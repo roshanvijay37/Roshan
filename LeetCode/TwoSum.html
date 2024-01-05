@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Two Sum LeetCode</title>
+  <title>Two Sum</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -46,9 +46,16 @@
   <h1>Two Sum Problem LeetCode</h1>
   <div class="approach">
     <a href="https://leetcode.com/problems/two-sum/description/">Click to go to Two Sum Problem in LeetCode</a>
-    <p>There can be two approaches for this problem. The major difference between the two approaches is the time complexity.</p>
-    <p>First method involves exhaustively examining each element pair to verify if their sum matches the target. This entails employing nested loops, with the outer loop spanning from the initial element to the second-to-last element, and the inner loop covering the subsequent element to the final one. It's important to note that this method exhibits a time complexity of O(n^2).</p>
-    <p>A more optimized strategy involves employing a hash table. The process entails traversing the array once and, for each element, verifying its complement (target minus the current element) in the hash table. Identifying a match indicates the presence of a valid pair of numbers, while the absence prompts the addition of the current element to the hash table.</p>
+    <p>1. Create a HashMap to store the elements of the array and their corresponding indices.</p>
+
+	<p>2. Iterate through the array, and for each element, calculate the complement by subtracting the current element from the target sum. The complement is the value that, when added to the current element, results in the target sum.</p>
+
+	<p>3. Check if the complement is already present in the HashMap. If yes, return the indices of the current element and its complement.</p>
+
+	<p>4. If the complement is not present in the HashMap, add the current element and its index to the HashMap.</p>
+
+	<p>5. If no two elements are found that sum up to the target, return an empty array or handle it as per the problem's requirements.</p>
+
     <a href="https://github.com/roshanvijay37/Leetcode/tree/master/TwoSumArrayQuestionOne">Click for My Solution in Github</a>
   </div>
 </body>

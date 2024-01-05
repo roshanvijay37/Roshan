@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Median of Two Sorted Arrays</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #3498db;
+      text-align: center;
+    }
+
+    a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .approach {
+      max-width: 800px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+      line-height: 1.6;
+      color: #333;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Median of Two Sorted Arrays Problem LeetCode</h1>
+  <div class="approach">
+    <a href="https://leetcode.com/problems/median-of-two-sorted-arrays/description/">Median of Two Sorted Arrays Problem in LeetCode</a>
+    <p>1. Ensure that <code>nums1</code> is the smaller array. If not, swap <code>nums1</code> and <code>nums2</code>.</p>
+
+	<p>2. Initialize <code>low</code> and <code>high</code> variables for binary search on the smaller array <code>nums1</code>. The binary search is performed on the smaller array because it allows for determining the partition point in logarithmic time complexity.</p>
+
+	<p>3. Use binary search to find a partition point (<code>partitionX</code>) in the smaller array <code>nums1</code>. The partition point is chosen such that the number of elements on the left side of the combined arrays is equal to the number of elements on the right side.</p>
+
+	<p>4. Calculate the corresponding partition point in the larger array <code>nums2</code> (<code>partitionY</code>). The total number of elements on the left side is <code>(x + y + 1) / 2 - partitionX</code>, where <code>x</code> and <code>y</code> are the lengths of <code>nums1</code> and <code>nums2</code>, respectively.</p>
+
+	<p>5. Determine the elements on both sides of the partition in both arrays (<code>maxX</code>, <code>maxY</code>, <code>minX</code>, and <code>minY</code>).</p>
+
+	<p>6. Check if the current partition is valid, i.e., <code>maxX</code> is less than or equal to <code>minY</code> and <code>maxY</code> is less than or equal to <code>minX</code>.</p>
+
+	<p>7. If the partition is valid, calculate the median based on whether the total number of elements is even or odd.</p>
+
+	<p>8. If the partition is not valid, adjust the search range based on whether <code>maxX</code> is greater than <code>minY</code> or <code>maxY</code> is greater than <code>minX</code>.</p>
+
+	<p>9. Repeat the process until a valid partition is found.</p>
+
+	<p>10. If no valid partition is found, throw an <code>IllegalArgumentException</code> indicating that the input arrays are not sorted.</p>								
+
+    <a href="https://github.com/roshanvijay37/Leetcode/tree/master/MedianOfSortedArrayQuestionThree">Click for My Solution in Github</a>
+  </div>
+</body>
+</html>
