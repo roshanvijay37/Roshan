@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Two Sum LeetCode</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #3498db;
+      text-align: center;
+    }
+
+    a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .approach {
+      max-width: 800px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+      line-height: 1.6;
+      color: #333;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Two Sum Problem LeetCode</h1>
+  <div class="approach">
+    <a href="https://leetcode.com/problems/two-sum/description/">Click to go to Two Sum Problem in LeetCode</a>
+    <p>There can be two approaches for this problem. The major difference between the two approaches is the time complexity.</p>
+    <p>First method involves exhaustively examining each element pair to verify if their sum matches the target. This entails employing nested loops, with the outer loop spanning from the initial element to the second-to-last element, and the inner loop covering the subsequent element to the final one. It's important to note that this method exhibits a time complexity of O(n^2).</p>
+    <p>A more optimized strategy involves employing a hash table. The process entails traversing the array once and, for each element, verifying its complement (target minus the current element) in the hash table. Identifying a match indicates the presence of a valid pair of numbers, while the absence prompts the addition of the current element to the hash table.</p>
+    <a href="https://github.com/roshanvijay37/Leetcode/tree/master/TwoSumArrayQuestionOne">Click for My Solution in Github</a>
+  </div>
+</body>
+</html>
