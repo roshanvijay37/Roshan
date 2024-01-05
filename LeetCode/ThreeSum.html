@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Three Sum LeetCode</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #3498db;
+      text-align: center;
+    }
+
+    a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .approach {
+      max-width: 800px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+      line-height: 1.6;
+      color: #333;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Three Sum Problem LeetCode</h1>
+  <div class="approach">
+    <a href="https://leetcode.com/problems/3sum/description/">Click to go to Three Sum Problem in LeetCode</a>
+    <p>For the three sum problem, there are also two main approaches, similar to the two-sum problem. The time complexity of these approaches varies, and the optimized strategy involves using a hash table or a more sophisticated algorithm.</p>
+    <p><strong>1. Brute Force Approach (O(n^3)):</strong> The brute-force method involves exhaustively examining each triplet of elements to verify if their sum matches the target. This requires using three nested loops, with the outer loop iterating from the first element to the third-to-last element, the middle loop iterating from the second element to the second-to-last element, and the inner loop covering the subsequent element to the final one. This method has a time complexity of O(n^3), which can be quite inefficient for large input arrays.</p>
+    <p><strong>2. Hash Table Approach (O(n^2)):</strong> Similar to the two-sum problem, an optimized strategy for the three-sum problem involves using a hash table. The process entails traversing the array once and, for each element, finding pairs of elements whose sum equals the target minus the current element. This can be achieved by using two nested loops and a hash table to store complements. The outer loop iterates through each element, and the inner loop searches for a pair in the hash table. If a pair is found, it indicates a valid triplet, and the elements are added to the result. If no pair is found, the current element is added to the hash table. This approach has a time complexity of O(n^2), making it more efficient than the brute-force method.</p>
+    <p>It's important to note that the hash table approach may not cover all cases, as there are more advanced algorithms specifically designed for the three-sum problem that achieve even better time complexity. One such algorithm is based on sorting the array first and then using a two-pointer approach, resulting in O(n^2) time complexity.</p>
+    <a href="https://github.com/roshanvijay37/Leetcode/tree/master/ThreeSumArrayQuestionTwo">Click for My Solution in Github</a>
+  </div>
+</body>
+</html>
