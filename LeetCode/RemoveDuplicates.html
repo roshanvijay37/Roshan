@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Remove Duplicates</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #3498db;
+      text-align: center;
+    }
+
+    a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .approach {
+      max-width: 800px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+      line-height: 1.6;
+      color: #333;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Remove Duplicates Problem LeetCode</h1>
+  <div class="approach">
+    <a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/description/">Click to go to Remove Duplicates Problem in LeetCode</a>
+    <p>Initialize pointers and iterate through the array:</p>
+	<p>Initialize j as the pointer for the new array without duplicates, starting at index 1.</p>
+	<p>Iterate through the array starting from index 1 (i = 1).</p>
+	<p>Check for duplicates:</p>
+	<p>Compare the current element nums[i] with the previous element nums[i - 1].</p>
+	<p>Remove duplicates in-place:</p>
+	<p>If the current element is not equal to the previous one, update the j-th element with the current element (nums[j] = nums[i]).</p>
+	<p>Increment the j pointer.</p>
+	<p>Return the new length:</p>
+	<p>The final value of j represents the new length of the array without duplicates.</p>
+
+
+    <a href="https://github.com/roshanvijay37/Leetcode/tree/master/RemoveDuplicatesFromSortedArray">Click for My Solution in Github</a>
+  </div>
+</body>
+</html>
