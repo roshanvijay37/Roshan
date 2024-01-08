@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Remove Duplicates</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #3498db;
+      text-align: center;
+    }
+
+    a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .approach {
+      max-width: 800px;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+      line-height: 1.6;
+      color: #333;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Remove Duplicates Problem LeetCode</h1>
+  <div class="approach">
+    <a href="https://leetcode.com/problems/4sum/description/">Click to go to Four Sum Problem in LeetCode</a>
+    <p>1. Sort the given array <code>nums</code> in non-decreasing order.</p>
+
+    <p>2. Initialize an empty list <code>result</code> to store the quadruplets.</p>
+
+    <p>3. Iterate over the array with two nested loops (indices <code>i</code> and <code>j</code>) to fix the first two elements.
+        Inside the nested loops, use two pointers (<code>left</code> and <code>right</code>) to find the remaining two elements.
+        Initialize <code>left</code> to <code>j + 1</code> and <code>right</code> to <code>len(nums) - 1</code>.</p>
+     
+     <p>   While <code>left</code> is less than <code>right</code>:
+          Calculate the current sum as <code>nums[i] + nums[j] + nums[left] + nums[right]</code>.
+          If the sum is equal to the target:
+            Add <code>[nums[i], nums[j], nums[left], nums[right]]</code> to the <code>result</code>.
+            Move <code>left</code> to the right to avoid duplicates.
+            Move <code>right</code> to the left to avoid duplicates.
+          If the sum is less than the target, increment <code>left</code>.
+          If the sum is greater than the target, decrement <code>right</code>.</p>
+     
+
+    <p>4. Continue the outer loops, making sure to skip duplicate values to avoid duplicate quadruplets.</p>
+
+    <p>5. Return the <code>result</code> list containing all unique quadruplets.</p>
+
+    <p>This algorithm ensures that the solution set contains unique quadruplets and has a time complexity of <code>O(n^3)</code> due to the three nested loops. Sorting the array at the beginning contributes <code>O(n log n)</code> to the overall time complexity.</p>
+                                                                
+    <a href="https://github.com/roshanvijay37/Leetcode/tree/master/FourSumArrayQuestionFive">Click for My Solution in Github</a>
+  </div>
+</body>
+</html>
