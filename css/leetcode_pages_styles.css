@@ -1,0 +1,80 @@
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  color: #555; /* Gray color instead of blue */
+  text-align: center;
+}
+
+a {
+  color: #555; /* Gray color instead of blue */
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.approach {
+  max-width: 800px;
+  margin: 20px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+p {
+  line-height: 1.6;
+  color: #333;
+}
+
+.home-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: #555; /* Gray color instead of blue */
+  text-decoration: none;
+  font-size: 24px;
+}
+
+.leetcode-menu {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: #555; /* Gray color instead of blue */
+  text-decoration: none;
+  font-size: 20px;
+  padding: 10px 10px;
+  border: 2px solid #555; /* Gray color instead of blue */
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+
+  /* Hover effect */
+  &:hover {
+    background-color: #555; /* Gray color instead of blue */
+    color: #fff;
+    text-decoration: none;
+  }
+}
+
+.clickable-question {
+  display: inline-block;
+  padding: 10px;
+  border: 1px solid #ddd; /* Light border color */
+  border-radius: 5px; /* Rounded corners */
+  text-decoration: none;
+  color: #333; /* Text color */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+
+  /* Hover effect */
+  &:hover {
+    background-color: #f4f4f4; /* Light background color on hover */
+    color: #555; /* Darker text color on hover */
+  }
+}
+

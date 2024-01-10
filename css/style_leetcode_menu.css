@@ -1,0 +1,59 @@
+body {
+  font-family: 'Helvetica', Arial, sans-serif;
+  background-color: #f8f8f8;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+h1 {
+  color: #555; /* Gray color instead of blue */
+  text-align: center;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.home-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: #555; /* Gray color instead of blue */
+  text-decoration: none;
+  font-size: 24px;
+}
+
+.problem-card {
+  width: calc(100% - 40px);
+  margin: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+  text-align: center;
+}
+
+.problem-card:hover {
+  transform: scale(1.05);
+}
+
+h2 {
+  color: #555; /* Gray color instead of blue */
+  margin-bottom: 10px;
+}
+
+a {
+  color: #555; /* Gray color instead of blue */
+  text-decoration: none;
+}
+
+
+@media screen and (min-width: 600px) {
+  .problem-card {
+    max-width: 400px;
+    width: calc(33.33% - 40px);
+  }
+}
