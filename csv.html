@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comma Separator</title>
+</head>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px; /* Added for spacing */
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+textarea#sqlScript {
+    margin-top: 20px;
+}
+</style>
+
+<body>
+    <div class="container">
+        <h1>Excel to Comma Separated Values</h1>
+        <label for="input_csv">Enter IDs (The One's you copied from Excelsheet):</label>
+        <textarea id="input_csv" rows="5"></textarea>
+        
+        <button id="generateBtn">Generate</button>
+        <textarea id="sqlScript" rows="10" readonly></textarea>
+		<button id="copyBtn">Copy</button> <!-- Added copy button -->
+
+    </div>
+    <script>
+    document.getElementById('generateBtn').addEventListener('click', function() {
+        var inputCsv = document.getElementById('input_csv').value.trim();
+        var cleanedCsv = inputCsv.replace(/\n/g, ',');
+        var sqlScript = `'${cleanedCsv}';`;
+        document.getElementById('sqlScript').value = sqlScript;
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', function() {
+        var sqlScript = document.getElementById('sqlScript');
+        sqlScript.select();
+        sqlScript.setSelectionRange(0, 99999); /* For mobile devices */
+        document.execCommand('copy');
+        alert('Copied to clipboard!');
+    });
+    </script>
+</body>
+</html> 
