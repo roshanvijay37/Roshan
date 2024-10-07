@@ -9,7 +9,6 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 20px;
         }
         table {
             width: 100%;
@@ -85,6 +84,13 @@
             display: block;
             margin: 0 auto 10px;
         }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -94,6 +100,7 @@
         </a>
         <h1>BJP Booth Contact Information - Mulki-Moodubidre</h1>
     </header>
+
     <table id="booth-table">
         <thead>
             <tr>
@@ -106,9 +113,10 @@
             <!-- Rows will be dynamically added here -->
         </tbody>
     </table>
+
     <footer>
         <h4>Designed and Developed with ❤️ by 
-            <a href="https://roshanvijay.com" target="_blank" style="text-decoration: none; color: #fff;">
+            <a href="https://roshanvijay.com" target="_blank">
                 <b>Roshan Vijay Shetty</b>
             </a>
         </h4>
@@ -158,8 +166,6 @@
         { name: "40. Rajesh Naik", phone: "9740940014" },
         { name: "41. Rajesh Mallya", phone: "9845310777" }
     ];
-
-
 
         const tableBody = document.querySelector("#booth-table tbody");
 
