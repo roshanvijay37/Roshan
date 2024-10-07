@@ -97,7 +97,6 @@
     <table id="booth-table">
         <thead>
             <tr>
-                <th>Sl. No.</th>
                 <th>Name</th>
                 <th>Mobile No.</th>
                 <th>Actions</th>
@@ -117,48 +116,49 @@
 
     <script>
         const data = [
-        { sl_no: "1", name: "Jayanand Chelyar", phone: "9964590138" },
-        { sl_no: "2", name: "Pushparaj Shetty", phone: "7899494328" },
-        { sl_no: "3", name: "Sukesh Pavanje", phone: "9844882757" },
-        { sl_no: "4", name: "Manoj Kumar", phone: "9901851312" },
-        { sl_no: "5", name: "Anil Kundar", phone: "9743082089" },
-        { sl_no: "6", name: "Shobendra", phone: "9945619138" },
-        { sl_no: "7", name: "Jeevan Prakash", phone: "9945935679" },
-        { sl_no: "8", name: "Hemanath Amin", phone: "8105008609" },
-        { sl_no: "9", name: "Ranganath Shetty", phone: "9964140315" },
-        { sl_no: "10", name: "Purushotham Bappanadu", phone: "9241440460" },
-        { sl_no: "11", name: "Radhika Kotian", phone: "9945092998" },
-        { sl_no: "12", name: "Vittal N.M.", phone: "9880639213" },
-        { sl_no: "13", name: "Rajanna", phone: "8867663444" },
-        { sl_no: "14", name: "Sharan Valikkar", phone: "9632081808" },
-        { sl_no: "15", name: "Jayanand Mulki", phone: "9880585187" },
-        { sl_no: "16", name: "Harishchandra Kotian", phone: "9844615498" },
-        { sl_no: "17", name: "Ramanath Pai (Kuttu)", phone: "8197240217" },
-        { sl_no: "18", name: "Rithesh Shetty", phone: "9741481811" },
-        { sl_no: "19", name: "Lokesh Bajpe", phone: "9945690178" },
-        { sl_no: "20", name: "Jokim Dicosta", phone: "9980957575" },
-        { sl_no: "21", name: "Ganesh Arbhi", phone: "9343574557" },
-        { sl_no: "22", name: "Suma Shetty", phone: "9880858827" },
-        { sl_no: "23", name: "Sudhakar Kamath", phone: "9972674681" },
-        { sl_no: "24", name: "Devaprasad Punarooru", phone: "9880123345" },
-        { sl_no: "25", name: "Bhuvanabhirama Udupa", phone: "9880162726" },
-        { sl_no: "26", name: "Ishwar Kateel", phone: "9448300700" },
-        { sl_no: "27", name: "Shashidhar Anchan", phone: "9845719785" },
-        { sl_no: "28", name: "Nagaraj Karkera", phone: "9945183522" },
-        { sl_no: "29", name: "Uday Kumar Shetty", phone: "9845590798" },
-        { sl_no: "30", name: "Ajay Rai", phone: "9845390224" },
-        { sl_no: "31", name: "Sucharitha Shetty", phone: "9945154818" },
-        { sl_no: "32", name: "Ashok Shetty", phone: "9880235871" },
-        { sl_no: "33", name: "Keshava PANJADI", phone: "9880071262" },
-        { sl_no: "34", name: "Sundar Poojary", phone: "9108184749" },
-        { sl_no: "35", name: "Sooraj Jain", phone: "9902576893" },
-        { sl_no: "36", name: "Vishwanath Kamath", phone: "7760487725" },
-        { sl_no: "37", name: "K.A Sujatha Beluvai", phone: "6360408551" },
-        { sl_no: "38", name: "Sukesh Shetty", phone: "9945909267" },
-        { sl_no: "39", name: "Suresh Bhandary", phone: "9902178295" },
-        { sl_no: "40", name: "Rajesh Naik", phone: "9740940014" },
-        { sl_no: "41", name: "Rajesh Mallya", phone: "9845310777" }
+        { name: "1. Jayanand Chelyar", phone: "9964590138" },
+        { name: "2. Pushparaj Shetty", phone: "7899494328" },
+        { name: "3. Sukesh Pavanje", phone: "9844882757" },
+        { name: "4. Manoj Kumar", phone: "9901851312" },
+        { name: "5. Anil Kundar", phone: "9743082089" },
+        { name: "6. Shobendra", phone: "9945619138" },
+        { name: "7. Jeevan Prakash", phone: "9945935679" },
+        { name: "8. Hemanath Amin", phone: "8105008609" },
+        { name: "9. Ranganath Shetty", phone: "9964140315" },
+        { name: "10. Purushotham Bappanadu", phone: "9241440460" },
+        { name: "11. Radhika Kotian", phone: "9945092998" },
+        { name: "12. Vittal N.M.", phone: "9880639213" },
+        { name: "13. Rajanna", phone: "8867663444" },
+        { name: "14. Sharan Valikkar", phone: "9632081808" },
+        { name: "15. Jayanand Mulki", phone: "9880585187" },
+        { name: "16. Harishchandra Kotian", phone: "9844615498" },
+        { name: "17. Ramanath Pai (Kuttu)", phone: "8197240217" },
+        { name: "18. Rithesh Shetty", phone: "9741481811" },
+        { name: "19. Lokesh Bajpe", phone: "9945690178" },
+        { name: "20. Jokim Dicosta", phone: "9980957575" },
+        { name: "21. Ganesh Arbhi", phone: "9343574557" },
+        { name: "22. Suma Shetty", phone: "9880858827" },
+        { name: "23. Sudhakar Kamath", phone: "9972674681" },
+        { name: "24. Devaprasad Punarooru", phone: "9880123345" },
+        { name: "25. Bhuvanabhirama Udupa", phone: "9880162726" },
+        { name: "26. Ishwar Kateel", phone: "9448300700" },
+        { name: "27. Shashidhar Anchan", phone: "9845719785" },
+        { name: "28. Nagaraj Karkera", phone: "9945183522" },
+        { name: "29. Uday Kumar Shetty", phone: "9845590798" },
+        { name: "30. Ajay Rai", phone: "9845390224" },
+        { name: "31. Sucharitha Shetty", phone: "9945154818" },
+        { name: "32. Ashok Shetty", phone: "9880235871" },
+        { name: "33. Keshava PANJADI", phone: "9880071262" },
+        { name: "34. Sundar Poojary", phone: "9108184749" },
+        { name: "35. Sooraj Jain", phone: "9902576893" },
+        { name: "36. Vishwanath Kamath", phone: "7760487725" },
+        { name: "37. K.A Sujatha Beluvai", phone: "6360408551" },
+        { name: "38. Sukesh Shetty", phone: "9945909267" },
+        { name: "39. Suresh Bhandary", phone: "9902178295" },
+        { name: "40. Rajesh Naik", phone: "9740940014" },
+        { name: "41. Rajesh Mallya", phone: "9845310777" }
     ];
+
 
 
         const tableBody = document.querySelector("#booth-table tbody");
@@ -177,7 +177,6 @@
         data.forEach(person => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${person.sl_no}</td>
                 <td>${person.name}</td>
                 <td>${person.phone}</td>
                 <td>${createButtonGroup(person.phone)}</td>
