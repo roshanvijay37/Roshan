@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haleyangadi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #ff6f00;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .action-btn {
+            background-color: #ff6f00;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+        }
+        .action-btn img {
+            width: 20px;
+            height: 20px;
+        }
+        .action-btn:hover {
+            opacity: 0.8;
+        }
+        .btn-group {
+            display: inline-flex;
+            gap: 10px;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            table, th, td {
+                font-size: 12px;
+            }
+            th, td {
+                padding: 8px;
+                width: 33.33%; /* Distribute the width equally among the three columns */
+            }
+            .action-btn {
+                padding: 6px;
+            }
+        }
+        @media (max-width: 480px) {
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+        header, footer {
+            background-color: #FF6F00;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+        .logo {
+            width: 100px;
+            height: auto;
+            display: block;
+            margin: 0 auto 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="bjplogo.svg" alt="Logo" class="logo">
+        </a>
+        <h1>BJP Booth Contact Information - Mulki-Moodubidre</h1>
+    </header>
+    <table id="booth-table">
+        <thead>
+            <tr>
+                <th>Mobile No.</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be dynamically added here -->
+        </tbody>
+    </table>
+    <footer>
+        <h4>Designed and Developed with ❤️ by 
+            <a href="https://roshanvijay.com" target="_blank" style="text-decoration: none; color: #fff;">
+                <b>Roshan Vijay Shetty</b>
+            </a>
+        </h4>
+    </footer>
+
+    <script>
+const data = [
+    "9980359035",
+    "9845323164",
+    "9448039431",
+    "9945749542",
+    "9916038670",
+    "9845158495",
+    "9606156336",
+    "9916042233",
+    "9916166765",
+    "9742763840",
+    "9741636573",
+    "9902332466",
+    "9611992935",
+    "9994970002",
+    "9513935906",
+    "9901344168",
+    "9900617366",
+    "9945887875",
+    "9611038927",
+    "9482872271",
+    "9538881611",
+    "9900426478",
+    "9945392183",
+    "9611650910",
+    "9886597370",
+    "9916514565",
+    "9886147280",
+    "9611998905",
+    "9686441708",
+    "9900890286",
+    "9900342000",
+    "9886097381",
+    "9805065594",
+    "9620888505",
+    "9945881748",
+    "9902877124",
+    "9611537113",
+    "9513878704",
+    "9620073531",
+    "9900654248",
+    "9916293005",
+    "9900963767",
+    "9742206103",
+    "9611860471",
+    "9742410176",
+    "9739563913",
+    "9611995686",
+    "9742804200",
+    "9900786533",
+    "9901694630",
+    "9886142524",
+    "9900000001",
+    "9886609615",
+    "9611666932",
+    "9916096723",
+    "9845171184",
+    "9611862200",
+    "9739492975",
+    "9980852394",
+    "9620292992",
+    "9945882803",
+    "9916100867",
+    "9810776060",
+    "9945385527",
+    "9611971430",
+    "9812000701",
+    "9538900540",
+    "9742619152",
+    "9886400727",
+    "9611066700",
+    "9611093930",
+    "9741928325",
+    "9945655433",
+    "9611173738",
+    "9742657283",
+    "9620215477",
+    "9886181470",
+    "9513872684",
+    "9741728528",
+    "9642268927",
+    "9886161132",
+    "9742374545",
+    "9611900416",
+    "9886184782",
+    "9620588441",
+    "9611548870",
+    "9886121280",
+    "9606107087",
+    "9611516222",
+    "9945701687",
+    "9611886576",
+    "9945729301",
+    "9642471847",
+    "9741643210",
+    "9741892246",
+    "9741698300",
+    "9642205570",
+    "9739468481",
+    "9739491001",
+    "9945617983",
+    "9611131535",
+    "9620186745",
+    "9611985555",
+    "9741735018",
+    "9945700721",
+    "9611901410",
+    "9741950607",
+    "9611650992",
+    "9886340802",
+    "9611160255",
+    "9741739113",
+    "9611102945",
+    "9886514071"
+];
+
+
+        const tableBody = document.querySelector("#booth-table tbody");
+
+        const createButtonGroup = (phone) => `
+            <div class="btn-group">
+                <button class="action-btn" onclick="window.location.href='tel:${phone}'">
+                    <img src="https://cdn-icons-png.flaticon.com/128/724/724664.png" alt="Call">
+                </button>
+                <button class="action-btn" onclick="window.location.href='https://wa.me/${phone}?text=Hello'">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+                </button>
+            </div>
+        `;
+
+        data.forEach(phone => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${phone}</td>
+                <td>${createButtonGroup(phone)}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    </script>
+</body>
+</html>
