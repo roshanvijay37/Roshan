@@ -124,7 +124,13 @@
         document.getElementById('jsonInput').addEventListener('input', function() {
             try {
                 const input = this.value;
-                jsonData = JSON.parse(input);
+                // Split the input by "][" to handle multiple JSON arrays
+                const cleanedInput = input.replace(/\]\s*\[/g, ',');
+                // Ensure the input starts with [ and ends with ]
+                const wrappedInput = cleanedInput.replace(/^\s*\[?|\]?\s*$/g, '');
+                const finalInput = `[${wrappedInput}]`;
+                
+                jsonData = JSON.parse(finalInput);
                 if (!Array.isArray(jsonData)) {
                     jsonData = [jsonData];
                 }
@@ -140,7 +146,7 @@
                     `).join('');
                 }
             } catch (e) {
-                console.error('Invalid JSON');
+                console.error('Invalid JSON:', e);
             }
         });
 
@@ -176,6 +182,5 @@
                     });
             }
         }
-    </script>
-</body>
+    </script></body>
 </html>
