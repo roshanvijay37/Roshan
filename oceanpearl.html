@@ -1,22 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Ocean Pearl Ujire</title>
-  <style>
-      body, html {
-          margin: 0;
-          padding: 0;
-          height: 100%;
-          overflow: hidden;
-      }
-      iframe {
-          width: 100%;
-          height: 100vh;
-          border: none;
-      }
-  </style>
+    <meta charset="UTF-8">
+    <title>Ocean Pearl Ujire</title>
+    <link rel="stylesheet" href="ocearnpearlassets/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-  <iframe src="https://roshanvijay37.github.io/OceanPearlUjire/"></iframe>
+    <button class="menu-toggle">
+        <span class="menu-icon">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+        </span>
+    </button>
+    <nav class="menu-overlay">
+        <div class="menu-items">
+            <a href="#" class="menu-item">Home</a>
+            <a href="#" class="menu-item">About</a>
+            <a href="#" class="menu-item">Rooms</a>
+            <a href="#" class="menu-item">Dining</a>
+            <a href="#" class="menu-item">Amenities</a>
+            <a href="#" class="menu-item">Contact</a>
+        </div>
+    </nav>
+    
+    <div class="hero-container">
+        <div class="overlay"></div>
+        <div class="hero-content parallax-section">
+            <h1 class="animate-title">Ocean Pearl Ujire</h1>
+            <p class="animate-subtitle">Elegance meets Comfort</p>
+            <p class="location-tagline">Experience the best of Ujire</p>
+        </div>
+        <a href="https://wa.me/YOUR_NUMBER" class="whatsapp-btn">
+            <i class="fab fa-whatsapp"></i> Book Now
+        </a>
+    </div>
+    <section class="map-container parallax-section">
+        <div class="map-overlay"></div>
+        <div class="map-content">
+            <h2 class="map-title">Find Us Here</h2>
+            <div class="mapouter">
+                <div class="gmap_canvas">
+                    <iframe 
+                        class="gmap_iframe" 
+                        frameborder="0" 
+                        scrolling="no" 
+                        marginheight="0" 
+                        marginwidth="0" 
+                        src="https://maps.google.com/maps?width=600&height=400&hl=en&q=ocean pearl ujire&t=&z=14&ie=UTF8&iwloc=B&output=embed">
+                    </iframe>
+                </div>
+            </div>
+            <div class="map-info">
+                <div class="info-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <p>Ocean Pearl Ujire, Ujire, Karnataka 574240, India</p>
+                </div>
+                <a href="https://www.google.com/maps/dir//Ocean+Pearl+Ujire" target="_blank" class="directions-btn">
+                    <i class="fas fa-directions"></i> Get Directions
+                </a>
+            </div>
+        </div>
+    </section>
+    <script src="ocearnpearlassets/scripts.js"></script>
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Ocean Pearl Ujire</h3>
+                <p>Luxury Redefined in Ujire</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="#">About Us</a>
+                <a href="#">Rooms</a>
+                <a href="#">Dining</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-phone"></i> +91 1234567890</p>
+                <p><i class="fas fa-envelope"></i> info@oceanpearlujire.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Ocean Pearl Ujire. All rights reserved.</p>
+            <h4 class="developer-credit">Designed and Developed with ❤️ by 
+                <a href="https://roshanvijay.com" target="_blank">
+                    <b>Roshan Vijay Shetty</b>
+                </a>
+            </h4>
+        </div>
+    </footer>
+    
 </body>
 </html>
