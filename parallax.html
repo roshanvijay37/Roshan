@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parallax Effect Demo</title>
+    <style>
+        /* Resetting some default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        /* Parallax Section */
+        .parallax {
+            height: 500px;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+        }
+
+        /* Content Sections */
+        .content {
+            padding: 50px;
+            text-align: center;
+            background: #f4f4f4;
+        }
+
+        .header-content {
+            text-align: center;
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 0.5em;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="parallax" style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');">
+        <div class="header-content">
+            <h1>Welcome to the Parallax Effect</h1>
+            <p>Scroll down to experience the parallax effect in action.</p>
+        </div>
+    </header>
+
+    <section class="content">
+        <h2>What is Parallax?</h2>
+        <p>
+            The parallax effect is a web design technique where background images move slower than foreground content as you scroll, creating a 3D effect on a 2D screen. It adds depth and a sense of immersion to the page.
+        </p>
+    </section>
+
+    <section class="parallax" style="background-image: url('https://images.unsplash.com/photo-1511884642898-4c92249e20b6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');"></section>
+
+    <section class="content">
+        <h2>Why Use Parallax?</h2>
+        <p>
+            Parallax effects can enhance the user experience by adding visual interest and making a website feel more dynamic. It can be especially effective for storytelling, landing pages, and visual portfolios.
+        </p>
+    </section>
+
+    <section class="parallax" style="background-image: url('https://images.unsplash.com/photo-1682686581498-5e85c7228119?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');"></section>
+
+    <section class="content">
+        <h2>Try it Out!</h2>
+        <p>
+            Implementing the parallax effect is easier than you might think. Just use CSS background properties and a few styles for smooth scrolling.
+        </p>
+    </section>
+
+    <footer>
+        <p>© 2024 Parallax Demo</p>
+    </footer>
+
+</body>
+</html>
