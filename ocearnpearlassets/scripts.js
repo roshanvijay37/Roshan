@@ -28,9 +28,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // Menu toggle functionality
     const menuToggle = document.querySelector('.menu-toggle');
     const menuOverlay = document.querySelector('.menu-overlay');
+    const menuItems = document.querySelectorAll('.menu-item');
     
     menuToggle.addEventListener('click', () => {
         menuToggle.classList.toggle('active');
         menuOverlay.classList.toggle('active');
+        
+        // Add staggered animation to menu items
+        menuItems.forEach((item, index) => {
+            if (menuOverlay.classList.contains('active')) {
+                item.style.transitionDelay = `${0.1 * index}s`;
+            } else {
+                item.style.transitionDelay = '0s';
+            }
+        });
     });
+
+    // Reviews section initialization
+    const reviewsTitle = document.querySelector('.reviews-title');
+    if (reviewsTitle) {
+        observer.observe(reviewsTitle);
+    }
 });
+
