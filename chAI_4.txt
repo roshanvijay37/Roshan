@@ -1,0 +1,22 @@
+https://roshanvijay.com/chatbot.html
+https://roshanvijay.com/aistory.html
+https://roshanvijay.com/motivation.html
+https://roshanvijay.com/funfact.html
+
+Software that interacts with users and performs tasks using AI
+
+A unique identifier used to authenticate requests.
+Works like a password for accessing an AI service.
+
+Do not expose API keys in frontend code.
+
+How AI APIs Work in the Backend
+Step-by-Step Process of an API Call
+User Input – User types a query in a chatbot or selects an option.
+Frontend Request – The frontend (HTML/JS) sends an API request with the user input.
+Backend Processing – The API:
+Validates the request.
+Passes input to an AI model.
+Generates a response using machine learning models.
+Response Returned – The API sends back structured data (usually in JSON format).
+Frontend Display – The frontend processes and displays the AI’s response.
