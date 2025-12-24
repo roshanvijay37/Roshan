@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belvai Panchayat Pramukh Contact Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #ff6f00;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .action-btn {
+            background-color: #ff6f00;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+        }
+        .action-btn img {
+            width: 20px;
+            height: 20px;
+        }
+        .action-btn:hover {
+            opacity: 0.8;
+        }
+        .btn-group {
+            display: inline-flex;
+            gap: 10px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            table, th, td {
+                font-size: 12px;
+            }
+            th, td {
+                padding: 8px;
+            }
+            .action-btn {
+                padding: 6px;
+            }
+        }
+
+        /* Allow table to scroll horizontally on small screens */
+        @media (max-width: 480px) {
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+        header, footer {
+            background-color: #FF6F00;
+            color: white;
+            text-align: center;
+            padding: 20px 0; /* Increased padding to make space for the logo */
+            margin-bottom: 20px;
+        }
+        /* Logo styling */
+        .logo {
+            width: 100px; /* Adjust the size of the logo */
+            height: auto;
+            display: block;
+            margin: 0 auto 10px; /* Centers the logo and adds margin below */
+        }
+    </style>
+</head>
+<header>
+    <a href="index.html">
+        <img src="bjplogo.svg" alt="Logo" class="logo">
+    </a>
+    <h1>Pramukh Contact Information</h1>
+</header>
+<body>
+    <table id="pramukh-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Ward</th>
+                <th>Phone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be dynamically added here -->
+        </tbody>
+    </table>
+    <footer>
+        <h4>Designed and Developed with ❤️ by 
+        <a href="https://roshanvijay.com" target="_blank" style="text-decoration: none; color: #fff;">
+            <b>Roshan Vijay Shetty</b></h4>
+        </a>
+    </footer>
+
+    <script>
+        // Data array for pramukhs
+        const pramukhs = [
+            { name: "Bhagya", ward: "Ward 5", phone: "+919900843283" },
+            { name: "Dayanand Pai", ward: "", phone: "+919448770832" },
+            { name: "Jayanna Balibari", ward: "Ward 6", phone: "+919731281747" },
+            { name: "Jayanthi", ward: "Ward 2", phone: "+917204212166" },
+            { name: "Mamatha", ward: "Ward 5", phone: "+917899980406" },
+            { name: "Narayana", ward: "", phone: "+919449102627" },
+            { name: "Raghu", ward: "", phone: "+919108792701" },
+            { name: "Ravindra", ward: "Ward 5", phone: "+919632163898" },
+            { name: "Ravindra VP", ward: "Ward 2", phone: "+919482250655" },
+            { name: "Sushilakka", ward: "Ward 3", phone: "+919972246488" },
+            { name: "Vasudeva", ward: "", phone: "+919945275941" },
+            { name: "Anand Mestri", ward: "", phone: "+918105663288" },
+            { name: "Sadanand", ward: "", phone: "+919008514239" },
+            { name: "Santhosh Acharya", ward: "", phone: "+919900411036" },
+            { name: "Santhosh", ward: "Taluk Panchayat", phone: "+918971463647" },
+            { name: "Sudhakar Kandiga", ward: "", phone: "+919845982625" },
+            { name: "Bharath", ward: "", phone: "+919741765423" },
+            { name: "Suraj", ward: "", phone: "+919844244432" }
+        ];
+
+        const tableBody = document.querySelector("#pramukh-table tbody");
+
+        // Function to generate the action buttons
+        const createButtonGroup = (phone) => {
+            return `
+                <div class="btn-group">
+                    <button class="action-btn" onclick="window.location.href='tel:${phone}'">
+                        <img src="https://cdn-icons-png.flaticon.com/128/724/724664.png" alt="Call">
+                    </button>
+                    <button class="action-btn" onclick="window.location.href='https://wa.me/${phone}?text=Hello'">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+                    </button>
+                </div>
+            `;
+        };
+
+        // Function to generate table rows
+        pramukhs.forEach(pramukh => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${pramukh.name}</td>
+                <td>${pramukh.ward}</td>
+                <td>${pramukh.phone}</td>
+                <td>${createButtonGroup(pramukh.phone)}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    </script>
+</body>
+</html>
