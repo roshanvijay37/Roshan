@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booth Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #ff6f00;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .action-btn {
+            background-color: #ff6f00;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+        }
+        .action-btn img {
+            width: 20px;
+            height: 20px;
+        }
+        .action-btn:hover {
+            opacity: 0.8;
+        }
+        .btn-group {
+            display: inline-flex;
+            gap: 10px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            table, th, td {
+                font-size: 12px;
+            }
+            th, td {
+                padding: 8px;
+            }
+            .action-btn {
+                padding: 6px;
+            }
+        }
+
+        /* Allow table to scroll horizontally on small screens */
+        @media (max-width: 480px) {
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+        header, footer {
+			background-color: #FF6F00;
+			color: white;
+			text-align: center;
+			padding: 20px 0; /* Increased padding to make space for the logo */
+			margin-bottom: 20px;
+		}
+		/* Logo styling */
+		.logo {
+			width: 100px; /* Adjust the size of the logo */
+			height: auto;
+			display: block;
+			margin: 0 auto 10px; /* Centers the logo and adds margin below */
+		}
+    </style>
+</head>
+<header>
+<a href="index.html">
+        <a href="index.html">
+        <img src="bjplogo.svg" alt="Logo" class="logo">
+    </a>    </a>
+<h1>Booth Wise Contact Information - Belvai</h1>
+</header>
+<body>
+    <table id="booth-table">
+        <thead>
+            <tr>
+                <th>Booth</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be dynamically added here -->
+        </tbody>
+    </table>
+    <footer>
+        <h4>Designed and Developed with ❤️ by 
+        <a href="https://roshanvijay.com" target="_blank" style="text-decoration: none; color: #fff;">
+            <b>Roshan Vijay Shetty</b></h4>
+        </a>
+    </footer>
+
+    <script>
+        // Data array for booths
+        const booths = [
+            { number: "27", name: "Santhosh Salian", designation: "Adyaksha", phone: "+919945483844" },
+            { number: "27", name: "Thimmappa", designation: "Kaaryadarshi", phone: "+919686903687" },
+            { number: "28", name: "Dinesh Devadiga", designation: "Adyaksha", phone: "+919611248588" },
+            { number: "28", name: "Ranjitha S Hegde", designation: "Kaaryadarshi", phone: "+918762309526" },
+            { number: "29", name: "Ananda Poojary", designation: "Adyaksha", phone: "+918105663288" },
+            { number: "29", name: "Yajnesh Acharya", designation: "Kaaryadarshi", phone: "+919591890026" },
+            { number: "30", name: "Yogish Naik", designation: "Adyaksha", phone: "+919611440880" },
+            { number: "30", name: "Sudesh", designation: "Kaaryadarshi", phone: "+919980045836" },
+            { number: "31", name: "Ganesh R Naik", designation: "Adyaksha", phone: "+918618354380" },
+            { number: "31", name: "Vishwanath Hegde", designation: "Kaaryadarshi", phone: "+919743283669" },
+            { number: "32", name: "Shivananda Poojary", designation: "Adyaksha", phone: "+917259831018" },
+            { number: "32", name: "Gopala", designation: "Kaaryadarshi", phone: "+919686000963" },
+            { number: "33", name: "Santhosh B", designation: "Adyaksha", phone: "+918971463647" },
+            { number: "33", name: "Deepak Acharya", designation: "Kaaryadarshi", phone: "+919108247414" },
+            { number: "34", name: "Prashanth", designation: "Adyaksha", phone: "+919902479726" },
+            { number: "34", name: "Damodhara", designation: "Kaaryadarshi", phone: "No number" },
+            { number: "35", name: "Krishnappa Poojary", designation: "Adyaksha", phone: "+919741893655" },
+            { number: "35", name: "Satish Shetty", designation: "Kaaryadarshi", phone: "+919071344207" }
+        ];
+
+        const tableBody = document.querySelector("#booth-table tbody");
+
+        // Function to generate the action buttons
+        const createButtonGroup = (phone) => {
+            return phone !== "No number" ? `
+                <div class="btn-group">
+                    <button class="action-btn" onclick="window.location.href='tel:${phone}'">
+                        <img src="https://cdn-icons-png.flaticon.com/128/724/724664.png" alt="Call">
+                    </button>
+                    <button class="action-btn" onclick="window.location.href='https://wa.me/${phone}?text=Hello'">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+                    </button>
+                </div>
+            ` : `
+                <div class="btn-group">
+                    <button class="action-btn" disabled>
+                        <img src="https://cdn-icons-png.flaticon.com/128/724/724664.png" alt="Call">
+                    </button>
+                    <button class="action-btn" disabled>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+                    </button>
+                </div>
+            `;
+        };
+
+        // Function to append (A) or (K) in front of names based on designation
+        const getFormattedName = (name, designation) => {
+            if (designation === "Adyaksha") {
+                return `(A) ${name}`;
+            } else if (designation === "Kaaryadarshi") {
+                return `(K) ${name}`;
+            }
+            return name;
+        };
+
+        // Function to generate table rows
+        booths.forEach(booth => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${booth.number}</td>
+                <td>${getFormattedName(booth.name, booth.designation)}</td>
+                <td>${booth.phone}</td>
+                <td>${createButtonGroup(booth.phone)}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    </script>
+</body>
+</html>
