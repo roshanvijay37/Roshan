@@ -3,32 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booth Wise Contact Information - Belvai</title>
+    <title>Belvai BJP Information Portal</title>
     <style>
-        * {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            padding: 20px;
         }
         
-        html, body {
-            width: 100%;
-            height: 100%;
+        header, footer {
+            background-color: #FF6F00;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+        
+        /* Logo styling */
+        .logo {
+            width: 100px;
+            height: auto;
+            display: block;
+            margin: 0 auto 10px;
+        }
+        
+        .menu-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .menu-item {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
             overflow: hidden;
-            position: fixed;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
-        iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .menu-item a {
+            display: block;
+            padding: 20px;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .menu-item h2 {
+            margin: 0;
+            color: #FF6F00;
+            font-size: 1.5rem;
+        }
+        
+        .menu-item p {
+            margin: 10px 0 0;
+            color: #666;
+        }
+        
+        .menu-icon {
+            width: 40px;
+            height: 40px;
+            float: left;
+            margin-right: 15px;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            
+            .menu-container {
+                padding: 10px;
+            }
+            
+            .menu-item h2 {
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <iframe src="https://roshanvijay37.github.io/BelvaiBooth/" allowfullscreen></iframe>
+    <header>
+        <img src="bjplogo.svg" alt="BJP Logo" class="logo">
+        <h1>Belvai BJP Information Portal</h1>
+    </header>
+    
+    <div class="menu-container">
+        <div class="menu-item">
+            <a href="belvai_panchayat_pramukh.html">
+                <img src="https://cdn-icons-png.flaticon.com/512/1256/1256650.png" alt="Pramukh Icon" class="menu-icon">
+                <h2>Panchayat Pramukh Information</h2>
+                <p>Contact details of all Panchayat Pramukhs in Belvai</p>
+            </a>
+        </div>
+        
+        <div class="menu-item">
+            <a href="belvaiboothleaders.html">
+                <img src="https://cdn-icons-png.flaticon.com/512/3126/3126647.png" alt="Booth Icon" class="menu-icon">
+                <h2>Booth Leaders Information</h2>
+                <p>Contact details of Booth Adyakshas and Kaaryadarshis</p>
+            </a>
+        </div>
+    </div>
+    
+    <footer>
+        <h4>Designed and Developed with ❤️ by 
+        <a href="https://roshanvijay.com" target="_blank" style="text-decoration: none; color: #fff;">
+            <b>Roshan Vijay Shetty</b>
+        </a></h4>
+    </footer>
 </body>
 </html>
