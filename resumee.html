@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Roshan Vijay — Resume</title>
+<style>
+  /* --- Page & typography --- */
+  :root{
+    --accent: #0f4761;
+    --muted: #667085;
+    --bg: #f6f8fb;
+    --paper-width: 800px;
+    --gutter: 28px;
+  }
+  html,body{height:100%;margin:0;background:var(--bg);font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;color:#111;}
+  .wrap{display:flex;align-items:flex-start;justify-content:center;padding:36px;}
+  .card{
+    width:var(--paper-width);
+    background:linear-gradient(180deg, #fff 0%, #fff 100%);
+    box-shadow:0 10px 30px rgba(16,24,40,0.08);
+    border-radius:10px;
+    padding:28px 36px;
+    box-sizing:border-box;
+    color:#0b1220;
+  }
+  header{display:flex;flex-direction:column;gap:6px;border-bottom:1px solid #eef2f7;padding-bottom:18px;margin-bottom:18px}
+  h1{font-size:28px;margin:0;color:var(--accent);letter-spacing:-0.2px}
+  .title{font-size:13px;color:#1f2937;margin-top:2px}
+  .contact{font-size:12px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+  .summary{font-size:12.4px;color:#243244;text-align:justify;margin-top:10px;line-height:1.45}
+  /* --- Sections --- */
+  section{margin:16px 0}
+  .section-title{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:0.6px;margin-bottom:10px}
+  .skills, .tags, .techstack{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{background:#f1f5f9;padding:6px 10px;border-radius:999px;font-size:12px;color:#112;box-shadow:inset 0 -1px 0 rgba(0,0,0,0.02)}
+  .job{margin-bottom:12px}
+  .job .meta{font-weight:700;color:#0b1220}
+  .job .submeta{font-size:12px;color:var(--muted);margin-bottom:8px}
+  ul.responsibilities{margin:8px 0 0 18px;padding:0;color:#263241}
+  ul.responsibilities li{margin:6px 0}
+  .achievements p{margin:8px 0}
+  .two-col{display:flex;gap:16px}
+  .col{flex:1}
+  /* --- Footer small print (hidden in PDF header area) --- */
+  .controls{display:flex;justify-content:flex-end;gap:10px;margin-bottom:16px}
+  .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600}
+  .btn.ghost{background:#fff;color:var(--accent);border:1px solid rgba(15,71,97,0.12)}
+  /* --- Print styles --- */
+  @page { size: A4; margin: 18mm; }
+  @media print {
+    html,body{background: #fff}
+    .wrap{padding:0}
+    .card{width:100%;box-shadow:none;border-radius:0;padding:0;margin:0}
+    .controls{display:none}
+    h1{font-size:22px}
+    .title{font-size:11px}
+    .contact{font-size:11px}
+    .summary{font-size:11px}
+    .chip{box-shadow:none}
+    /* ensure colors print as expected */
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  /* small responsive tweaks */
+  @media (max-width:880px){
+    :root{--paper-width:680px}
+    .card{padding:20px}
+  }
+  @media (max-width:520px){
+    .wrap{padding:12px}
+    :root{--paper-width:100%}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="main" aria-label="Resume — Roshan Vijay">
+      <div class="controls">
+        <button class="btn" id="printBtn" title="Download PDF (opens Print dialog)">Download PDF</button>
+      </div>
+
+      <header>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
+          <div>
+            <h1>Roshan Vijay</h1>
+            <div class="title">Backend Developer · Java · JavaScript · Security</div>
+            <div class="contact" style="margin-top:10px">
+              <div> Moodabidri, India</div>
+              <div> 7349495469</div>
+              <div> roshanshetty010100@gmail.com</div>
+            </div>
+          </div>
+
+          <div style="max-width:360px;font-size:12px;color:var(--muted);text-align:right">
+            <div style="font-weight:600;color:#0b1220;margin-bottom:8px">Profile</div>
+            <div class="summary">
+              Backend developer with 4+ years in microservices, API development, and security practices. Experience with security scanning tools, vulnerability assessment, and building secure backend architectures.
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section aria-labelledby="skills-title">
+          <div class="section-title" id="skills-title">Skills &amp; Tools</div>
+          <div class="skills">
+            <span class="chip">C# / .NET / Java</span>
+            <span class="chip">JavaScript (ES6+)</span>
+            <span class="chip">Security Best Practices</span>
+            <span class="chip">Static Analysis Tools</span>
+            <span class="chip">Vulnerability Assessment</span>
+            <span class="chip">RESTful / WebSocket APIs</span>
+            <span class="chip">PostgreSQL / SQL Server</span>
+            <span class="chip">Docker / Linux</span>
+            <span class="chip">Code Review & Mentoring</span>
+            <span class="chip">CI/CD Security Integration</span>
+          </div>
+        </section>
+
+        <section aria-labelledby="strength-title">
+          <div class="section-title" id="strength-title">Workplace Strengths</div>
+          <div class="tags">
+            <span class="chip">Security Code Review Lead</span>
+            <span class="chip">Vulnerability Assessment</span>
+            <span class="chip">DevSecOps Champion</span>
+            <span class="chip">Security Mentor / Code Quality</span>
+          </div>
+        </section>
+
+        <section aria-labelledby="exp-title">
+          <div class="section-title" id="exp-title">Professional Experience</div>
+
+          <div class="job">
+            <div class="meta">Software Engineer — Cornerstone OnDemand</div>
+            <div class="submeta">Pune • Jun 2022 – Present</div>
+            <ul class="responsibilities">
+              <li>Developed backend services using <strong>Java, Spring Boot, C#, .NET, and JavaScript</strong> across multiple product modules and integration projects.</li>
+              <li>Worked with <strong>security scanning tools including Black Duck</strong> to identify vulnerabilities in dependencies and proprietary code during CI/CD processes.</li>
+              <li>Participated in <strong>security audit response</strong> - collaborated with security team to identify and remediate IDOR vulnerabilities, using automated tools to scan codebase.</li>
+              <li>Architected <strong>RESTful APIs and WebSocket services</strong> with authentication, authorization, and input validation following security best practices.</li>
+              <li>Built the <strong>Edge Import Framework</strong> with comprehensive validation, security checks, and performance optimizations adopted across teams.</li>
+              <li>Conducted thorough <strong>code reviews</strong> with focus on security vulnerabilities, performance, and maintainability standards.</li>
+              <li>Gained experience with <strong>PostgreSQL</strong> through data migration projects while maintaining primary expertise in SQL Server environments.</li>
+              <li>Mentored junior developers on secure coding practices and established code review guidelines for the team.</li>
+            </ul>
+          </div>
+
+          <div class="job">
+            <div class="meta">Associate Software Engineer — Allstate</div>
+            <div class="submeta">Bangalore • Sep 2021 – Jun 2022</div>
+            <ul class="responsibilities">
+              <li>Developed backend components using <strong>C#, .NET, and JavaScript</strong> with growing familiarity in <strong>Java and Spring Framework</strong>.</li>
+              <li>Implemented <strong>RESTful APIs</strong> with proper authentication and authorization mechanisms following security guidelines.</li>
+              <li>Worked on the <strong>Agent module</strong> implementing secure login flows and protected interfaces for sensitive insurance data.</li>
+              <li>Gained experience with <strong>PostgreSQL</strong> optimization and secure query patterns alongside existing SQL Server expertise.</li>
+              <li>Collaborated with security teams on vulnerability assessment and participated in security testing initiatives.</li>
+              <li>Conducted code reviews focusing on security best practices and integrated static analysis tools into development workflow.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section aria-labelledby="ach-title">
+          <div class="section-title" id="ach-title">Key Achievements</div>
+          <div class="achievements">
+            <p><strong>Security Integration Initiative</strong> — Collaborated on integrating security scanning tools into development workflow, contributing to improved vulnerability detection processes.</p>
+            <p><strong>Vulnerability Response Contribution</strong> — Participated in security audit response team, helping identify and remediate access control issues across multiple application modules.</p>
+            <p><strong>Secure Framework Development</strong> — Led design of Edge Import Framework with built-in security validations and comprehensive error handling.</p>
+            <p><strong>Cross-Platform Learning</strong> — Expanded technical skills from .NET to Java ecosystem while maintaining focus on secure development practices.</p>
+          </div>
+        </section>
+
+        <section aria-labelledby="edu-title">
+          <div class="section-title" id="edu-title">Education &amp; Training</div>
+          <div style="margin-bottom:8px">
+            <div style="font-weight:700">Bachelor of Engineering (B.E.)</div>
+            <div style="font-size:13px;color:var(--muted)">Mangalore Institute of Technology &amp; Engineering — Moodabidri • 2017–2021</div>
+          </div>
+          <div>
+            <div style="font-weight:700">Security Training & Certifications</div>
+            <div style="font-size:13px;color:var(--muted)">Application Security Fundamentals, OWASP Top 10, Secure Code Review — Completed</div>
+          </div>
+        </section>
+
+        <section aria-labelledby="tech-title">
+          <div class="section-title" id="tech-title">Tech Stack (concise)</div>
+          <div class="techstack" style="margin-top:6px">
+            <span class="chip">C#/.NET</span>
+            <span class="chip">Java</span>
+            <span class="chip">JavaScript</span>
+            <span class="chip">Spring Boot</span>
+            <span class="chip">PostgreSQL</span>
+            <span class="chip">Security Tools</span>
+            <span class="chip">Docker</span>
+            <span class="chip">Linux</span>
+            <span class="chip">REST APIs</span>
+            <span class="chip">Code Review</span>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+<script>
+  // Print button
+  document.getElementById('printBtn').addEventListener('click', function(){
+    window.print();
+  });
+  // Accessibility: allow Ctrl+P hint (we don't override native behavior)
+</script>
+</body>
+</html>
