@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cover Letter — Roshan Vijay — Apple</title>
+<style>
+  :root{
+    --accent: #0f4761;
+    --muted: #64748b;
+    --bg: #f6f8fb;
+    --paper-width: 800px;
+  }
+  html,body{height:100%;margin:0;background:var(--bg);font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;color:#111;}
+  .wrap{display:flex;align-items:flex-start;justify-content:center;padding:36px;}
+  .card{
+    width:var(--paper-width);
+    background:#fff;
+    box-shadow:0 10px 30px rgba(16,24,40,0.08);
+    border-radius:10px;
+    padding:48px 56px;
+    box-sizing:border-box;
+    color:#0b1220;
+  }
+  .controls{display:flex;justify-content:flex-end;gap:10px;margin-bottom:20px}
+  .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600;font-size:13px}
+  .header{margin-bottom:32px}
+  .name{font-size:20px;font-weight:700;color:#0b1220;margin-bottom:4px}
+  .contact-info{font-size:13px;color:var(--muted);line-height:1.6}
+  .date{font-size:13px;color:var(--muted);margin:24px 0}
+  .recipient{font-size:13px;color:#0b1220;line-height:1.6;margin-bottom:24px}
+  .recipient strong{font-weight:600}
+  .salutation{font-size:14px;color:#0b1220;margin-bottom:20px}
+  .body-text{font-size:13.5px;color:#243244;line-height:1.7;margin-bottom:18px;text-align:justify}
+  .body-text strong{font-weight:600;color:#0b1220}
+  .closing{font-size:14px;color:#0b1220;margin-top:28px;margin-bottom:8px}
+  .signature{font-size:14px;color:#0b1220;font-weight:600}
+  
+  @page{size:A4;margin:18mm}
+  @media print{
+    html,body{background:#fff}
+    .wrap{padding:0}
+    .card{width:100%;box-shadow:none;border-radius:0;padding:0;margin:0}
+    .controls{display:none}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+  @media (max-width:880px){
+    :root{--paper-width:680px}
+    .card{padding:32px}
+  }
+  @media (max-width:520px){
+    .wrap{padding:12px}
+    :root{--paper-width:100%}
+    .card{padding:24px}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="controls">
+        <button class="btn" id="printBtn">Download PDF</button>
+      </div>
+
+      <div class="header">
+        <div class="name">Roshan Vijay</div>
+        <div class="contact-info">
+          Moodabidri, India<br>
+          7349495469<br>
+          roshanshetty010100@gmail.com
+        </div>
+      </div>
+
+      <div class="date">Date: 28-01-2026</div>
+
+      <div class="recipient">
+        <strong>Hiring Manager</strong><br>
+        Apple Inc.
+      </div>
+
+      <div class="salutation">Dear Hiring Manager,</div>
+
+      <div class="body-text">
+        I am writing to express my enthusiasm for the Software Engineer - Java, Spring Boot and Microservices position at Apple. With over 4 years of specialized experience building enterprise-grade backend systems using Java, Spring Boot, and microservices architecture, I am excited about the opportunity to contribute to Apple's world-class engineering team and help build products that millions of users rely on daily.
+      </div>
+
+      <div class="body-text">
+        <strong>Microservices Architecture & Spring Boot Expertise:</strong> At Cornerstone OnDemand, I have architected and developed scalable microservices-based backend systems using Java and Spring Boot. I designed the Edge Import Framework—a robust, production-grade solution that handles enterprise-scale data ingestion with comprehensive validation, security checks, and performance optimizations. This framework has been adopted across multiple teams, demonstrating my ability to build reusable, high-quality solutions that scale.
+      </div>
+
+      <div class="body-text">
+        <strong>RESTful API Design & Security:</strong> I have extensive experience designing and implementing secure RESTful APIs with advanced error handling, input validation, and authentication mechanisms. I've actively participated in security audit responses, collaborating with security teams to identify and remediate vulnerabilities using automated scanning tools. My focus on security-first development aligns with Apple's commitment to user privacy and data protection.
+      </div>
+
+      <div class="body-text">
+        <strong>Code Quality & Best Practices:</strong> As a code review lead for my team, I ensure adherence to best practices, maintain high code quality standards, and mentor developers on secure coding practices. I believe in writing clean, maintainable code that stands the test of time—a philosophy that resonates with Apple's engineering excellence.
+      </div>
+
+      <div class="body-text">
+        <strong>Innovation & AI Integration:</strong> I've successfully led hackathon projects from concept to production, including an AI-powered feature that generates goal descriptions, significantly improving user experience. My expertise in integrating GenAI solutions into production systems demonstrates my ability to innovate and leverage cutting-edge technologies to solve real-world problems.
+      </div>
+
+      <div class="body-text">
+        <strong>Full-Stack Capabilities:</strong> Beyond backend development, I bring experience with React and Angular for building interactive user interfaces, along with proficiency in Docker, Kubernetes, AWS, and CI/CD pipelines. This full-stack perspective enables me to understand the complete product lifecycle and collaborate effectively across teams.
+      </div>
+
+      <div class="body-text">
+        I am deeply inspired by Apple's commitment to innovation, design excellence, and creating products that enrich people's lives. The opportunity to work on systems that power Apple's ecosystem and contribute to products used by millions worldwide is incredibly motivating. I am confident that my technical expertise, passion for quality, and collaborative approach would make me a valuable addition to your engineering team.
+      </div>
+
+      <div class="body-text">
+        I would welcome the opportunity to discuss how my experience in Java, Spring Boot, and microservices architecture can contribute to Apple's continued success. Thank you for considering my application.
+      </div>
+
+      <div class="closing">Sincerely,</div>
+      <div class="signature">Roshan Vijay</div>
+    </div>
+  </div>
+
+<script>
+  document.getElementById('printBtn').addEventListener('click', function(){
+    window.print();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Roshan Vijay — Resume</title>
+<style>
+  /* --- Page & typography --- */
+  :root{
+    --accent: #0f4761;
+    --muted: #667085;
+    --bg: #f6f8fb;
+    --paper-width: 800px;
+    --gutter: 28px;
+  }
+  html,body{height:100%;margin:0;background:var(--bg);font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;color:#111;}
+  .wrap{display:flex;align-items:flex-start;justify-content:center;padding:36px;}
+  .card{
+    width:var(--paper-width);
+    background:linear-gradient(180deg, #fff 0%, #fff 100%);
+    box-shadow:0 10px 30px rgba(16,24,40,0.08);
+    border-radius:10px;
+    padding:28px 36px;
+    box-sizing:border-box;
+    color:#0b1220;
+  }
+  header{display:flex;flex-direction:column;gap:6px;border-bottom:1px solid #eef2f7;padding-bottom:18px;margin-bottom:18px}
+  h1{font-size:28px;margin:0;color:var(--accent);letter-spacing:-0.2px}
+  .title{font-size:13px;color:#1f2937;margin-top:2px}
+  .contact{font-size:12px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+  .summary{font-size:12.4px;color:#243244;text-align:justify;margin-top:10px;line-height:1.45}
+  /* --- Sections --- */
+  section{margin:16px 0}
+  .section-title{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:0.6px;margin-bottom:10px}
+  .skills, .tags, .techstack{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{background:#f1f5f9;padding:6px 10px;border-radius:999px;font-size:12px;color:#112;box-shadow:inset 0 -1px 0 rgba(0,0,0,0.02)}
+  .job{margin-bottom:12px}
+  .job .meta{font-weight:700;color:#0b1220}
+  .job .submeta{font-size:12px;color:var(--muted);margin-bottom:8px}
+  ul.responsibilities{margin:8px 0 0 18px;padding:0;color:#263241}
+  ul.responsibilities li{margin:6px 0}
+  .achievements p{margin:8px 0}
+  .two-col{display:flex;gap:16px}
+  .col{flex:1}
+  /* --- Footer small print (hidden in PDF header area) --- */
+  .controls{display:flex;justify-content:flex-end;gap:10px;margin-bottom:16px}
+  .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600}
+  .btn.ghost{background:#fff;color:var(--accent);border:1px solid rgba(15,71,97,0.12)}
+  /* --- Print styles --- */
+  @page { size: A4; margin: 18mm; }
+  @media print {
+    html,body{background: #fff}
+    .wrap{padding:0}
+    .card{width:100%;box-shadow:none;border-radius:0;padding:0;margin:0}
+    .controls{display:none}
+    h1{font-size:22px}
+    .title{font-size:11px}
+    .contact{font-size:11px}
+    .summary{font-size:11px}
+    .chip{box-shadow:none}
+    /* ensure colors print as expected */
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  /* small responsive tweaks */
+  @media (max-width:880px){
+    :root{--paper-width:680px}
+    .card{padding:20px}
+  }
+  @media (max-width:520px){
+    .wrap{padding:12px}
+    :root{--paper-width:100%}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="main" aria-label="Resume — Roshan Vijay">
+      <div class="controls">
+        <button class="btn" id="printBtn" title="Download PDF (opens Print dialog)">Download PDF</button>
+      </div>
+
+      <header>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
+          <div>
+            <h1>Roshan Vijay</h1>
+            <div class="title">Full Stack Developer</div>
+            <div class="contact" style="margin-top:10px">
+              <div>📍 Moodabidri, India</div>
+              <div>📞 7349495469</div>
+              <div>✉️ roshanshetty010100@gmail.com</div>
+            </div>
+          </div>
+
+          <div style="max-width:360px;font-size:12px;color:var(--muted);text-align:right">
+            <div style="font-weight:600;color:#0b1220;margin-bottom:8px">Profile</div>
+            <div class="summary">
+              Full Stack Developer with 4+ years of experience building scalable web applications using .NET Core, C#, and Angular. Proven track record in designing RESTful APIs, developing responsive UIs, and working with SQL Server databases. Strong background in Agile development, code reviews, and leading technical initiatives from concept to production.
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section aria-labelledby="skills-title">
+          <div class="section-title" id="skills-title">Technical Skills</div>
+          <div class="skills">
+            <span class="chip">.NET Core / C#</span>
+            <span class="chip">Angular / TypeScript</span>
+            <span class="chip">HTML5 / CSS3</span>
+            <span class="chip">RESTful APIs</span>
+            <span class="chip">Entity Framework Core</span>
+            <span class="chip">SQL Server</span>
+            <span class="chip">Azure (Cloud Services)</span>
+            <span class="chip">Microservices Architecture</span>
+            <span class="chip">RabbitMQ</span>
+            <span class="chip">Docker / Kubernetes</span>
+            <span class="chip">Git / CI/CD</span>
+            <span class="chip">Agile / Scrum</span>
+          </div>
+        </section>
+
+        <section aria-labelledby="strength-title">
+          <div class="section-title" id="strength-title">Core Competencies</div>
+          <div class="tags">
+            <span class="chip">Full Stack Development</span>
+            <span class="chip">API Design & Integration</span>
+            <span class="chip">Cross-Browser Compatibility</span>
+            <span class="chip">Performance Optimization</span>
+            <span class="chip">Code Review & Quality</span>
+            <span class="chip">Team Leadership</span>
+            <span class="chip">Security Best Practices</span>
+            <span class="chip">AI/ML Integration</span>
+          </div>
+        </section>
+
+        <section aria-labelledby="edu-title">
+          <div class="section-title" id="edu-title">Education</div>
+          <div style="margin-bottom:8px">
+            <div style="font-weight:700">Bachelor of Engineering (B.E.) in Information Science and Engineering</div>
+            <div style="font-size:13px;color:var(--muted)">Mangalore Institute of Technology & Engineering — Moodabidri • 2017–2021</div>
+          </div>
+        </section>
+
+        <section aria-labelledby="exp-title">
+          <div class="section-title" id="exp-title">Professional Experience</div>
+
+          <div class="job">
+            <div class="meta">Software Engineer — Cornerstone OnDemand</div>
+            <div class="submeta">Pune • Jun 2022 – Present</div>
+            <ul class="responsibilities">
+              <li>Designed and developed scalable web applications using <strong>.NET Core, C#</strong>, and <strong>Entity Framework Core</strong> for the Performance Goals module</li>
+              <li>Built responsive, high-performance UIs with <strong>Angular, TypeScript, HTML5, and CSS3</strong>, ensuring cross-browser compatibility and optimal user experience</li>
+              <li>Created and integrated <strong>RESTful APIs</strong> with backend services, implementing robust error handling and security measures</li>
+              <li>Worked extensively with <strong>SQL Server</strong> for database design, optimization, and data management</li>
+              <li>Led the migration of Performance Goals component from monolith to <strong>microservices architecture</strong>, implementing GraphQL for efficient data querying</li>
+              <li>Architected and led development of <strong>Perf-Goals-Import microservice</strong> for bulk goal creation, using <strong>RabbitMQ</strong> for async message processing and handling Excel data imports</li>
+              <li>Identified and fixed security vulnerabilities (IDOR) by conducting comprehensive code reviews across multiple service files, creating documentation and best practices for the team</li>
+              <li>Led a team of developers in building an <strong>AI-powered goal description generator</strong> that went from hackathon project to production, improving user productivity</li>
+              <li>Conducted regular <strong>code reviews</strong> in Agile sprints, ensuring high code quality, security compliance, and adherence to best practices</li>
+              <li>Mentored team members on AI coding tools and modern development practices, improving team efficiency</li>
+              <li>Developed a localization tool that reduced manual work and saved developer time significantly</li>
+              <li>Currently leading development of AI-powered comment generation tool and MCP integration for natural language API access</li>
+              <li>Working on integration of Skills component with Goals component, coordinating with cross-functional teams</li>
+            </ul>
+          </div>
+
+          <div class="job">
+            <div class="meta">Associate Software Engineer — Allstate</div>
+            <div class="submeta">Bangalore • Sep 2021 – Jun 2022</div>
+            <ul class="responsibilities">
+              <li>Developed backend services and <strong>RESTful APIs</strong> using <strong>C#, .NET</strong> for Agent Portal of Allstate Insurance Company</li>
+              <li>Collaborated with cross-functional teams in <strong>Agile environment</strong> to deliver features on schedule</li>
+              <li>Supported end-to-end implementation of <strong>Adobe Analytics</strong>, transforming user interactions into actionable business insights</li>
+              <li>Participated in code reviews and maintained high code quality standards</li>
+            </ul>
+          </div>
+        </section>
+
+        <section aria-labelledby="projects-title">
+          <div class="section-title" id="projects-title">Key Projects & Achievements</div>
+          <ul class="responsibilities">
+            <li><strong>Edge Import Framework:</strong> Built comprehensive bulk data import system with validation, security checks, and performance optimizations adopted across multiple teams</li>
+            <li><strong>Microservices Migration:</strong> Successfully migrated monolithic application to microservices, improving scalability and maintainability</li>
+            <li><strong>AI Integration:</strong> Led multiple AI-powered features from concept to production, including goal description generation and comment rephrasing tools</li>
+            <li><strong>Security Enhancement:</strong> Proactively identified and fixed security vulnerabilities before they could be exploited, creating security guidelines for the team</li>
+          </ul>
+        </section>
+
+
+      </main>
+    </div>
+  </div>
+
+<script>
+  // Print button
+  document.getElementById('printBtn').addEventListener('click', function(){
+    window.print();
+  });
+  // Accessibility: allow Ctrl+P hint (we don't override native behavior)
+</script>
+</body>
+</html>

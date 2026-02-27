@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cover Letter — Roshan Vijay</title>
+<style>
+  :root{
+    --accent: #0f4761;
+    --muted: #64748b;
+    --bg: #f6f8fb;
+    --paper-width: 800px;
+  }
+  html,body{height:100%;margin:0;background:var(--bg);font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;color:#111;}
+  .wrap{display:flex;align-items:flex-start;justify-content:center;padding:36px;}
+  .card{
+    width:var(--paper-width);
+    background:#fff;
+    box-shadow:0 10px 30px rgba(16,24,40,0.08);
+    border-radius:10px;
+    padding:48px 56px;
+    box-sizing:border-box;
+    color:#0b1220;
+  }
+  .controls{display:flex;justify-content:flex-end;gap:10px;margin-bottom:20px}
+  .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600;font-size:13px}
+  .header{margin-bottom:32px}
+  .name{font-size:20px;font-weight:700;color:#0b1220;margin-bottom:4px}
+  .contact-info{font-size:13px;color:var(--muted);line-height:1.6}
+  .date{font-size:13px;color:var(--muted);margin:24px 0}
+  .recipient{font-size:13px;color:#0b1220;line-height:1.6;margin-bottom:24px}
+  .recipient strong{font-weight:600}
+  .salutation{font-size:14px;color:#0b1220;margin-bottom:20px}
+  .body-text{font-size:13.5px;color:#243244;line-height:1.7;margin-bottom:18px;text-align:justify}
+  .body-text strong{font-weight:600;color:#0b1220}
+  .closing{font-size:14px;color:#0b1220;margin-top:28px;margin-bottom:8px}
+  .signature{font-size:14px;color:#0b1220;font-weight:600}
+  
+  @page{size:A4;margin:18mm}
+  @media print{
+    html,body{background:#fff}
+    .wrap{padding:0}
+    .card{width:100%;box-shadow:none;border-radius:0;padding:0;margin:0}
+    .controls{display:none}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+  @media (max-width:880px){
+    :root{--paper-width:680px}
+    .card{padding:32px}
+  }
+  @media (max-width:520px){
+    .wrap{padding:12px}
+    :root{--paper-width:100%}
+    .card{padding:24px}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="controls">
+        <button class="btn" id="printBtn">Download PDF</button>
+      </div>
+
+      <div class="header">
+        <div class="name">Roshan Vijay</div>
+        <div class="contact-info">
+          Moodabidri, India<br>
+          7349495469<br>
+          roshanshetty010100@gmail.com
+        </div>
+      </div>
+
+      <div class="date">Date: 28-01-2026</div>
+
+      <div class="recipient">
+        <strong>Hiring Manager</strong><br>
+        Apple
+      </div>
+
+      <div class="salutation">Dear Hiring Manager,</div>
+
+      <div class="body-text">
+        I am writing to express my strong interest in the Software Engineer position at Honeywell. With over 4 years of hands-on experience in Java, Spring Boot, microservices architecture, and modern front-end frameworks, I am excited about the opportunity to contribute to Honeywell's mission of solving complex challenges in automation, aviation, and energy transition.
+      </div>
+
+      <div class="body-text">
+        My background aligns exceptionally well with your requirements:
+      </div>
+
+      <div class="body-text">
+        <strong>Technical Leadership & Architecture:</strong> At Cornerstone OnDemand, I have demonstrated technical leadership by architecting the Edge Import Framework—a comprehensive solution adopted across multiple teams. I've led security audit responses, conducted code reviews, and mentored team members on AI-powered development practices, showcasing the leadership qualities essential for this role.
+      </div>
+
+      <div class="body-text">
+        <strong>Core Technology Stack:</strong> I bring extensive expertise in Java, Spring Boot, and microservices-based architecture, having developed scalable backend services across multiple enterprise applications. My proficiency extends to containerization with Docker and Kubernetes, RESTful API design, and both Angular and React for front-end development—directly matching your technical requirements.
+      </div>
+
+      <div class="body-text">
+        <strong>Cloud & DevOps:</strong> My experience with AWS, combined with hands-on knowledge of CI/CD security integration and container orchestration, positions me well to contribute to your cloud-based initiatives. I've successfully implemented automated deployment pipelines and security best practices throughout the development lifecycle.
+      </div>
+
+      <div class="body-text">
+        <strong>Agile & Database Expertise:</strong> Working in Agile environments throughout my career, I've collaborated effectively with cross-functional teams while managing complex database operations using SQL Server and implementing robust data validation and integrity checks for enterprise-scale applications.
+      </div>
+
+      <div class="body-text">
+        <strong>Innovation & Problem-Solving:</strong> I've successfully led hackathon projects from concept to production, including an AI-powered feature that enhanced user experience in a production environment. This demonstrates my ability to identify opportunities, innovate, and deliver tangible business value—qualities that align with Honeywell's focus on actionable solutions.
+      </div>
+
+      <div class="body-text">
+        I am particularly drawn to Honeywell's commitment to making the world smarter, safer, and more sustainable through technology. The opportunity to work on complex automation challenges and contribute to critical industries like aviation and energy transition is incredibly motivating.
+      </div>
+
+      <div class="body-text">
+        I would welcome the opportunity to discuss how my technical expertise, leadership experience, and passion for innovation can contribute to Honeywell's continued success. Thank you for considering my application.
+      </div>
+
+      <div class="closing">Sincerely,</div>
+      <div class="signature">Roshan Vijay</div>
+    </div>
+  </div>
+
+<script>
+  document.getElementById('printBtn').addEventListener('click', function(){
+    window.print();
+  });
+</script>
+</body>
+</html>
