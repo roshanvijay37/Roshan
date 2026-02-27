@@ -1,0 +1,29 @@
+Cornerstone -
+
+Developed backend services RESTful APIs using C#, .NET, Entity Framework across Performance modules Goals Component of Cornerstone OnDemand
+
+Built and maintained interactive UI components in Angular and Typescript, HTML5, CSS3
+
+We used SQL Server for Database
+
+Worked on the migration of Performance Goals component from Monolith to Microservice learned about GraphQL and Used D
+
+The security team had hired hackers to check if there were any bugs in our system and they found 2 IDORs, I used AI Tool Cody to run through multiple Service files related to our component to check if there are any similar Security Loopholes and Created wiki around the same and then we divided the work to fix those bugs before the hackers found them.
+
+I had prepared a hackathon project to auto generate goal descriptions based on user context like his Designation and skills, This idea was shortlisted as a good idea and was taken up and is now in production, I was the lead of the development of this project for a team of 3
+
+Led the team in creation of a Microservice called Perf-Goals-Import which was used to Bulk create Goals, Here we used RabbitMQ Message broker for async communication of the details that come to us in excel sheet and send them as messages
+
+Gave frequent KTs to the team regarding AI coding tools and AI Agents like Cody and AmazonQ about the proper and best usage and best practices
+
+Created a localization tool which saves manual work and developer time as a part of the Innovation project
+
+Conducted thorough Code reviews for the team to ensure high-quality code, follow security best practices
+
+Currently Leading the team in Creation of a AI tool to generate/rephrase Goal Comments and 
+Working on Building a MCP tool which would help our clients to call our Public APIs in Natural Human Understandable language
+Working on Integration of Skills Component of Performance module with Goals Component
+
+Allstate 
+Developed backend services RESTful APIs using C#, .NET for Agent Portal of Allstate Insurance Company
+Collaborated with other teams and Supported the end-to-end implementation of Adobe Analytics at Allstate, helping the team transform raw user interactions into actionable business insights.
