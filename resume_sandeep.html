@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sandeep S — Resume</title>
+<style>
+  /* --- Page & typography --- */
+  :root{
+    --accent: #0f4761;
+    --muted: #667085;
+    --bg: #f6f8fb;
+    --paper-width: 800px;
+    --gutter: 28px;
+  }
+  html,body{height:100%;margin:0;background:var(--bg);font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;color:#111;}
+  .wrap{display:flex;align-items:flex-start;justify-content:center;padding:36px;}
+  .card{
+    width:var(--paper-width);
+    background:linear-gradient(180deg, #fff 0%, #fff 100%);
+    box-shadow:0 10px 30px rgba(16,24,40,0.08);
+    border-radius:10px;
+    padding:28px 36px;
+    box-sizing:border-box;
+    color:#0b1220;
+  }
+  header{display:flex;flex-direction:column;gap:6px;border-bottom:1px solid #eef2f7;padding-bottom:18px;margin-bottom:18px}
+  h1{font-size:28px;margin:0;color:var(--accent);letter-spacing:-0.2px}
+  .title{font-size:13px;color:#1f2937;margin-top:2px}
+  .contact{font-size:12px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+  .summary{font-size:12.4px;color:#243244;text-align:justify;margin-top:10px;line-height:1.45}
+  /* --- Sections --- */
+  section{margin:16px 0}
+  .section-title{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:0.6px;margin-bottom:10px}
+  .skills, .tags, .techstack{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{background:#f1f5f9;padding:6px 10px;border-radius:999px;font-size:12px;color:#112;box-shadow:inset 0 -1px 0 rgba(0,0,0,0.02)}
+  .job{margin-bottom:12px}
+  .job .meta{font-weight:700;color:#0b1220}
+  .job .submeta{font-size:12px;color:var(--muted);margin-bottom:8px}
+  ul.responsibilities{margin:8px 0 0 18px;padding:0;color:#263241}
+  ul.responsibilities li{margin:6px 0}
+  .achievements p{margin:8px 0}
+  .two-col{display:flex;gap:16px}
+  .col{flex:1}
+  /* --- Footer small print (hidden in PDF header area) --- */
+  .controls{display:flex;justify-content:flex-end;gap:10px;margin-bottom:16px}
+  .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600}
+  .btn.ghost{background:#fff;color:var(--accent);border:1px solid rgba(15,71,97,0.12)}
+  /* --- Print styles --- */
+  @page { size: A4; margin: 18mm; }
+  @media print {
+    html,body{background: #fff}
+    .wrap{padding:0}
+    .card{width:100%;box-shadow:none;border-radius:0;padding:0;margin:0}
+    .controls{display:none}
+    h1{font-size:22px}
+    .title{font-size:11px}
+    .contact{font-size:11px}
+    .summary{font-size:11px}
+    .chip{box-shadow:none}
+    /* ensure colors print as expected */
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  /* small responsive tweaks */
+  @media (max-width:880px){
+    :root{--paper-width:680px}
+    .card{padding:20px}
+  }
+  @media (max-width:520px){
+    .wrap{padding:12px}
+    :root{--paper-width:100%}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="main" aria-label="Resume — Sandeep S">
+      <div class="controls">
+        <button class="btn" id="printBtn" title="Download PDF (opens Print dialog)">Download PDF</button>
+      </div>
+
+      <header>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
+          <div>
+            <h1>Sandeep S</h1>
+            <div class="title">HR Service Delivery Analyst</div>
+            <div class="contact" style="margin-top:10px">
+              <div>📍 Karnataka, India</div>
+              <div>📞 8618766148</div>
+              <div>✉️ sandeepkumar31597@gmail.com</div>
+            </div>
+          </div>
+
+          <div style="max-width:360px;font-size:12px;color:var(--muted);text-align:right">
+            <div style="font-weight:600;color:#0b1220;margin-bottom:8px">Profile</div>
+            <div class="summary">
+              HR professional with 5+ years of experience delivering seamless HR operations across employee lifecycle management, HRIS administration, and service delivery excellence. Proven expertise in Workday, ServiceNow, and SAP platforms with a strong focus on process optimization, compliance, and stakeholder satisfaction. Passionate about enhancing employee experience through efficient query resolution, data-driven insights, and continuous improvement of HR practices in dynamic, collaborative environments.
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section aria-labelledby="skills-title">
+          <div class="section-title" id="skills-title">Technical Skills</div>
+          <div class="skills">
+            <span class="chip">Workday HCM</span>
+            <span class="chip">ServiceNow</span>
+            <span class="chip">SAP HR</span>
+            <span class="chip">Workday EIB</span>
+            <span class="chip">SharePoint</span>
+            <span class="chip">ARIBA / Buy Now</span>
+            <span class="chip">HRIS Administration</span>
+            <span class="chip">MS Excel / Advanced Analytics</span>
+            <span class="chip">MS Word / PowerPoint</span>
+            <span class="chip">Data Management & Reporting</span>
+            <span class="chip">HR Service Delivery</span>
+            <span class="chip">Process Documentation</span>
+          </div>
+        </section>
+
+        <section aria-labelledby="strength-title">
+          <div class="section-title" id="strength-title">Core Competencies</div>
+          <div class="tags">
+            <span class="chip">HR Operations & Service Delivery</span>
+            <span class="chip">Employee Lifecycle Management</span>
+            <span class="chip">HRIS Systems & Optimization</span>
+            <span class="chip">Compliance & Labor Law</span>
+            <span class="chip">Data Analysis & Reporting</span>
+            <span class="chip">Process Improvement</span>
+            <span class="chip">Stakeholder Management</span>
+            <span class="chip">Cross-Functional Collaboration</span>
+            <span class="chip">Quality Management</span>
+          </div>
+        </section>
+
+        <section aria-labelledby="edu-title">
+          <div class="section-title" id="edu-title">Education</div>
+          <div style="margin-bottom:8px">
+            <div style="font-weight:700">MBA in Human Resource Management</div>
+            <div style="font-size:13px;color:var(--muted)">Mangalore Institute of Technology & Engineering — Moodbidri • 2017–2019</div>
+          </div>
+          <div style="margin-bottom:8px">
+            <div style="font-weight:700">Bachelor of Commerce</div>
+            <div style="font-size:13px;color:var(--muted)">Alva's College — Moodbidri • 2014–2017</div>
+          </div>
+        </section>
+
+        <section aria-labelledby="exp-title">
+          <div class="section-title" id="exp-title">Professional Experience</div>
+
+          <div class="job">
+            <div class="meta">HR Service Delivery Analyst — Accenture Solutions Pvt Ltd</div>
+            <div class="submeta">Bengaluru, Karnataka • Apr 2023 – Present</div>
+            <ul class="responsibilities">
+              <li>Delivered region-specific HR support with <strong>100% accuracy</strong>, ensuring full compliance with local labor laws and global company policies across multiple business units</li>
+              <li>Expertly utilized <strong>Workday and ServiceNow</strong> for employee data management, HR transactions, and resolution of service requests, consistently meeting <strong>SLA targets</strong> and maintaining high stakeholder satisfaction</li>
+              <li>Oversaw critical HR processes within a <strong>shared services environment</strong>, ensuring seamless and standardized service delivery across business units while driving operational excellence</li>
+              <li>Collaborated with cross-functional teams to identify HR needs, drive <strong>service quality improvements</strong>, and implement process efficiencies that enhanced overall HR operations</li>
+              <li>Executed <strong>Workday EIB (Enterprise Interface Builder)</strong> for bulk data updates, enabling efficient management of candidate details and reducing manual processing time significantly</li>
+              <li>Handled <strong>Leave of Absence (LOA)</strong> processes end-to-end, ensuring compliance, maintaining accurate records, and providing comprehensive employee support throughout the leave period</li>
+              <li>Delivered <strong>Knowledge Transfers (KT)</strong> to new team members, enabling rapid onboarding and maintaining operational continuity across the HR service delivery team</li>
+              <li>Managed <strong>country transfers</strong> by initiating transfers in Workday, creating new personnel numbers, and coordinating all required documentation and compliance requirements</li>
+              <li>Handled <strong>Purchase Orders (PO)</strong> for financial year planning and monthly invoice processing through <strong>ARIBA/Buy Now</strong>, ensuring accurate budget tracking and vendor management</li>
+            </ul>
+          </div>
+
+          <div class="job">
+            <div class="meta">HR Assistant — Accenture Solutions Pvt Ltd (Payroll of Maintech)</div>
+            <div class="submeta">Bengaluru, Karnataka • Dec 2020 – Mar 2023</div>
+            <ul class="responsibilities">
+              <li>Managed <strong>end-to-end HR operations</strong>, from onboarding to exit, enabling smooth, timely, and compliant workflows across departments</li>
+              <li>Handled complete <strong>exit formalities</strong>, ensuring smooth separation processes, proper documentation, and compliance with company policies and legal requirements</li>
+              <li>Organized and executed <strong>employee engagement initiatives</strong>, including motivation programs and team-building activities, to enhance workplace culture and employee satisfaction</li>
+              <li>Worked as <strong>database administrator</strong> to ensure candidate mandate documents were collected, verified, and documented accurately in HR systems</li>
+            </ul>
+          </div>
+
+          <div class="job">
+            <div class="meta">HR Executive — Accenture Solutions Pvt Ltd (Payroll of Maintech)</div>
+            <div class="submeta">Bengaluru, Karnataka • Jan 2020 – Aug 2020</div>
+            <ul class="responsibilities">
+              <li>Collaborated with hiring managers to understand and determine current and future <strong>staffing requirements</strong> aligned with business objectives</li>
+              <li>Sourced potential candidates through various <strong>Accenture Internal Job portals</strong>, online platforms, social media networks, and professional job boards</li>
+              <li>Planned and executed the <strong>interview and selection process</strong>, involving pre-screening calls, conducting assessments, and arranging in-person interviews</li>
+              <li>Organized and participated in <strong>job fairs and recruitment drives</strong> to attract quality talent and build a strong candidate pipeline</li>
+              <li>Coordinated with the coordination department to maintain accurate <strong>recruitment trackers and databases</strong>, ensuring data integrity and reporting accuracy</li>
+              <li>Oversaw <strong>background verification (BGV)</strong> processes to ensure authenticity of candidate information and compliance with company standards</li>
+              <li>Managed the <strong>selection and onboarding process</strong>, ensuring smooth integration of new hires into the organization and positive first-day experiences</li>
+            </ul>
+          </div>
+        </section>
+
+        <section aria-labelledby="cert-title">
+          <div class="section-title" id="cert-title">Certifications & Training</div>
+          <div style="margin-bottom:8px">
+            <div style="font-weight:700">Workday 101</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:4px">Proficient in Workday 101 HR systems with practical experience in core HR functionalities</div>
+          </div>
+          <div style="margin-bottom:8px">
+            <div style="font-weight:700">Workday HCM Essentials for Talent and Operations</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:4px">Managing employee data, coordinating workflows, generating insights through reporting, and ensuring smooth HR service delivery</div>
+          </div>
+        </section>
+
+        <section aria-labelledby="awards-title">
+          <div class="section-title" id="awards-title">Awards & Recognition</div>
+          <div class="tags">
+            <span class="chip">Core Value Champion Award</span>
+            <span class="chip">Star of the Month</span>
+            <span class="chip">Rockstar of the Month</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-top:8px">
+            Recognized for outstanding performance, dedication, and significant contributions to team success
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+<script>
+  // Print button
+  document.getElementById('printBtn').addEventListener('click', function(){
+    window.print();
+  });
+</script>
+</body>
+</html>
