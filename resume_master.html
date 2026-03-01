@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Roshan Vijay — Resume</title>
+<style>
+  /* --- Page & typography --- */
+  :root{
+    --accent: #0f4761;
+    --muted: #667085;
+    --bg: #f6f8fb;
+    --paper-width: 800px;
+    --gutter: 28px;
+  }
+  html,body{height:100%;margin:0;background:var(--bg);font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;color:#111;}
+  .wrap{display:flex;align-items:flex-start;justify-content:center;padding:36px;}
+  .card{
+    width:var(--paper-width);
+    background:linear-gradient(180deg, #fff 0%, #fff 100%);
+    box-shadow:0 10px 30px rgba(16,24,40,0.08);
+    border-radius:10px;
+    padding:28px 36px;
+    box-sizing:border-box;
+    color:#0b1220;
+  }
+  header{display:flex;flex-direction:column;gap:6px;border-bottom:1px solid #eef2f7;padding-bottom:18px;margin-bottom:18px}
+  h1{font-size:28px;margin:0;color:var(--accent);letter-spacing:-0.2px}
+  .title{font-size:13px;color:#1f2937;margin-top:2px}
+  .contact{font-size:12px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+  .summary{font-size:12.4px;color:#243244;text-align:justify;margin-top:10px;line-height:1.45}
+  /* --- Sections --- */
+  section{margin:16px 0}
+  .section-title{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:0.6px;margin-bottom:10px}
+  .skills, .tags, .techstack{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{background:#f1f5f9;padding:6px 10px;border-radius:999px;font-size:12px;color:#112;box-shadow:inset 0 -1px 0 rgba(0,0,0,0.02)}
+  .job{margin-bottom:12px}
+  .job .meta{font-weight:700;color:#0b1220}
+  .job .submeta{font-size:12px;color:var(--muted);margin-bottom:8px}
+  ul.responsibilities{margin:8px 0 0 18px;padding:0;color:#263241}
+  ul.responsibilities li{margin:6px 0}
+  .achievements p{margin:8px 0}
+  .two-col{display:flex;gap:16px}
+  .col{flex:1}
+  /* --- Footer small print (hidden in PDF header area) --- */
+  .controls{display:flex;justify-content:flex-end;gap:10px;margin-bottom:16px}
+  .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600}
+  .btn.ghost{background:#fff;color:var(--accent);border:1px solid rgba(15,71,97,0.12)}
+  /* --- Print styles --- */
+  @page { size: A4; margin: 18mm; }
+  @media print {
+    html,body{background: #fff}
+    .wrap{padding:0}
+    .card{width:100%;box-shadow:none;border-radius:0;padding:0;margin:0}
+    .controls{display:none}
+    h1{font-size:22px}
+    .title{font-size:11px}
+    .contact{font-size:11px}
+    .summary{font-size:11px}
+    .chip{box-shadow:none}
+    /* ensure colors print as expected */
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  /* small responsive tweaks */
+  @media (max-width:880px){
+    :root{--paper-width:680px}
+    .card{padding:20px}
+  }
+  @media (max-width:520px){
+    .wrap{padding:12px}
+    :root{--paper-width:100%}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="main" aria-label="Resume — Roshan Vijay">
+      <div class="controls">
+        <button class="btn" id="printBtn" title="Download PDF (opens Print dialog)">Download PDF</button>
+      </div>
+
+      <header>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
+          <div>
+            <h1>Roshan Vijay</h1>
+            <div class="title">Senior Software Engineer</div>
+            <div class="contact" style="margin-top:10px">
+              <div>📍 Moodabidri, India</div>
+              <div>📞 7349495469</div>
+              <div>✉️ roshanshetty010100@gmail.com</div>
+            </div>
+          </div>
+
+          <div style="max-width:360px;font-size:12px;color:var(--muted);text-align:right">
+            <div style="font-weight:600;color:#0b1220;margin-bottom:8px">Profile</div>
+            <div class="summary">
+              Senior Software Engineer with 4+ years of experience designing and implementing scalable backend services, automation capabilities, and distributed systems. Proven expertise in API-driven integrations, microservices architecture, and building secure, resilient software using modern engineering practices. Strong track record in leading technical initiatives, architectural decisions, and cross-functional collaboration to improve operational efficiency and system reliability.
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section aria-labelledby="skills-title">
+          <div class="section-title" id="skills-title">Technical Skills</div>
+          <div class="skills">
+            <span class="chip">C# / .NET Core</span>
+            <span class="chip">Java</span>
+            <span class="chip">Distributed Systems</span>
+            <span class="chip">Microservices Architecture</span>
+            <span class="chip">RESTful APIs / GraphQL</span>
+            <span class="chip">Service-Oriented Architecture (SOA)</span>
+            <span class="chip">AWS / Cloud Infrastructure</span>
+            <span class="chip">Docker / Kubernetes</span>
+            <span class="chip">CI/CD Pipelines</span>
+            <span class="chip">Infrastructure Automation</span>
+            <span class="chip">RabbitMQ / Async Messaging</span>
+            <span class="chip">Observability & Monitoring</span>
+            <span class="chip">Security Best Practices</span>
+            <span class="chip">Git / Version Control</span>
+          </div>
+        </section>
+
+        <section aria-labelledby="strength-title">
+          <div class="section-title" id="strength-title">Core Competencies</div>
+          <div class="tags">
+            <span class="chip">Backend Services Development</span>
+            <span class="chip">API Design & Integration</span>
+            <span class="chip">Automation & Orchestration</span>
+            <span class="chip">System Reliability & Resilience</span>
+            <span class="chip">Security & Vulnerability Remediation</span>
+            <span class="chip">Architectural Design</span>
+            <span class="chip">Cross-Functional Collaboration</span>
+            <span class="chip">Code Review & Quality Assurance</span>
+            <span class="chip">Technical Leadership</span>
+          </div>
+        </section>
+
+        <section aria-labelledby="edu-title">
+          <div class="section-title" id="edu-title">Education</div>
+          <div style="margin-bottom:8px">
+            <div style="font-weight:700">Bachelor of Engineering (B.E.) in Information Science and Engineering - 8.3 CGPA</div>
+            <div style="font-size:13px;color:var(--muted)">Mangalore Institute of Technology & Engineering — Moodabidri • 2017–2021</div>
+          </div>
+        </section>
+
+        <section aria-labelledby="exp-title">
+          <div class="section-title" id="exp-title">Professional Experience</div>
+
+          <div class="job">
+            <div class="meta">Software Engineer — Cornerstone OnDemand</div>
+            <div class="submeta">Pune • Jun 2022 – Present</div>
+            <ul class="responsibilities">
+              <li>Designed and implemented scalable backend services using <strong>C#, .NET Core</strong>, and <strong>Entity Framework Core</strong>, supporting network lifecycle and automation workflows for the Performance Goals module</li>
+              <li>Led migration of Goals component from monolithic architecture to <strong>microservices-driven solution (perf-goals-api)</strong>, aligned with <strong>Service-Oriented Architecture (SOA)</strong> principles, implementing <strong>GraphQL</strong> integrations and leveraging <strong>AWS, Kubernetes, and Docker</strong> for containerized deployment and orchestration</li>
+              <li>Initiated and led development of <strong>AI-powered Goal Title and Description Generator</strong>, leveraging user context to generate personalized goals; served as primary developer coordinating with internal LLM platform teams, taking the concept from hackathon to production</li>
+              <li>Architected and led development of <strong>Edge Import (perf-goals-import)</strong>, an internal framework for high-volume bulk data processing, implementing <strong>concurrency and parallel processing</strong> strategies with <strong>RabbitMQ</strong> for asynchronous messaging and containerized deployment using Docker</li>
+              <li>Currently leading <strong>Skills and Goals Integration</strong> initiative, developing an <strong>MCP (Model Context Protocol) server</strong> to enable clients to create SMART goals and interact with public APIs in a secure, simplified manner, improving developer experience by abstracting complex API workflows</li>
+              <li>Played key role in addressing <strong>API security gaps</strong> identified during company-led bug bounty program by utilizing AI-driven code analysis to detect <strong>IDOR vulnerabilities</strong> across services; created remediation wiki, facilitated team-wide effort allocation, and contributed to successful closure of all security findings</li>
+              <li>Developed internal <strong>localization automation tool</strong> to streamline creation of key-value resource files for internationalization, significantly reducing manual effort; conducted knowledge transfer sessions and created documentation for team adoption</li>
+              <li>Ensured <strong>high code quality</strong> through regular code reviews, adherence to <strong>SOLID principles</strong>, clean code practices, and adequate test coverage; mentored team on modern engineering practices and AI-assisted development tools</li>
+              </ul>
+          </div>
+
+          <div class="job">
+            <div class="meta">Associate Software Engineer — Allstate</div>
+            <div class="submeta">Bangalore • Sep 2021 – Jun 2022</div>
+            <ul class="responsibilities">
+              <li>Developed backend services and <strong>RESTful APIs</strong> using <strong>C#, .NET</strong> for Agent Portal of Allstate Insurance Company</li>
+              <li>Collaborated with cross-functional teams in <strong>Agile environment</strong> to deliver features on schedule</li>
+              <li>Supported end-to-end implementation of <strong>Adobe Analytics</strong>, transforming user interactions into actionable business insights</li>
+              <li>Participated in code reviews and maintained high code quality standards</li>
+            </ul>
+          </div>
+        </section>
+
+
+      </main>
+    </div>
+  </div>
+
+<script>
+  // Print button
+  document.getElementById('printBtn').addEventListener('click', function(){
+    window.print();
+  });
+  // Accessibility: allow Ctrl+P hint (we don't override native behavior)
+</script>
+</body>
+</html>
