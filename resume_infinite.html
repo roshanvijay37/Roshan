@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Roshan Vijay — Resume</title>
+<style>
+  :root{
+    --accent: #0f4761;
+    --muted: #667085;
+    --bg: #f6f8fb;
+    --paper-width: 800px;
+  }
+  html,body{height:100%;margin:0;background:var(--bg);font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;color:#111;}
+  .wrap{display:flex;align-items:flex-start;justify-content:center;padding:36px;}
+  .card{
+    width:var(--paper-width);
+    background:#fff;
+    box-shadow:0 10px 30px rgba(16,24,40,0.08);
+    border-radius:10px;
+    padding:28px 36px;
+    box-sizing:border-box;
+    color:#0b1220;
+  }
+  header{display:flex;flex-direction:column;gap:6px;border-bottom:1px solid #eef2f7;padding-bottom:18px;margin-bottom:18px}
+  h1{font-size:28px;margin:0;color:var(--accent);letter-spacing:-0.2px}
+  .title{font-size:13px;color:#1f2937;margin-top:2px}
+  .contact{font-size:12px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+  .summary{font-size:12.4px;color:#243244;text-align:justify;margin-top:10px;line-height:1.45}
+  section{margin:16px 0}
+  .section-title{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:0.6px;margin-bottom:10px}
+  .skills,.tags,.techstack{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{background:#f1f5f9;padding:6px 10px;border-radius:999px;font-size:12px;color:#112;box-shadow:inset 0 -1px 0 rgba(0,0,0,0.02)}
+  .job{margin-bottom:12px}
+  .job .meta{font-weight:700;color:#0b1220}
+  .job .submeta{font-size:12px;color:var(--muted);margin-bottom:8px}
+  ul.responsibilities{margin:8px 0 0 18px;padding:0;color:#263241}
+  ul.responsibilities li{margin:6px 0}
+  .achievements p{margin:8px 0}
+  .controls{display:flex;justify-content:flex-end;gap:10px;margin-bottom:16px}
+  .btn{background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600}
+  @page { size: A4; margin: 18mm; }
+  @media print {
+    html,body{background:#fff}
+    .wrap{padding:0}
+    .card{width:100%;box-shadow:none;border-radius:0;padding:0;margin:0}
+    .controls{display:none}
+    h1{font-size:22px}
+    .title,.contact,.summary{font-size:11px}
+    .chip{box-shadow:none}
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  @media (max-width:880px){ :root{--paper-width:680px} .card{padding:20px} }
+  @media (max-width:520px){ .wrap{padding:12px} :root{--paper-width:100%} }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="main" aria-label="Resume — Roshan Vijay">
+      <div class="controls">
+        <button class="btn" id="printBtn" title="Download PDF (opens Print dialog)">Download PDF</button>
+      </div>
+
+      <header>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap">
+          <div>
+            <h1>Roshan Vijay</h1>
+            <div class="title">Full Stack .NET Developer — Azure Cloud & Microservices</div>
+            <div class="contact" style="margin-top:10px">
+              <div>📍 Moodabidri, India</div>
+              <div>📞 7349495469</div>
+              <div>✉️ roshanshetty010100@gmail.com</div>
+            </div>
+          </div>
+
+          <div style="max-width:370px;font-size:12px;color:var(--muted);text-align:right">
+            <div style="font-weight:600;color:#0b1220;margin-bottom:8px">Profile</div>
+            <div class="summary">
+              Full Stack .NET Developer with 4+ years of experience building and modernizing enterprise applications using .NET Core / C#, ASP.NET MVC, Azure cloud-native services, and microservices architecture. Proven expertise in designing secure RESTful APIs, migrating monolithic .NET Framework systems to service-oriented architectures, and working with SQL Server, Azure SQL, and Cosmos DB. Strong background in Azure DevOps CI/CD, Azure Service Bus, Docker/Kubernetes, SOLID principles, and Agile delivery. Hands-on experience with Azure API Management, Blob Storage, and infrastructure provisioning using Terraform — directly applicable to enterprise payer workflows.
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section aria-labelledby="skills-title">
+          <div class="section-title" id="skills-title">Technical Skills</div>
+          <div class="skills">
+            <span class="chip">.NET Core / C# / .NET 6+</span>
+            <span class="chip">.NET Core / C# / .NET 6+</span>
+            <span class="chip">ASP.NET Web API / MVC</span>
+            <span class="chip">RESTful APIs / GraphQL</span>
+            <span class="chip">Entity Framework Core / LINQ</span>
+            <span class="chip">SQL Server / Azure SQL / Cosmos DB</span>
+            <span class="chip">Azure Blob Storage</span>
+            <span class="chip">Azure App Service / AKS</span>
+            <span class="chip">Azure Service Bus / Event Grid / Functions</span>
+            <span class="chip">Azure API Management (APIM)</span>
+            <span class="chip">Azure DevOps / CI/CD Pipelines</span>
+            <span class="chip">Terraform / ARM / Bicep</span>
+            <span class="chip">Docker / Kubernetes</span>
+            <span class="chip">Microservices Architecture</span>
+            <span class="chip">RabbitMQ / Async Messaging</span>
+            <span class="chip">OAuth2 / JWT</span>
+            <span class="chip">xUnit / NUnit / MSTest</span>
+            <span class="chip">React JS / JavaScript</span>
+            <span class="chip">Git / Agile / Scrum</span>
+          </div>
+        </section>
+
+        <section aria-labelledby="strength-title">
+          <div class="section-title" id="strength-title">Core Competencies</div>
+          <div class="tags">
+            <span class="chip">Cloud-Native .NET Development</span>
+            <span class="chip">Microservices & API Design</span>
+            <span class="chip">Legacy Modernization</span>
+            <span class="chip">Event-Driven Architecture</span>
+            <span class="chip">Azure PaaS Integration</span>
+            <span class="chip">Database Design & Optimization</span>
+            <span class="chip">Security Best Practices</span>
+            <span class="chip">SOLID Principles & OOP</span>
+            <span class="chip">CI/CD & DevOps Automation</span>
+            <span class="chip">Infrastructure as Code (IaC)</span>
+            <span class="chip">Unit Testing & TDD</span>
+            <span class="chip">Code Review & Quality</span>
+          </div>
+        </section>
+
+        <section aria-labelledby="edu-title">
+          <div class="section-title" id="edu-title">Education</div>
+          <div style="margin-bottom:8px">
+            <div style="font-weight:700">Bachelor of Engineering (B.E.) in Information Science and Engineering — 8.3 CGPA</div>
+            <div style="font-size:13px;color:var(--muted)">Mangalore Institute of Technology & Engineering — Moodabidri • 2017–2021</div>
+          </div>
+        </section>
+
+        <section aria-labelledby="exp-title">
+          <div class="section-title" id="exp-title">Professional Experience</div>
+
+          <div class="job">
+            <div class="meta">Software Engineer — Cornerstone OnDemand</div>
+            <div class="submeta">Pune • Jun 2022 – Present</div>
+            <ul class="responsibilities">
+              <li>Designed and developed scalable backend services, <strong>RESTful APIs</strong>, and <strong>ASP.NET MVC</strong> applications using <strong>.NET Core, C#</strong>, and <strong>Entity Framework Core</strong>, supporting enterprise-scale workflow management for the Performance Goals module</li>
+              <li>Led migration of the Performance Goals component from a <strong>monolithic .NET Framework</strong> application to a <strong>cloud-native microservices architecture</strong> deployed on <strong>Azure Kubernetes Service (AKS)</strong> using Docker containers — directly paralleling legacy-to-cloud modernization in healthcare payer systems</li>
+              <li>Architected and led development of <strong>Perf-Goals-Import microservice</strong> for high-volume bulk data ingestion, leveraging <strong>Azure Service Bus</strong> and <strong>RabbitMQ</strong> for async message processing and event-driven communication between distributed services</li>
+              <li>Built and maintained <strong>Azure DevOps CI/CD pipelines</strong> for automated builds, testing, and deployments across microservices; provisioned cloud infrastructure using <strong>Terraform</strong> and <strong>ARM templates</strong>, ensuring consistent and repeatable environment setup</li>
+              <li>Implemented <strong>OAuth2 / JWT</strong> authentication, API security controls, and input validation across all REST endpoints; proactively identified and remediated <strong>IDOR vulnerabilities</strong> across multiple services</li>
+              <li>Worked extensively with <strong>SQL Server</strong> and <strong>Azure SQL</strong> for database design, stored procedures, and query optimization; used <strong>Cosmos DB</strong> for document storage in distributed microservices and <strong>Azure Blob Storage</strong> for handling large file and binary data imports</li>
+              <li>Developed event-driven and message-based backend workflows using <strong>async messaging (RabbitMQ)</strong> for decoupled, asynchronous processing between modules — directly applicable to payer module integration patterns</li>
+              <li>Managed and secured APIs using <strong>Azure API Management (APIM)</strong> for throttling, versioning, and access control across microservices, ensuring consistent API governance</li>
+              <li>Refactored legacy <strong>ASP.NET MVC / WebForms</strong> modules into service-oriented microservices, decoupling dependencies and exposing standardized REST interfaces for interoperability with downstream systems</li>
+              <li>Wrote comprehensive unit and integration tests using <strong>xUnit / NUnit</strong>, maintaining high code coverage and ensuring reliability across backend services and API layers</li>
+              <li>Built <strong>React JS</strong> front-end components integrated with secure backend REST APIs for enterprise user workflows</li>
+              <li>Led a team of developers in building an <strong>AI-powered backend service</strong> (goal description generator) from hackathon concept to production on Azure infrastructure</li>
+              <li>Conducted regular <strong>code reviews</strong> in Agile sprints, enforcing <strong>SOLID principles</strong>, clean coding standards, security compliance, and adherence to best practices</li>
+              <li>Actively participated in sprint planning, backlog refinement, stand-ups, and retrospectives in an <strong>Agile / Scrum</strong> environment</li>
+            </ul>
+          </div>
+
+          <div class="job">
+            <div class="meta">Associate Software Engineer — Allstate Insurance</div>
+            <div class="submeta">Bangalore • Sep 2021 – Jun 2022</div>
+            <ul class="responsibilities">
+              <li>Developed backend services and <strong>RESTful APIs</strong> using <strong>C#, .NET</strong> for the Agent Portal — an enterprise insurance application with workflows analogous to payer provider management and claims processing</li>
+              <li>Implemented business logic, data access layers, and database integrations using <strong>SQL Server</strong> for insurance domain workflows</li>
+              <li>Collaborated with cross-functional teams including QA, architects, and product owners in an <strong>Agile environment</strong> to deliver features on schedule</li>
+              <li>Participated in code reviews and maintained high code quality standards following <strong>SOLID principles</strong></li>
+            </ul>
+          </div>
+        </section>
+
+        <section aria-labelledby="projects-title">
+          <div class="section-title" id="projects-title">Key Projects & Achievements</div>
+          <ul class="responsibilities">
+            <li><strong>Monolith-to-Microservices Migration (.NET):</strong> Led end-to-end migration of a monolithic .NET Framework application to cloud-native microservices on Azure AKS — decoupling dependencies, enabling API interoperability, and improving scalability and deployment independence</li>
+            <li><strong>Edge Import Framework (Bulk Data Processing):</strong> Architected a high-volume async data ingestion framework using .NET Core, Azure Service Bus, and RabbitMQ with validation, security checks, and performance optimizations — adopted across multiple teams; data persisted across Azure SQL, Cosmos DB, and Blob Storage</li>
+            <li><strong>Azure DevOps CI/CD & IaC:</strong> Built and maintained automated build, test, and release pipelines using Azure DevOps, including containerized deployments to AKS with Docker; provisioned infrastructure using Terraform and ARM templates for consistent multi-environment deployments</li>
+            <li><strong>Security Remediation:</strong> Proactively identified and fixed IDOR and auth vulnerabilities across microservices, creating OAuth2/JWT security guidelines and best practices documentation for the team</li>
+            <li><strong>AI-Powered .NET Backend Services:</strong> Led backend development of AI-powered services integrating LLM APIs into production .NET Core microservices on Azure, from concept to production deployment</li>
+          </ul>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+<script>
+  document.getElementById('printBtn').addEventListener('click', function(){
+    window.print();
+  });
+</script>
+</body>
+</html>
