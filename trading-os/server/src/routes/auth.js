@@ -1,54 +1,74 @@
-import { KiteConnect } from "kiteconnect";
 import express from "express";
 
 const router = express.Router();
 
-const apiKey = process.env.KITE_API_KEY;
-const apiSecret = process.env.KITE_API_SECRET;
+const appId = process.env.FYERS_APP_ID;
+const secretId = process.env.FYERS_SECRET_ID;
+const redirectUrl = process.env.FYERS_REDIRECT_URL || "http://localhost:5173/live-trade";
 
 // In-memory session store (use Redis in production)
 const sessions = new Map();
 
-// Initialize KiteConnect instance
-function getKite(accessToken = null) {
-  return new KiteConnect({ api_key: apiKey, access_token: accessToken });
-}
-
-// Step 1: Get login URL for Zerodha OAuth
+// Step 1: Get FYERS login URL
 router.get("/login", (_req, res) => {
-  if (!apiKey || !apiSecret) {
+  if (!appId || !secretId) {
     return res.status(500).json({
-      error: "Kite API credentials not configured",
-      setupUrl: "https://kite.trade/",
+      error: "FYERS API credentials not configured",
+      setupUrl: "https://myaccount.fyers.in/",
     });
   }
 
-  const kite = getKite();
-  const loginUrl = kite.getLoginURL();
-  res.json({ loginUrl });
+  // FYERS OAuth URL format
+  const state = Math.random().toString(36).substring(7);
+  const loginUrl = `https://api.fyers.in/api/v3/generate-authcode?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&state=${state}`;
+
+  res.json({ loginUrl, state });
 });
 
 // Step 2: Handle OAuth callback and generate access token
 router.post("/callback", async (req, res) => {
-  const { request_token } = req.body;
+  const { auth_code } = req.body;
 
-  if (!request_token) {
-    return res.status(400).json({ error: "request_token is required" });
+  if (!auth_code) {
+    return res.status(400).json({ error: "auth_code is required" });
   }
 
   try {
-    const kite = getKite();
-    const response = await kite.generateSession(request_token, apiSecret);
+    // Exchange auth_code for access_token
+    const tokenResponse = await fetch("https://api.fyers.in/api/v3/validate-authcode", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        grant_type: "authorization_code",
+        appIdHash: secretId,
+        code: auth_code,
+      }),
+    });
+
+    const tokenData = await tokenResponse.json();
+
+    if (!tokenResponse.ok || tokenData.s !== "ok") {
+      throw new Error(tokenData.message || "Failed to get access token");
+    }
+
+    const { access_token, refresh_token } = tokenData;
+
+    // Get user profile using the access token
+    const profileResponse = await fetch(
+      `https://api.fyers.in/api/v3/profile?client_id=${appId}&access_token=${access_token}`,
+    );
+    const profileData = await profileResponse.json();
 
     // Create session
     const sessionId = crypto.randomUUID();
     const session = {
       id: sessionId,
-      accessToken: response.access_token,
-      userId: response.user_id,
-      userName: response.user_name,
-      email: response.email,
-      broker: response.broker,
+      accessToken: access_token,
+      refreshToken: refresh_token,
+      userId: profileData.data?.fy_id || "unknown",
+      userName: profileData.data?.name || "FYERS User",
+      email: profileData.data?.email_id || "",
+      broker: "FYERS",
       createdAt: new Date().toISOString(),
     };
 
@@ -58,16 +78,16 @@ router.post("/callback", async (req, res) => {
       success: true,
       sessionId,
       user: {
-        userId: response.user_id,
-        userName: response.user_name,
-        email: response.email,
-        broker: response.broker,
+        userId: session.userId,
+        userName: session.userName,
+        email: session.email,
+        broker: session.broker,
       },
     });
   } catch (error) {
-    console.error("Kite auth error:", error);
+    console.error("FYERS auth error:", error);
     res.status(401).json({
-      error: "Failed to authenticate with Zerodha",
+      error: "Failed to authenticate with FYERS",
       message: error.message,
     });
   }
@@ -101,7 +121,7 @@ router.post("/logout", (req, res) => {
   res.json({ success: true });
 });
 
-// Middleware to validate session and attach kite instance
+// Middleware to validate session and attach FYERS config
 export function requireAuth(req, res, next) {
   const sessionId = req.headers["x-session-id"];
 
@@ -114,8 +134,11 @@ export function requireAuth(req, res, next) {
     return res.status(401).json({ error: "Invalid or expired session" });
   }
 
-  // Attach kite instance and session to request
-  req.kite = getKite(session.accessToken);
+  // Attach FYERS config to request
+  req.fyers = {
+    appId,
+    accessToken: session.accessToken,
+  };
   req.session = session;
   next();
 }

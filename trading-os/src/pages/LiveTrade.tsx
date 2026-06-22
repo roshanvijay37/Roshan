@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "../components/Card";
 import { EmotionEvaluation } from "../components/EmotionEvaluation";
-import { accountApi, isKiteConnected, orderApi } from "../services/api";
+import { accountApi, isFyersConnected, orderApi } from "../services/api";
 import { EmotionEngine } from "../rules/EmotionEngine";
 import { RiskEngine } from "../rules/RiskEngine";
 import { TradeRules } from "../rules/TradeRules";
@@ -41,12 +41,12 @@ export function LiveTrade() {
   const today = toLocalDateKey();
   const locked = trades.filter((trade) => trade.date === today).length >= settings.maxTradesPerDay;
 
-  // Check Kite connection
+  // Check FYERS connection
   useEffect(() => {
-    setConnected(isKiteConnected());
-    const handle = () => setConnected(isKiteConnected());
-    window.addEventListener("kite:logout", handle);
-    return () => window.removeEventListener("kite:logout", handle);
+    setConnected(isFyersConnected());
+    const handle = () => setConnected(isFyersConnected());
+    window.addEventListener("fyers:logout", handle);
+    return () => window.removeEventListener("fyers:logout", handle);
   }, []);
 
   // Fetch funds when connected
@@ -54,7 +54,7 @@ export function LiveTrade() {
     if (connected) {
       accountApi
         .getFunds()
-        .then((data) => setFunds(data.margins))
+        .then((data) => setFunds(data.funds))
         .catch(() => setFunds(null));
     }
   }, [connected]);
@@ -115,14 +115,13 @@ export function LiveTrade() {
       );
       if (!validation.valid) throw new Error(validation.errors.join(" "));
 
-      // Place real order through Zerodha
+      // Place real order through FYERS
       const orderResponse = await orderApi.place({
-        tradingsymbol: symbol.trim().toUpperCase(),
-        transaction_type: side === "LONG" ? "BUY" : "SELL",
-        quantity,
-        order_type: "MARKET",
-        product: "MIS",
-        exchange: "NSE",
+        symbol: `NSE:${symbol.trim().toUpperCase()}-EQ`,
+        side: side === "LONG" ? 1 : -1,
+        qty: quantity,
+        type: 2, // Market order
+        productType: "INTRADAY",
       });
 
       setPlacedOrder(orderResponse);
@@ -141,7 +140,7 @@ export function LiveTrade() {
         followedRules: true,
         outcome: "OPEN",
         pnl: 0,
-        notes: `[ZERODHA ORDER #${orderResponse.orderId}] ${notes}`,
+        notes: `[FYERS ORDER #${orderResponse.orderId}] ${notes}`,
         createdAt: new Date().toISOString(),
       });
     } catch (caught: any) {
@@ -160,9 +159,9 @@ export function LiveTrade() {
         <span className="inline-flex rounded-2xl bg-zinc-800 p-4 text-zinc-400">
           <Wallet size={32} />
         </span>
-        <h1 className="mt-6 text-3xl font-semibold text-white">Connect Zerodha</h1>
+        <h1 className="mt-6 text-3xl font-semibold text-white">Connect FYERS</h1>
         <p className="mt-3 text-zinc-400">
-          Link your Zerodha account to place live trades through TradingOS.
+          Link your FYERS account to place live trades through TradingOS.
         </p>
         <p className="mt-2 text-sm text-zinc-600">
           All discipline checks still apply. Real money is at risk.
@@ -192,14 +191,14 @@ export function LiveTrade() {
         <div>
           <h1 className="text-3xl font-semibold tracking-tight text-white">Live Trade</h1>
           <p className="mt-2 text-sm text-zinc-500">
-            Place real orders through Zerodha after passing all discipline checks.
+            Place real orders through FYERS after passing all discipline checks.
           </p>
         </div>
-        {funds && (
+        {funds && funds[0] && (
           <div className="rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-2.5 text-right">
             <p className="text-xs text-zinc-500">Available margin</p>
             <p className="text-lg font-semibold text-lime-300">
-              {formatCurrency(funds.equity?.available?.cash || 0)}
+              {formatCurrency(funds[0].equityAmount || 0)}
             </p>
           </div>
         )}
@@ -337,7 +336,7 @@ export function LiveTrade() {
                 "Placing order…"
               ) : (
                 <>
-                  Place live order on Zerodha <ArrowRight size={17} className="ml-1 inline" />
+                  Place live order on FYERS <ArrowRight size={17} className="ml-1 inline" />
                 </>
               )}
             </button>

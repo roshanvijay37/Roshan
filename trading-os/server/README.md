@@ -1,15 +1,18 @@
-# TradingOS Zerodha Server
+# TradingOS FYERS Server
 
-Backend server that connects TradingOS to your real Zerodha account via Kite Connect API.
+Backend server that connects TradingOS to your real FYERS account via FYERS API v3.
 
 ## Setup
 
-### 1. Get Kite Connect API credentials
+### 1. Get FYERS API credentials
 
-1. Go to [kite.trade](https://kite.trade/) and create a Kite Connect developer account
-2. Create a new app
-3. Set the **Redirect URL** to: `http://localhost:5173/live-trade` (or your frontend URL)
-4. Note down your **API Key** and **API Secret**
+1. Have a FYERS trading account (open at [fyers.in](https://fyers.in/) if needed)
+2. Go to [myaccount.fyers.in](https://myaccount.fyers.in/) → API
+3. Create a new app:
+   - **App Name**: `TradingOS`
+   - **Redirect URL**: `http://localhost:5173/live-trade`
+   - **App Type**: `Trading`
+4. Note down your **App ID** and **Secret ID**
 
 ### 2. Configure environment variables
 
@@ -21,8 +24,10 @@ cp .env.example .env
 Edit `.env`:
 
 ```env
-KITE_API_KEY=your_actual_api_key
-KITE_API_SECRET=your_actual_api_secret
+FYERS_APP_ID=your_actual_app_id
+FYERS_SECRET_ID=your_actual_secret_id
+FYERS_REDIRECT_URL=http://localhost:5173/live-trade
+
 PORT=3001
 FRONTEND_URL=http://localhost:5173
 JWT_SECRET=any_random_string_for_security
@@ -42,8 +47,8 @@ Server will start on `http://localhost:3001`
 ### Auth
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/auth/login` | Get Zerodha OAuth login URL |
-| POST | `/api/auth/callback` | Exchange request_token for access token |
+| GET | `/api/auth/login` | Get FYERS OAuth login URL |
+| POST | `/api/auth/callback` | Exchange auth_code for access token |
 | GET | `/api/auth/session/:id` | Check if session is valid |
 | POST | `/api/auth/logout` | Invalidate session |
 
@@ -52,6 +57,7 @@ Server will start on `http://localhost:3001`
 |--------|----------|-------------|
 | POST | `/api/orders/place` | Place a real order |
 | DELETE | `/api/orders/cancel/:id` | Cancel an order |
+| PUT | `/api/orders/modify/:id` | Modify an order |
 | GET | `/api/orders/history` | Get order history |
 | GET | `/api/orders/:id` | Get order details |
 | GET | `/api/orders/trades/today` | Get today's trades |
@@ -63,25 +69,36 @@ Server will start on `http://localhost:3001`
 | GET | `/api/account/funds` | Get available margins |
 | GET | `/api/account/holdings` | Get holdings |
 | GET | `/api/account/positions` | Get positions |
-| GET | `/api/account/quote/:instrument` | Get market quote |
+| POST | `/api/account/quote` | Get market quotes |
+| POST | `/api/account/depth` | Get market depth |
 | GET | `/api/account/search` | Search instruments |
+
+## FYERS Order Parameters
+
+| Parameter | Values | Description |
+|-----------|--------|-------------|
+| `symbol` | `NSE:RELIANCE-EQ` | Trading symbol with exchange prefix |
+| `side` | `1` (Buy), `-1` (Sell) | Order side |
+| `type` | `1` Limit, `2` Market, `3` Stop, `4` Stoplimit | Order type |
+| `qty` | number | Quantity |
+| `productType` | `INTRADAY`, `CNC`, `CO`, `BO`, `MARGIN` | Product type |
 
 ## How it works
 
-1. User clicks **"Connect Zerodha"** in TradingOS
-2. Backend generates a Kite login URL and redirects the user
-3. User logs into Zerodha and authorizes the app
-4. Zerodha redirects back with a `request_token`
-5. Backend exchanges the `request_token` for an `access_token`
-6. The `access_token` is stored in a server-side session (in-memory, use Redis in production)
-7. All subsequent API calls use the session ID to authenticate with Zerodha
+1. User clicks **"Connect FYERS"** in TradingOS
+2. Backend generates a FYERS OAuth login URL
+3. User logs into FYERS and authorizes the app
+4. FYERS redirects back with an `auth_code`
+5. Backend exchanges `auth_code` for `access_token`
+6. The `access_token` is stored in a server-side session
+7. All subsequent API calls use the session ID to authenticate with FYERS
 
 ## Security Notes
 
-- **Never commit `.env` to git** — it contains your API secret
+- **Never commit `.env` to git** — it contains your Secret ID
 - The server uses in-memory session storage. For production, use **Redis** or a database
-- Access tokens expire at the end of the trading day (set by Zerodha)
-- The frontend never sees your API secret — all Kite API calls go through the backend
+- Access tokens expire and need daily reconnection (typical for broker APIs)
+- The frontend never sees your Secret ID — all FYERS API calls go through the backend
 - All routes (except `/api/auth/login`) require a valid `x-session-id` header
 
 ## Production Deployment

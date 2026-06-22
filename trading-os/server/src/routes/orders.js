@@ -3,72 +3,82 @@ import { requireAuth } from "./auth.js";
 
 const router = express.Router();
 
-// Place a real order through Zerodha
+// Helper to make FYERS API calls
+async function fyersApiCall(endpoint, accessToken, appId, body = null, method = "GET") {
+  const url = `https://api.fyers.in/api/v3${endpoint}`;
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `${appId}:${accessToken}`,
+  };
+
+  const options = {
+    method,
+    headers,
+  };
+
+  if (body && (method === "POST" || method === "PUT")) {
+    options.body = JSON.stringify(body);
+  }
+
+  const response = await fetch(url, options);
+  const data = await response.json();
+
+  if (data.s !== "ok") {
+    throw new Error(data.message || "FYERS API error");
+  }
+
+  return data;
+}
+
+// Place a real order through FYERS
 router.post("/place", requireAuth, async (req, res) => {
   const {
-    tradingsymbol,
-    exchange = "NSE",
-    transaction_type, // BUY or SELL
-    quantity,
-    order_type = "MARKET", // MARKET, LIMIT, SL, SL-M
-    product = "CNC", // CNC (delivery), MIS (intraday), NRML (F&O)
-    price = 0,
-    trigger_price = 0,
-    variety = "regular", // regular, amo, bo, co
+    symbol,
+    qty,
+    side, // 1 = Buy, -1 = Sell
+    type, // 1 = Limit, 2 = Market, 3 = Stop, 4 = Stoplimit
+    limitPrice = 0,
+    stopPrice = 0,
+    productType = "INTRADAY", // INTRADAY, CNC, CO, BO, MARGIN
   } = req.body;
 
   // Validate required fields
-  if (!tradingsymbol || !transaction_type || !quantity) {
+  if (!symbol || !qty || !side) {
     return res.status(400).json({
-      error: "tradingsymbol, transaction_type, and quantity are required",
-    });
-  }
-
-  // Validate transaction type
-  if (!["BUY", "SELL"].includes(transaction_type)) {
-    return res.status(400).json({
-      error: "transaction_type must be BUY or SELL",
+      error: "symbol, qty, and side are required",
     });
   }
 
   try {
-    const orderParams = {
-      tradingsymbol: tradingsymbol.toUpperCase(),
-      exchange: exchange.toUpperCase(),
-      transaction_type: transaction_type.toUpperCase(),
-      quantity: parseInt(quantity),
-      order_type: order_type.toUpperCase(),
-      product: product.toUpperCase(),
-      variety: variety.toLowerCase(),
+    const orderBody = {
+      symbol: symbol.toUpperCase(),
+      qty: parseInt(qty),
+      side: parseInt(side),
+      type: parseInt(type) || 2, // Default to Market
+      productType: productType.toUpperCase(),
+      limitPrice: parseFloat(limitPrice) || 0,
+      stopPrice: parseFloat(stopPrice) || 0,
+      disclosedQty: 0,
+      validity: "DAY",
+      offlineOrder: false,
+      stopLoss: 0,
+      takeProfit: 0,
     };
 
-    // Add price for limit orders
-    if (["LIMIT", "SL", "SL-M"].includes(orderParams.order_type)) {
-      if (!price || price <= 0) {
-        return res.status(400).json({
-          error: "Price is required for LIMIT/SL/SL-M orders",
-        });
-      }
-      orderParams.price = parseFloat(price);
-    }
-
-    // Add trigger price for SL orders
-    if (["SL", "SL-M"].includes(orderParams.order_type)) {
-      if (!trigger_price || trigger_price <= 0) {
-        return res.status(400).json({
-          error: "trigger_price is required for SL/SL-M orders",
-        });
-      }
-      orderParams.trigger_price = parseFloat(trigger_price);
-    }
-
-    const response = await req.kite.placeOrder(variety, orderParams);
+    const response = await fyersApiCall(
+      "/orders",
+      req.fyers.accessToken,
+      req.fyers.appId,
+      orderBody,
+      "POST",
+    );
 
     res.json({
       success: true,
-      orderId: response.order_id,
+      orderId: response.id,
       status: "placed",
-      details: orderParams,
+      message: response.message,
+      details: orderBody,
     });
   } catch (error) {
     console.error("Order placement error:", error);
@@ -82,14 +92,21 @@ router.post("/place", requireAuth, async (req, res) => {
 // Cancel an order
 router.delete("/cancel/:orderId", requireAuth, async (req, res) => {
   const { orderId } = req.params;
-  const { variety = "regular" } = req.body;
 
   try {
-    const response = await req.kite.cancelOrder(variety, orderId);
+    const response = await fyersApiCall(
+      `/orders?id=${orderId}`,
+      req.fyers.accessToken,
+      req.fyers.appId,
+      null,
+      "DELETE",
+    );
+
     res.json({
       success: true,
-      orderId: response.order_id,
+      orderId,
       status: "cancelled",
+      message: response.message,
     });
   } catch (error) {
     console.error("Order cancellation error:", error);
@@ -100,11 +117,55 @@ router.delete("/cancel/:orderId", requireAuth, async (req, res) => {
   }
 });
 
+// Modify an order
+router.put("/modify/:orderId", requireAuth, async (req, res) => {
+  const { orderId } = req.params;
+  const { qty, type, side, limitPrice, stopPrice, productType } = req.body;
+
+  try {
+    const modifyBody = {
+      id: orderId,
+      qty: parseInt(qty),
+      type: parseInt(type),
+      side: parseInt(side),
+      limitPrice: parseFloat(limitPrice) || 0,
+      stopPrice: parseFloat(stopPrice) || 0,
+      productType: productType.toUpperCase(),
+    };
+
+    const response = await fyersApiCall(
+      "/orders",
+      req.fyers.accessToken,
+      req.fyers.appId,
+      modifyBody,
+      "PATCH",
+    );
+
+    res.json({
+      success: true,
+      orderId,
+      status: "modified",
+      message: response.message,
+    });
+  } catch (error) {
+    console.error("Order modification error:", error);
+    res.status(400).json({
+      error: "Failed to modify order",
+      message: error.message,
+    });
+  }
+});
+
 // Get order history
 router.get("/history", requireAuth, async (req, res) => {
   try {
-    const orders = await req.kite.getOrders();
-    res.json({ orders });
+    const response = await fyersApiCall(
+      "/orders",
+      req.fyers.accessToken,
+      req.fyers.appId,
+    );
+
+    res.json({ orders: response.orderBook || [] });
   } catch (error) {
     console.error("Get orders error:", error);
     res.status(400).json({
@@ -114,11 +175,16 @@ router.get("/history", requireAuth, async (req, res) => {
   }
 });
 
-// Get order details
+// Get individual order details
 router.get("/:orderId", requireAuth, async (req, res) => {
   try {
-    const order = await req.kite.getOrderHistory(req.params.orderId);
-    res.json({ order });
+    const response = await fyersApiCall(
+      `/orders?id=${req.params.orderId}`,
+      req.fyers.accessToken,
+      req.fyers.appId,
+    );
+
+    res.json({ order: response.orderBook?.[0] || null });
   } catch (error) {
     console.error("Get order error:", error);
     res.status(400).json({
@@ -131,8 +197,13 @@ router.get("/:orderId", requireAuth, async (req, res) => {
 // Get trades for the day
 router.get("/trades/today", requireAuth, async (req, res) => {
   try {
-    const trades = await req.kite.getTrades();
-    res.json({ trades });
+    const response = await fyersApiCall(
+      "/tradebook",
+      req.fyers.accessToken,
+      req.fyers.appId,
+    );
+
+    res.json({ trades: response.tradeBook || [] });
   } catch (error) {
     console.error("Get trades error:", error);
     res.status(400).json({

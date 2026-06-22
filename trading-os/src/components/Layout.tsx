@@ -12,7 +12,7 @@ import {
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useDailyAccess } from "../hooks/useDailyAccess";
-import { KiteConnect } from "./KiteConnect";
+import { FyersConnect } from "./FyersConnect";
 
 const navigation = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -108,10 +108,10 @@ export function Layout() {
             </button>
             <p className="ml-3 font-semibold text-white">TradingOS</p>
           </div>
-          <KiteConnect />
+          <FyersConnect />
         </header>
         <header className="sticky top-0 z-30 hidden h-16 items-center justify-end border-b border-zinc-800 bg-zinc-950/90 px-6 backdrop-blur lg:flex">
-          <KiteConnect />
+          <FyersConnect />
         </header>
         <main className="mx-auto max-w-7xl p-5 sm:p-8">
           <Outlet />

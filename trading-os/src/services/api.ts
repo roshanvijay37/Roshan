@@ -2,7 +2,7 @@
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 
 function getSessionId(): string | null {
-  return localStorage.getItem("kiteSessionId");
+  return localStorage.getItem("fyersSessionId");
 }
 
 async function fetchWithAuth(path: string, options: RequestInit = {}) {
@@ -21,8 +21,8 @@ async function fetchWithAuth(path: string, options: RequestInit = {}) {
 
   if (response.status === 401) {
     // Clear invalid session
-    localStorage.removeItem("kiteSessionId");
-    window.dispatchEvent(new Event("kite:logout"));
+    localStorage.removeItem("fyersSessionId");
+    window.dispatchEvent(new Event("fyers:logout"));
   }
 
   if (!response.ok) {
@@ -36,10 +36,10 @@ async function fetchWithAuth(path: string, options: RequestInit = {}) {
 // Auth
 export const authApi = {
   getLoginUrl: () => fetchWithAuth("/auth/login"),
-  exchangeToken: (requestToken: string) =>
+  exchangeToken: (authCode: string) =>
     fetchWithAuth("/auth/callback", {
       method: "POST",
-      body: JSON.stringify({ request_token: requestToken }),
+      body: JSON.stringify({ auth_code: authCode }),
     }),
   checkSession: (sessionId: string) => fetchWithAuth(`/auth/session/${sessionId}`),
   logout: () => {
@@ -50,7 +50,7 @@ export const authApi = {
         body: JSON.stringify({ sessionId }),
       }).catch(() => {});
     }
-    localStorage.removeItem("kiteSessionId");
+    localStorage.removeItem("fyersSessionId");
   },
 };
 
@@ -60,7 +60,11 @@ export const accountApi = {
   getFunds: () => fetchWithAuth("/account/funds"),
   getHoldings: () => fetchWithAuth("/account/holdings"),
   getPositions: () => fetchWithAuth("/account/positions"),
-  getQuote: (instrument: string) => fetchWithAuth(`/account/quote/${instrument}`),
+  getQuotes: (symbols: string[]) =>
+    fetchWithAuth("/account/quote", {
+      method: "POST",
+      body: JSON.stringify({ symbols }),
+    }),
   searchInstruments: (query: string, exchange = "NSE") =>
     fetchWithAuth(`/account/search?q=${encodeURIComponent(query)}&exchange=${exchange}`),
 };
@@ -68,28 +72,26 @@ export const accountApi = {
 // Orders
 export const orderApi = {
   place: (params: {
-    tradingsymbol: string;
-    transaction_type: "BUY" | "SELL";
-    quantity: number;
-    order_type?: string;
-    product?: string;
-    price?: number;
-    trigger_price?: number;
-    exchange?: string;
+    symbol: string;
+    side: number; // 1 = Buy, -1 = Sell
+    qty: number;
+    type?: number; // 1 = Limit, 2 = Market, 3 = Stop, 4 = Stoplimit
+    limitPrice?: number;
+    stopPrice?: number;
+    productType?: string; // INTRADAY, CNC, CO, BO, MARGIN
   }) =>
     fetchWithAuth("/orders/place", {
       method: "POST",
       body: JSON.stringify(params),
     }),
-  cancel: (orderId: string, variety = "regular") =>
+  cancel: (orderId: string) =>
     fetchWithAuth(`/orders/cancel/${orderId}`, {
       method: "DELETE",
-      body: JSON.stringify({ variety }),
     }),
   getHistory: () => fetchWithAuth("/orders/history"),
   getTrades: () => fetchWithAuth("/orders/trades/today"),
 };
 
-export function isKiteConnected(): boolean {
+export function isFyersConnected(): boolean {
   return !!getSessionId();
 }
