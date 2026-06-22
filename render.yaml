@@ -20,6 +20,6 @@ services:
       - key: FYERS_SECRET_ID
         sync: false
       - key: FYERS_REDIRECT_URL
-        value: https://roshanvijay37.github.io/Roshan/live-trade
+        value: https://roshanvijay.com/trading-os/
       - key: JWT_SECRET
         generateValue: true
