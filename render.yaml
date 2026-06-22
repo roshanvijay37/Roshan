@@ -20,6 +20,6 @@ services:
       - key: FYERS_SECRET_ID
         sync: false
       - key: FYERS_REDIRECT_URL
-        value: https://roshanvijay.com/
+        value: https://roshanvijay.com
       - key: JWT_SECRET
         generateValue: true

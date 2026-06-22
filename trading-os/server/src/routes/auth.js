@@ -5,7 +5,7 @@ const router = express.Router();
 
 const appId = process.env.FYERS_APP_ID;
 const secretId = process.env.FYERS_SECRET_ID;
-const redirectUrl = process.env.FYERS_REDIRECT_URL || "http://127.0.0.1:5173/";
+const redirectUrl = process.env.FYERS_REDIRECT_URL || "http://127.0.0.1:5173";
 
 // FYERS uses base client_id for OAuth, full appId for API calls
 // OAuth client_id = base part (e.g., NOGKPU94W4)
