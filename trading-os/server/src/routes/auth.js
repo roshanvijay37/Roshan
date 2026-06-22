@@ -12,7 +12,7 @@ const sessions = new Map();
 const stateStore = new Map(); // Store state tokens for validation
 
 // Step 1: Get FYERS login URL
-router.get("/login", (_req, res) => {
+router.get("/login", async (_req, res) => {
   if (!appId || !secretId) {
     return res.status(500).json({
       error: "FYERS API credentials not configured",
@@ -20,7 +20,6 @@ router.get("/login", (_req, res) => {
     });
   }
 
-  // FYERS OAuth URL format
   const state = crypto.randomUUID();
   stateStore.set(state, { createdAt: Date.now() });
 
@@ -32,9 +31,41 @@ router.get("/login", (_req, res) => {
     }
   }
 
-  const loginUrl = `https://api.fyers.in/api/v3/generate-authcode?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&state=${state}`;
+  try {
+    // FYERS requires POST to generate authcode
+    const response = await fetch("https://api.fyers.in/api/v3/generate-authcode", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        client_id: appId,
+        redirect_uri: redirectUrl,
+        response_type: "code",
+        state: state,
+      }),
+    });
 
-  res.json({ loginUrl, state });
+    const data = await response.json();
+
+    if (data.s === "ok" && data.data && data.data.authorization_code) {
+      // FYERS returned auth code directly - unusual but possible
+      res.json({
+        loginUrl: `${redirectUrl}?auth_code=${data.data.authorization_code}&state=${state}`,
+        state,
+      });
+    } else if (data.s === "ok" && data.data && data.data.url) {
+      // FYERS returned a login URL
+      res.json({ loginUrl: data.data.url, state });
+    } else {
+      // Fallback to standard OAuth URL format
+      const loginUrl = `https://api.fyers.in/api/v3/generate-authcode?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&state=${state}`;
+      res.json({ loginUrl, state });
+    }
+  } catch (error) {
+    console.error("FYERS login URL error:", error);
+    // Fallback to standard OAuth URL
+    const loginUrl = `https://api.fyers.in/api/v3/generate-authcode?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&state=${state}`;
+    res.json({ loginUrl, state });
+  }
 });
 
 // Step 2: Handle OAuth callback and generate access token
