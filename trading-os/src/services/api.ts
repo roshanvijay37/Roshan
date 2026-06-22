@@ -36,10 +36,10 @@ async function fetchWithAuth(path: string, options: RequestInit = {}) {
 // Auth
 export const authApi = {
   getLoginUrl: () => fetchWithAuth("/auth/login"),
-  exchangeToken: (authCode: string) =>
+  exchangeToken: (authCode: string, state?: string) =>
     fetchWithAuth("/auth/callback", {
       method: "POST",
-      body: JSON.stringify({ auth_code: authCode }),
+      body: JSON.stringify({ auth_code: authCode, state }),
     }),
   checkSession: (sessionId: string) => fetchWithAuth(`/auth/session/${sessionId}`),
   logout: () => {

@@ -47,12 +47,13 @@ export function FyersConnect() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const authCode = params.get("auth_code");
+    const state = params.get("state");
     const status = params.get("status");
 
-    if ((status === "success" || status === "ok") && authCode) {
+    if (authCode) {
       setLoading(true);
       authApi
-        .exchangeToken(authCode)
+        .exchangeToken(authCode, state || undefined)
         .then((result) => {
           localStorage.setItem("fyersSessionId", result.sessionId);
           setConnected(true);

@@ -4,10 +4,11 @@ const router = express.Router();
 
 const appId = process.env.FYERS_APP_ID;
 const secretId = process.env.FYERS_SECRET_ID;
-const redirectUrl = process.env.FYERS_REDIRECT_URL || "http://localhost:5173/live-trade";
+const redirectUrl = process.env.FYERS_REDIRECT_URL || "http://127.0.0.1:5173/";
 
 // In-memory session store (use Redis in production)
 const sessions = new Map();
+const stateStore = new Map(); // Store state tokens for validation
 
 // Step 1: Get FYERS login URL
 router.get("/login", (_req, res) => {
@@ -19,7 +20,17 @@ router.get("/login", (_req, res) => {
   }
 
   // FYERS OAuth URL format
-  const state = Math.random().toString(36).substring(7);
+  const state = crypto.randomUUID();
+  stateStore.set(state, { createdAt: Date.now() });
+
+  // Clean up old states (older than 10 minutes)
+  const tenMinutesAgo = Date.now() - 10 * 60 * 1000;
+  for (const [key, value] of stateStore.entries()) {
+    if (value.createdAt < tenMinutesAgo) {
+      stateStore.delete(key);
+    }
+  }
+
   const loginUrl = `https://api.fyers.in/api/v3/generate-authcode?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&state=${state}`;
 
   res.json({ loginUrl, state });
@@ -27,20 +38,35 @@ router.get("/login", (_req, res) => {
 
 // Step 2: Handle OAuth callback and generate access token
 router.post("/callback", async (req, res) => {
-  const { auth_code } = req.body;
+  const { auth_code, state } = req.body;
 
   if (!auth_code) {
     return res.status(400).json({ error: "auth_code is required" });
   }
 
+  // Validate state if provided
+  if (state && !stateStore.has(state)) {
+    return res.status(400).json({ error: "Invalid or expired state" });
+  }
+
+  // Clear used state
+  if (state) {
+    stateStore.delete(state);
+  }
+
   try {
-    // Exchange auth_code for access_token
+    // Exchange auth_code for access_token using SHA256 hash of secret
+    const cryptoModule = await import("crypto");
+    const hash = cryptoModule.createHash("sha256");
+    hash.update(`${appId}:${secretId}`);
+    const appIdHash = hash.digest("hex");
+
     const tokenResponse = await fetch("https://api.fyers.in/api/v3/validate-authcode", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         grant_type: "authorization_code",
-        appIdHash: secretId,
+        appIdHash: appIdHash,
         code: auth_code,
       }),
     });
