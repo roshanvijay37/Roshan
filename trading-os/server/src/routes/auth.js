@@ -7,6 +7,10 @@ const appId = process.env.FYERS_APP_ID;
 const secretId = process.env.FYERS_SECRET_ID;
 const redirectUrl = process.env.FYERS_REDIRECT_URL || "http://127.0.0.1:5173/";
 
+// Extract base client_id (without suffix like -100) for OAuth
+// FYERS OAuth often uses base ID while API uses full ID with suffix
+const clientId = appId ? appId.split('-')[0] : '';
+
 // In-memory session store (use Redis in production)
 const sessions = new Map();
 const stateStore = new Map(); // Store state tokens for validation
@@ -31,11 +35,8 @@ router.get("/login", (_req, res) => {
     }
   }
 
-  // FYERS OAuth URL - browser opens this directly via GET
-  // Ensure redirect URI matches exactly what's registered in FYERS app
-  const normalizedRedirectUri = redirectUrl.endsWith("/") ? redirectUrl : redirectUrl + "/";
-  
-  const loginUrl = `https://api.fyers.in/api/v3/generate-authcode?client_id=${appId}&redirect_uri=${encodeURIComponent(normalizedRedirectUri)}&response_type=code&state=${state}`;
+  // FYERS OAuth URL - use base client_id without suffix
+  const loginUrl = `https://api.fyers.in/api/v3/generate-authcode?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&state=${state}`;
 
   res.json({ loginUrl, state });
 });
