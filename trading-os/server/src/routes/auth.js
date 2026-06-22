@@ -12,7 +12,7 @@ const sessions = new Map();
 const stateStore = new Map(); // Store state tokens for validation
 
 // Step 1: Get FYERS login URL
-router.get("/login", async (_req, res) => {
+router.get("/login", (_req, res) => {
   if (!appId || !secretId) {
     return res.status(500).json({
       error: "FYERS API credentials not configured",
@@ -31,44 +31,13 @@ router.get("/login", async (_req, res) => {
     }
   }
 
-  try {
-    // FYERS requires authenticated POST to generate authcode
-    const hash = crypto.createHash("sha256");
-    hash.update(`${appId}:${secretId}`);
-    const appIdHash = hash.digest("hex");
+  // FYERS OAuth URL - browser opens this directly via GET
+  // Ensure redirect URI matches exactly what's registered in FYERS app
+  const normalizedRedirectUri = redirectUrl.endsWith("/") ? redirectUrl : redirectUrl + "/";
+  
+  const loginUrl = `https://api.fyers.in/api/v3/generate-authcode?client_id=${appId}&redirect_uri=${encodeURIComponent(normalizedRedirectUri)}&response_type=code&state=${state}`;
 
-    const response = await fetch("https://api.fyers.in/api/v3/generate-authcode", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        client_id: appId,
-        redirect_uri: redirectUrl,
-        response_type: "code",
-        state: state,
-        appIdHash: appIdHash,
-      }),
-    });
-
-    const data = await response.json();
-    console.log("FYERS generate-authcode response:", JSON.stringify(data));
-
-    if (data.s === "ok" && data.data) {
-      // FYERS returns the login URL in the response
-      const loginUrl = data.data.url || data.data.authorization_url;
-      if (loginUrl) {
-        res.json({ loginUrl, state });
-        return;
-      }
-    }
-
-    // If we get here, something went wrong but let's try fallback
-    throw new Error(data.message || "Failed to get login URL from FYERS");
-  } catch (error) {
-    console.error("FYERS login error:", error);
-    // Fallback: construct the OAuth URL directly
-    const loginUrl = `https://api.fyers.in/api/v3/generate-authcode?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&state=${state}`;
-    res.json({ loginUrl, state, warning: "Using fallback URL" });
-  }
+  res.json({ loginUrl, state });
 });
 
 // Step 2: Handle OAuth callback and generate access token
@@ -91,8 +60,7 @@ router.post("/callback", async (req, res) => {
 
   try {
     // Exchange auth_code for access_token using SHA256 hash of secret
-    const cryptoModule = await import("crypto");
-    const hash = cryptoModule.createHash("sha256");
+    const hash = crypto.createHash("sha256");
     hash.update(`${appId}:${secretId}`);
     const appIdHash = hash.digest("hex");
 
