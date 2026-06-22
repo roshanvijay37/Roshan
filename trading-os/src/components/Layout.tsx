@@ -7,14 +7,17 @@ import {
   Settings,
   ShieldCheck,
   X,
+  Zap,
 } from "lucide-react";
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useDailyAccess } from "../hooks/useDailyAccess";
+import { KiteConnect } from "./KiteConnect";
 
 const navigation = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/new-trade", label: "New Trade", icon: PlusCircle },
+  { to: "/live-trade", label: "Live Trade", icon: Zap },
   { to: "/journal", label: "Journal", icon: BookOpen },
   { to: "/reports", label: "Reports", icon: BarChart3 },
   { to: "/settings", label: "Settings", icon: Settings },
@@ -94,15 +97,21 @@ export function Layout() {
         </div>
       )}
       <div className="lg:pl-64">
-        <header className="sticky top-0 z-30 flex h-16 items-center border-b border-zinc-800 bg-zinc-950/90 px-4 backdrop-blur lg:hidden">
-          <button
-            aria-label="Open menu"
-            onClick={() => setOpen(true)}
-            className="rounded-lg border border-zinc-800 p-2"
-          >
-            <Menu size={20} />
-          </button>
-          <p className="ml-3 font-semibold text-white">TradingOS</p>
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-zinc-800 bg-zinc-950/90 px-4 backdrop-blur lg:hidden">
+          <div className="flex items-center">
+            <button
+              aria-label="Open menu"
+              onClick={() => setOpen(true)}
+              className="rounded-lg border border-zinc-800 p-2"
+            >
+              <Menu size={20} />
+            </button>
+            <p className="ml-3 font-semibold text-white">TradingOS</p>
+          </div>
+          <KiteConnect />
+        </header>
+        <header className="sticky top-0 z-30 hidden h-16 items-center justify-end border-b border-zinc-800 bg-zinc-950/90 px-6 backdrop-blur lg:flex">
+          <KiteConnect />
         </header>
         <main className="mx-auto max-w-7xl p-5 sm:p-8">
           <Outlet />

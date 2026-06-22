@@ -4,6 +4,7 @@ import { storage } from "./services/storage";
 import { Constitution } from "./pages/Constitution";
 import { Dashboard } from "./pages/Dashboard";
 import { Journal } from "./pages/Journal";
+import { LiveTrade } from "./pages/LiveTrade";
 import { NewTrade } from "./pages/NewTrade";
 import { Reports } from "./pages/Reports";
 import { Settings } from "./pages/Settings";
@@ -19,6 +20,7 @@ export default function App() {
       <Route element={<DailyGate />}>
         <Route index element={<Dashboard />} />
         <Route path="/new-trade" element={<NewTrade />} />
+        <Route path="/live-trade" element={<LiveTrade />} />
         <Route path="/journal" element={<Journal />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/settings" element={<Settings />} />
