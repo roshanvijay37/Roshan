@@ -10,7 +10,7 @@
     />
     <title>TradingOS</title>
     <script>
-      // Redirect direct paths to hash-based routing for SPA on GitHub Pages
+      // Redirect direct paths to hash-based routing for SPA
       (function() {
         var path = window.location.pathname;
         var hash = window.location.hash;
@@ -18,17 +18,13 @@
         
         // If we have an auth_code in the URL but no hash, redirect to hash
         if (search.includes('auth_code=') && !hash) {
-          window.location.replace(window.location.pathname + '/#' + search);
+          window.location.replace('/#' + search);
           return;
         }
         
-        // Handle direct paths like /trading-os/live-trade
-        var basePath = '/trading-os';
-        if (path.startsWith(basePath) && path.length > basePath.length && !path.startsWith(basePath + '/#')) {
-          var route = path.slice(basePath.length);
-          if (route !== '/' && route !== '') {
-            window.location.replace(basePath + '/#' + route + search);
-          }
+        // Handle direct paths like /live-trade
+        if (path !== '/' && path !== '' && !hash) {
+          window.location.replace('/#' + path + search);
         }
       })();
     </script>
