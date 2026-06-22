@@ -9,6 +9,29 @@
       content="TradingOS — a discipline-first risk manager and trading journal."
     />
     <title>TradingOS</title>
+    <script>
+      // Redirect direct paths to hash-based routing for SPA on GitHub Pages
+      (function() {
+        var path = window.location.pathname;
+        var hash = window.location.hash;
+        var search = window.location.search;
+        
+        // If we have an auth_code in the URL but no hash, redirect to hash
+        if (search.includes('auth_code=') && !hash) {
+          window.location.replace(window.location.pathname + '/#' + search);
+          return;
+        }
+        
+        // Handle direct paths like /trading-os/live-trade
+        var basePath = '/trading-os';
+        if (path.startsWith(basePath) && path.length > basePath.length && !path.startsWith(basePath + '/#')) {
+          var route = path.slice(basePath.length);
+          if (route !== '/' && route !== '') {
+            window.location.replace(basePath + '/#' + route + search);
+          }
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
