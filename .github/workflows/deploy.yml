@@ -1,4 +1,4 @@
-name: Deploy portfolio
+name: Deploy portfolio and TradingOS
 
 on:
   push:
@@ -23,8 +23,30 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
-      - run: npm run build
+
+      - name: Install portfolio dependencies
+        run: npm ci
+
+      - name: Build portfolio
+        run: npm run build
+
+      - name: Install TradingOS dependencies
+        working-directory: trading-os
+        run: npm install
+
+      - name: Test TradingOS
+        working-directory: trading-os
+        run: npm test
+
+      - name: Build TradingOS
+        working-directory: trading-os
+        run: npm run build
+
+      - name: Add TradingOS to the Pages site
+        run: |
+          mkdir -p dist/trading-os
+          cp -R trading-os/dist/. dist/trading-os/
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
