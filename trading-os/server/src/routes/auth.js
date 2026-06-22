@@ -7,6 +7,9 @@ const appId = process.env.FYERS_APP_ID;
 const secretId = process.env.FYERS_SECRET_ID;
 const redirectUrl = process.env.FYERS_REDIRECT_URL || "http://127.0.0.1:5173/";
 
+// FYERS API base URL - using api-t1 as per official docs
+const FYERS_API_BASE = "https://api-t1.fyers.in/api/v3";
+
 // In-memory session store (use Redis in production)
 const sessions = new Map();
 const stateStore = new Map(); // Store state tokens for validation
@@ -32,8 +35,7 @@ router.get("/login", (_req, res) => {
   }
 
   // FYERS v3 OAuth URL - GET endpoint per official docs
-  // https://myapi.fyers.in/docsv3#tag/Authentication-and-Login-Flow-User-Apps
-  const loginUrl = `https://api.fyers.in/api/v3/generate-authcode?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&state=${state}`;
+  const loginUrl = `${FYERS_API_BASE}/generate-authcode?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&state=${state}`;
 
   res.json({ loginUrl, state });
 });
@@ -62,7 +64,7 @@ router.post("/callback", async (req, res) => {
     hash.update(`${appId}:${secretId}`);
     const appIdHash = hash.digest("hex");
 
-    const tokenResponse = await fetch("https://api.fyers.in/api/v3/validate-authcode", {
+    const tokenResponse = await fetch(`${FYERS_API_BASE}/validate-authcode`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -82,7 +84,7 @@ router.post("/callback", async (req, res) => {
 
     // Get user profile using the access token
     const profileResponse = await fetch(
-      `https://api.fyers.in/api/v3/profile?client_id=${appId}&access_token=${access_token}`,
+      `${FYERS_API_BASE}/profile?client_id=${appId}&access_token=${access_token}`,
     );
     const profileData = await profileResponse.json();
 

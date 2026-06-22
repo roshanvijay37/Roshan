@@ -3,9 +3,11 @@ import { requireAuth } from "./auth.js";
 
 const router = express.Router();
 
+const FYERS_API_BASE = "https://api-t1.fyers.in/api/v3";
+
 // Helper to make FYERS API calls
 async function fyersApiCall(endpoint, accessToken, appId, body = null, method = "GET") {
-  const url = `https://api.fyers.in/api/v3${endpoint}`;
+  const url = `${FYERS_API_BASE}${endpoint}`;
   const headers = {
     "Content-Type": "application/json",
     Authorization: `${appId}:${accessToken}`,
