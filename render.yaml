@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: tradingos-api
+    runtime: node
+    plan: free
+    repo: https://github.com/roshanvijay37/Roshan.git
+    branch: main
+    rootDir: trading-os/server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: FRONTEND_URL
+        value: https://roshanvijay37.github.io
+      - key: FYERS_APP_ID
+        sync: false
+      - key: FYERS_SECRET_ID
+        sync: false
+      - key: FYERS_REDIRECT_URL
+        value: https://roshanvijay37.github.io/Roshan/live-trade
+      - key: JWT_SECRET
+        generateValue: true
