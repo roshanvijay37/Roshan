@@ -4,12 +4,12 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch src/index.js",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "build": "echo 'No build step needed for Node.js server'"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "fyers-api-v3": "^3.2.3"
+    "express": "^4.21.2"
   }
 }

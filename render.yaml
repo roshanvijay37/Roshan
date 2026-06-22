@@ -6,7 +6,7 @@ services:
     repo: https://github.com/roshanvijay37/Roshan.git
     branch: main
     rootDir: trading-os/server
-    buildCommand: npm install
+    buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
       - key: NODE_ENV
