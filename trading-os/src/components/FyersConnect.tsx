@@ -65,12 +65,16 @@ export function FyersConnect() {
         })
         .catch((err) => {
           alert("FYERS login failed: " + err.message);
+          // Clear stale hash so user can retry
+          window.location.hash = "";
         })
         .finally(() => setLoading(false));
     }
   }, []);
 
   const handleLogin = async () => {
+    // Clear any old hash to prevent reprocessing stale auth codes
+    window.location.hash = "";
     setLoading(true);
     try {
       const { loginUrl } = await authApi.getLoginUrl();
