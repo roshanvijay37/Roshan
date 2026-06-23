@@ -39,8 +39,8 @@ router.get("/login", (_req, res) => {
     }
   }
 
-  // FYERS v3 OAuth URL - use base client_id for OAuth
-  const loginUrl = `${FYERS_API_BASE}/generate-authcode?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&state=${state}`;
+  // FYERS v3 OAuth URL - use full appId (with suffix) for OAuth
+  const loginUrl = `${FYERS_API_BASE}/generate-authcode?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUrl)}&response_type=code&state=${state}`;
 
   res.json({ loginUrl, state });
 });
