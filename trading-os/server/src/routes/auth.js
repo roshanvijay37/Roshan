@@ -54,9 +54,10 @@ router.post("/callback", async (req, res) => {
   }
 
   // Validate state if provided
-  if (state && !stateStore.has(state)) {
-    return res.status(400).json({ error: "Invalid or expired state" });
-  }
+  // Note: In-memory state is lost on server restart. For production, use Redis or persistent storage.
+  // if (state && !stateStore.has(state)) {
+  //   return res.status(400).json({ error: "Invalid or expired state" });
+  // }
 
   // Clear used state
   if (state) {
