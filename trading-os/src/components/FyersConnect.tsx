@@ -43,9 +43,12 @@ export function FyersConnect() {
     return () => window.removeEventListener("fyers:logout", handleLogout);
   }, [checkSession]);
 
-  // Handle OAuth callback (auth_code in URL)
+  // Handle OAuth callback (auth_code in URL hash)
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+    // FYERS redirects with auth_code in hash fragment (#?auth_code=...)
+    const hash = window.location.hash;
+    const hashParams = hash.startsWith("#") ? hash.slice(1) : hash;
+    const params = new URLSearchParams(hashParams || window.location.search);
     const authCode = params.get("auth_code");
     const state = params.get("state");
     const status = params.get("status");
