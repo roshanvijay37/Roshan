@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Play, RotateCcw, TrendingUp, TrendingDown, Target, Shield, DollarSign, BarChart3, Activity, Clock } from "lucide-react";
+import { Play, RotateCcw, TrendingUp, TrendingDown, Target, Shield, DollarSign, BarChart3, Activity, Clock, MessageSquare, Settings2 } from "lucide-react";
 import { backtestApi } from "../services/api";
 
 interface BacktestSummary {
@@ -49,10 +49,81 @@ interface BacktestResult {
   equityCurve: EquityPoint[];
 }
 
+// Natural language parser (client-side)
+function parseNaturalLanguage(text: string) {
+  const t = text.toLowerCase();
+  const config: Record<string, any> = {};
+
+  // Symbol
+  if (t.includes("bank nifty")) config.symbol = "NSE:NIFTYBANK-INDEX";
+  else if (t.includes("nifty 50") || t.includes("nifty")) config.symbol = "NSE:NIFTY50-INDEX";
+  else if (t.includes("fin nifty")) config.symbol = "NSE:FINNIFTY-INDEX";
+  else if (t.includes("sensex")) config.symbol = "BSE:SENSEX";
+  else config.symbol = "NSE:NIFTYBANK-INDEX";
+
+  // Timeframe
+  if (t.includes("1 min")) config.resolution = "1";
+  else if (t.includes("5 min")) config.resolution = "5";
+  else if (t.includes("15 min")) config.resolution = "15";
+  else if (t.includes("30 min")) config.resolution = "30";
+  else if (t.includes("1 hour") || t.includes("hourly")) config.resolution = "60";
+  else if (t.includes("daily") || t.includes("day")) config.resolution = "D";
+  else config.resolution = "5";
+
+  // Dates
+  const end = new Date().toISOString().split("T")[0];
+  let days = 90;
+  if (t.includes("1 year")) days = 365;
+  else if (t.includes("2 year")) days = 730;
+  else if (t.includes("6 month")) days = 180;
+  else if (t.includes("3 month")) days = 90;
+  else if (t.includes("1 month")) days = 30;
+  const start = new Date(Date.now() - days * 86400000).toISOString().split("T")[0];
+  config.fromDate = start;
+  config.toDate = end;
+
+  // Capital
+  const capMatch = text.match(/(\d+)\s*(?:lac|lakh)/i);
+  config.capital = capMatch ? parseInt(capMatch[1]) * 100000 : 1000000;
+
+  // Risk
+  const riskMatch = text.match(/(\d+(?:\.\d+)?)\s*%\s*risk/i);
+  config.riskPercent = riskMatch ? parseFloat(riskMatch[1]) : 1;
+
+  // Stop loss
+  const slMatch = text.match(/stop\s*loss\s+(\d+(?:\.\d+)?)\s*%/i);
+  config.slBuffer = slMatch ? parseFloat(slMatch[1]) / 100 : 0.005;
+
+  // RSI
+  const rsiMatch = text.match(/rsi\s*(?:\()?(\d+)?(?:\))?\s*(?:<|below|under)\s*(\d+)/i);
+  if (rsiMatch) {
+    config.rsiPeriod = rsiMatch[1] ? parseInt(rsiMatch[1]) : 14;
+    config.oversoldThreshold = parseInt(rsiMatch[2]);
+  } else {
+    config.rsiPeriod = 2;
+    config.oversoldThreshold = 10;
+  }
+
+  const rsiExitMatch = text.match(/(?:sell|exit).*rsi\s*(?:>|above)\s*(\d+)/i);
+  config.overboughtThreshold = rsiExitMatch ? parseInt(rsiExitMatch[1]) : 90;
+
+  // Target / R:R
+  const rrMatch = text.match(/risk[:\s]*reward\s*(?:ratio)?\s*(?:of\s*)?(\d+(?:\.\d+)?)\s*[:\-]\s*(\d+(?:\.\d+)?)/i);
+  if (rrMatch) {
+    config.targetMultiplier = parseFloat(rrMatch[2]) / parseFloat(rrMatch[1]);
+  } else {
+    config.targetMultiplier = 2;
+  }
+
+  return config;
+}
+
 export function Backtest() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<BacktestResult | null>(null);
   const [error, setError] = useState("");
+  const [mode, setMode] = useState<"manual" | "nlp">("manual");
+  const [nlpText, setNlpText] = useState("");
 
   // Form state
   const [symbol, setSymbol] = useState("NSE:NIFTYBANK-INDEX");
@@ -88,18 +159,31 @@ export function Backtest() {
     setResult(null);
 
     try {
-      const data = await backtestApi.run({
-        symbol,
-        resolution,
-        fromDate,
-        toDate,
-        rsiPeriod,
-        oversoldThreshold: oversold,
-        overboughtThreshold: overbought,
-        capital,
-        riskPercent,
-        targetMultiplier: targetMult,
-      });
+      let params: any;
+      
+      if (mode === "nlp") {
+        if (!nlpText.trim()) {
+          setError("Please type a strategy description");
+          setLoading(false);
+          return;
+        }
+        params = parseNaturalLanguage(nlpText);
+      } else {
+        params = {
+          symbol,
+          resolution,
+          fromDate,
+          toDate,
+          rsiPeriod,
+          oversoldThreshold: oversold,
+          overboughtThreshold: overbought,
+          capital,
+          riskPercent,
+          targetMultiplier: targetMult,
+        };
+      }
+      
+      const data = await backtestApi.run(params);
       setResult(data);
     } catch (err: any) {
       setError(err.message || "Backtest failed");
@@ -197,9 +281,54 @@ export function Backtest() {
         <p className="mt-1 text-sm text-zinc-500">Test your 2-Period RSI strategy on historical data</p>
       </div>
 
+      {/* Mode Toggle */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => setMode("manual")}
+          className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm transition ${
+            mode === "manual" 
+              ? "bg-lime-400 text-zinc-950" 
+              : "border border-zinc-700 text-zinc-400 hover:border-zinc-500"
+          }`}
+        >
+          <Settings2 size={16} />
+          Manual
+        </button>
+        <button
+          onClick={() => setMode("nlp")}
+          className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm transition ${
+            mode === "nlp" 
+              ? "bg-lime-400 text-zinc-950" 
+              : "border border-zinc-700 text-zinc-400 hover:border-zinc-500"
+          }`}
+        >
+          <MessageSquare size={16} />
+          Natural Language
+        </button>
+      </div>
+
       {/* Configuration Panel */}
       <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-5">
-        <h2 className="mb-4 text-sm font-medium text-zinc-300">Strategy Parameters</h2>
+        {mode === "nlp" ? (
+          <div className="space-y-4">
+            <div>
+              <label className="mb-2 block text-sm font-medium text-zinc-300">
+                Describe Your Strategy
+              </label>
+              <textarea
+                value={nlpText}
+                onChange={(e) => setNlpText(e.target.value)}
+                placeholder="Example: RSI 2 period below 10 on Bank Nifty 5min, sell when RSI above 90, 1% stop loss, 1:2 risk reward, 10 lakh capital, last 3 months"
+                className="h-32 w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-sm text-zinc-200 outline-none focus:border-lime-400 resize-none"
+              />
+            </div>
+            <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-3">
+              <p className="text-xs text-zinc-500">
+                <strong className="text-zinc-400">Supported:</strong> RSI, Golden Cross, Bollinger, Stop Loss %, Risk:Reward, Capital (lakh), Timeframes (1m/5m/15m/1h/daily), Periods (1mo/3mo/6mo/1yr)
+              </p>
+            </div>
+          </div>
+        ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <label className="mb-1.5 block text-xs text-zinc-500">Symbol</label>
@@ -325,7 +454,7 @@ export function Backtest() {
             />
           </div>
         </div>
-
+        )}
         <div className="mt-5 flex gap-3">
           <button
             onClick={runBacktest}
