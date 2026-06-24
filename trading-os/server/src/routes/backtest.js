@@ -6,7 +6,7 @@ const router = express.Router();
 const appId = process.env.FYERS_APP_ID;
 const FYERS_DATA_BASE = "https://api-t1.fyers.in/data";
 
-// In-memory cache for historical data (symbol+resolution -> candle array)
+// In-memory cache for historical data
 const dataCache = new Map();
 
 // ─── RSI Calculation ──────────────────────────────────────────────
@@ -49,6 +49,8 @@ async function fetchHistoricalData(symbol, resolution, fromTs, toTs, accessToken
 
   const url = `${FYERS_DATA_BASE}/history?symbol=${encodeURIComponent(symbol)}&resolution=${resolution}&date_format=0&range_from=${fromTs}&range_to=${toTs}&cont_flag=1`;
 
+  console.log("Fetching FYERS data:", url);
+
   const response = await fetch(url, {
     headers: {
       Authorization: `${appId}:${accessToken}`,
@@ -56,9 +58,10 @@ async function fetchHistoricalData(symbol, resolution, fromTs, toTs, accessToken
   });
 
   const data = await response.json();
+  console.log("FYERS response:", JSON.stringify(data).slice(0, 500));
 
   if (data.s !== "ok") {
-    throw new Error(data.message || "Failed to fetch historical data");
+    throw new Error(data.message || `FYERS error: ${JSON.stringify(data)}`);
   }
 
   const candles = data.candles || [];
@@ -299,7 +302,7 @@ function runBacktest(candles, config) {
 // ─── API Endpoint: Run Backtest ───────────────────────────────────
 router.post("/run", async (req, res) => {
   const {
-    symbol = "NSE:BANKNIFTY-INDEX",
+    symbol = "NSE:NIFTYBANK-INDEX",
     resolution = "5",
     fromDate,
     toDate,
@@ -360,8 +363,7 @@ router.post("/run", async (req, res) => {
     });
   } catch (error) {
     console.error("Backtest error:", error);
-    console.error("Stack:", error.stack);
-    res.status(500).json({ error: error.message || "Backtest failed", stack: error.stack });
+    res.status(500).json({ error: error.message || "Backtest failed" });
   }
 });
 
@@ -369,9 +371,9 @@ router.post("/run", async (req, res) => {
 router.get("/symbols", (_req, res) => {
   res.json({
     indices: [
-      { symbol: "NSE:NIFTY BANK", name: "Bank Nifty" },
-      { symbol: "NSE:NIFTY 50", name: "Nifty 50" },
-      { symbol: "NSE:NIFTY FIN SERVICE", name: "Fin Nifty" },
+      { symbol: "NSE:NIFTYBANK-INDEX", name: "Bank Nifty" },
+      { symbol: "NSE:NIFTY50-INDEX", name: "Nifty 50" },
+      { symbol: "NSE:FINNIFTY-INDEX", name: "Fin Nifty" },
       { symbol: "BSE:SENSEX", name: "Sensex" },
     ],
     timeframes: [

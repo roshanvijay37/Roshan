@@ -55,7 +55,7 @@ export function Backtest() {
   const [error, setError] = useState("");
 
   // Form state
-  const [symbol, setSymbol] = useState("NSE:NIFTY BANK");
+  const [symbol, setSymbol] = useState("NSE:NIFTYBANK-INDEX");
   const [resolution, setResolution] = useState("5");
   const [fromDate, setFromDate] = useState("2026-03-24");
   const [toDate, setToDate] = useState("2026-06-24");
@@ -67,9 +67,9 @@ export function Backtest() {
   const [targetMult, setTargetMult] = useState(2);
 
   const symbols = [
-    { value: "NSE:NIFTY BANK", label: "Bank Nifty" },
-    { value: "NSE:NIFTY 50", label: "Nifty 50" },
-    { value: "NSE:NIFTY FIN SERVICE", label: "Fin Nifty" },
+    { value: "NSE:NIFTYBANK-INDEX", label: "Bank Nifty" },
+    { value: "NSE:NIFTY50-INDEX", label: "Nifty 50" },
+    { value: "NSE:FINNIFTY-INDEX", label: "Fin Nifty" },
     { value: "BSE:SENSEX", label: "Sensex" },
   ];
 
