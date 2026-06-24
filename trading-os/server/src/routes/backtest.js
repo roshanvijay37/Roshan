@@ -360,7 +360,8 @@ router.post("/run", async (req, res) => {
     });
   } catch (error) {
     console.error("Backtest error:", error);
-    res.status(500).json({ error: error.message || "Backtest failed" });
+    console.error("Stack:", error.stack);
+    res.status(500).json({ error: error.message || "Backtest failed", stack: error.stack });
   }
 });
 
