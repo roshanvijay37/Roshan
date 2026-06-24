@@ -368,10 +368,10 @@ router.post("/run", async (req, res) => {
 router.get("/symbols", (_req, res) => {
   res.json({
     indices: [
-      { symbol: "NSE:BANKNIFTY-INDEX", name: "Bank Nifty" },
-      { symbol: "NSE:NIFTY50-INDEX", name: "Nifty 50" },
-      { symbol: "NSE:FINNIFTY-INDEX", name: "Fin Nifty" },
-      { symbol: "NSE:SENSEX-INDEX", name: "Sensex" },
+      { symbol: "NSE:NIFTY BANK", name: "Bank Nifty" },
+      { symbol: "NSE:NIFTY 50", name: "Nifty 50" },
+      { symbol: "NSE:NIFTY FIN SERVICE", name: "Fin Nifty" },
+      { symbol: "BSE:SENSEX", name: "Sensex" },
     ],
     timeframes: [
       { value: "1", label: "1 Minute" },
