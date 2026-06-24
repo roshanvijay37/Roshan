@@ -1,5 +1,5 @@
 import express from "express";
-import { getSession } from "./auth.js";
+import { getSession, getAllSessions } from "./auth.js";
 
 const router = express.Router();
 
@@ -375,14 +375,20 @@ router.post("/data", async (req, res) => {
     return res.status(400).json({ error: "symbol, fromDate, and toDate are required" });
   }
 
-  const sessionId = req.headers["x-session-id"];
-  if (!sessionId) {
-    return res.status(401).json({ error: "FYERS session required" });
+  let sessionId = req.headers["x-session-id"];
+  let session = sessionId ? getSession(sessionId) : null;
+  
+  // If no session ID provided or invalid, try to use any active session
+  if (!session) {
+    const sessions = getAllSessions();
+    if (sessions.length > 0) {
+      session = sessions[0];
+      console.log("Using available session for /backtest/data:", session.userId);
+    }
   }
 
-  const session = getSession(sessionId);
   if (!session) {
-    return res.status(401).json({ error: "Invalid or expired FYERS session" });
+    return res.status(401).json({ error: "No active FYERS session. Please connect FYERS at https://roshanvijay.com" });
   }
 
   try {

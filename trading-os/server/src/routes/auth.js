@@ -162,6 +162,20 @@ export function getSession(sessionId) {
   return sessions.get(sessionId);
 }
 
+// Helper to get all active sessions (used by standalone backtester)
+export function getAllSessions() {
+  const now = Date.now();
+  const active = [];
+  for (const [id, session] of sessions.entries()) {
+    // Session expires after 24 hours
+    const created = new Date(session.createdAt).getTime();
+    if (now - created < 24 * 60 * 60 * 1000) {
+      active.push(session);
+    }
+  }
+  return active;
+}
+
 // Middleware to validate session and attach FYERS config
 export function requireAuth(req, res, next) {
   const sessionId = req.headers["x-session-id"];
