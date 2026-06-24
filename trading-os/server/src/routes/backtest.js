@@ -367,6 +367,46 @@ router.post("/run", async (req, res) => {
   }
 });
 
+// ─── API Endpoint: Get raw historical data ────────────────────────
+router.post("/data", async (req, res) => {
+  const { symbol, resolution, fromDate, toDate } = req.body;
+
+  if (!symbol || !fromDate || !toDate) {
+    return res.status(400).json({ error: "symbol, fromDate, and toDate are required" });
+  }
+
+  const sessionId = req.headers["x-session-id"];
+  if (!sessionId) {
+    return res.status(401).json({ error: "FYERS session required" });
+  }
+
+  const session = getSession(sessionId);
+  if (!session) {
+    return res.status(401).json({ error: "Invalid or expired FYERS session" });
+  }
+
+  try {
+    const fromTs = Math.floor(new Date(fromDate).getTime() / 1000);
+    const toTs = Math.floor(new Date(toDate).getTime() / 1000) + 86400;
+
+    const rawCandles = await fetchHistoricalData(symbol, resolution, fromTs, toTs, session.accessToken);
+    const candles = parseCandles(rawCandles);
+
+    res.json({
+      success: true,
+      symbol,
+      resolution,
+      fromDate,
+      toDate,
+      totalCandles: candles.length,
+      candles,
+    });
+  } catch (error) {
+    console.error("Data fetch error:", error);
+    res.status(500).json({ error: error.message || "Failed to fetch data" });
+  }
+});
+
 // ─── API Endpoint: Get available symbols ──────────────────────────
 router.get("/symbols", (_req, res) => {
   res.json({
