@@ -6,6 +6,7 @@ import {
   PlusCircle,
   Settings,
   ShieldCheck,
+  TestTube,
   X,
   Zap,
 } from "lucide-react";
@@ -18,6 +19,7 @@ const navigation = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
   { to: "/new-trade", label: "New Trade", icon: PlusCircle },
   { to: "/live-trade", label: "Live Trade", icon: Zap },
+  { to: "/backtest", label: "Backtest", icon: TestTube },
   { to: "/journal", label: "Journal", icon: BookOpen },
   { to: "/reports", label: "Reports", icon: BarChart3 },
   { to: "/settings", label: "Settings", icon: Settings },

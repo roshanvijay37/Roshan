@@ -5,6 +5,7 @@ import express from "express";
 
 import accountRoutes from "./routes/account.js";
 import authRoutes from "./routes/auth.js";
+import backtestRoutes from "./routes/backtest.js";
 import orderRoutes from "./routes/orders.js";
 
 const app = express();
@@ -32,6 +33,7 @@ app.get("/api/health", (_req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/account", accountRoutes);
+app.use("/api/backtest", backtestRoutes);
 
 // Global error handler
 app.use((err, _req, res, _next) => {

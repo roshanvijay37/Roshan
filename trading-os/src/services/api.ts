@@ -92,6 +92,28 @@ export const orderApi = {
   getTrades: () => fetchWithAuth("/orders/trades/today"),
 };
 
+export const backtestApi = {
+  getSymbols: () => fetchWithAuth("/backtest/symbols"),
+  run: (params: {
+    symbol: string;
+    resolution: string;
+    fromDate: string;
+    toDate: string;
+    rsiPeriod?: number;
+    oversoldThreshold?: number;
+    overboughtThreshold?: number;
+    capital?: number;
+    riskPercent?: number;
+    slBuffer?: number;
+    targetMultiplier?: number;
+    maxHoldBars?: number;
+  }) =>
+    fetchWithAuth("/backtest/run", {
+      method: "POST",
+      body: JSON.stringify(params),
+    }),
+};
+
 export function isFyersConnected(): boolean {
   return !!getSessionId();
 }

@@ -157,6 +157,11 @@ router.post("/logout", (req, res) => {
   res.json({ success: true });
 });
 
+// Helper to get session by ID (used by other routes like backtest)
+export function getSession(sessionId) {
+  return sessions.get(sessionId);
+}
+
 // Middleware to validate session and attach FYERS config
 export function requireAuth(req, res, next) {
   const sessionId = req.headers["x-session-id"];
