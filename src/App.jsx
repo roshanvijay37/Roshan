@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Intro from "./Intro";
-import { CountUp, LazyVisual, MagneticLink, Marquee, ProjectCard, Reveal, ThemeToggle, TiltCard } from "./components";
+import { CountUp, LazyVisual, MagneticLink, Marquee, ProjectCard, Reveal, Scroll3D, ThemeToggle, TiltCard } from "./components";
 import { education, experience, projects, skills } from "./data";
 import { dur, ease, maskLine, spring } from "./motion";
 
@@ -176,9 +176,11 @@ function About() {
               ["06+", "Independent web experiences"],
             ].map(([number, label], index) => (
               <Reveal key={label} delay={index * 0.08}>
+                <Scroll3D intensity={1.1} lift={0.8}>
                 <TiltCard className="stat-card">
                   <CountUp value={number} /><span>{label}</span>
                 </TiltCard>
+                </Scroll3D>
               </Reveal>
             ))}
           </div>
@@ -211,9 +213,11 @@ function Skills() {
             ["04", "Technical leadership", "Architecture, security, code quality and collaborative delivery."],
           ].map(([num, title, text], index) => (
             <Reveal key={title} delay={index * 0.06}>
+              <Scroll3D intensity={0.45} lift={0.35}>
               <motion.div className="capability-row" whileHover={{ x: 8 }}>
                 <span>{num}</span><h3>{title}</h3><p>{text}</p><ArrowUpRight size={18} />
               </motion.div>
+              </Scroll3D>
             </Reveal>
           ))}
         </div>
@@ -234,9 +238,11 @@ function Work() {
       </Reveal>
       <div className="projects-grid">
         {projects.map((project, index) => (
-          // Two columns, so the offset cascades each row left-to-right instead of
-          // growing with the whole list.
-          <ProjectCard project={project} delay={(index % 2) * 0.12} key={project.title} />
+          // Two columns, so the reveal offset cascades each row left-to-right
+          // instead of growing with the whole list.
+          <Scroll3D key={project.title} intensity={1.15} lift={1.2}>
+            <ProjectCard project={project} delay={(index % 2) * 0.12} />
+          </Scroll3D>
         ))}
       </div>
     </section>
@@ -343,6 +349,7 @@ function Contact() {
         </div>
       </Reveal>
       <Reveal>
+        <Scroll3D intensity={0.9} lift={1}>
         <form className="contact-form glass" onSubmit={submit}>
           <div className="form-row">
             <label><span>Your name</span><input required name="from_name" placeholder="Jane Smith" autoComplete="name" /></label>
@@ -355,6 +362,7 @@ function Contact() {
           </button>
           {status === "error" && <p className="form-error">The signal got lost. Please email me directly instead.</p>}
         </form>
+        </Scroll3D>
       </Reveal>
     </section>
   );

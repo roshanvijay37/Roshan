@@ -239,6 +239,14 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .scene { position: fixed; inset: 0; z-index: -2; pointer-events: none; }
 .section-pad { width: min(calc(100% - 48px), var(--max)); margin: auto; }
+/* Perspective lives on the wrapper so each subtree gets its own vanishing
+   point; one shared perspective on <body> would swing far-from-centre elements
+   wildly. `perspective-origin` at the top keeps the tilt hinged where the eye
+   enters the element rather than about its middle. */
+.scroll3d { perspective: 1400px; perspective-origin: 50% 0%; }
+/* No will-change: promoting seventeen of these to their own compositor layers
+   costs more than the transforms it accelerates. */
+.scroll3d-inner { transform-style: preserve-3d; }
 
 .nav-shell {
   position: fixed;

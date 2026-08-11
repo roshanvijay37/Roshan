@@ -54,6 +54,36 @@ export function useNearViewport(ref, margin = "400px") {
   return near;
 }
 
+// Tilts its subtree in 3D according to where it sits in the viewport: pitched
+// away on the way in, flat when centred, pitched away again on the way out.
+//
+// `intensity` is deliberately per-element-type. Rotating body copy the way you
+// rotate a card makes it harder to read and reads as effect for its own sake,
+// so text gets a fraction of what panels get.
+export function Scroll3D({ children, className = "", intensity = 1, lift = 1 }) {
+  const ref = useRef(null);
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+
+  // Deliberately no spring here. Scroll position is already smooth, and a
+  // spring per element means one animation loop per element — with seventeen of
+  // these the page ran at 6fps and the tilts lagged so far behind the scroll
+  // that they never reached their targets. Reading the progress directly is
+  // both cheaper and more accurate.
+  const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [9 * intensity, 0, -9 * intensity]);
+  const z = useTransform(scrollYProgress, [0, 0.5, 1], [-90 * lift, 0, -90 * lift]);
+
+  if (reduced) return <div className={className} ref={ref}>{children}</div>;
+
+  return (
+    <div className={`scroll3d ${className}`} ref={ref}>
+      <motion.div className="scroll3d-inner" style={{ rotateX, z }}>
+        {children}
+      </motion.div>
+    </div>
+  );
+}
+
 // Holds back a lazy subtree until it is approached. The gate has to sit at the
 // call site, not inside the component: rendering a lazy() element is what
 // requests its chunk, so skipping only the <Canvas> inside still pays the
