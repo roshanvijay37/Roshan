@@ -79,8 +79,4 @@ export const skills = [
 ];
 
 
-export const education = [
-  { year: "2021", title: "B.E. Computer Science", place: "MITE, Moodabidri" },
-  { year: "2016", title: "Pre-University", place: "Jain Junior PU College" },
-  { year: "2014", title: "SSLC", place: "Jain High School" },
-];
+

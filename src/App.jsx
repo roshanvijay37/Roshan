@@ -5,7 +5,7 @@ import {
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Intro from "./Intro";
 import { LazyVisual, MagneticLink, Marquee, ProjectCard, Reveal, Scroll3D, ThemeToggle } from "./components";
-import { education, projects, skills } from "./data";
+import { projects, skills } from "./data";
 import { dur, maskLine } from "./motion";
 
 // Reduced-motion stand-in for maskLine: same timing, no travel.
@@ -22,7 +22,6 @@ const nav = [
   ["About", "#about"],
   ["Skills", "#skills"],
   ["Work", "#work"],
-  ["Background", "#background"],
   ["Contact", "#contact"],
 ];
 
@@ -231,26 +230,6 @@ function Work() {
   );
 }
 
-function Background() {
-  return (
-    <section className="section-pad experience" id="background">
-      <Reveal className="section-heading compact">
-        <span className="section-number">04 / BACKGROUND</span>
-        <h2>Trained to build.<br /><em>Practised on real work.</em></h2>
-      </Reveal>
-      <Reveal className="education-block">
-        <span className="section-number">EDUCATION</span>
-        <div>
-          {education.map((item) => (
-            <div className="education-row" key={item.title}>
-              <span>{item.year}</span><h3>{item.title}</h3><p>{item.place}</p>
-            </div>
-          ))}
-        </div>
-      </Reveal>
-    </section>
-  );
-}
 
 // WhatsApp has no icon in lucide, and it is the one mark worth drawing exactly:
 // a generic chat bubble does not read as WhatsApp, and recognition is the whole
@@ -269,7 +248,7 @@ function Contact() {
     <section className="section-pad contact" id="contact">
       <div className="contact-glow" />
       <Reveal className="contact-intro">
-        <span className="section-number">05 / CONTACT</span>
+        <span className="section-number">04 / CONTACT</span>
         <h2>Have an ambitious idea?<br /><em>Let&apos;s give it gravity.</em></h2>
         <p>I&apos;m always interested in thoughtful products, difficult engineering problems, and collaborations with a little spark to them.</p>
         <div className="contact-actions">
@@ -348,7 +327,6 @@ export default function App() {
         <About />
         <Skills />
         <Work />
-        <Background />
         <Contact />
       </main>
       <Footer />
