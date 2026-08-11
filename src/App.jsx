@@ -1,12 +1,19 @@
 import emailjs from "@emailjs/browser";
-import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
+import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import {
   ArrowDown, ArrowRight, ArrowUpRight, Check, Github, Linkedin, Mail,
   Menu, Send, Sparkles, X,
 } from "lucide-react";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { CountUp, MagneticLink, ProjectCard, Reveal, TiltCard } from "./components";
+import { CountUp, MagneticLink, Marquee, ProjectCard, Reveal, TiltCard } from "./components";
 import { education, experience, projects, skills } from "./data";
+import { dur, ease, maskLine, spring } from "./motion";
+
+// Reduced-motion stand-in for maskLine: same timing, no travel.
+const fadeLine = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: dur.quick } },
+};
 
 const Scene = lazy(() => import("./Scene"));
 
@@ -70,6 +77,7 @@ function Header() {
 }
 
 function Hero() {
+  const reduced = useReducedMotion();
   return (
     <section className="hero section-pad" id="top">
       <motion.div
@@ -81,10 +89,20 @@ function Hero() {
         <motion.div className="availability" variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
           <i /> Available for ambitious projects
         </motion.div>
-        <motion.h1 variants={{ hidden: { opacity: 0, y: 60 }, visible: { opacity: 1, y: 0, transition: { duration: 1, ease: [0.22, 1, 0.36, 1] } } }}>
-          I engineer ideas<br />
-          into <span>impact.</span>
-        </motion.h1>
+        <h1>
+          {/* Each line rides up from behind its own mask, the second trailing the
+              first — overlapping action rather than one block fading in. */}
+          <motion.span className="line-mask" variants={{ hidden: {}, visible: {} }}>
+            <motion.span className="line" variants={reduced ? fadeLine : maskLine}>
+              I engineer ideas
+            </motion.span>
+          </motion.span>
+          <motion.span className="line-mask" variants={{ hidden: {}, visible: {} }}>
+            <motion.span className="line" variants={reduced ? fadeLine : maskLine}>
+              into <span className="accent">impact.</span>
+            </motion.span>
+          </motion.span>
+        </h1>
         <motion.p variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8 } } }}>
           Software engineer building scalable products, intelligent tools, and digital experiences with equal parts precision and imagination.
         </motion.p>
@@ -180,9 +198,9 @@ function Skills() {
           ))}
         </div>
       </div>
-      <div className="skill-marquee" aria-hidden="true">
-        <div>{[...skills, ...skills].map((skill, index) => <span key={`${skill}-${index}`}>{skill}<i>✦</i></span>)}</div>
-      </div>
+      <Marquee>
+        {[...skills, ...skills].map((skill, index) => <span key={`${skill}-${index}`}>{skill}<i>✦</i></span>)}
+      </Marquee>
     </section>
   );
 }
@@ -205,6 +223,35 @@ function Work() {
   );
 }
 
+// Pops as the drawn line reaches it — the marker acknowledges the progress
+// rather than sitting inert while the line slides past.
+function TimelineMarker({ index }) {
+  const ref = useRef(null);
+  const reduced = useReducedMotion();
+  const inView = useInView(ref, { once: true, margin: "-45% 0px -45% 0px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      className="timeline-marker"
+      initial={false}
+      animate={inView ? "lit" : "idle"}
+      variants={{
+        idle: { scale: 1, borderColor: "rgba(255,255,255,.1)" },
+        lit: reduced
+          ? { borderColor: "rgba(155,140,255,.85)" }
+          : {
+              scale: [1, 1.22, 1],
+              borderColor: "rgba(155,140,255,.85)",
+              transition: { duration: dur.base, ease: ease.back, times: [0, 0.45, 1] },
+            },
+      }}
+    >
+      <span>{index + 1}</span>
+    </motion.div>
+  );
+}
+
 function Experience() {
   const timelineRef = useRef(null);
   const reduced = useReducedMotion();
@@ -221,7 +268,7 @@ function Experience() {
         <motion.div className="timeline-progress" style={{ scaleY: reduced ? 1 : lineScale }} />
         {experience.map((item, index) => (
           <Reveal className="timeline-item" key={item.company} delay={index * 0.1}>
-            <div className="timeline-marker"><span>{index + 1}</span></div>
+            <TimelineMarker index={index} />
             <div className="timeline-period">{item.period}</div>
             <div className="timeline-content">
               <span className="company">{item.company}</span>

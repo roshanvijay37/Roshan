@@ -150,7 +150,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
   letter-spacing: -0.075em;
   font-weight: 600;
 }
-.hero h1 span {
+/* The mask clips the line's travel. Padding opens room for descenders and the
+   gradient's overflow, and the negative margin takes that space back out of
+   the layout so line-height is unchanged. */
+.hero h1 .line-mask { display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+.hero h1 .line { display: block; will-change: transform; }
+.hero h1 .accent {
   color: transparent;
   background: linear-gradient(115deg, #fff 0%, #a69cff 42%, #61d8ff 100%);
   background-clip: text;
@@ -349,10 +354,14 @@ button, a { -webkit-tap-highlight-color: transparent; }
   transform: rotate(-1.5deg);
   background: rgba(255,255,255,.02);
 }
-.skill-marquee div { width: max-content; display: flex; animation: marquee 35s linear infinite; }
+/* Driven by useAnimationFrame in <Marquee>, not CSS — the keyframe version
+   could not respond to scroll velocity. */
+.skill-marquee div { width: max-content; display: flex; }
 .skill-marquee span { padding: 17px 20px; color: #8d8c99; font: 11px "DM Mono", monospace; text-transform: uppercase; }
 .skill-marquee i { margin-left: 38px; color: var(--violet); font-style: normal; }
-@keyframes marquee { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  .skill-marquee div { animation: none; transform: none; }
+}
 
 .section-heading.horizontal { display: flex; justify-content: space-between; align-items: end; gap: 60px; }
 .section-heading.horizontal > p { max-width: 390px; margin: 0 0 8px; color: var(--muted); line-height: 1.75; font-size: 14px; }

@@ -2,13 +2,14 @@ import {
   animate, motion, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform,
 } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { anticipate, dur, ease as easings, spring } from "./motion";
 
-export const ease = [0.22, 1, 0.36, 1];
+const ease = easings.out;
 
 export const fadeUp = {
   hidden: { opacity: 0, y: 44, filter: "blur(10px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.85, ease } },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: dur.slow, ease } },
 };
 
 const fadeOnly = {
@@ -29,6 +30,59 @@ export function Reveal({ children, className = "", delay = 0 }) {
     >
       {children}
     </motion.div>
+  );
+}
+
+// A marquee that drifts on its own but takes its cue from the page: scrolling
+// adds speed, and scrolling up reverses it. The track holds two copies of the
+// content, so wrapping at -50% puts the seam exactly where it started.
+//
+// Driven by a plain rAF loop writing transform straight to the node. Framer's
+// useAnimationFrame silently stopped ticking here after the first scroll, and a
+// loop we own is both easier to reason about and one less thing between the
+// value and the pixel.
+export function Marquee({ children, baseSpeed = 1.6, maxBoost = 26 }) {
+  const reduced = useReducedMotion();
+  const trackRef = useRef(null);
+  const offset = useRef(0);
+  const direction = useRef(1);
+
+  useEffect(() => {
+    if (reduced) return undefined;
+    let raf = 0;
+    let lastTime = 0;
+    let lastScroll = window.scrollY;
+
+    const loop = (now) => {
+      // Clamp dt so a backgrounded tab doesn't resume with one enormous jump.
+      const dt = lastTime ? Math.min(now - lastTime, 64) : 16;
+      lastTime = now;
+
+      const scrollY = window.scrollY;
+      const moved = scrollY - lastScroll;
+      lastScroll = scrollY;
+      if (Math.abs(moved) > 0.5) direction.current = moved > 0 ? 1 : -1;
+
+      const speed = baseSpeed + Math.min(Math.abs(moved) * 0.9, maxBoost);
+      let next = offset.current - direction.current * speed * (dt / 1000);
+      if (next <= -50) next += 50;
+      if (next > 0) next -= 50;
+      offset.current = next;
+
+      if (trackRef.current) {
+        trackRef.current.style.transform = `translate3d(${next}%, 0, 0)`;
+      }
+      raf = requestAnimationFrame(loop);
+    };
+
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [reduced, baseSpeed, maxBoost]);
+
+  return (
+    <div className="skill-marquee" aria-hidden="true">
+      <div ref={trackRef}>{children}</div>
+    </div>
   );
 }
 
@@ -80,12 +134,19 @@ export function MagneticLink({ children, className = "", ...props }) {
       style={reduced ? undefined : { x, y }}
       onMouseMove={move}
       onMouseLeave={() => { x.set(0); y.set(0); }}
+      variants={reduced ? undefined : anticipate}
+      initial="rest"
+      whileHover="hover"
+      whileTap="tap"
       {...props}
     >
       {children}
     </motion.a>
   );
 }
+
+// Lets descendants react to the card's tilt without prop-drilling motion values.
+const TiltContext = createContext(null);
 
 export function TiltCard({ children, className = "", glow = "#8b5cf6" }) {
   const ref = useRef(null);
@@ -108,15 +169,31 @@ export function TiltCard({ children, className = "", glow = "#8b5cf6" }) {
   };
 
   return (
-    <motion.div
-      ref={ref}
-      className={`tilt-card ${className}`}
-      style={{ rotateX, rotateY, "--glow": glow, "--gx": gx, "--gy": gy }}
-      onMouseMove={move}
-      onMouseLeave={() => { rotateX.set(0); rotateY.set(0); }}
-    >
-      {children}
-    </motion.div>
+    <TiltContext.Provider value={rotateY}>
+      <motion.div
+        ref={ref}
+        className={`tilt-card ${className}`}
+        style={{ rotateX, rotateY, "--glow": glow, "--gx": gx, "--gy": gy }}
+        onMouseMove={move}
+        onMouseLeave={() => { rotateX.set(0); rotateY.set(0); }}
+      >
+        {children}
+      </motion.div>
+    </TiltContext.Provider>
+  );
+}
+
+// Secondary action: the badge counter-rotates against the card's tilt, so it
+// reads as a separate object sitting on the surface rather than painted on it.
+function OpenBadge() {
+  const rotateY = useContext(TiltContext);
+  const reduced = useReducedMotion();
+  const fallback = useMotionValue(0);
+  const counter = useTransform(rotateY ?? fallback, (v) => -v * 1.6);
+  return (
+    <motion.span className="project-open" style={reduced ? undefined : { rotate: counter }}>
+      <ArrowUpRight size={20} />
+    </motion.span>
   );
 }
 
@@ -133,26 +210,53 @@ function ParallaxImage({ src }) {
       <motion.div className="parallax-layer" style={reduced ? undefined : { y }}>
         <img src={src} alt="" loading="lazy" />
       </motion.div>
-      <span className="project-open"><ArrowUpRight size={20} /></span>
+      <OpenBadge />
     </div>
   );
 }
 
+// The image leads, the caption follows a beat later — overlapping action, so
+// the card assembles instead of appearing whole.
+//
+// The caption's delay has to exceed the *difference* in durations, not just be
+// positive: it runs a shorter animation, so too small a delay lets it settle
+// before the image does and the sequence reads backwards.
+const cardImage = {
+  hidden: { opacity: 0, y: 48, filter: "blur(10px)" },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: dur.base, ease } },
+};
+const cardMeta = {
+  hidden: { opacity: 0, y: 18 },
+  visible: { opacity: 1, y: 0, transition: { duration: dur.quick, ease, delay: 0.3 } },
+};
+
 export function ProjectCard({ project, delay = 0 }) {
+  const reduced = useReducedMotion();
+  const variants = reduced
+    ? { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: dur.quick } } }
+    : null;
+
   return (
-    <Reveal delay={delay}>
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ delayChildren: reduced ? 0 : delay }}
+    >
       <TiltCard className="project-card" glow={project.color}>
         <a href={project.href} target="_blank" rel="noreferrer" aria-label={`Open ${project.title}`}>
-          <ParallaxImage src={project.image} />
-          <div className="project-meta">
+          <motion.div variants={variants ?? cardImage}>
+            <ParallaxImage src={project.image} />
+          </motion.div>
+          <motion.div className="project-meta" variants={variants ?? cardMeta}>
             <div>
               <span className="eyebrow">{project.type}</span>
               <h3>{project.title}</h3>
             </div>
             <span className="project-index">{project.index}</span>
-          </div>
+          </motion.div>
         </a>
       </TiltCard>
-    </Reveal>
+    </motion.div>
   );
 }
