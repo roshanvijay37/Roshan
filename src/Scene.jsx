@@ -82,11 +82,130 @@ function ParticleField({ palette, revealed }) {
   );
 }
 
+// The sculpture breaks into its own triangles and the pieces are driven by
+// scroll: whole at the top, scattered through the middle of the page, back
+// together by the end.
+//
+// Every shard lives in one geometry and one draw call. Each vertex carries its
+// triangle's centroid and a per-triangle random axis as attributes, so the
+// vertex shader can push each face outward and spin it about its own centre
+// without eighty separate meshes.
+const shardVertex = /* glsl */ `
+  attribute vec3 aCentroid;
+  attribute vec3 aAxis;
+  attribute float aRand;
+  uniform float uExplode;
+  varying float vRand;
+  varying vec3 vNormalView;
+
+  vec3 rotateAxis(vec3 v, vec3 axis, float angle) {
+    float c = cos(angle), s = sin(angle);
+    return v * c + cross(axis, v) * s + axis * dot(axis, v) * (1.0 - c);
+  }
+
+  void main() {
+    vRand = aRand;
+    vNormalView = normalize(normalMatrix * normal);
+
+    vec3 local = position - aCentroid;
+    local = rotateAxis(local, normalize(aAxis), uExplode * (2.0 + aRand * 3.4));
+    vec3 drift = normalize(aCentroid) * uExplode * (0.7 + aRand * 2.1);
+
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(aCentroid + local + drift, 1.0);
+  }
+`;
+
+const shardFragment = /* glsl */ `
+  uniform vec3 uColorA;
+  uniform vec3 uColorB;
+  uniform float uOpacity;
+  varying float vRand;
+  varying vec3 vNormalView;
+
+  void main() {
+    float lambert = clamp(dot(normalize(vNormalView), normalize(vec3(0.35, 0.7, 0.62))), 0.0, 1.0);
+    vec3 col = mix(uColorA, uColorB, vRand) * (0.42 + 0.8 * lambert);
+    gl_FragColor = vec4(col, uOpacity);
+  }
+`;
+
+function Shards({ palette, explodeRef }) {
+  const material = useRef();
+
+  const geometry = useMemo(() => {
+    // Non-indexed so every triangle owns its three vertices and can move alone.
+    const g = new THREE.IcosahedronGeometry(1.3, 1).toNonIndexed();
+    const pos = g.attributes.position;
+    const count = pos.count;
+    const centroid = new Float32Array(count * 3);
+    const axis = new Float32Array(count * 3);
+    const rand = new Float32Array(count);
+
+    for (let i = 0; i < count; i += 3) {
+      const mx = (pos.getX(i) + pos.getX(i + 1) + pos.getX(i + 2)) / 3;
+      const my = (pos.getY(i) + pos.getY(i + 1) + pos.getY(i + 2)) / 3;
+      const mz = (pos.getZ(i) + pos.getZ(i + 1) + pos.getZ(i + 2)) / 3;
+      const r = Math.random();
+      let ax = Math.random() * 2 - 1, ay = Math.random() * 2 - 1, az = Math.random() * 2 - 1;
+      const len = Math.hypot(ax, ay, az) || 1;
+      ax /= len; ay /= len; az /= len;
+
+      for (let k = 0; k < 3; k++) {
+        const v = i + k;
+        centroid[v * 3] = mx; centroid[v * 3 + 1] = my; centroid[v * 3 + 2] = mz;
+        axis[v * 3] = ax; axis[v * 3 + 1] = ay; axis[v * 3 + 2] = az;
+        rand[v] = r;
+      }
+    }
+
+    g.setAttribute("aCentroid", new THREE.BufferAttribute(centroid, 3));
+    g.setAttribute("aAxis", new THREE.BufferAttribute(axis, 3));
+    g.setAttribute("aRand", new THREE.BufferAttribute(rand, 1));
+    return g;
+  }, []);
+
+  const uniforms = useMemo(
+    () => ({
+      uExplode: { value: 0 },
+      uOpacity: { value: 0 },
+      uColorA: { value: new THREE.Color(palette.core) },
+      uColorB: { value: new THREE.Color(palette.ring2) },
+    }),
+    [palette.core, palette.ring2]
+  );
+
+  useFrame(() => {
+    if (!material.current) return;
+    const e = explodeRef.current;
+    material.current.uniforms.uExplode.value = e;
+    // Invisible while whole, so the shards never z-fight the glass core they
+    // are hidden inside. Capped well below opaque: these sit behind the whole
+    // page, and at full strength they compete with the content instead of
+    // sitting behind it.
+    material.current.uniforms.uOpacity.value = Math.min(0.5, e * 1.1);
+  });
+
+  return (
+    <mesh geometry={geometry}>
+      <shaderMaterial
+        ref={material}
+        vertexShader={shardVertex}
+        fragmentShader={shardFragment}
+        uniforms={uniforms}
+        transparent
+        depthWrite={false}
+        side={THREE.DoubleSide}
+      />
+    </mesh>
+  );
+}
+
 function HeroSculpture({ palette, scrollRef, revealed }) {
   const group = useRef();
   const core = useRef();
   const ringA = useRef();
   const ringB = useRef();
+  const explodeRef = useRef(0);
   // Eases 0 -> 1 once the curtain opens, so the sculpture assembles into the
   // hero instead of already sitting there when the panels part.
   const entrance = useRef(0);
@@ -106,11 +225,16 @@ function HeroSculpture({ palette, scrollRef, revealed }) {
     core.current.rotation.x -= delta * 0.18;
     core.current.rotation.z += delta * 0.12;
 
-    // The sculpture reacts to reading position: it contracts and spins up as
-    // you descend, so the hero object becomes a progress indicator rather than
-    // an ornament that ignores the page.
-    const shrink = (1 - scroll * 0.45) * enter;
-    core.current.scale.setScalar(THREE.MathUtils.lerp(core.current.scale.x, shrink, 0.06));
+    // Whole at the top, fully scattered around the middle of the page, back
+    // together by the end — sin() gives exactly that arc with no keyframes.
+    const explodeTarget = revealed ? Math.sin(Math.max(0, Math.min(1, scroll)) * Math.PI) : 0;
+    explodeRef.current += (explodeTarget - explodeRef.current) * Math.min(delta * 3, 1);
+    const explode = explodeRef.current;
+
+    // The glass core recedes as the shards take over, so the two never read as
+    // two copies of the same object.
+    const shrink = (1 - scroll * 0.45) * enter * (1 - Math.min(1, explode * 1.35));
+    core.current.scale.setScalar(THREE.MathUtils.lerp(core.current.scale.x, Math.max(0, shrink), 0.08));
     group.current.rotation.z = THREE.MathUtils.lerp(group.current.rotation.z, -0.15 + scroll * 1.4, 0.05);
 
     // The rings counter-rotate and open out — they lag the core, which reads as
@@ -153,6 +277,7 @@ function HeroSculpture({ palette, scrollRef, revealed }) {
         <torusGeometry args={[1.72, 0.012, 12, 160]} />
         <meshBasicMaterial color={palette.ring2} transparent opacity={palette.ring2Opacity} />
       </mesh>
+      <Shards palette={palette} explodeRef={explodeRef} />
       <Sparkles count={38} scale={4.6} size={2.2} speed={0.22} color={palette.sparkle} />
     </group>
   );

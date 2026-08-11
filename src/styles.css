@@ -150,7 +150,12 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; background: var(--bg); }
-body { margin: 0; background: var(--bg); color: var(--text); overflow-x: hidden; }
+/* No background on body. In CSS paint order a block-level ancestor's background
+   paints after negative z-index descendants, so an opaque body background sits
+   on top of .scene (-2) and body::before (-5) and hides the entire 3D layer.
+   html carries the page colour instead — it paints as the canvas, underneath
+   everything. */
+body { margin: 0; color: var(--text); overflow-x: hidden; }
 body::before {
   content: "";
   position: fixed;
