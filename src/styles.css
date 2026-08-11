@@ -314,6 +314,36 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 .hero { position: relative; min-height: 100svh; display: flex; align-items: center; padding-top: 120px; padding-bottom: 80px; }
 .hero-copy { width: min(790px, 66vw); position: relative; z-index: 2; }
+.hero-identity { display: flex; align-items: center; gap: 13px; margin-bottom: 22px; }
+/* Crops the 512px source to the head: region x 137..352 maps to a 238% wide
+   image offset by -63.7%, which lands that region exactly on the 46px circle. */
+.hero-identity .avatar {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  flex: none;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  box-shadow: 0 8px 24px var(--shadow-md);
+}
+.hero-identity .avatar img {
+  position: absolute;
+  top: 0;
+  left: -63.7%;
+  width: 238%;
+  height: 238%;
+  max-width: none;
+}
+.hero-identity span { display: grid; gap: 3px; }
+.hero-identity strong { font-size: 15px; font-weight: 700; letter-spacing: -.015em; }
+.hero-identity i {
+  color: var(--text-4);
+  font: 10px "DM Mono", monospace;
+  font-style: normal;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
 .availability {
   width: max-content;
   display: flex;

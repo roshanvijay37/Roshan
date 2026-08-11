@@ -94,6 +94,21 @@ function Hero({ revealed }) {
         animate={revealed ? "visible" : "hidden"}
         variants={{ visible: { transition: { staggerChildren: 0.11, delayChildren: 0.12 } } }}
       >
+        {/* The first screen previously carried no name at all — only the "R"
+            logo — so anyone arriving from a shared link had to scroll to find
+            out whose site this is. */}
+        <motion.div className="hero-identity" variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}>
+          {/* The source is a full-body shot; at 46px the face would be about
+              nine pixels tall. The wrapper crops to the head in CSS rather than
+              shipping a second image — this file is already in cache. */}
+          <span className="avatar">
+            <img src="/img/profile_big.jpg" alt="Roshan Vijay" width="46" height="46" />
+          </span>
+          <span>
+            <strong>Roshan Vijay</strong>
+            <i>Software Engineer</i>
+          </span>
+        </motion.div>
         <motion.div className="availability" variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
           <i /> Available for ambitious projects
         </motion.div>
