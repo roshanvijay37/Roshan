@@ -5,7 +5,7 @@ import {
   Menu, Send, Sparkles, X,
 } from "lucide-react";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { CountUp, MagneticLink, Marquee, ProjectCard, Reveal, TiltCard } from "./components";
+import { CountUp, MagneticLink, Marquee, ProjectCard, Reveal, ThemeToggle, TiltCard } from "./components";
 import { education, experience, projects, skills } from "./data";
 import { dur, ease, maskLine, spring } from "./motion";
 
@@ -43,9 +43,12 @@ function Header() {
       <nav className="desktop-nav" aria-label="Primary navigation">
         {nav.map(([label, href]) => <a href={href} key={href}>{label}</a>)}
       </nav>
-      <a className="nav-cta" href="mailto:roshanshetty010100@gmail.com">
-        Let&apos;s talk <ArrowUpRight size={15} />
-      </a>
+      <div className="nav-actions">
+        <ThemeToggle />
+        <a className="nav-cta" href="mailto:roshanshetty010100@gmail.com">
+          Let&apos;s talk <ArrowUpRight size={15} />
+        </a>
+      </div>
       <button className="menu-button" onClick={() => setOpen(!open)} aria-label="Toggle navigation" aria-expanded={open}>
         {open ? <X /> : <Menu />}
       </button>

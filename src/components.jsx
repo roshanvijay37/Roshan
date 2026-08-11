@@ -1,7 +1,7 @@
 import {
   animate, motion, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform,
 } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Moon, Sun } from "lucide-react";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { anticipate, dur, ease as easings, spring } from "./motion";
 
@@ -30,6 +30,64 @@ export function Reveal({ children, className = "", delay = 0 }) {
     >
       {children}
     </motion.div>
+  );
+}
+
+// The <html> attribute is the single source of truth for the theme — the
+// pre-paint script sets it before React exists, so state is derived from the
+// DOM rather than kept alongside it.
+export function useThemeName() {
+  const [theme, setTheme] = useState(() =>
+    typeof document === "undefined"
+      ? "light"
+      : document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light"
+  );
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const sync = () => setTheme(root.getAttribute("data-theme") === "dark" ? "dark" : "light");
+    const observer = new MutationObserver(sync);
+    observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    sync();
+    return () => observer.disconnect();
+  }, []);
+
+  return theme;
+}
+
+// Light is the default; the choice persists.
+export function ThemeToggle() {
+  const theme = useThemeName();
+
+  const flip = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    const root = document.documentElement;
+    if (next === "dark") root.setAttribute("data-theme", "dark");
+    else root.removeAttribute("data-theme");
+    // Keeps the mobile browser chrome in step with the page.
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", next === "dark" ? "#07070b" : "#fbfbfd");
+    try { localStorage.setItem("theme", next); } catch { /* private mode */ }
+  };
+
+  const dark = theme === "dark";
+  return (
+    <button
+      className="theme-toggle"
+      onClick={flip}
+      aria-label={`Switch to ${dark ? "light" : "dark"} theme`}
+      title={`Switch to ${dark ? "light" : "dark"} theme`}
+    >
+      <motion.span
+        key={theme}
+        initial={{ rotate: -70, opacity: 0, scale: 0.7 }}
+        animate={{ rotate: 0, opacity: 1, scale: 1 }}
+        transition={spring.pop}
+      >
+        {dark ? <Sun size={17} /> : <Moon size={17} />}
+      </motion.span>
+    </button>
   );
 }
 

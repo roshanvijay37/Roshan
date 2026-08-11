@@ -3,8 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#07070b" />
+    <meta name="theme-color" content="#fbfbfd" />
     <meta name="description" content="Roshan Vijay — software engineer building thoughtful, scalable digital products." />
+    <script>
+      // Runs before first paint: applying the stored theme from React would
+      // flash the default palette for a frame first.
+      (function () {
+        try {
+          var saved = localStorage.getItem("theme");
+          if (saved === "dark" || saved === "light") {
+            document.documentElement.setAttribute("data-theme", saved);
+            document
+              .querySelector('meta[name="theme-color"]')
+              .setAttribute("content", saved === "dark" ? "#07070b" : "#fbfbfd");
+          }
+        } catch (e) {
+          /* private mode blocks localStorage — the light default still applies */
+        }
+      })();
+    </script>
     <meta property="og:title" content="Roshan Vijay — Software Engineer" />
     <meta property="og:description" content="Engineering ambitious ideas into elegant, dependable software." />
     <meta property="og:image" content="/img/profile_big.jpg" />
