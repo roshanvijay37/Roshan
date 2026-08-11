@@ -16,6 +16,8 @@ const fadeLine = {
 };
 
 const Scene = lazy(() => import("./Scene"));
+const Portrait = lazy(() => import("./Portrait"));
+const SkillOrbit = lazy(() => import("./SkillOrbit"));
 
 const nav = [
   ["About", "#about"],
@@ -135,7 +137,9 @@ function About() {
       <div className="about-grid">
         <Reveal className="about-portrait">
           <div className="portrait-frame">
-            <img src="/img/profile_big.jpg" alt="Roshan Vijay" />
+            <Suspense fallback={<img src="/img/profile_big.jpg" alt="Roshan Vijay" />}>
+              <Portrait src="/img/profile_big.jpg" alt="Roshan Vijay" />
+            </Suspense>
             <div className="portrait-shine" />
           </div>
           <span className="portrait-caption">Roshan Vijay · Software Engineer</span>
@@ -173,18 +177,9 @@ function Skills() {
       </Reveal>
       <div className="skills-layout">
         <Reveal className="skill-orbit">
-          <div className="orbit orbit-a" />
-          <div className="orbit orbit-b" />
-          <div className="orbit-core"><Sparkles size={30} /><span>BUILD</span></div>
-          {skills.slice(0, 8).map((skill, index) => (
-            <motion.span
-              className={`orbit-skill orbit-skill-${index + 1}`}
-              key={skill}
-              whileHover={{ scale: 1.15, zIndex: 10 }}
-            >
-              {skill}
-            </motion.span>
-          ))}
+          <Suspense fallback={<div className="orbit-core"><Sparkles size={30} /><span>BUILD</span></div>}>
+            <SkillOrbit skills={skills} />
+          </Suspense>
         </Reveal>
         <div className="capability-list">
           {[

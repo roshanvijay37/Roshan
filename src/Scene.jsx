@@ -70,15 +70,38 @@ function ParticleField({ palette }) {
   );
 }
 
-function HeroSculpture({ palette }) {
+function HeroSculpture({ palette, scrollRef }) {
   const group = useRef();
   const core = useRef();
+  const ringA = useRef();
+  const ringB = useRef();
+
   useFrame((state, delta) => {
     if (!group.current || !core.current) return;
+    const scroll = scrollRef.current || 0;
+
     group.current.rotation.y += delta * 0.08;
     group.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.22) * 0.12;
     core.current.rotation.x -= delta * 0.18;
     core.current.rotation.z += delta * 0.12;
+
+    // The sculpture reacts to reading position: it contracts and spins up as
+    // you descend, so the hero object becomes a progress indicator rather than
+    // an ornament that ignores the page.
+    const shrink = 1 - scroll * 0.45;
+    core.current.scale.setScalar(THREE.MathUtils.lerp(core.current.scale.x, shrink, 0.06));
+    group.current.rotation.z = THREE.MathUtils.lerp(group.current.rotation.z, -0.15 + scroll * 1.4, 0.05);
+
+    // The rings counter-rotate and open out — they lag the core, which reads as
+    // follow-through rather than one rigid object.
+    if (ringA.current) {
+      ringA.current.rotation.z += delta * (0.12 + scroll * 0.9);
+      ringA.current.scale.setScalar(THREE.MathUtils.lerp(ringA.current.scale.x, 1 + scroll * 0.5, 0.05));
+    }
+    if (ringB.current) {
+      ringB.current.rotation.z -= delta * (0.09 + scroll * 0.7);
+      ringB.current.scale.setScalar(THREE.MathUtils.lerp(ringB.current.scale.x, 1 + scroll * 0.8, 0.04));
+    }
   });
 
   return (
@@ -101,11 +124,11 @@ function HeroSculpture({ palette }) {
           />
         </mesh>
       </Float>
-      <mesh rotation={[1.1, 0.3, 0.4]}>
+      <mesh ref={ringA} rotation={[1.1, 0.3, 0.4]}>
         <torusGeometry args={[2.05, 0.018, 12, 160]} />
         <meshBasicMaterial color={palette.ring1} transparent opacity={palette.ring1Opacity} />
       </mesh>
-      <mesh rotation={[0.25, 1.15, -0.4]}>
+      <mesh ref={ringB} rotation={[0.25, 1.15, -0.4]}>
         <torusGeometry args={[1.72, 0.012, 12, 160]} />
         <meshBasicMaterial color={palette.ring2} transparent opacity={palette.ring2Opacity} />
       </mesh>
@@ -130,7 +153,7 @@ function Scene({ pointer, scrollRef }) {
           <pointLight position={[4, 3, 5]} intensity={36} color={palette.key} />
           <pointLight position={[-4, -2, 3]} intensity={24} color={palette.fill} />
           <ParticleField palette={palette} />
-          <HeroSculpture palette={palette} />
+          <HeroSculpture palette={palette} scrollRef={scrollRef} />
           <CameraRig pointer={pointer} scrollRef={scrollRef} />
         </Suspense>
       </Canvas>

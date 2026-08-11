@@ -394,6 +394,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .portrait-frame img { width: 100%; height: 100%; object-fit: cover; filter: var(--portrait-filter); transition: transform .7s ease; }
 .portrait-frame:hover img { transform: scale(1.035); }
+/* The WebGL portrait sits over a plain <img>, so the photo is visible while the
+   canvas boots and remains the whole experience if WebGL is unavailable. */
+.portrait-canvas { position: absolute; inset: 0; }
+.portrait-canvas canvas { position: relative; z-index: 1; filter: var(--portrait-filter); }
+.portrait-fallback { position: absolute; inset: 0; z-index: 0; }
 .portrait-shine {
   position: absolute;
   z-index: 2;
@@ -437,6 +442,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .skills-section { overflow: hidden; }
 .skills-layout { display: grid; grid-template-columns: .9fr 1.1fr; gap: 7vw; align-items: center; }
 .skill-orbit { position: relative; aspect-ratio: 1; max-width: 520px; display: grid; place-items: center; }
+.skill-orbit-3d { position: absolute; inset: 0; }
+.skill-orbit-3d canvas { display: block; }
 .orbit { position: absolute; border: 1px solid var(--tint-4); border-radius: 50%; }
 .orbit-a { inset: 7%; animation: spin 28s linear infinite; }
 .orbit-b { inset: 23%; border-style: dashed; animation: spin 20s linear infinite reverse; }
