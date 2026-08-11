@@ -198,6 +198,37 @@ button, a { -webkit-tap-highlight-color: transparent; }
   border-radius: 50%;
   background: radial-gradient(circle, var(--cursor-wash), transparent 65%);
 }
+.intro { position: fixed; inset: 0; z-index: 300; pointer-events: none; }
+.intro-panel { position: absolute; left: 0; right: 0; height: 50.5%; background: var(--bg); }
+.intro-panel-top { top: 0; }
+.intro-panel-bottom { bottom: 0; }
+.intro-mark {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 18px;
+}
+.intro-mark span {
+  width: 62px;
+  height: 62px;
+  display: grid;
+  place-items: center;
+  color: var(--invert-text);
+  background: var(--text-hi);
+  border-radius: 50%;
+  font-size: 30px;
+  font-weight: 800;
+}
+/* A hairline that fills while the page boots — a progress cue without claiming
+   a percentage the page cannot actually measure. */
+.intro-mark i {
+  width: 132px;
+  height: 1px;
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--violet), var(--cyan));
+}
 .progress-bar {
   position: fixed;
   inset: 0 0 auto;
@@ -396,6 +427,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .portrait-frame:hover img { transform: scale(1.035); }
 /* The WebGL portrait sits over a plain <img>, so the photo is visible while the
    canvas boots and remains the whole experience if WebGL is unavailable. */
+.portrait-mount, .orbit-mount { position: absolute; inset: 0; }
+.orbit-mount { display: grid; place-items: center; }
 .portrait-canvas { position: absolute; inset: 0; }
 .portrait-canvas canvas { position: relative; z-index: 1; filter: var(--portrait-filter); }
 .portrait-fallback { position: absolute; inset: 0; z-index: 0; }

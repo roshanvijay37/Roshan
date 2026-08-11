@@ -3,7 +3,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { useReducedMotion } from "framer-motion";
 import { memo, Suspense, useMemo, useRef } from "react";
 import * as THREE from "three";
-import { useThemeName } from "./components";
+import { useNearViewport, useThemeName } from "./components";
 
 const PALETTE = {
   dark: { ring: "#5b5570", chip: "#d6d5de", core: "#a99bff", spark: "#65d9ff" },
@@ -101,6 +101,7 @@ function OrbitScene({ skills, pointer }) {
 function SkillOrbit({ skills }) {
   const pointer = useRef({ x: 0, y: 0 });
   const frame = useRef(null);
+  const near = useNearViewport(frame);
 
   const track = (event) => {
     const rect = frame.current?.getBoundingClientRect();
@@ -113,11 +114,13 @@ function SkillOrbit({ skills }) {
     <div className="skill-orbit-3d" ref={frame} onPointerMove={track} onPointerLeave={() => { pointer.current = { x: 0, y: 0 }; }}>
       {/* Further back with a narrower field flattens the perspective, so a label
           on the near side is not three times the size of one on the far side. */}
+      {near && (
       <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 7.4], fov: 36 }} gl={{ alpha: true, antialias: true }}>
         <Suspense fallback={null}>
           <OrbitScene skills={skills} pointer={pointer} />
         </Suspense>
       </Canvas>
+      )}
     </div>
   );
 }

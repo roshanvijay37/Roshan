@@ -2,6 +2,7 @@ import { useTexture } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useReducedMotion } from "framer-motion";
 import { memo, Suspense, useMemo, useRef } from "react";
+import { useNearViewport } from "./components";
 import * as THREE from "three";
 
 // Depth is derived in the shader from an elliptical falloff rather than shipped
@@ -137,9 +138,12 @@ function Portrait({ src, alt }) {
   };
 
   const reset = () => { pointer.current.x = 0; pointer.current.y = 0; };
+  // Below the fold at load: no reason to hold a WebGL context until approached.
+  const near = useNearViewport(frame);
 
   return (
     <div className="portrait-canvas" ref={frame} onPointerMove={track} onPointerLeave={reset}>
+      {near && (
       <Canvas
         dpr={[1, 2]}
         camera={{ position: [0, 0, 3.4], fov: 45 }}
@@ -151,6 +155,7 @@ function Portrait({ src, alt }) {
           <PortraitMesh src={src} pointer={pointer} reduced={reduced} />
         </Suspense>
       </Canvas>
+      )}
       <img className="portrait-fallback" src={src} alt={alt} />
     </div>
   );

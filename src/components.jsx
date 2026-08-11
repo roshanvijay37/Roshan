@@ -33,6 +33,37 @@ export function Reveal({ children, className = "", delay = 0 }) {
   );
 }
 
+// True once the element comes within `margin` of the viewport, and stays true.
+// Used to hold back WebGL canvases that live below the fold: mounting them at
+// page load costs a context and a chunk parse before anything has been seen.
+export function useNearViewport(ref, margin = "400px") {
+  const [near, setNear] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || near) return undefined;
+    if (typeof IntersectionObserver === "undefined") { setNear(true); return undefined; }
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setNear(true); observer.disconnect(); } },
+      { rootMargin: margin }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref, near, margin]);
+
+  return near;
+}
+
+// Holds back a lazy subtree until it is approached. The gate has to sit at the
+// call site, not inside the component: rendering a lazy() element is what
+// requests its chunk, so skipping only the <Canvas> inside still pays the
+// download and parse cost up front.
+export function LazyVisual({ className, children, fallback = null }) {
+  const ref = useRef(null);
+  const near = useNearViewport(ref);
+  return <div className={className} ref={ref}>{near ? children : fallback}</div>;
+}
+
 // The <html> attribute is the single source of truth for the theme — the
 // pre-paint script sets it before React exists, so state is derived from the
 // DOM rather than kept alongside it.

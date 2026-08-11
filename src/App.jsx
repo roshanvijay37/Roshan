@@ -4,8 +4,9 @@ import {
   ArrowDown, ArrowRight, ArrowUpRight, Check, Github, Linkedin, Mail,
   Menu, Send, Sparkles, X,
 } from "lucide-react";
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { CountUp, MagneticLink, Marquee, ProjectCard, Reveal, ThemeToggle, TiltCard } from "./components";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import Intro from "./Intro";
+import { CountUp, LazyVisual, MagneticLink, Marquee, ProjectCard, Reveal, ThemeToggle, TiltCard } from "./components";
 import { education, experience, projects, skills } from "./data";
 import { dur, ease, maskLine, spring } from "./motion";
 
@@ -81,15 +82,17 @@ function Header() {
   );
 }
 
-function Hero() {
+function Hero({ revealed }) {
   const reduced = useReducedMotion();
   return (
     <section className="hero section-pad" id="top">
       <motion.div
         className="hero-copy"
         initial="hidden"
-        animate="visible"
-        variants={{ visible: { transition: { staggerChildren: 0.11, delayChildren: 0.2 } } }}
+        // Held until the curtain opens so the headline rises into view rather
+        // than being already settled behind it.
+        animate={revealed ? "visible" : "hidden"}
+        variants={{ visible: { transition: { staggerChildren: 0.11, delayChildren: 0.12 } } }}
       >
         <motion.div className="availability" variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
           <i /> Available for ambitious projects
@@ -116,7 +119,7 @@ function Hero() {
           <MagneticLink className="button ghost" href="#contact">Start a conversation</MagneticLink>
         </motion.div>
       </motion.div>
-      <motion.div className="hero-side-note" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }}>
+      <motion.div className="hero-side-note" initial={{ opacity: 0 }} animate={{ opacity: revealed ? 1 : 0 }} transition={{ delay: 0.9 }}>
         <span>Based in India</span>
         <span>04+ years building products</span>
       </motion.div>
@@ -137,9 +140,11 @@ function About() {
       <div className="about-grid">
         <Reveal className="about-portrait">
           <div className="portrait-frame">
-            <Suspense fallback={<img src="/img/profile_big.jpg" alt="Roshan Vijay" />}>
-              <Portrait src="/img/profile_big.jpg" alt="Roshan Vijay" />
-            </Suspense>
+            <LazyVisual className="portrait-mount" fallback={<img src="/img/profile_big.jpg" alt="Roshan Vijay" />}>
+              <Suspense fallback={<img src="/img/profile_big.jpg" alt="Roshan Vijay" />}>
+                <Portrait src="/img/profile_big.jpg" alt="Roshan Vijay" />
+              </Suspense>
+            </LazyVisual>
             <div className="portrait-shine" />
           </div>
           <span className="portrait-caption">Roshan Vijay · Software Engineer</span>
@@ -177,9 +182,11 @@ function Skills() {
       </Reveal>
       <div className="skills-layout">
         <Reveal className="skill-orbit">
-          <Suspense fallback={<div className="orbit-core"><Sparkles size={30} /><span>BUILD</span></div>}>
-            <SkillOrbit skills={skills} />
-          </Suspense>
+          <LazyVisual className="orbit-mount" fallback={<div className="orbit-core"><Sparkles size={30} /><span>BUILD</span></div>}>
+            <Suspense fallback={<div className="orbit-core"><Sparkles size={30} /><span>BUILD</span></div>}>
+              <SkillOrbit skills={skills} />
+            </Suspense>
+          </LazyVisual>
         </Reveal>
         <div className="capability-list">
           {[
@@ -349,6 +356,8 @@ function Footer() {
 }
 
 export default function App() {
+  const [revealed, setRevealed] = useState(false);
+  const reveal = useCallback(() => setRevealed(true), []);
   const pointer = useRef({ x: 0, y: 0 });
   const scrollRef = useRef(0);
   const { scrollYProgress } = useScroll();
@@ -376,10 +385,19 @@ export default function App() {
       <motion.div className="progress-bar" style={{ scaleX: progress }} />
       <div className="noise" />
       <div className="cursor-glow" />
-      <Suspense fallback={null}><Scene pointer={pointer} scrollRef={scrollRef} /></Suspense>
+      <AnimatePresence>{!revealed && <Intro key="intro" onDone={reveal} />}</AnimatePresence>
+      {/* The scene mounts only after the curtain. Booting three WebGL contexts
+          while the intro plays saturates the main thread — the timers fire late
+          and the panels slide at ~13fps. Deferring the mount buys the intro a
+          clear thread, and the sculpture then assembles into an empty stage. */}
+      {revealed && (
+        <Suspense fallback={null}>
+          <Scene pointer={pointer} scrollRef={scrollRef} revealed={revealed} />
+        </Suspense>
+      )}
       <Header />
       <main>
-        <Hero />
+        <Hero revealed={revealed} />
         <About />
         <Skills />
         <Work />

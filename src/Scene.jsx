@@ -42,7 +42,7 @@ function CameraRig({ pointer, scrollRef }) {
   return null;
 }
 
-function ParticleField({ palette }) {
+function ParticleField({ palette, revealed }) {
   const ref = useRef();
   const positions = useMemo(() => {
     const values = new Float32Array(900 * 3);
@@ -54,10 +54,22 @@ function ParticleField({ palette }) {
     return values;
   }, []);
 
-  useFrame((state) => {
+  const material = useRef();
+  const entrance = useRef(0);
+
+  useFrame((state, delta) => {
     if (!ref.current) return;
     ref.current.rotation.y = state.clock.elapsedTime * 0.012;
     ref.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.08) * 0.08;
+
+    // The field rushes inward from far out as the curtain opens, which gives
+    // the reveal something moving behind the headline rather than a static
+    // starfield that was clearly already there.
+    const target = revealed ? 1 : 0;
+    entrance.current += (target - entrance.current) * Math.min(delta * 1.7, 1);
+    const enter = entrance.current;
+    ref.current.scale.setScalar(1 + (1 - enter) * 1.9);
+    if (material.current) material.current.opacity = palette.particleOpacity * enter;
   });
 
   return (
@@ -65,20 +77,29 @@ function ParticleField({ palette }) {
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
-      <pointsMaterial size={0.018} color={palette.particles} transparent opacity={palette.particleOpacity} sizeAttenuation />
+      <pointsMaterial ref={material} size={0.018} color={palette.particles} transparent opacity={0} sizeAttenuation />
     </points>
   );
 }
 
-function HeroSculpture({ palette, scrollRef }) {
+function HeroSculpture({ palette, scrollRef, revealed }) {
   const group = useRef();
   const core = useRef();
   const ringA = useRef();
   const ringB = useRef();
+  // Eases 0 -> 1 once the curtain opens, so the sculpture assembles into the
+  // hero instead of already sitting there when the panels part.
+  const entrance = useRef(0);
 
   useFrame((state, delta) => {
     if (!group.current || !core.current) return;
     const scroll = scrollRef.current || 0;
+
+    const target = revealed ? 1 : 0;
+    entrance.current += (target - entrance.current) * Math.min(delta * 2.4, 1);
+    const enter = entrance.current;
+    group.current.visible = enter > 0.01;
+    group.current.position.z = -0.8 - (1 - enter) * 5.5;
 
     group.current.rotation.y += delta * 0.08;
     group.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.22) * 0.12;
@@ -88,7 +109,7 @@ function HeroSculpture({ palette, scrollRef }) {
     // The sculpture reacts to reading position: it contracts and spins up as
     // you descend, so the hero object becomes a progress indicator rather than
     // an ornament that ignores the page.
-    const shrink = 1 - scroll * 0.45;
+    const shrink = (1 - scroll * 0.45) * enter;
     core.current.scale.setScalar(THREE.MathUtils.lerp(core.current.scale.x, shrink, 0.06));
     group.current.rotation.z = THREE.MathUtils.lerp(group.current.rotation.z, -0.15 + scroll * 1.4, 0.05);
 
@@ -137,7 +158,7 @@ function HeroSculpture({ palette, scrollRef }) {
   );
 }
 
-function Scene({ pointer, scrollRef }) {
+function Scene({ pointer, scrollRef, revealed }) {
   // A hook here rather than a prop: memo() would otherwise freeze the scene on
   // whichever theme it first mounted with, since pointer/scrollRef never change.
   const palette = PALETTE[useThemeName()];
@@ -152,8 +173,8 @@ function Scene({ pointer, scrollRef }) {
           <ambientLight intensity={palette.ambient} />
           <pointLight position={[4, 3, 5]} intensity={36} color={palette.key} />
           <pointLight position={[-4, -2, 3]} intensity={24} color={palette.fill} />
-          <ParticleField palette={palette} />
-          <HeroSculpture palette={palette} scrollRef={scrollRef} />
+          <ParticleField palette={palette} revealed={revealed} />
+          <HeroSculpture palette={palette} scrollRef={scrollRef} revealed={revealed} />
           <CameraRig pointer={pointer} scrollRef={scrollRef} />
         </Suspense>
       </Canvas>
