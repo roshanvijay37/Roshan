@@ -87,9 +87,14 @@ function PortraitMesh({ src, pointer, reduced }) {
     () => ({
       uTexture: { value: texture },
       uPointer: { value: new THREE.Vector2(0, 0) },
-      uStrength: { value: 0.045 },
+      uStrength: { value: 0.055 },
       uAberration: { value: 0.0022 },
-      uDepth: { value: 0.42 },
+      // Anything pushed toward a perspective camera is magnified, so a large
+      // displacement swells the middle of the frame into a fisheye — at 0.42
+      // against a camera 3.4 away the face rendered 14% larger than the edges.
+      // The depth people actually perceive comes from the UV offset below, so
+      // this stays small enough to add form without bending the face.
+      uDepth: { value: 0.1 },
       uCenter: { value: new THREE.Vector2(0.5, 0.45) },
       uRadii: { value: new THREE.Vector2(0.36, 0.62) },
       uPlaneAspect: { value: planeAspect },
@@ -143,10 +148,13 @@ function Portrait({ src, alt }) {
 
   return (
     <div className="portrait-canvas" ref={frame} onPointerMove={track} onPointerLeave={reset}>
+      {/* A longer lens further back: same framing (2·z·tan(fov/2) is unchanged)
+          but much flatter perspective, so what displacement remains barely
+          changes scale across the frame. */}
       {near && (
       <Canvas
         dpr={[1, 2]}
-        camera={{ position: [0, 0, 3.4], fov: 45 }}
+        camera={{ position: [0, 0, 5.26], fov: 30 }}
         gl={{ antialias: true, alpha: true }}
       >
         {/* Falls back to nothing while the texture loads; the <img> underneath
