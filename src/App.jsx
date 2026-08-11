@@ -1,12 +1,10 @@
-import emailjs from "@emailjs/browser";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import {
-  ArrowDown, ArrowRight, ArrowUpRight, Check, Github, Linkedin, Mail,
-  Menu, Send, Sparkles, X,
+  ArrowDown, ArrowRight, ArrowUpRight, Github, Linkedin, Mail, Menu, Sparkles, X,
 } from "lucide-react";
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Intro from "./Intro";
-import { CountUp, LazyVisual, MagneticLink, Marquee, ProjectCard, Reveal, Scroll3D, ThemeToggle, TiltCard } from "./components";
+import { LazyVisual, MagneticLink, Marquee, ProjectCard, Reveal, Scroll3D, ThemeToggle } from "./components";
 import { education, projects, skills } from "./data";
 import { dur, maskLine } from "./motion";
 
@@ -169,21 +167,6 @@ function About() {
             <p className="lead-copy">I turn complicated product problems into systems that feel simple, fast, and dependable.</p>
             <p>My route into software engineering involved a little luck. Staying in it was a deliberate choice. I found a field where disciplined thinking and creative experimentation reinforce each other—and I have been happily building ever since.</p>
           </Reveal>
-          <div className="stats">
-            {[
-              ["04+", "Years building software"],
-              ["06", "Client sites live"],
-              ["03", "Products of my own"],
-            ].map(([number, label], index) => (
-              <Reveal key={label} delay={index * 0.08}>
-                <Scroll3D intensity={1.1} lift={0.8}>
-                <TiltCard className="stat-card">
-                  <CountUp value={number} /><span>{label}</span>
-                </TiltCard>
-                </Scroll3D>
-              </Reveal>
-            ))}
-          </div>
         </div>
       </div>
     </section>
@@ -261,7 +244,7 @@ function Background() {
         <div>
           {education.map((item) => (
             <div className="education-row" key={item.title}>
-              <span>{item.year}</span><h3>{item.title}</h3><p>{item.place}</p><strong>{item.score}</strong>
+              <span>{item.year}</span><h3>{item.title}</h3><p>{item.place}</p>
             </div>
           ))}
         </div>
@@ -270,21 +253,19 @@ function Background() {
   );
 }
 
-function Contact() {
-  const [status, setStatus] = useState("idle");
-  const submit = async (event) => {
-    event.preventDefault();
-    setStatus("sending");
-    const form = event.currentTarget;
-    try {
-      await emailjs.sendForm("service_7ft8ctb", "template_9vdseo7", form, { publicKey: "Xd_uhEKp8W8k0_gE7" });
-      setStatus("sent");
-      form.reset();
-    } catch {
-      setStatus("error");
-    }
-  };
+// WhatsApp has no icon in lucide, and it is the one mark worth drawing exactly:
+// a generic chat bubble does not read as WhatsApp, and recognition is the whole
+// point of the button.
+function WhatsAppGlyph({ size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.38-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35z" />
+      <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.86 9.86 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 18.13h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.17 8.17 0 0 1-1.25-4.36c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24z" />
+    </svg>
+  );
+}
 
+function Contact() {
   return (
     <section className="section-pad contact" id="contact">
       <div className="contact-glow" />
@@ -292,27 +273,22 @@ function Contact() {
         <span className="section-number">05 / CONTACT</span>
         <h2>Have an ambitious idea?<br /><em>Let&apos;s give it gravity.</em></h2>
         <p>I&apos;m always interested in thoughtful products, difficult engineering problems, and collaborations with a little spark to them.</p>
+        <div className="contact-actions">
+          {/* wa.me needs the number in full international form, no plus or spaces. */}
+          <MagneticLink
+            className="button whatsapp"
+            href="https://wa.me/917349495469"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <WhatsAppGlyph size={19} /> Message me on WhatsApp
+          </MagneticLink>
+        </div>
         <div className="social-links">
           <a href="mailto:roshanshetty010100@gmail.com"><Mail size={17} /> Email</a>
           <a href="https://github.com/roshanvijay37" target="_blank" rel="noreferrer"><Github size={17} /> GitHub</a>
           <a href="https://www.linkedin.com/in/roshan-shetty-046161191/" target="_blank" rel="noreferrer"><Linkedin size={17} /> LinkedIn</a>
         </div>
-      </Reveal>
-      <Reveal>
-        <Scroll3D intensity={0.9} lift={1}>
-        <form className="contact-form glass" onSubmit={submit}>
-          <div className="form-row">
-            <label><span>Your name</span><input required name="from_name" placeholder="Jane Smith" autoComplete="name" /></label>
-            <label><span>Email address</span><input required type="email" name="email_id" placeholder="jane@company.com" autoComplete="email" /></label>
-          </div>
-          <label><span>Phone <i>optional</i></span><input name="phone" placeholder="+91 00000 00000" autoComplete="tel" /></label>
-          <label><span>Tell me about the idea</span><textarea required name="message" rows="5" placeholder="A little context, the challenge, and what success looks like…" /></label>
-          <button className="button primary submit-button" disabled={status === "sending" || status === "sent"}>
-            {status === "sending" ? "Sending…" : status === "sent" ? <><Check size={18} /> Message sent</> : <>Send message <Send size={17} /></>}
-          </button>
-          {status === "error" && <p className="form-error">The signal got lost. Please email me directly instead.</p>}
-        </form>
-        </Scroll3D>
       </Reveal>
     </section>
   );

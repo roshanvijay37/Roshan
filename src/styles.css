@@ -668,13 +668,15 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .tag-list { display: flex; flex-wrap: wrap; gap: 7px; }
 .tag-list span { padding: 7px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--text-4); font: 9px "DM Mono", monospace; }
 .education-block { display: grid; grid-template-columns: 232px 1fr; margin-top: 30px; }
-.education-row { display: grid; grid-template-columns: 70px 1.2fr 1fr auto; align-items: center; gap: 22px; min-height: 90px; border-bottom: 1px solid var(--line); }
+.education-row { display: grid; grid-template-columns: 70px 1.2fr 1fr; align-items: center; gap: 22px; min-height: 90px; border-bottom: 1px solid var(--line); }
 .education-row > span { color: var(--text-6); font: 10px "DM Mono", monospace; }
 .education-row h3 { margin: 0; font-size: 15px; font-weight: 600; }
 .education-row p { color: var(--text-5); font-size: 12px; }
 .education-row strong { color: var(--text-3); font: 500 10px "DM Mono", monospace; }
 
-.contact { display: grid; grid-template-columns: 1fr .88fr; gap: 8vw; align-items: center; min-height: 90vh; overflow: hidden; }
+/* Single column since the form was removed — the WhatsApp CTA is the whole ask. */
+.contact { display: grid; grid-template-columns: 1fr; gap: 8vw; align-items: center; min-height: 70vh; overflow: hidden; }
+.contact-intro { max-width: 760px; }
 .contact-glow {
   position: absolute;
   z-index: -1;
@@ -795,7 +797,7 @@ footer > a:last-child:hover { color: var(--text-hi); }
   .timeline-period { grid-column: 2; padding: 0; margin-top: -38px; }
   .timeline-content { grid-column: 2; }
   .education-block { grid-template-columns: 1fr; }
-  .education-row { grid-template-columns: 50px 1fr auto; padding: 16px 0; }
+  .education-row { grid-template-columns: 50px 1fr; padding: 16px 0; }
   .education-row p { grid-column: 2; margin: -10px 0 0; }
   .education-row strong { grid-column: 3; grid-row: 1; }
   .form-row { grid-template-columns: 1fr; gap: 0; }
@@ -816,3 +818,15 @@ footer > a:last-child:hover { color: var(--text-hi); }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
   .scene { display: none; }
 }
+
+/* Brand green: the point of a WhatsApp button is that it is recognised
+   before it is read, so it keeps its own colour rather than the site accent. */
+.contact-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 34px 0 26px; }
+.button.whatsapp {
+  color: #fff;
+  background: #25d366;
+  border-color: transparent;
+  box-shadow: 0 12px 38px rgba(37, 211, 102, .28);
+}
+.button.whatsapp:hover { background: #1fbe5a; box-shadow: 0 16px 46px rgba(37, 211, 102, .36); }
+.button.whatsapp svg { flex: none; }

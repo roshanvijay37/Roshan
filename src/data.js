@@ -80,7 +80,7 @@ export const skills = [
 
 
 export const education = [
-  { year: "2021", title: "B.E. Computer Science", place: "MITE, Moodabidri", score: "8.2 CGPA" },
-  { year: "2016", title: "Pre-University", place: "Jain Junior PU College", score: "87.67%" },
-  { year: "2014", title: "SSLC", place: "Jain High School", score: "91.04%" },
+  { year: "2021", title: "B.E. Computer Science", place: "MITE, Moodabidri" },
+  { year: "2016", title: "Pre-University", place: "Jain Junior PU College" },
+  { year: "2014", title: "SSLC", place: "Jain High School" },
 ];
