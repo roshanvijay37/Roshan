@@ -1,11 +1,67 @@
 export const projects = [
   {
+    title: "TradingOS",
+    type: "Autonomous trading system",
+    image: "/img/tradingos.jpg",
+    href: "https://roshanvijay37.github.io/trading-os/",
+    color: "#22c55e",
+    index: "01",
+  },
+  {
+    title: "Finance OS",
+    type: "Personal finance platform",
+    image: "/img/financeos.jpg",
+    href: "https://kadambamoodbidri.in",
+    color: "#a855f7",
+    index: "02",
+  },
+  {
+    title: "Chatu",
+    type: "Voice-first social",
+    image: "/img/chatu.jpg",
+    href: "https://chatu.in",
+    color: "#c2610c",
+    index: "03",
+  },
+  {
+    title: "Kateel Construction",
+    type: "Site management platform",
+    image: "/img/kateel.jpg",
+    href: "https://kateel.in",
+    color: "#2563eb",
+    index: "04",
+  },
+  {
+    title: "Adhishtam Digital",
+    type: "Agency website",
+    image: "/img/adhishtam.jpg",
+    href: "https://adhishtam.com",
+    color: "#2f9e6e",
+    index: "05",
+  },
+  {
+    title: "Shobha Digital Studio",
+    type: "Photography studio",
+    image: "/img/shobhadigital.jpg",
+    href: "https://shobhadigitalstudio.in",
+    color: "#c9a227",
+    index: "06",
+  },
+  {
+    title: "Belvai Temple",
+    type: "Heritage temple site",
+    image: "/img/belvaitemple.jpg",
+    href: "https://belvaitemple.in",
+    color: "#d97706",
+    index: "07",
+  },
+  {
     title: "Shivam Digital",
     type: "Photography experience",
     image: "/img/img_1.jpg",
     href: "https://roshanvijay37.github.io/shivamdigital/",
     color: "#8b5cf6",
-    index: "01",
+    index: "08",
   },
   {
     title: "Divas Event Planners",
@@ -13,7 +69,7 @@ export const projects = [
     image: "/img/divas.jpg",
     href: "https://roshanvijay37.github.io/DivasEventPlanners/",
     color: "#ec4899",
-    index: "02",
+    index: "09",
   },
   {
     title: "G3 Builders",
@@ -21,7 +77,7 @@ export const projects = [
     image: "/img/projectsByG3.jpg",
     href: "https://roshanvijay37.github.io/projectsByG3/",
     color: "#22d3ee",
-    index: "03",
+    index: "10",
   },
   {
     title: "Comma Separator",
@@ -29,7 +85,7 @@ export const projects = [
     image: "/img/GPT.jpg",
     href: "https://roshanvijay37.github.io/CommaSeperatedValues/",
     color: "#a3e635",
-    index: "04",
+    index: "11",
   },
   {
     title: "JSON Explorer",
@@ -37,7 +93,7 @@ export const projects = [
     image: "/img/JSON.jpg",
     href: "https://roshanvijay37.github.io/TestingJSONDisplay/",
     color: "#f59e0b",
-    index: "05",
+    index: "12",
   },
   {
     title: "Resume in HTML",
@@ -45,7 +101,7 @@ export const projects = [
     image: "/img/resume.jpg",
     href: "https://roshanvijay37.github.io/ResumeHtmlCss/",
     color: "#fb7185",
-    index: "06",
+    index: "13",
   },
   {
     title: "Ocean Pearl",
@@ -53,7 +109,7 @@ export const projects = [
     image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1400&q=80",
     href: "https://roshanvijay37.github.io/OceanPearlUjire/",
     color: "#38bdf8",
-    index: "07",
+    index: "14",
   },
 ];
 
