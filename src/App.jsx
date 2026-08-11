@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import {
-  ArrowDown, ArrowRight, ArrowUpRight, Github, Linkedin, Mail, Menu, Sparkles, X,
+  ArrowDown, ArrowRight, ArrowUpRight, Github, Mail, Menu, Sparkles, X,
 } from "lucide-react";
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Intro from "./Intro";
@@ -165,7 +165,6 @@ function About() {
         <div className="about-copy">
           <Reveal>
             <p className="lead-copy">I turn complicated product problems into systems that feel simple, fast, and dependable.</p>
-            <p>My route into software engineering involved a little luck. Staying in it was a deliberate choice. I found a field where disciplined thinking and creative experimentation reinforce each other—and I have been happily building ever since.</p>
           </Reveal>
         </div>
       </div>
@@ -287,7 +286,6 @@ function Contact() {
         <div className="social-links">
           <a href="mailto:roshanshetty010100@gmail.com"><Mail size={17} /> Email</a>
           <a href="https://github.com/roshanvijay37" target="_blank" rel="noreferrer"><Github size={17} /> GitHub</a>
-          <a href="https://www.linkedin.com/in/roshan-shetty-046161191/" target="_blank" rel="noreferrer"><Linkedin size={17} /> LinkedIn</a>
         </div>
       </Reveal>
     </section>
