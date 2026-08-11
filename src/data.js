@@ -66,7 +66,7 @@ export const projects = [
   {
     title: "Ocean Pearl",
     type: "Hospitality website",
-    image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1400&q=80",
+    image: "/img/oceanpearl.jpg",
     href: "https://oceanpearlujire.vercel.app",
     color: "#38bdf8",
     index: "09",
