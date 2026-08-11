@@ -109,7 +109,7 @@ const shardVertex = /* glsl */ `
 
     vec3 local = position - aCentroid;
     local = rotateAxis(local, normalize(aAxis), uExplode * (2.0 + aRand * 3.4));
-    vec3 drift = normalize(aCentroid) * uExplode * (0.7 + aRand * 2.1);
+    vec3 drift = normalize(aCentroid) * uExplode * (0.55 + aRand * 1.35);
 
     gl_Position = projectionMatrix * modelViewMatrix * vec4(aCentroid + local + drift, 1.0);
   }
@@ -182,7 +182,9 @@ function Shards({ palette, explodeRef }) {
     // are hidden inside. Capped well below opaque: these sit behind the whole
     // page, and at full strength they compete with the content instead of
     // sitting behind it.
-    material.current.uniforms.uOpacity.value = Math.min(0.5, e * 1.1);
+    // The fracture only becomes visible past the hero — which is precisely
+    // where the text lives — so this stays low enough to read through.
+    material.current.uniforms.uOpacity.value = Math.min(0.26, e * 0.6);
   });
 
   return (

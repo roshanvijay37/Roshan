@@ -1,5 +1,5 @@
 import emailjs from "@emailjs/browser";
-import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useSpring } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import {
   ArrowDown, ArrowRight, ArrowUpRight, Check, Github, Linkedin, Mail,
   Menu, Send, Sparkles, X,
@@ -7,8 +7,8 @@ import {
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Intro from "./Intro";
 import { CountUp, LazyVisual, MagneticLink, Marquee, ProjectCard, Reveal, Scroll3D, ThemeToggle, TiltCard } from "./components";
-import { education, experience, projects, skills } from "./data";
-import { dur, ease, maskLine, spring } from "./motion";
+import { education, projects, skills } from "./data";
+import { dur, maskLine } from "./motion";
 
 // Reduced-motion stand-in for maskLine: same timing, no travel.
 const fadeLine = {
@@ -24,7 +24,7 @@ const nav = [
   ["About", "#about"],
   ["Skills", "#skills"],
   ["Work", "#work"],
-  ["Experience", "#experience"],
+  ["Background", "#background"],
   ["Contact", "#contact"],
 ];
 
@@ -171,9 +171,9 @@ function About() {
           </Reveal>
           <div className="stats">
             {[
-              ["04+", "Years in product engineering"],
-              ["02", "Enterprise platforms"],
-              ["06+", "Independent web experiences"],
+              ["04+", "Years building software"],
+              ["06", "Client sites live"],
+              ["03", "Products of my own"],
             ].map(([number, label], index) => (
               <Reveal key={label} delay={index * 0.08}>
                 <Scroll3D intensity={1.1} lift={0.8}>
@@ -249,63 +249,13 @@ function Work() {
   );
 }
 
-// Pops as the drawn line reaches it — the marker acknowledges the progress
-// rather than sitting inert while the line slides past.
-function TimelineMarker({ index }) {
-  const ref = useRef(null);
-  const reduced = useReducedMotion();
-  const inView = useInView(ref, { once: true, margin: "-45% 0px -45% 0px" });
-
+function Background() {
   return (
-    <motion.div
-      ref={ref}
-      className="timeline-marker"
-      initial={false}
-      animate={inView ? "lit" : "idle"}
-      variants={{
-        idle: { scale: 1, borderColor: "rgba(255,255,255,.1)" },
-        lit: reduced
-          ? { borderColor: "rgba(155,140,255,.85)" }
-          : {
-              scale: [1, 1.22, 1],
-              borderColor: "rgba(155,140,255,.85)",
-              transition: { duration: dur.base, ease: ease.back, times: [0, 0.45, 1] },
-            },
-      }}
-    >
-      <span>{index + 1}</span>
-    </motion.div>
-  );
-}
-
-function Experience() {
-  const timelineRef = useRef(null);
-  const reduced = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: timelineRef, offset: ["start 0.85", "end 0.65"] });
-  const lineScale = useSpring(scrollYProgress, { stiffness: 80, damping: 26, restDelta: 0.001 });
-
-  return (
-    <section className="section-pad experience" id="experience">
+    <section className="section-pad experience" id="background">
       <Reveal className="section-heading compact">
-        <span className="section-number">04 / EXPERIENCE</span>
-        <h2>Systems, teams,<br /><em>and momentum.</em></h2>
+        <span className="section-number">04 / BACKGROUND</span>
+        <h2>Trained to build.<br /><em>Practised on real work.</em></h2>
       </Reveal>
-      <div className="timeline" ref={timelineRef}>
-        <motion.div className="timeline-progress" style={{ scaleY: reduced ? 1 : lineScale }} />
-        {experience.map((item, index) => (
-          <Reveal className="timeline-item" key={item.company} delay={index * 0.1}>
-            <TimelineMarker index={index} />
-            <div className="timeline-period">{item.period}</div>
-            <div className="timeline-content">
-              <span className="company">{item.company}</span>
-              <h3>{item.role}</h3>
-              <p className="timeline-summary">{item.summary}</p>
-              <ul>{item.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}</ul>
-              <div className="tag-list">{item.stack.map((tag) => <span key={tag}>{tag}</span>)}</div>
-            </div>
-          </Reveal>
-        ))}
-      </div>
       <Reveal className="education-block">
         <span className="section-number">EDUCATION</span>
         <div>
@@ -424,7 +374,7 @@ export default function App() {
         <About />
         <Skills />
         <Work />
-        <Experience />
+        <Background />
         <Contact />
       </main>
       <Footer />

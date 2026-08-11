@@ -78,33 +78,6 @@ export const skills = [
   "Microservices", "RabbitMQ", "GraphQL", "REST APIs", "AI / LLM", "Three.js",
 ];
 
-export const experience = [
-  {
-    period: "2022 — NOW",
-    role: "Software Engineer",
-    company: "Cornerstone OnDemand · Pune",
-    summary: "Building scalable product systems for performance goals, bulk data import, and AI-assisted workflows.",
-    highlights: [
-      "Led the Performance Goals migration from a monolith to message-driven microservices.",
-      "Architected an Edge Import framework adopted across multiple teams.",
-      "Took an AI goal-description generator from hackathon concept to production.",
-      "Led security hardening, cross-team integrations, and developer mentorship.",
-    ],
-    stack: [".NET Core", "Angular", "RabbitMQ", "GraphQL", "SQL Server", "AI"],
-  },
-  {
-    period: "2021 — 2022",
-    role: "Associate Software Engineer",
-    company: "Allstate · Bangalore",
-    summary: "Shipped reliable features and analytics for a large-scale insurance agent platform.",
-    highlights: [
-      "Delivered core features for the My Claims module.",
-      "Built and maintained REST services backed by Oracle.",
-      "Partnered with QA and analytics teams to improve quality and product insight.",
-    ],
-    stack: ["C#", ".NET", "Oracle", "REST APIs", "Adobe Analytics"],
-  },
-];
 
 export const education = [
   { year: "2021", title: "B.E. Computer Science", place: "MITE, Moodabidri", score: "8.2 CGPA" },
