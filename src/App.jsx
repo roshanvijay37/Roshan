@@ -5,7 +5,7 @@ import {
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Intro from "./Intro";
 import { LazyVisual, MagneticLink, Marquee, ProjectCard, Reveal, Scroll3D, ThemeToggle } from "./components";
-import { projects, skills } from "./data";
+import { projects, skillGroups, skills } from "./data";
 import { dur, maskLine } from "./motion";
 
 // Reduced-motion stand-in for maskLine: same timing, no travel.
@@ -182,26 +182,21 @@ function Skills() {
         <Reveal className="skill-orbit">
           <LazyVisual className="orbit-mount" fallback={<div className="orbit-core"><Sparkles size={30} /><span>BUILD</span></div>}>
             <Suspense fallback={<div className="orbit-core"><Sparkles size={30} /><span>BUILD</span></div>}>
-              <SkillOrbit skills={skills} />
+              <SkillOrbit groups={skillGroups} />
             </Suspense>
           </LazyVisual>
         </Reveal>
-        <div className="capability-list">
-          {[
-            ["01", "Product engineering", ".NET, C#, Angular, TypeScript and robust API design."],
-            ["02", "Distributed systems", "Microservices, queues, bulk processing and resilient integrations."],
-            ["03", "Intelligent workflows", "AI-assisted features that move from prototype to production."],
-            ["04", "Technical leadership", "Architecture, security, code quality and collaborative delivery."],
-          ].map(([num, title, text], index) => (
-            <Reveal key={title} delay={index * 0.06}>
-              <Scroll3D intensity={0.45} lift={0.35}>
-              <motion.div className="capability-row" whileHover={{ x: 8 }}>
-                <span>{num}</span><h3>{title}</h3><p>{text}</p><ArrowUpRight size={18} />
-              </motion.div>
-              </Scroll3D>
-            </Reveal>
+        {/* The sphere colours by discipline; without a key those colours are
+            decoration rather than information. */}
+        <Reveal className="skill-legend">
+          {skillGroups.map((group) => (
+            <div className="legend-row" key={group.key}>
+              <i data-group={group.key} />
+              <span>{group.name}</span>
+              <strong>{group.items.length}</strong>
+            </div>
           ))}
-        </div>
+        </Reveal>
       </div>
       <Marquee>
         {[...skills, ...skills].map((skill, index) => <span key={`${skill}-${index}`}>{skill}<i>✦</i></span>)}

@@ -5,100 +5,98 @@ import { memo, Suspense, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useNearViewport, useThemeName } from "./components";
 
+// One hue per discipline, tuned per theme — the light values are darkened so
+// they hold contrast against a near-white page.
 const PALETTE = {
-  dark: { ring: "#5b5570", chip: "#d6d5de", core: "#a99bff", spark: "#65d9ff" },
-  light: { ring: "#c3c1d4", chip: "#3b3a48", core: "#6244f5", spark: "#0a7fa3" },
+  dark: {
+    shell: "#4a4560",
+    lang: "#9b8cff",
+    front: "#65d9ff",
+    motion: "#f0a6ff",
+    back: "#7ef0b6",
+    ops: "#ffc978",
+  },
+  light: {
+    shell: "#c6c4d6",
+    lang: "#5b3fe0",
+    front: "#0a7fa3",
+    motion: "#b23fb0",
+    back: "#18795a",
+    ops: "#a35c07",
+  },
 };
 
-// One ring of skills tilted in space. Each sits on a circle, rotates as a group,
-// but the labels billboard so they stay readable from any angle — the failure
-// mode of naive 3D text is that half of it faces away and becomes noise.
-function Ring({ items, radius, tilt, speed, colors, reduced, offsetY = 0 }) {
-  const group = useRef();
-
-  const placed = useMemo(
-    () =>
-      items.map((label, i) => {
-        const angle = (i / items.length) * Math.PI * 2;
-        return { label, position: [Math.cos(angle) * radius, 0, Math.sin(angle) * radius] };
-      }),
-    [items, radius]
-  );
-
-  useFrame((_, delta) => {
-    if (group.current && !reduced) group.current.rotation.y += delta * speed;
+// Fibonacci distribution: the only cheap way to place N points on a sphere with
+// roughly even spacing. Ring-based layouts crowd at the poles, which with text
+// means labels overlapping into noise exactly where the sphere is busiest.
+function spherePoints(count, radius) {
+  const golden = Math.PI * (3 - Math.sqrt(5));
+  return Array.from({ length: count }, (_, i) => {
+    const y = 1 - (i / Math.max(1, count - 1)) * 2;
+    const ring = Math.sqrt(Math.max(0, 1 - y * y));
+    const theta = golden * i;
+    return [Math.cos(theta) * ring * radius, y * radius, Math.sin(theta) * ring * radius];
   });
-
-  return (
-    <group rotation={[tilt, 0, 0]} position={[0, offsetY, 0]}>
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[radius, 0.006, 8, 120]} />
-        <meshBasicMaterial color={colors.ring} transparent opacity={0.55} />
-      </mesh>
-      <group ref={group}>
-        {placed.map(({ label, position }) => (
-          <Billboard key={label} position={position}>
-            <Text
-              fontSize={0.12}
-              color={colors.chip}
-              anchorX="center"
-              anchorY="middle"
-              maxWidth={1.05}
-              textAlign="center"
-            >
-              {label}
-            </Text>
-          </Billboard>
-        ))}
-      </group>
-    </group>
-  );
 }
 
-function OrbitScene({ skills, pointer }) {
-  const theme = useThemeName();
-  const colors = PALETTE[theme];
+function SkillSphere({ groups, pointer }) {
+  const colors = PALETTE[useThemeName()];
   const reduced = useReducedMotion();
   const root = useRef();
-  const core = useRef();
+  const shell = useRef();
+  const labels = useRef([]);
+  const worldPos = useMemo(() => new THREE.Vector3(), []);
 
-  // Two rings so the arrangement reads as a volume rather than a flat dial.
-  const [inner, outer] = useMemo(() => {
-    const half = Math.ceil(skills.length / 2);
-    return [skills.slice(0, half), skills.slice(half)];
-  }, [skills]);
+  const placed = useMemo(() => {
+    const flat = groups.flatMap((g) => g.items.map((label) => ({ label, key: g.key })));
+    const points = spherePoints(flat.length, 2.7);
+    return flat.map((entry, i) => ({ ...entry, position: points[i] }));
+  }, [groups]);
+
+  const tick = useRef(0);
 
   useFrame((state, delta) => {
     if (root.current) {
-      const tx = reduced ? 0 : pointer.current.x * 0.25;
-      const ty = reduced ? 0 : -pointer.current.y * 0.2;
-      root.current.rotation.y = THREE.MathUtils.lerp(root.current.rotation.y, tx, 0.05);
-      root.current.rotation.x = THREE.MathUtils.lerp(root.current.rotation.x, ty, 0.05);
+      if (!reduced) root.current.rotation.y += delta * 0.075;
+      const tx = reduced ? 0 : -pointer.current.y * 0.32;
+      const tz = reduced ? 0 : pointer.current.x * 0.14;
+      root.current.rotation.x = THREE.MathUtils.lerp(root.current.rotation.x, tx, 0.05);
+      root.current.rotation.z = THREE.MathUtils.lerp(root.current.rotation.z, tz, 0.05);
     }
-    if (core.current && !reduced) {
-      core.current.rotation.y += delta * 0.25;
-      core.current.rotation.x += delta * 0.13;
+    if (shell.current && !reduced) shell.current.rotation.y -= delta * 0.03;
+
+    // Depth fade. Without it every label renders at full strength and the cloud
+    // reads flat — the far side is what tells the eye this is a sphere.
+    // Every other frame: 43 material writes per frame is the single biggest cost
+    // here, and at this rotation speed the difference is invisible.
+    tick.current += 1;
+    if (tick.current % 2) return;
+    for (const item of labels.current) {
+      if (!item) continue;
+      item.getWorldPosition(worldPos);
+      const depth = (worldPos.z + 2.7) / 5.4;
+      item.children[0].fillOpacity = 0.12 + Math.max(0, Math.min(1, depth)) * 0.88;
     }
   });
 
   return (
     <group ref={root}>
-      <mesh ref={core}>
-        <icosahedronGeometry args={[0.42, 0]} />
-        <meshBasicMaterial color={colors.core} wireframe transparent opacity={0.6} />
+      <mesh ref={shell}>
+        <icosahedronGeometry args={[2.7, 1]} />
+        <meshBasicMaterial color={colors.shell} wireframe transparent opacity={0.14} />
       </mesh>
-      {/* Radii are bounded by the visible frame: a label's half-width (~0.55)
-          plus the radius has to stay inside the camera's half-extent (2.4 at
-          this camera), or the outer ring's text clips against the canvas edge.
-          The vertical offset and opposed tilts keep the two rings from
-          occupying the same band, which is what made labels collide. */}
-      <Ring items={inner} radius={1.2} tilt={0.5} speed={0.12} offsetY={0.42} colors={colors} reduced={reduced} />
-      <Ring items={outer} radius={1.82} tilt={-0.4} speed={-0.085} offsetY={-0.42} colors={colors} reduced={reduced} />
+      {placed.map((item, i) => (
+        <Billboard key={item.label} position={item.position} ref={(el) => { labels.current[i] = el; }}>
+          <Text fontSize={0.145} color={colors[item.key]} anchorX="center" anchorY="middle">
+            {item.label}
+          </Text>
+        </Billboard>
+      ))}
     </group>
   );
 }
 
-function SkillOrbit({ skills }) {
+function SkillOrbit({ groups }) {
   const pointer = useRef({ x: 0, y: 0 });
   const frame = useRef(null);
   const near = useNearViewport(frame);
@@ -111,15 +109,20 @@ function SkillOrbit({ skills }) {
   };
 
   return (
-    <div className="skill-orbit-3d" ref={frame} onPointerMove={track} onPointerLeave={() => { pointer.current = { x: 0, y: 0 }; }}>
-      {/* Further back with a narrower field flattens the perspective, so a label
-          on the near side is not three times the size of one on the far side. */}
+    <div
+      className="skill-orbit-3d"
+      ref={frame}
+      onPointerMove={track}
+      onPointerLeave={() => { pointer.current = { x: 0, y: 0 }; }}
+    >
+      {/* A long lens well back: at a wider angle the near labels render several
+          times the size of the far ones and the sphere reads as a mess. */}
       {near && (
-      <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 7.4], fov: 36 }} gl={{ alpha: true, antialias: true }}>
-        <Suspense fallback={null}>
-          <OrbitScene skills={skills} pointer={pointer} />
-        </Suspense>
-      </Canvas>
+        <Canvas dpr={[1, 1.5]} camera={{ position: [0, 0, 11.5], fov: 34 }} gl={{ alpha: true, antialias: true }}>
+          <Suspense fallback={null}>
+            <SkillSphere groups={groups} pointer={pointer} />
+          </Suspense>
+        </Canvas>
       )}
     </div>
   );

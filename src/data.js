@@ -73,10 +73,40 @@ export const projects = [
   },
 ];
 
-export const skills = [
-  "C#", ".NET Core", "Angular", "TypeScript", "React", "SQL Server",
-  "Microservices", "RabbitMQ", "GraphQL", "REST APIs", "AI / LLM", "Three.js",
+// Drawn from what these repos actually use — package manifests across
+// trading-os, finance-os, attendance, kateel, chatu, the Astro site and this
+// one — plus the enterprise stack from day-job work. Grouped so the sphere can
+// colour by discipline rather than showing forty undifferentiated words.
+export const skillGroups = [
+  {
+    key: 'lang',
+    name: 'Languages',
+    items: ['TypeScript', 'JavaScript', 'C#', 'Python', 'Java', 'SQL', 'HTML', 'CSS', 'GLSL'],
+  },
+  {
+    key: 'front',
+    name: 'Frontend',
+    items: ['React', 'Next.js', 'Angular', 'Astro', 'Tailwind CSS', 'Radix UI', 'SCSS', 'Vite'],
+  },
+  {
+    key: 'motion',
+    name: '3D & Motion',
+    items: ['Three.js', 'React Three Fiber', 'Drei', 'Framer Motion', 'Shaders', 'OGL', 'Lenis'],
+  },
+  {
+    key: 'back',
+    name: 'Backend & Data',
+    items: ['Node.js', 'Express', '.NET Core', 'Supabase', 'PostgreSQL', 'SQL Server', 'REST APIs', 'GraphQL', 'WebSockets', 'RabbitMQ'],
+  },
+  {
+    key: 'ops',
+    name: 'Tooling & Delivery',
+    items: ['Git', 'Vercel', 'AWS Lightsail', 'Nginx', 'PM2', 'Vitest', 'Zod', 'TanStack Query', 'Zustand'],
+  },
 ];
+
+// Flat list for the marquee.
+export const skills = skillGroups.flatMap((g) => g.items);
 
 
 
