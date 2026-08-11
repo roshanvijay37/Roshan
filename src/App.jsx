@@ -1,11 +1,11 @@
 import emailjs from "@emailjs/browser";
-import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import {
   ArrowDown, ArrowRight, ArrowUpRight, Check, Github, Linkedin, Mail,
   Menu, Send, Sparkles, X,
 } from "lucide-react";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { MagneticLink, ProjectCard, Reveal, TiltCard } from "./components";
+import { CountUp, MagneticLink, ProjectCard, Reveal, TiltCard } from "./components";
 import { education, experience, projects, skills } from "./data";
 
 const Scene = lazy(() => import("./Scene"));
@@ -132,7 +132,7 @@ function About() {
             ].map(([number, label], index) => (
               <Reveal key={label} delay={index * 0.08}>
                 <TiltCard className="stat-card">
-                  <strong>{number}</strong><span>{label}</span>
+                  <CountUp value={number} /><span>{label}</span>
                 </TiltCard>
               </Reveal>
             ))}
@@ -195,22 +195,32 @@ function Work() {
         <p>A collection of websites and utilities built to solve specific problems, learn in public, and make useful things feel considered.</p>
       </Reveal>
       <div className="projects-grid">
-        {projects.map((project) => <ProjectCard project={project} key={project.title} />)}
+        {projects.map((project, index) => (
+          // Two columns, so the offset cascades each row left-to-right instead of
+          // growing with the whole list.
+          <ProjectCard project={project} delay={(index % 2) * 0.12} key={project.title} />
+        ))}
       </div>
     </section>
   );
 }
 
 function Experience() {
+  const timelineRef = useRef(null);
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: timelineRef, offset: ["start 0.85", "end 0.65"] });
+  const lineScale = useSpring(scrollYProgress, { stiffness: 80, damping: 26, restDelta: 0.001 });
+
   return (
     <section className="section-pad experience" id="experience">
       <Reveal className="section-heading compact">
         <span className="section-number">04 / EXPERIENCE</span>
         <h2>Systems, teams,<br /><em>and momentum.</em></h2>
       </Reveal>
-      <div className="timeline">
+      <div className="timeline" ref={timelineRef}>
+        <motion.div className="timeline-progress" style={{ scaleY: reduced ? 1 : lineScale }} />
         {experience.map((item, index) => (
-          <Reveal className="timeline-item" key={item.company}>
+          <Reveal className="timeline-item" key={item.company} delay={index * 0.1}>
             <div className="timeline-marker"><span>{index + 1}</span></div>
             <div className="timeline-period">{item.period}</div>
             <div className="timeline-content">
