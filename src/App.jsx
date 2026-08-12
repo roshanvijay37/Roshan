@@ -249,7 +249,7 @@ function Contact() {
         <div className="contact-actions">
           {/* wa.me needs the number in full international form, no plus or spaces. */}
           <MagneticLink
-            className="button whatsapp"
+            className="button primary"
             href="https://wa.me/917349495469"
             target="_blank"
             rel="noreferrer"

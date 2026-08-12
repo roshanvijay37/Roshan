@@ -821,17 +821,11 @@ footer > a:last-child:hover { color: var(--text-hi); }
   .scene { display: none; }
 }
 
-/* Brand green: the point of a WhatsApp button is that it is recognised
-   before it is read, so it keeps its own colour rather than the site accent. */
+/* The WhatsApp mark is enough to identify the channel. Brand green was the
+   only saturated block on a page built from monochrome plus violet/cyan, and
+   it read as pasted in from somewhere else. */
 .contact-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 34px 0 26px; }
-.button.whatsapp {
-  color: #fff;
-  background: #25d366;
-  border-color: transparent;
-  box-shadow: 0 12px 38px rgba(37, 211, 102, .28);
-}
-.button.whatsapp:hover { background: #1fbe5a; box-shadow: 0 16px 46px rgba(37, 211, 102, .36); }
-.button.whatsapp svg { flex: none; }
+.contact-actions .button svg { flex: none; }
 
 .skill-legend { display: grid; gap: 2px; align-content: center; }
 .legend-row {
