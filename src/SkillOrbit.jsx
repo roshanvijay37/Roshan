@@ -7,22 +7,25 @@ import { useNearViewport, useThemeName } from "./components";
 
 // One hue per discipline, tuned per theme — the light values are darkened so
 // they hold contrast against a near-white page.
+// Five metals rather than five arbitrary hues: gold, amber, rose gold, brass
+// and copper. Still distinguishable enough for the legend to mean something,
+// but all drawn from the same family so the sphere reads as one object.
 const PALETTE = {
   dark: {
-    shell: "#4a4560",
-    lang: "#9b8cff",
-    front: "#65d9ff",
-    motion: "#f0a6ff",
-    back: "#7ef0b6",
-    ops: "#ffc978",
+    shell: "#4a3f28",
+    lang: "#e6c374",
+    front: "#e0a760",
+    motion: "#dd9a86",
+    back: "#c4c47e",
+    ops: "#c2913f",
   },
   light: {
-    shell: "#c6c4d6",
-    lang: "#5b3fe0",
-    front: "#0a7fa3",
-    motion: "#b23fb0",
-    back: "#18795a",
-    ops: "#a35c07",
+    shell: "#d8cfb6",
+    lang: "#8a6a14",
+    front: "#9a5f14",
+    motion: "#9c4f38",
+    back: "#65701c",
+    ops: "#8a5320",
   },
 };
 

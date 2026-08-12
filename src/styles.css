@@ -7,74 +7,76 @@
   font-synthesis: none;
   --max: 1240px;
 
-  /* surfaces */
-  --bg: #fbfbfd;
-  --bg-deep: #f1f1f6;
-  --surface-2: #ffffff;
-  --surface-3: #f3f3f8;
-  --panel: rgba(255, 255, 255, 0.72);
-  --nav-bg: rgba(255, 255, 255, 0.82);
-  --menu-bg: rgba(255, 255, 255, 0.97);
-  --chip-bg: rgba(255, 255, 255, 0.88);
-  --input-bg: rgba(255, 255, 255, 0.75);
+  /* surfaces — cream rather than blue-white, so gold sits on a warm ground
+     instead of fighting a cool one */
+  --bg: #fcfaf4;
+  --bg-deep: #f2ecdd;
+  --surface-2: #fffdf8;
+  --surface-3: #f6f1e5;
+  --panel: rgba(255, 253, 248, 0.74);
+  --nav-bg: rgba(255, 253, 248, 0.84);
+  --menu-bg: rgba(255, 253, 248, 0.97);
+  --chip-bg: rgba(255, 253, 248, 0.9);
+  --input-bg: rgba(255, 253, 248, 0.78);
 
-  /* text — highest contrast first. --text-hi doubles as the inverted button
+  /* text — warm-tinted neutrals. Pure grey on cream reads dirty; these carry a
+     trace of the ground colour. --text-hi doubles as the inverted button
      surface, so it must stay the extreme end of the scale in both themes. */
-  --text-hi: #0b0b12;
-  --text-1: #15151d;
-  --text-2: #3b3a48;
-  --text-3: #56555f;
-  --text-4: #6b6a78;
-  /* The two faintest tiers carry section numbers, indices and placeholders.
-     Straight lightening of the dark values landed at 3.5 and 2.7 against this
-     background; these hit AA and AA-large while keeping the hierarchy. */
-  --text-5: #64636e;
-  --text-6: #7a7984;
-  --invert-text: #f7f7fa;
+  --text-hi: #13100a;
+  --text-1: #1b170f;
+  --text-2: #423a2b;
+  --text-3: #5a5140;
+  --text-4: #6c6350;
+  /* The two faintest tiers carry section numbers, indices and stack chips.
+     Held dark enough to clear AA and AA-large against cream. */
+  --text-5: #736a57;
+  --text-6: #83795f;
+  --invert-text: #fbf8f1;
   --text: var(--text-1);
   --muted: var(--text-3);
 
-  /* hairlines and fills: black-alpha here, white-alpha in dark */
-  --line: rgba(12, 12, 24, 0.12);
-  --tint-0: rgba(12, 12, 24, 0.02);
-  --tint-1: rgba(12, 12, 24, 0.035);
-  --tint-2: rgba(12, 12, 24, 0.06);
-  --tint-3: rgba(12, 12, 24, 0.1);
-  --tint-4: rgba(12, 12, 24, 0.14);
-  --tint-5: rgba(12, 12, 24, 0.18);
-  --tint-6: rgba(12, 12, 24, 0.3);
-  --glass-a: rgba(255, 255, 255, 0.85);
-  --glass-b: rgba(255, 255, 255, 0.55);
+  /* hairlines and fills: warm black-alpha here, warm white-alpha in dark */
+  --line: rgba(48, 36, 10, 0.14);
+  --tint-0: rgba(48, 36, 10, 0.025);
+  --tint-1: rgba(48, 36, 10, 0.04);
+  --tint-2: rgba(48, 36, 10, 0.07);
+  --tint-3: rgba(48, 36, 10, 0.11);
+  --tint-4: rgba(48, 36, 10, 0.15);
+  --tint-5: rgba(48, 36, 10, 0.19);
+  --tint-6: rgba(48, 36, 10, 0.32);
+  --glass-a: rgba(255, 253, 247, 0.88);
+  --glass-b: rgba(255, 251, 240, 0.58);
 
-  /* accents — darkened for contrast against a light ground */
-  --violet: #6244f5;
-  --cyan: #0a7fa3;
-  --lime: #37801f;
-  --danger: #c0344a;
-  --grad-start: #15151d;
-  --grad-mid: #6244f5;
-  --grad-end: #0b93bd;
+  /* Gold has to go deep on a light ground — anything brighter than this is
+     unreadable as text, which is the usual failure of gold themes. */
+  --violet: #8a6a14;
+  --cyan: #9a5a1c;
+  --lime: #5c701c;
+  --danger: #a83a2c;
+  --grad-start: #1b170f;
+  --grad-mid: #8a6a14;
+  --grad-end: #b8873b;
 
-  /* washes and glows: a glow on white reads as a stain, so keep these faint */
-  --wash-violet: rgba(106, 84, 255, 0.09);
-  --wash-cyan: rgba(34, 150, 200, 0.06);
-  --cursor-wash: rgba(126, 111, 255, 0.06);
-  --contact-wash: rgba(128, 96, 255, 0.08);
-  --orbit-core-b: rgba(118, 94, 255, 0.1);
-  --orbit-inner-glow: rgba(150, 135, 255, 0.14);
-  --orbit-outer-glow: rgba(98, 80, 230, 0.1);
-  --btn-glow: rgba(98, 80, 230, 0.22);
-  --focus-ring: rgba(98, 68, 245, 0.55);
-  --focus-halo: rgba(98, 68, 245, 0.12);
+  /* washes and glows: a glow on cream reads as a stain, so keep these faint */
+  --wash-violet: rgba(190, 150, 60, 0.13);
+  --wash-cyan: rgba(150, 105, 35, 0.07);
+  --cursor-wash: rgba(190, 150, 60, 0.08);
+  --contact-wash: rgba(180, 140, 55, 0.1);
+  --orbit-core-b: rgba(180, 140, 55, 0.12);
+  --orbit-inner-glow: rgba(210, 175, 95, 0.16);
+  --orbit-outer-glow: rgba(160, 120, 40, 0.12);
+  --btn-glow: rgba(160, 120, 40, 0.24);
+  --focus-ring: rgba(138, 106, 20, 0.55);
+  --focus-halo: rgba(138, 106, 20, 0.14);
 
   /* scrims over imagery */
-  --scrim: rgba(12, 12, 24, 0.14);
-  --scrim-strong: rgba(12, 12, 24, 0.34);
+  --scrim: rgba(40, 30, 8, 0.15);
+  --scrim-strong: rgba(40, 30, 8, 0.36);
 
-  --shadow-sm: rgba(22, 22, 45, 0.06);
-  --shadow-md: rgba(22, 22, 45, 0.09);
-  --shadow-lg: rgba(22, 22, 45, 0.11);
-  --shadow-xl: rgba(22, 22, 45, 0.14);
+  --shadow-sm: rgba(60, 45, 15, 0.07);
+  --shadow-md: rgba(60, 45, 15, 0.1);
+  --shadow-lg: rgba(60, 45, 15, 0.13);
+  --shadow-xl: rgba(60, 45, 15, 0.17);
 
   --noise-opacity: 0.016;
   --img-filter: saturate(0.95) brightness(1);
@@ -85,62 +87,64 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --bg: #07070b;
-  --bg-deep: #060609;
-  --surface-2: #0a0a10;
-  --surface-3: #13131a;
-  --panel: rgba(18, 18, 27, 0.62);
-  --nav-bg: rgba(9, 9, 14, 0.74);
-  --menu-bg: rgba(9, 9, 14, 0.94);
-  --chip-bg: rgba(13, 13, 20, 0.78);
-  --input-bg: rgba(4, 4, 8, 0.32);
+  /* Near-black with warmth in it. Gold on a blue-black reads cold and cheap;
+     on a brown-black it reads like metal on leather. */
+  --bg: #0b0906;
+  --bg-deep: #070502;
+  --surface-2: #100d08;
+  --surface-3: #18140d;
+  --panel: rgba(28, 22, 13, 0.62);
+  --nav-bg: rgba(13, 10, 6, 0.76);
+  --menu-bg: rgba(13, 10, 6, 0.95);
+  --chip-bg: rgba(21, 17, 10, 0.8);
+  --input-bg: rgba(8, 6, 3, 0.34);
 
-  --text-hi: #ffffff;
-  --text-1: #f5f5f7;
-  --text-2: #c4c3cc;
-  --text-3: #a5a4b0;
-  --text-4: #8d8c99;
-  --text-5: #777684;
-  --text-6: #625f6d;
-  --invert-text: #09090d;
+  --text-hi: #fffdf7;
+  --text-1: #f7f2e5;
+  --text-2: #cfc6b0;
+  --text-3: #b1a892;
+  --text-4: #978e79;
+  --text-5: #807763;
+  --text-6: #675f4e;
+  --invert-text: #0b0906;
 
-  --line: rgba(255, 255, 255, 0.1);
-  --tint-0: rgba(255, 255, 255, 0.015);
-  --tint-1: rgba(255, 255, 255, 0.03);
-  --tint-2: rgba(255, 255, 255, 0.06);
-  --tint-3: rgba(255, 255, 255, 0.09);
-  --tint-4: rgba(255, 255, 255, 0.12);
-  --tint-5: rgba(255, 255, 255, 0.16);
-  --tint-6: rgba(255, 255, 255, 0.25);
-  --glass-a: rgba(255, 255, 255, 0.07);
-  --glass-b: rgba(255, 255, 255, 0.025);
+  --line: rgba(255, 240, 205, 0.12);
+  --tint-0: rgba(255, 240, 205, 0.02);
+  --tint-1: rgba(255, 240, 205, 0.035);
+  --tint-2: rgba(255, 240, 205, 0.07);
+  --tint-3: rgba(255, 240, 205, 0.1);
+  --tint-4: rgba(255, 240, 205, 0.13);
+  --tint-5: rgba(255, 240, 205, 0.17);
+  --tint-6: rgba(255, 240, 205, 0.28);
+  --glass-a: rgba(255, 240, 205, 0.08);
+  --glass-b: rgba(255, 240, 205, 0.028);
 
-  --violet: #9b8cff;
-  --cyan: #65d9ff;
-  --lime: #b9f36a;
-  --danger: #ff8d9f;
-  --grad-start: #ffffff;
-  --grad-mid: #a69cff;
-  --grad-end: #61d8ff;
+  --violet: #e6c374;
+  --cyan: #d1a05a;
+  --lime: #b6cf72;
+  --danger: #ff9a8d;
+  --grad-start: #fffdf7;
+  --grad-mid: #e6c374;
+  --grad-end: #c2913f;
 
-  --wash-violet: rgba(106, 84, 255, 0.14);
-  --wash-cyan: rgba(34, 211, 238, 0.08);
-  --cursor-wash: rgba(126, 111, 255, 0.08);
-  --contact-wash: rgba(128, 96, 255, 0.13);
-  --orbit-core-b: rgba(118, 94, 255, 0.12);
-  --orbit-inner-glow: rgba(150, 135, 255, 0.12);
-  --orbit-outer-glow: rgba(98, 80, 230, 0.12);
-  --btn-glow: rgba(139, 122, 255, 0.25);
-  --focus-ring: rgba(155, 140, 255, 0.6);
-  --focus-halo: rgba(155, 140, 255, 0.08);
+  --wash-violet: rgba(205, 165, 75, 0.16);
+  --wash-cyan: rgba(160, 110, 40, 0.09);
+  --cursor-wash: rgba(205, 165, 75, 0.09);
+  --contact-wash: rgba(190, 145, 60, 0.14);
+  --orbit-core-b: rgba(190, 145, 60, 0.13);
+  --orbit-inner-glow: rgba(225, 190, 110, 0.13);
+  --orbit-outer-glow: rgba(170, 125, 45, 0.13);
+  --btn-glow: rgba(215, 175, 90, 0.26);
+  --focus-ring: rgba(230, 195, 116, 0.6);
+  --focus-halo: rgba(230, 195, 116, 0.1);
 
-  --scrim: rgba(7, 7, 11, 0.45);
-  --scrim-strong: rgba(8, 8, 12, 0.75);
+  --scrim: rgba(11, 9, 6, 0.45);
+  --scrim-strong: rgba(11, 9, 6, 0.75);
 
-  --shadow-sm: rgba(0, 0, 0, 0.25);
-  --shadow-md: rgba(0, 0, 0, 0.28);
-  --shadow-lg: rgba(0, 0, 0, 0.32);
-  --shadow-xl: rgba(0, 0, 0, 0.4);
+  --shadow-sm: rgba(0, 0, 0, 0.3);
+  --shadow-md: rgba(0, 0, 0, 0.34);
+  --shadow-lg: rgba(0, 0, 0, 0.38);
+  --shadow-xl: rgba(0, 0, 0, 0.46);
 
   --noise-opacity: 0.028;
   --img-filter: saturate(0.7) brightness(0.82);
@@ -843,16 +847,16 @@ footer > a:last-child:hover { color: var(--text-hi); }
 .legend-row span { color: var(--text-2); font-size: 13px; }
 .legend-row strong { color: var(--text-5); font: 500 10px "DM Mono", monospace; }
 /* Same hues the sphere uses, so the key actually keys. */
-.legend-row i[data-group="lang"]   { background: #5b3fe0; box-shadow: 0 0 12px rgba(91,63,224,.4); }
-.legend-row i[data-group="front"]  { background: #0a7fa3; box-shadow: 0 0 12px rgba(10,127,163,.4); }
-.legend-row i[data-group="motion"] { background: #b23fb0; box-shadow: 0 0 12px rgba(178,63,176,.4); }
-.legend-row i[data-group="back"]   { background: #18795a; box-shadow: 0 0 12px rgba(24,121,90,.4); }
-.legend-row i[data-group="ops"]    { background: #a35c07; box-shadow: 0 0 12px rgba(163,92,7,.4); }
-:root[data-theme="dark"] .legend-row i[data-group="lang"]   { background: #9b8cff; box-shadow: 0 0 12px rgba(155,140,255,.5); }
-:root[data-theme="dark"] .legend-row i[data-group="front"]  { background: #65d9ff; box-shadow: 0 0 12px rgba(101,217,255,.5); }
-:root[data-theme="dark"] .legend-row i[data-group="motion"] { background: #f0a6ff; box-shadow: 0 0 12px rgba(240,166,255,.5); }
-:root[data-theme="dark"] .legend-row i[data-group="back"]   { background: #7ef0b6; box-shadow: 0 0 12px rgba(126,240,182,.5); }
-:root[data-theme="dark"] .legend-row i[data-group="ops"]    { background: #ffc978; box-shadow: 0 0 12px rgba(255,201,120,.5); }
+.legend-row i[data-group="lang"]   { background: #8a6a14; box-shadow: 0 0 12px rgba(138,106,20,.4); }
+.legend-row i[data-group="front"]  { background: #9a5f14; box-shadow: 0 0 12px rgba(154,95,20,.4); }
+.legend-row i[data-group="motion"] { background: #9c4f38; box-shadow: 0 0 12px rgba(156,79,56,.4); }
+.legend-row i[data-group="back"]   { background: #65701c; box-shadow: 0 0 12px rgba(101,112,28,.4); }
+.legend-row i[data-group="ops"]    { background: #8a5320; box-shadow: 0 0 12px rgba(138,83,32,.4); }
+:root[data-theme="dark"] .legend-row i[data-group="lang"]   { background: #e6c374; box-shadow: 0 0 12px rgba(230,195,116,.5); }
+:root[data-theme="dark"] .legend-row i[data-group="front"]  { background: #e0a760; box-shadow: 0 0 12px rgba(224,167,96,.5); }
+:root[data-theme="dark"] .legend-row i[data-group="motion"] { background: #dd9a86; box-shadow: 0 0 12px rgba(221,154,134,.5); }
+:root[data-theme="dark"] .legend-row i[data-group="back"]   { background: #c4c47e; box-shadow: 0 0 12px rgba(196,196,126,.5); }
+:root[data-theme="dark"] .legend-row i[data-group="ops"]    { background: #c2913f; box-shadow: 0 0 12px rgba(194,145,63,.5); }
 
 @media (max-width: 980px) {
   .skills-layout { grid-template-columns: 1fr; gap: 40px; }

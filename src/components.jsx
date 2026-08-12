@@ -128,7 +128,7 @@ export function ThemeToggle() {
     // Keeps the mobile browser chrome in step with the page.
     document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", next === "dark" ? "#07070b" : "#fbfbfd");
+      ?.setAttribute("content", next === "dark" ? "#0b0906" : "#fcfaf4");
     try { localStorage.setItem("theme", next); } catch { /* private mode */ }
   };
 
