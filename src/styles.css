@@ -153,7 +153,10 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; background: var(--bg); }
+/* The nav is fixed at top:20px with height:62px, so it owns the first 82px of
+   the viewport. Without this every in-page link parked its target flush to the
+   top and the first line of the heading landed behind the pill. */
+html { scroll-behavior: smooth; background: var(--bg); scroll-padding-top: 102px; }
 /* No background on body. In CSS paint order a block-level ancestor's background
    paints after negative z-index descendants, so an opaque body background sits
    on top of .scene (-2) and body::before (-5) and hides the entire 3D layer.
@@ -683,7 +686,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .education-row strong { color: var(--text-3); font: 500 10px "DM Mono", monospace; }
 
 /* Single column since the form was removed — the WhatsApp CTA is the whole ask. */
-.contact { display: grid; grid-template-columns: 1fr; gap: 8vw; align-items: center; min-height: 70vh; overflow: hidden; }
+/* `gap` and `min-height` are gone with the second column: this was a two-column
+   grid holding the contact form, and once that went the lone remaining child sat
+   centred in a 70vh box with dead space under the buttons. The section already
+   gets its breathing room from the shared padding rule above. */
+.contact { display: grid; grid-template-columns: 1fr; overflow: hidden; }
 .contact-intro { max-width: 760px; }
 .contact-glow {
   position: absolute;
@@ -774,6 +781,7 @@ footer > a:last-child:hover { color: var(--text-hi); }
 @media (max-width: 720px) {
   .section-pad { width: min(calc(100% - 36px), var(--max)); }
   .nav-shell { top: 10px; width: calc(100% - 20px); height: 58px; }
+  html { scroll-padding-top: 88px; }   /* 10 + 58, plus breathing room */
   .hero { padding-top: 120px; align-items: flex-start; }
   .hero-copy { width: 100%; }
   .hero h1 { font-size: clamp(61px, 18vw, 92px); line-height: .9; }
