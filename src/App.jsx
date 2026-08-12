@@ -141,14 +141,9 @@ function About() {
         <span className="section-number">01 / ABOUT</span>
         <h2>What I build,<br /><em>and how I work.</em></h2>
       </Reveal>
-      <div className="about-grid">
-        <div className="about-copy">
-          <Reveal>
-            <p className="lead-copy">I turn complicated product problems into systems that feel simple, fast, and dependable.</p>
-          </Reveal>
-        </div>
-      </div>
-      {/* An empty About told a client nothing. These say what there is to buy. */}
+      {/* The lead line here said "complicated problems into systems that feel
+          simple, fast and dependable" — true, but every developer site says it,
+          so it carried no information. The three cards say what there is to buy. */}
       <div className="service-grid">
         {services.map((service, index) => (
           <Reveal key={service.num} delay={index * 0.08}>
@@ -187,7 +182,9 @@ function Skills() {
               baseSpeed={2.4 + index * 0.55}
               maxBoost={34}
             >
-              {[...group.items, ...group.items].map((item, i) => (
+              {/* Tripled, not doubled: the groups are five items now instead of
+                  nine, and a row needs enough width to loop without a gap. */}
+              {[...group.items, ...group.items, ...group.items].map((item, i) => (
                 <span key={`${item}-${i}`}>{item}<i>✦</i></span>
               ))}
             </Marquee>

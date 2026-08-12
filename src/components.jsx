@@ -379,11 +379,9 @@ export function ProjectRow({ project, flip }) {
         <div className="project-topline">
           <span className="project-idx">{project.index}</span>
           <span className="eyebrow">{project.type}</span>
-          <span className="project-year">{project.year}</span>
         </div>
         <h3>{project.title}</h3>
         <p className="project-summary">{project.summary}</p>
-        {project.detail && <p className="project-detail">{project.detail}</p>}
         <ul className="stack-list">
           {project.stack.map((item) => <li key={item}>{item}</li>)}
         </ul>

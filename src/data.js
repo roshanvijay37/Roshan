@@ -5,11 +5,8 @@ export const projects = [
   {
     title: "Chatu",
     type: "Voice-first social",
-    year: "2026",
     summary:
       "Voice conversations with one stranger at a time, matched on shared interests, language and a trust score rather than a roulette of anonymous rooms.",
-    detail:
-      "Video only turns on if both people agree, and every action is attached to an account that can be reported — the moderation model is the product.",
     stack: ["Next.js", "TypeScript", "Supabase", "Zustand", "Realtime audio"],
     image: "/img/chatu.jpg",
     href: "https://chatu.in",
@@ -19,11 +16,8 @@ export const projects = [
   {
     title: "Kateel Construction",
     type: "Site management platform",
-    year: "2026",
     summary:
       "Mobile-first site management for a construction firm — drawings, progress photos and project records, in the hands of people standing on the site.",
-    detail:
-      "Role-based access across admin, chief engineer and site engineer, with image compression on the client so uploads survive a patchy site connection.",
     stack: ["Next.js", "TypeScript", "Supabase", "Tailwind", "Vercel"],
     image: "/img/kateel.jpg",
     href: "https://kateel.in",
@@ -33,10 +27,8 @@ export const projects = [
   {
     title: "Adhishtam Digital",
     type: "Agency website",
-    year: "2026",
     summary:
       "A dark, motion-led marketing site for a creative agency in Moodbidri, built around a full-screen preloader and scroll choreography.",
-    detail: "Live on its own domain, adhishtam.com.",
     stack: ["HTML", "CSS", "JavaScript", "GSAP-style motion"],
     image: "/img/adhishtam.jpg",
     href: "https://adhishtam.com",
@@ -46,11 +38,8 @@ export const projects = [
   {
     title: "Shobha Digital Studio",
     type: "Photography studio",
-    year: "2026",
     summary:
       "A bilingual marketing site for a photography and cinematography studio in Belvai, serving weddings, temple festivals and Yakshagana.",
-    detail:
-      "Astro with smooth scrolling and WebGL accents, hosted free on GitHub Pages — the only running cost is the domain.",
     stack: ["Astro", "Tailwind", "Lenis", "OGL"],
     image: "/img/shobhadigital.jpg",
     href: "https://shobhadigitalstudio.in",
@@ -60,10 +49,8 @@ export const projects = [
   {
     title: "Belvai Temple",
     type: "Heritage site",
-    year: "2026",
     summary:
       "A heritage site for an 830-year-old Shiva temple in Dakshina Kannada, written entirely in Kannada for the community that visits it.",
-    detail: "History, rituals, gallery and contact, on its own domain.",
     stack: ["HTML", "CSS", "JavaScript"],
     image: "/img/belvaitemple.jpg",
     href: "https://belvaitemple.in",
@@ -72,35 +59,28 @@ export const projects = [
   },
 ];
 
-// Drawn from what these repos actually use — package manifests across
-// trading-os, finance-os, attendance, kateel, chatu, the Astro site and this
-// one — plus the enterprise stack from day-job work. Grouped so the sphere can
-// colour by discipline rather than showing forty undifferentiated words.
+// Fifteen, not forty-three. A long list reads as junior, and it is the least
+// verifiable thing on the page — a client cannot check it and a technical
+// evaluator will probe the weakest item on it. Everything here is evidenced by
+// a project above or by this site itself, and is worth being interviewed on.
+// The per-project `stack` does the detailed work; this is the shape of it.
+//
+// Keys stay `front`/`motion`/`back` because styles.css colours the rows by them.
 export const skillGroups = [
-  {
-    key: "lang",
-    name: "Languages",
-    items: ["TypeScript", "JavaScript", "C#", "Python", "Java", "SQL", "HTML", "CSS", "GLSL"],
-  },
   {
     key: "front",
     name: "Frontend",
-    items: ["React", "Next.js", "Angular", "Astro", "Tailwind CSS", "Radix UI", "SCSS", "Vite"],
+    items: ["TypeScript", "React", "Next.js", "Astro", "Tailwind CSS"],
   },
   {
     key: "motion",
     name: "3D & Motion",
-    items: ["Three.js", "React Three Fiber", "Drei", "Framer Motion", "Shaders", "OGL", "Lenis"],
+    items: ["Three.js", "React Three Fiber", "Framer Motion", "GLSL", "Lenis"],
   },
   {
     key: "back",
-    name: "Backend & Data",
-    items: ["Node.js", "Express", ".NET Core", "Supabase", "PostgreSQL", "SQL Server", "REST APIs", "GraphQL", "WebSockets", "RabbitMQ"],
-  },
-  {
-    key: "ops",
-    name: "Tooling & Delivery",
-    items: ["Git", "Vercel", "AWS Lightsail", "Nginx", "PM2", "Vitest", "Zod", "TanStack Query", "Zustand"],
+    name: "Backend & Delivery",
+    items: ["Node.js", "Supabase", "PostgreSQL", ".NET Core", "Vercel"],
   },
 ];
 
@@ -123,6 +103,3 @@ export const services = [
     body: "APIs, realtime data, third-party integrations and the unglamorous plumbing that keeps a product honest.",
   },
 ];
-
-// Flat list for the marquee.
-export const skills = skillGroups.flatMap((g) => g.items);
