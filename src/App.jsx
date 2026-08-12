@@ -171,7 +171,7 @@ function Skills() {
     <section className="section-pad skills-section" id="skills">
       <Reveal className="section-heading compact">
         <span className="section-number">02 / CAPABILITIES</span>
-        <h2>Forty-three tools.<br /><em>One way of working.</em></h2>
+        <h2>What I build with.<br /><em>One way of working.</em></h2>
       </Reveal>
       {/* One full-bleed row per discipline, counter-moving at different speeds.
           A rotating sphere of words could not be read while it moved; type this
