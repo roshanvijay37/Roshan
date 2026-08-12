@@ -4,8 +4,8 @@ import {
 } from "lucide-react";
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Intro from "./Intro";
-import { LazyVisual, MagneticLink, Marquee, ProjectCard, Reveal, Scroll3D, ThemeToggle } from "./components";
-import { projects, skillGroups, skills } from "./data";
+import { LazyVisual, MagneticLink, Marquee, ProjectRow, Reveal, Scroll3D, ThemeToggle } from "./components";
+import { projects, services, skillGroups, skills } from "./data";
 import { dur, maskLine } from "./motion";
 
 // Reduced-motion stand-in for maskLine: same timing, no travel.
@@ -117,7 +117,7 @@ function Hero({ revealed }) {
           </motion.span>
         </h1>
         <motion.p variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8 } } }}>
-          Software engineer building scalable products, intelligent tools, and digital experiences with equal parts precision and imagination.
+          I design and build web products for founders and small teams — from fast marketing sites to full applications with real users behind them.
         </motion.p>
         <motion.div className="hero-actions" variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
           <MagneticLink className="button primary" href="#work">Explore my work <ArrowRight size={18} /></MagneticLink>
@@ -140,7 +140,7 @@ function About() {
     <section className="section-pad about" id="about">
       <Reveal className="section-heading">
         <span className="section-number">01 / ABOUT</span>
-        <h2>Clarity in the code.<br /><em>Curiosity in the process.</em></h2>
+        <h2>What I build,<br /><em>and how I work.</em></h2>
       </Reveal>
       <div className="about-grid">
         <div className="about-copy">
@@ -148,6 +148,20 @@ function About() {
             <p className="lead-copy">I turn complicated product problems into systems that feel simple, fast, and dependable.</p>
           </Reveal>
         </div>
+      </div>
+      {/* An empty About told a client nothing. These say what there is to buy. */}
+      <div className="service-grid">
+        {services.map((service, index) => (
+          <Reveal key={service.num} delay={index * 0.08}>
+            <Scroll3D intensity={0.7} lift={0.6}>
+              <div className="service-card">
+                <span className="service-num">{service.num}</span>
+                <h3>{service.title}</h3>
+                <p>{service.body}</p>
+              </div>
+            </Scroll3D>
+          </Reveal>
+        ))}
       </div>
     </section>
   );
@@ -191,16 +205,16 @@ function Work() {
   return (
     <section className="section-pad work" id="work">
       <Reveal className="section-heading horizontal">
-        <div><span className="section-number">03 / SELECTED WORK</span><h2>Experiments with<br /><em>real-world edges.</em></h2></div>
-        <p>A collection of websites and utilities built to solve specific problems, learn in public, and make useful things feel considered.</p>
+        <div><span className="section-number">03 / SELECTED WORK</span><h2>Nine things<br /><em>built and shipped.</em></h2></div>
+        <p>Trading systems, finance platforms, a voice-first social product and sites for businesses across Dakshina Kannada. Every one of them is live — the links go to the running thing, not a case study.</p>
       </Reveal>
-      <div className="projects-grid">
+      <div className="project-list">
         {projects.map((project, index) => (
-          // Two columns, so the reveal offset cascades each row left-to-right
-          // instead of growing with the whole list.
-          <Scroll3D key={project.title} intensity={1.15} lift={1.2}>
-            <ProjectCard project={project} delay={(index % 2) * 0.12} />
-          </Scroll3D>
+          <Reveal key={project.title}>
+            <Scroll3D intensity={0.55} lift={0.7}>
+              <ProjectRow project={project} flip={index % 2 === 1} />
+            </Scroll3D>
+          </Reveal>
         ))}
       </div>
     </section>

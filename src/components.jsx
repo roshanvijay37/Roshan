@@ -349,6 +349,42 @@ const cardMeta = {
   visible: { opacity: 1, y: 0, transition: { duration: dur.quick, ease, delay: 0.3 } },
 };
 
+// A full-width row per project instead of a card in a grid. A card can only
+// carry a title; a row has room for what the thing is, what was hard about it,
+// and what it was built with — which is the difference between a gallery and a
+// portfolio someone can judge.
+export function ProjectRow({ project, flip }) {
+  return (
+    <article className={flip ? "project-row flip" : "project-row"}>
+      <a
+        className="project-visual"
+        href={project.href}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={`Open ${project.title}`}
+      >
+        <ParallaxImage src={project.image} />
+      </a>
+      <div className="project-body">
+        <div className="project-topline">
+          <span className="project-idx">{project.index}</span>
+          <span className="eyebrow">{project.type}</span>
+          <span className="project-year">{project.year}</span>
+        </div>
+        <h3>{project.title}</h3>
+        <p className="project-summary">{project.summary}</p>
+        {project.detail && <p className="project-detail">{project.detail}</p>}
+        <ul className="stack-list">
+          {project.stack.map((item) => <li key={item}>{item}</li>)}
+        </ul>
+        <a className="project-link" href={project.href} target="_blank" rel="noreferrer">
+          Visit live site <ArrowUpRight size={16} />
+        </a>
+      </div>
+    </article>
+  );
+}
+
 export function ProjectCard({ project, delay = 0 }) {
   const reduced = useReducedMotion();
   const variants = reduced
