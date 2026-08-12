@@ -3,34 +3,6 @@
 // sentence that says what the thing does and what was hard about it.
 export const projects = [
   {
-    title: "TradingOS",
-    type: "Autonomous trading system",
-    year: "2026",
-    summary:
-      "An autonomous futures bot running a trend-gated 5-EMA strategy on Bank Nifty, with a manual options terminal and a backtest lab beside it.",
-    detail:
-      "Live trading and backtesting share one signal engine, so a rule can never quietly mean two different things in two places.",
-    stack: ["React", "TypeScript", "Node", "Express", "WebSockets", "AWS"],
-    image: "/img/tradingos.jpg",
-    href: "https://trading-os-sable.vercel.app",
-    color: "#22c55e",
-    index: "01",
-  },
-  {
-    title: "Finance OS",
-    type: "Personal finance platform",
-    year: "2026",
-    summary:
-      "A financial operating system built on an append-only ledger, answering one question every time you open it: where do I actually stand today?",
-    detail:
-      "No balance is ever stored. Net worth, debt and safe-to-spend are all derived from events, so the numbers cannot drift out of sync with each other.",
-    stack: ["Next.js", "TypeScript", "Supabase", "PostgreSQL", "TanStack Query"],
-    image: "/img/financeos.jpg",
-    href: "https://kadambamoodbidri.in",
-    color: "#a855f7",
-    index: "02",
-  },
-  {
     title: "Chatu",
     type: "Voice-first social",
     year: "2026",
@@ -42,7 +14,7 @@ export const projects = [
     image: "/img/chatu.jpg",
     href: "https://chatu.in",
     color: "#c2610c",
-    index: "03",
+    index: "01",
   },
   {
     title: "Kateel Construction",
@@ -56,7 +28,7 @@ export const projects = [
     image: "/img/kateel.jpg",
     href: "https://kateel.in",
     color: "#2563eb",
-    index: "04",
+    index: "02",
   },
   {
     title: "Adhishtam Digital",
@@ -69,7 +41,7 @@ export const projects = [
     image: "/img/adhishtam.jpg",
     href: "https://adhishtam.com",
     color: "#2f9e6e",
-    index: "05",
+    index: "03",
   },
   {
     title: "Shobha Digital Studio",
@@ -83,7 +55,7 @@ export const projects = [
     image: "/img/shobhadigital.jpg",
     href: "https://shobhadigitalstudio.in",
     color: "#c9a227",
-    index: "06",
+    index: "04",
   },
   {
     title: "Belvai Temple",
@@ -96,33 +68,7 @@ export const projects = [
     image: "/img/belvaitemple.jpg",
     href: "https://belvaitemple.in",
     color: "#d97706",
-    index: "07",
-  },
-  {
-    title: "Shivam Digital",
-    type: "Photography experience",
-    year: "2025",
-    summary:
-      "A portfolio site for a photography studio, built around full-bleed imagery and a quiet, image-first layout.",
-    detail: "",
-    stack: ["HTML", "CSS", "JavaScript"],
-    image: "/img/img_1.jpg",
-    href: "https://shivamdigital.vercel.app",
-    color: "#8b5cf6",
-    index: "08",
-  },
-  {
-    title: "Ocean Pearl",
-    type: "Hospitality website",
-    year: "2025",
-    summary:
-      "A hotel site for Ocean Pearl in Ujire — rooms, dining and amenities, with booking enquiries routed straight to WhatsApp.",
-    detail: "",
-    stack: ["HTML", "CSS", "JavaScript"],
-    image: "/img/oceanpearl.jpg",
-    href: "https://oceanpearlujire.vercel.app",
-    color: "#38bdf8",
-    index: "09",
+    index: "05",
   },
 ];
 
@@ -164,7 +110,7 @@ export const services = [
   {
     num: "01",
     title: "Product builds",
-    body: "Full applications with auth, data and real users behind them — the kind of thing Finance OS and Kateel are.",
+    body: "Full applications with auth, data and real users behind them — the kind of thing Chatu and Kateel are.",
   },
   {
     num: "02",

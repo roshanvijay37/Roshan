@@ -202,8 +202,8 @@ function Work() {
   return (
     <section className="section-pad work" id="work">
       <Reveal className="section-heading horizontal">
-        <div><span className="section-number">03 / SELECTED WORK</span><h2>Nine things<br /><em>built and shipped.</em></h2></div>
-        <p>Trading systems, finance platforms, a voice-first social product and sites for businesses across Dakshina Kannada. Every one of them is live — the links go to the running thing, not a case study.</p>
+        <div><span className="section-number">03 / SELECTED WORK</span><h2>Some of my work.<br /><em>All of it live.</em></h2></div>
+        <p>A voice-first social product, a site-management platform for a construction firm, and sites for businesses across Dakshina Kannada. Every link goes to the running thing, not a case study.</p>
       </Reveal>
       <div className="project-list">
         {projects.map((project, index) => (
