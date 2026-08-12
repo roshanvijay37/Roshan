@@ -939,3 +939,63 @@ footer > a:last-child:hover { color: var(--text-hi); }
   .service-grid { grid-template-columns: 1fr; }
   .project-row, .project-row.flip { grid-template-columns: 1fr; direction: ltr; gap: 28px; }
 }
+
+/* ---- Kinetic type wall ------------------------------------------------ */
+.kinetic-wall { margin-top: clamp(48px, 5vw, 78px); display: grid; gap: clamp(2px, 0.5vw, 10px); }
+.kinetic-row { position: relative; }
+.kinetic-label {
+  display: block;
+  width: min(calc(100% - 48px), var(--max));
+  margin: 0 auto 4px;
+  color: var(--text-5);
+  font: 500 9px "DM Mono", monospace;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+/* Override the old bordered/rotated marquee shell — these rows are full-bleed
+   and unadorned so the type is the only thing on screen. */
+.skill-marquee.kinetic-track {
+  width: 100vw;
+  margin: 0 0 0 calc(50% - 50vw);
+  border: 0;
+  background: none;
+  transform: none;
+  overflow: hidden;
+}
+.kinetic-track > div { width: max-content; display: flex; align-items: baseline; }
+.kinetic-track span {
+  padding: 0 clamp(12px, 1.5vw, 28px);
+  font-size: clamp(34px, 6vw, 92px);
+  font-weight: 600;
+  letter-spacing: -.05em;
+  line-height: 1.1;
+  white-space: nowrap;
+  text-transform: none;
+  color: var(--kinetic);
+}
+.kinetic-track i { display: none; }
+/* Alternating rows are outlined rather than filled. Five solid rows of type
+   this size is a wall of colour; alternating gives the block depth and lets
+   the page breathe through it. */
+.kinetic-row:nth-child(even) .kinetic-track span {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--kinetic);
+}
+.kinetic-row[data-group="lang"]   { --kinetic: #8a6a14; }
+.kinetic-row[data-group="front"]  { --kinetic: #9a5f14; }
+.kinetic-row[data-group="motion"] { --kinetic: #9c4f38; }
+.kinetic-row[data-group="back"]   { --kinetic: #65701c; }
+.kinetic-row[data-group="ops"]    { --kinetic: #8a5320; }
+:root[data-theme="dark"] .kinetic-row[data-group="lang"]   { --kinetic: #e6c374; }
+:root[data-theme="dark"] .kinetic-row[data-group="front"]  { --kinetic: #e0a760; }
+:root[data-theme="dark"] .kinetic-row[data-group="motion"] { --kinetic: #dd9a86; }
+:root[data-theme="dark"] .kinetic-row[data-group="back"]   { --kinetic: #c4c47e; }
+:root[data-theme="dark"] .kinetic-row[data-group="ops"]    { --kinetic: #c2913f; }
+
+@media (prefers-reduced-motion: reduce) {
+  .kinetic-track > div { transform: none; }
+}
+@media (max-width: 720px) {
+  .kinetic-track span { font-size: clamp(28px, 11vw, 52px); padding: 0 12px; }
+  .kinetic-label { width: calc(100% - 36px); }
+}

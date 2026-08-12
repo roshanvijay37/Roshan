@@ -1,11 +1,11 @@
 import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import {
-  ArrowDown, ArrowRight, ArrowUpRight, Github, Mail, Menu, Sparkles, X,
+  ArrowDown, ArrowRight, ArrowUpRight, Github, Mail, Menu, X,
 } from "lucide-react";
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Intro from "./Intro";
-import { LazyVisual, MagneticLink, Marquee, ProjectRow, Reveal, Scroll3D, ThemeToggle } from "./components";
-import { projects, services, skillGroups, skills } from "./data";
+import { MagneticLink, Marquee, ProjectRow, Reveal, Scroll3D, ThemeToggle } from "./components";
+import { projects, services, skillGroups } from "./data";
 import { dur, maskLine } from "./motion";
 
 // Reduced-motion stand-in for maskLine: same timing, no travel.
@@ -15,7 +15,6 @@ const fadeLine = {
 };
 
 const Scene = lazy(() => import("./Scene"));
-const SkillOrbit = lazy(() => import("./SkillOrbit"));
 
 const nav = [
   ["About", "#about"],
@@ -172,31 +171,29 @@ function Skills() {
     <section className="section-pad skills-section" id="skills">
       <Reveal className="section-heading compact">
         <span className="section-number">02 / CAPABILITIES</span>
-        <h2>Built across the stack.<br /><em>Focused on outcomes.</em></h2>
+        <h2>Forty-three tools.<br /><em>One way of working.</em></h2>
       </Reveal>
-      <div className="skills-layout">
-        <Reveal className="skill-orbit">
-          <LazyVisual className="orbit-mount" fallback={<div className="orbit-core"><Sparkles size={30} /><span>BUILD</span></div>}>
-            <Suspense fallback={<div className="orbit-core"><Sparkles size={30} /><span>BUILD</span></div>}>
-              <SkillOrbit groups={skillGroups} />
-            </Suspense>
-          </LazyVisual>
-        </Reveal>
-        {/* The sphere colours by discipline; without a key those colours are
-            decoration rather than information. */}
-        <Reveal className="skill-legend">
-          {skillGroups.map((group) => (
-            <div className="legend-row" key={group.key}>
-              <i data-group={group.key} />
-              <span>{group.name}</span>
-              <strong>{group.items.length}</strong>
-            </div>
-          ))}
-        </Reveal>
+      {/* One full-bleed row per discipline, counter-moving at different speeds.
+          A rotating sphere of words could not be read while it moved; type this
+          large is legible even in motion, which is the whole point. */}
+      <div className="kinetic-wall">
+        {skillGroups.map((group, index) => (
+          <div className="kinetic-row" data-group={group.key} key={group.key}>
+            <span className="kinetic-label">{group.name}</span>
+            <Marquee
+              className="kinetic-track"
+              reverse={index % 2 === 1}
+              lockDirection
+              baseSpeed={2.4 + index * 0.55}
+              maxBoost={34}
+            >
+              {[...group.items, ...group.items].map((item, i) => (
+                <span key={`${item}-${i}`}>{item}<i>✦</i></span>
+              ))}
+            </Marquee>
+          </div>
+        ))}
       </div>
-      <Marquee>
-        {[...skills, ...skills].map((skill, index) => <span key={`${skill}-${index}`}>{skill}<i>✦</i></span>)}
-      </Marquee>
     </section>
   );
 }

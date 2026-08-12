@@ -160,11 +160,21 @@ export function ThemeToggle() {
 // useAnimationFrame silently stopped ticking here after the first scroll, and a
 // loop we own is both easier to reason about and one less thing between the
 // value and the pixel.
-export function Marquee({ children, baseSpeed = 1.6, maxBoost = 26 }) {
+export function Marquee({
+  children,
+  baseSpeed = 1.6,
+  maxBoost = 26,
+  reverse = false,
+  // Stacked rows want fixed opposing directions — if scroll could flip them
+  // they would all swing the same way at once and the counter-motion, which is
+  // the entire effect, would collapse.
+  lockDirection = false,
+  className = "",
+}) {
   const reduced = useReducedMotion();
   const trackRef = useRef(null);
   const offset = useRef(0);
-  const direction = useRef(1);
+  const direction = useRef(reverse ? -1 : 1);
 
   useEffect(() => {
     if (reduced) return undefined;
@@ -180,7 +190,7 @@ export function Marquee({ children, baseSpeed = 1.6, maxBoost = 26 }) {
       const scrollY = window.scrollY;
       const moved = scrollY - lastScroll;
       lastScroll = scrollY;
-      if (Math.abs(moved) > 0.5) direction.current = moved > 0 ? 1 : -1;
+      if (!lockDirection && Math.abs(moved) > 0.5) direction.current = moved > 0 ? 1 : -1;
 
       const speed = baseSpeed + Math.min(Math.abs(moved) * 0.9, maxBoost);
       let next = offset.current - direction.current * speed * (dt / 1000);
@@ -196,10 +206,10 @@ export function Marquee({ children, baseSpeed = 1.6, maxBoost = 26 }) {
 
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, [reduced, baseSpeed, maxBoost]);
+  }, [reduced, baseSpeed, maxBoost, lockDirection]);
 
   return (
-    <div className="skill-marquee" aria-hidden="true">
+    <div className={["skill-marquee", className].filter(Boolean).join(" ")} aria-hidden="true">
       <div ref={trackRef}>{children}</div>
     </div>
   );
