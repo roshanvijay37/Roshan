@@ -1,4 +1,4 @@
-import { Float, MeshTransmissionMaterial, Sparkles } from "@react-three/drei";
+import { Environment, Float, Lightformer, MeshTransmissionMaterial, Sparkles } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { memo, Suspense, useMemo, useRef } from "react";
 import * as THREE from "three";
@@ -17,6 +17,14 @@ const PALETTE = {
     sparkle: "#fff6e2",
     key: "#ffd89b", fill: "#c2913f",
     ambient: 0.5,
+    // The environment the glass core refracts. Dark keeps a moody surround so
+    // the gold strips read as bright specular edges rather than a wash.
+    envBg: "#100c07", envKey: "#fff1cf", envFill: "#c2913f", envRim: "#fff6e2",
+    envIntensity: 2.6,
+    // Separate from `core`, which also drives the shard shader. Thickness is
+    // Beer-Lambert attenuation: the deeper the glass, the more the tint eats
+    // the light passing through it.
+    glass: "#d9ae5f", glassThickness: 0.7,
   },
   light: {
     particles: "#a8823a", particleOpacity: 0.45,
@@ -26,8 +34,64 @@ const PALETTE = {
     sparkle: "#8a6a14",
     key: "#e0b866", fill: "#b8873b",
     ambient: 0.95,
+    // Light needs a high-key surround: the core sits on cream, so its refraction
+    // has to be brighter than the page or it reads as a hole punched in it.
+    envBg: "#fdf8ec", envKey: "#ffffff", envFill: "#f0dcb2", envRim: "#ffffff",
+    envIntensity: 4.2,
+    // A pale, thin glass on light: a saturated tint at this thickness turns the
+    // core into a dark ball, which is the one thing it must not be on cream.
+    glass: "#f5ead2", glassThickness: 0.3,
   },
 };
+
+// A transmission material refracts whatever surrounds it. With no environment
+// map it samples the canvas clear colour — transparent, which resolves to black
+// — so the core rendered as a dark polygon on the cream page. WebGL cannot
+// refract the DOM behind the canvas, so the surround has to exist in the scene.
+//
+// Built from emissive planes rather than a downloaded HDR: same idea as the
+// three.js keyframes example generating its sky through PMREMGenerator instead
+// of fetching one. That costs no network request and no HDR asset, though the
+// drei helpers themselves add ~20 KB gzipped to this chunk. `frames={1}` bakes
+// the cubemap once at mount, so there is no per-frame cost.
+function StudioEnvironment({ palette }) {
+  return (
+    <Environment resolution={256} frames={1}>
+      {/* An enclosing shell, not `<color attach="background">` — that does not
+          reach the internal scene drei renders these children into, which left
+          the gaps between lightformers black and put a dark mass at the centre
+          of the refraction. This is the room the glass sits in. */}
+      <mesh scale={60}>
+        <sphereGeometry args={[1, 24, 16]} />
+        <meshBasicMaterial color={palette.envBg} side={THREE.BackSide} />
+      </mesh>
+      {/* Broad overhead key — gives the facets a gradient to slide across. */}
+      <Lightformer
+        form="rect" intensity={palette.envIntensity} color={palette.envKey}
+        position={[0, 5, -2]} rotation={[Math.PI / 2, 0, 0]} scale={[10, 10, 1]}
+      />
+      {/* Narrow side strips read as crisp specular edges on the facet borders. */}
+      <Lightformer
+        form="rect" intensity={palette.envIntensity * 1.5} color={palette.envRim}
+        position={[-5, 1, 1]} rotation={[0, Math.PI / 2, 0]} scale={[8, 2, 1]}
+      />
+      <Lightformer
+        form="rect" intensity={palette.envIntensity * 1.1} color={palette.envFill}
+        position={[5, -1, 1]} rotation={[0, -Math.PI / 2, 0]} scale={[8, 2, 1]}
+      />
+      {/* Warm bounce from below, so the underside is not dead. */}
+      <Lightformer
+        form="rect" intensity={palette.envIntensity * 0.6} color={palette.envFill}
+        position={[0, -4, 1]} rotation={[-Math.PI / 2, 0, 0]} scale={[10, 6, 1]}
+      />
+      {/* A ring catchlight — the round highlight that makes glass look polished. */}
+      <Lightformer
+        form="ring" intensity={palette.envIntensity * 2} color={palette.envRim}
+        position={[-1.5, 2.5, 3.5]} scale={2.4}
+      />
+    </Environment>
+  );
+}
 
 function CameraRig({ pointer, scrollRef }) {
   const { camera } = useThree();
@@ -251,6 +315,12 @@ function HeroSculpture({ palette, scrollRef, revealed }) {
     }
   });
 
+  // Transmission refracts an off-screen render of the scene behind the mesh.
+  // That buffer clears to the canvas colour — transparent, so black — which is
+  // what kept the middle of the core dark even once the environment existed.
+  // Rays passing straight through now land on the room colour instead.
+  const glassBackdrop = useMemo(() => new THREE.Color(palette.envBg), [palette.envBg]);
+
   return (
     <group ref={group} position={[1.65, 0.1, -0.8]} rotation={[0.2, 0, -0.15]}>
       <Float speed={1.6} rotationIntensity={0.55} floatIntensity={0.7}>
@@ -259,7 +329,7 @@ function HeroSculpture({ palette, scrollRef, revealed }) {
           <MeshTransmissionMaterial
             backside
             samples={4}
-            thickness={0.75}
+            thickness={palette.glassThickness}
             chromaticAberration={0.18}
             anisotropy={0.15}
             distortion={0.35}
@@ -267,7 +337,8 @@ function HeroSculpture({ palette, scrollRef, revealed }) {
             temporalDistortion={0.08}
             roughness={0.16}
             transmission={1}
-            color={palette.core}
+            color={palette.glass}
+            background={glassBackdrop}
           />
         </mesh>
       </Float>
@@ -297,6 +368,7 @@ function Scene({ pointer, scrollRef, revealed }) {
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >
         <Suspense fallback={null}>
+          <StudioEnvironment palette={palette} />
           <ambientLight intensity={palette.ambient} />
           <pointLight position={[4, 3, 5]} intensity={36} color={palette.key} />
           <pointLight position={[-4, -2, 3]} intensity={24} color={palette.fill} />
