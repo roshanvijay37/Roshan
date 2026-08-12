@@ -450,7 +450,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
   font-weight: 500;
 }
 .section-heading h2 em, .contact h2 em { color: var(--text-4); font-style: normal; }
-.about-grid { display: grid; grid-template-columns: .75fr 1.25fr; gap: clamp(50px, 9vw, 140px); align-items: center; }
+/* Single column since the portrait was removed. */
+.about-grid { display: grid; grid-template-columns: 1fr; }
+.about-copy { max-width: 860px; }
 .portrait-frame {
   position: relative;
   aspect-ratio: .82;

@@ -15,7 +15,6 @@ const fadeLine = {
 };
 
 const Scene = lazy(() => import("./Scene"));
-const Portrait = lazy(() => import("./Portrait"));
 const SkillOrbit = lazy(() => import("./SkillOrbit"));
 
 const nav = [
@@ -95,12 +94,6 @@ function Hero({ revealed }) {
             logo — so anyone arriving from a shared link had to scroll to find
             out whose site this is. */}
         <motion.div className="hero-identity" variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}>
-          {/* The source is a full-body shot; at 46px the face would be about
-              nine pixels tall. The wrapper crops to the head in CSS rather than
-              shipping a second image — this file is already in cache. */}
-          <span className="avatar">
-            <img src="/img/profile_big.jpg" alt="Roshan Vijay" width="46" height="46" />
-          </span>
           <span>
             <strong>Roshan Vijay</strong>
             <i>Software Engineer</i>
@@ -150,17 +143,6 @@ function About() {
         <h2>Clarity in the code.<br /><em>Curiosity in the process.</em></h2>
       </Reveal>
       <div className="about-grid">
-        <Reveal className="about-portrait">
-          <div className="portrait-frame">
-            <LazyVisual className="portrait-mount" fallback={<img src="/img/profile_big.jpg" alt="Roshan Vijay" />}>
-              <Suspense fallback={<img src="/img/profile_big.jpg" alt="Roshan Vijay" />}>
-                <Portrait src="/img/profile_big.jpg" alt="Roshan Vijay" />
-              </Suspense>
-            </LazyVisual>
-            <div className="portrait-shine" />
-          </div>
-          <span className="portrait-caption">Roshan Vijay · Software Engineer</span>
-        </Reveal>
         <div className="about-copy">
           <Reveal>
             <p className="lead-copy">I turn complicated product problems into systems that feel simple, fast, and dependable.</p>
