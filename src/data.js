@@ -8,9 +8,7 @@ export const projects = [
     summary:
       "Voice conversations with one stranger at a time, matched on shared interests, language and a trust score rather than a roulette of anonymous rooms.",
     stack: ["Next.js", "TypeScript", "Supabase", "Zustand", "Realtime audio"],
-    image: "/img/chatu.jpg",
     href: "https://chatu.in",
-    color: "#c2610c",
     index: "01",
   },
   {
@@ -19,9 +17,7 @@ export const projects = [
     summary:
       "Mobile-first site management for a construction firm — drawings, progress photos and project records, in the hands of people standing on the site.",
     stack: ["Next.js", "TypeScript", "Supabase", "Tailwind", "Vercel"],
-    image: "/img/kateel.jpg",
     href: "https://kateel.in",
-    color: "#2563eb",
     index: "02",
   },
   {
@@ -30,9 +26,7 @@ export const projects = [
     summary:
       "A dark, motion-led marketing site for a creative agency in Moodbidri, built around a full-screen preloader and scroll choreography.",
     stack: ["HTML", "CSS", "JavaScript", "GSAP-style motion"],
-    image: "/img/adhishtam.jpg",
     href: "https://adhishtam.com",
-    color: "#2f9e6e",
     index: "03",
   },
   {
@@ -41,9 +35,7 @@ export const projects = [
     summary:
       "A bilingual marketing site for a photography and cinematography studio in Belvai, serving weddings, temple festivals and Yakshagana.",
     stack: ["Astro", "Tailwind", "Lenis", "OGL"],
-    image: "/img/shobhadigital.jpg",
     href: "https://shobhadigitalstudio.in",
-    color: "#c9a227",
     index: "04",
   },
   {
@@ -52,9 +44,7 @@ export const projects = [
     summary:
       "A heritage site for an 830-year-old Shiva temple in Dakshina Kannada, written entirely in Kannada for the community that visits it.",
     stack: ["HTML", "CSS", "JavaScript"],
-    image: "/img/belvaitemple.jpg",
     href: "https://belvaitemple.in",
-    color: "#d97706",
     index: "05",
   },
 ];

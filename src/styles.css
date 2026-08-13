@@ -79,8 +79,6 @@
   --shadow-xl: rgba(60, 45, 15, 0.17);
 
   --noise-opacity: 0.016;
-  --img-filter: saturate(0.95) brightness(1);
-  --img-filter-hover: saturate(1.05) brightness(1.02);
   --portrait-filter: saturate(0.95) contrast(1.02);
 }
 
@@ -147,8 +145,6 @@
   --shadow-xl: rgba(0, 0, 0, 0.46);
 
   --noise-opacity: 0.028;
-  --img-filter: saturate(0.7) brightness(0.82);
-  --img-filter-hover: saturate(1) brightness(0.92);
   --portrait-filter: saturate(0.72) contrast(1.08);
 }
 
@@ -497,19 +493,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .about-copy > div > p { color: var(--muted); font-size: 16px; line-height: 1.8; }
 .about-copy .lead-copy { margin-top: 0; color: var(--text-1); font-size: clamp(24px, 2.5vw, 36px); line-height: 1.35; letter-spacing: -.025em; }
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 44px; perspective: 900px; }
-.tilt-card { position: relative; transform-style: preserve-3d; }
-.tilt-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  opacity: 0;
-  pointer-events: none;
-  border-radius: inherit;
-  background: radial-gradient(circle at var(--gx) var(--gy), color-mix(in srgb, var(--glow), transparent 75%), transparent 45%);
-  transition: opacity .3s;
-}
-.tilt-card:hover::before { opacity: 1; }
 .stat-card {
   min-height: 150px;
   padding: 24px;
@@ -612,42 +595,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .section-heading.horizontal > p { max-width: 390px; margin: 0 0 8px; color: var(--muted); line-height: 1.75; font-size: 14px; }
 .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px 28px; perspective: 1200px; }
 .projects-grid > div:nth-child(even) { margin-top: 100px; }
-.project-card { border-radius: 24px; }
-.project-card a { display: block; }
-.project-image {
-  position: relative;
-  aspect-ratio: 1.28;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  background: var(--surface-3);
-  box-shadow: 0 35px 80px var(--shadow-md);
-}
-.project-image::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 65%, var(--scrim)); }
-.parallax-layer { position: absolute; inset: -9% 0; will-change: transform; }
-.project-image img { width: 100%; height: 100%; object-fit: cover; filter: var(--img-filter); transition: transform .75s cubic-bezier(.2,.8,.2,1), filter .5s; }
-.project-card:hover img { transform: scale(1.055); filter: var(--img-filter-hover); }
-.project-open {
-  position: absolute;
-  z-index: 3;
-  top: 18px;
-  right: 18px;
-  width: 46px;
-  height: 46px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  color: var(--invert-text);
-  background: var(--text-hi);
-  transform: scale(.8) rotate(-20deg);
-  opacity: 0;
-  transition: .35s ease;
-}
-.project-card:hover .project-open { transform: scale(1) rotate(0); opacity: 1; }
-.project-meta { display: flex; justify-content: space-between; padding: 20px 5px 0; }
 .eyebrow { color: var(--text-5); font: 9px "DM Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
-.project-meta h3 { margin: 8px 0 0; font-size: 22px; letter-spacing: -.03em; font-weight: 600; }
-.project-index { color: var(--text-6); font: 10px "DM Mono", monospace; }
 
 .timeline { position: relative; }
 .timeline::before { content: ""; position: absolute; left: 21px; top: 12px; bottom: 0; width: 1px; background: var(--tint-2); }
@@ -806,7 +754,6 @@ footer > a:last-child:hover { color: var(--text-hi); }
   .section-heading.horizontal > p { margin-top: 26px; }
   .projects-grid { grid-template-columns: 1fr; gap: 52px; }
   .projects-grid > div:nth-child(even) { margin-top: 0; }
-  .project-open { opacity: 1; transform: scale(.85); }
   .timeline-item { grid-template-columns: 38px 1fr; gap: 20px; }
   .timeline::before { left: 18px; }
   .timeline-marker { width: 38px; height: 38px; }
@@ -889,30 +836,12 @@ footer > a:last-child:hover { color: var(--text-hi); }
 /* ---- Work: full-width editorial rows ---------------------------------- */
 .project-list { display: grid; gap: 0; perspective: 1600px; }
 .project-row {
-  display: grid;
-  grid-template-columns: 1.1fr .9fr;
-  gap: clamp(38px, 5vw, 88px);
-  align-items: center;
+  display: block;
   padding: clamp(56px, 6.5vw, 104px) 0;
   border-top: 1px solid var(--line);
 }
-/* Reversing with direction keeps the source order — and therefore the reading
-   and tab order — unchanged while the image alternates sides. */
 .project-row.flip { direction: rtl; }
 .project-row.flip > * { direction: ltr; }
-.project-visual {
-  position: relative;
-  display: block;
-  aspect-ratio: 1.42;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 22px;
-  background: var(--surface-3);
-  box-shadow: 0 40px 90px var(--shadow-lg);
-}
-.project-visual::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 70%, var(--scrim)); }
-.project-visual img { width: 100%; height: 100%; object-fit: cover; filter: var(--img-filter); transition: transform .8s cubic-bezier(.2,.8,.2,1), filter .5s; }
-.project-visual:hover img { transform: scale(1.04); filter: var(--img-filter-hover); }
 .project-topline { display: flex; align-items: center; gap: 14px; }
 .project-idx { color: var(--text-1); font: 500 11px "DM Mono", monospace; letter-spacing: .1em; }
 .project-year { margin-left: auto; color: var(--text-5); font: 10px "DM Mono", monospace; }

@@ -2,7 +2,7 @@ import {
   motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform,
 } from "framer-motion";
 import { ArrowUpRight, Moon, Sun } from "lucide-react";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { anticipate, dur, ease as easings, spring } from "./motion";
 
 const ease = easings.out;
@@ -246,91 +246,6 @@ export function MagneticLink({ children, className = "", ...props }) {
   );
 }
 
-// Lets descendants react to the card's tilt without prop-drilling motion values.
-const TiltContext = createContext(null);
-
-export function TiltCard({ children, className = "", glow = "#8b5cf6" }) {
-  const ref = useRef(null);
-  const reduced = useReducedMotion();
-  const rotateX = useSpring(useMotionValue(0), { stiffness: 180, damping: 22 });
-  const rotateY = useSpring(useMotionValue(0), { stiffness: 180, damping: 22 });
-  const gx = useMotionValue("50%");
-  const gy = useMotionValue("50%");
-
-  const move = (event) => {
-    const rect = ref.current.getBoundingClientRect();
-    const px = (event.clientX - rect.left) / rect.width;
-    const py = (event.clientY - rect.top) / rect.height;
-    if (!reduced) {
-      rotateX.set((0.5 - py) * 7);
-      rotateY.set((px - 0.5) * 7);
-    }
-    gx.set(`${px * 100}%`);
-    gy.set(`${py * 100}%`);
-  };
-
-  return (
-    <TiltContext.Provider value={rotateY}>
-      <motion.div
-        ref={ref}
-        className={`tilt-card ${className}`}
-        style={{ rotateX, rotateY, "--glow": glow, "--gx": gx, "--gy": gy }}
-        onMouseMove={move}
-        onMouseLeave={() => { rotateX.set(0); rotateY.set(0); }}
-      >
-        {children}
-      </motion.div>
-    </TiltContext.Provider>
-  );
-}
-
-// Secondary action: the badge counter-rotates against the card's tilt, so it
-// reads as a separate object sitting on the surface rather than painted on it.
-function OpenBadge() {
-  const rotateY = useContext(TiltContext);
-  const reduced = useReducedMotion();
-  const fallback = useMotionValue(0);
-  const counter = useTransform(rotateY ?? fallback, (v) => -v * 1.6);
-  return (
-    <motion.span className="project-open" style={reduced ? undefined : { rotate: counter }}>
-      <ArrowUpRight size={20} />
-    </motion.span>
-  );
-}
-
-// Drifts the artwork against the page as the card crosses the viewport. The layer is
-// taller than its frame so the travel never exposes an edge.
-function ParallaxImage({ src }) {
-  const ref = useRef(null);
-  const reduced = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], ["-7%", "7%"]);
-
-  return (
-    <div className="project-image" ref={ref}>
-      <motion.div className="parallax-layer" style={reduced ? undefined : { y }}>
-        <img src={src} alt="" loading="lazy" />
-      </motion.div>
-      <OpenBadge />
-    </div>
-  );
-}
-
-// The image leads, the caption follows a beat later — overlapping action, so
-// the card assembles instead of appearing whole.
-//
-// The caption's delay has to exceed the *difference* in durations, not just be
-// positive: it runs a shorter animation, so too small a delay lets it settle
-// before the image does and the sequence reads backwards.
-const cardImage = {
-  hidden: { opacity: 0, y: 48, filter: "blur(10px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: dur.base, ease } },
-};
-const cardMeta = {
-  hidden: { opacity: 0, y: 18 },
-  visible: { opacity: 1, y: 0, transition: { duration: dur.quick, ease, delay: 0.3 } },
-};
-
 // A full-width row per project instead of a card in a grid. A card can only
 // carry a title; a row has room for what the thing is, what was hard about it,
 // and what it was built with — which is the difference between a gallery and a
@@ -338,15 +253,6 @@ const cardMeta = {
 export function ProjectRow({ project, flip }) {
   return (
     <article className={flip ? "project-row flip" : "project-row"}>
-      <a
-        className="project-visual"
-        href={project.href}
-        target="_blank"
-        rel="noreferrer"
-        aria-label={`Open ${project.title}`}
-      >
-        <ParallaxImage src={project.image} />
-      </a>
       <div className="project-body">
         <div className="project-topline">
           <span className="project-idx">{project.index}</span>
@@ -362,36 +268,5 @@ export function ProjectRow({ project, flip }) {
         </a>
       </div>
     </article>
-  );
-}
-
-export function ProjectCard({ project, delay = 0 }) {
-  const reduced = useReducedMotion();
-  const variants = reduced
-    ? { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: dur.quick } } }
-    : null;
-
-  return (
-    <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ delayChildren: reduced ? 0 : delay }}
-    >
-      <TiltCard className="project-card" glow={project.color}>
-        <a href={project.href} target="_blank" rel="noreferrer" aria-label={`Open ${project.title}`}>
-          <motion.div variants={variants ?? cardImage}>
-            <ParallaxImage src={project.image} />
-          </motion.div>
-          <motion.div className="project-meta" variants={variants ?? cardMeta}>
-            <div>
-              <span className="eyebrow">{project.type}</span>
-              <h3>{project.title}</h3>
-            </div>
-            <span className="project-index">{project.index}</span>
-          </motion.div>
-        </a>
-      </TiltCard>
-    </motion.div>
   );
 }
