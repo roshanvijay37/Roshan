@@ -34,15 +34,20 @@ nav{position:fixed;z-index:50;top:0;left:0;right:0;display:flex;justify-content:
 nav b{color:var(--gold);font-weight:600}
 
 /* ---------- 1. hero ---------- */
-/* overflow:hidden because .glow deliberately bleeds past the right edge — without
-   it the whole document grew to 462px on a 390px phone and scrolled sideways. */
-.hero{min-height:100svh;display:grid;align-content:center;padding:18vh 0 12vh;position:relative;overflow:hidden}
+.hero{min-height:100svh;display:grid;align-content:center;padding:18vh 0 12vh;position:relative}
+/* The decoration clips here, not on .hero. .hero sits inside .pad, which is
+   28px narrower than the screen, so clipping there stopped the glow short of
+   the edge and left a visible vertical seam down the right side. This breaks
+   out to the full viewport, so the bleed reaches the edge and still cannot
+   scroll the page sideways. */
+.herofx{position:absolute;top:0;bottom:0;left:50%;transform:translateX(-50%);width:100vw;
+  overflow:hidden;pointer-events:none;z-index:0}
 .hero .k{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
 .hero h1{font-weight:800;font-size:clamp(44px,11.5vw,142px);line-height:.92;letter-spacing:-.05em}
 .hero h1 em{font-style:normal;color:var(--gold)}
 .hero p{margin-top:28px;max-width:48ch;color:var(--dim);line-height:1.8;font-size:15.5px}
 .hero .scroll{margin-top:40px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
-.glow{position:absolute;width:70vw;height:70vw;max-width:760px;max-height:760px;right:-22vw;top:6vh;
+.glow{position:absolute;width:70vw;height:70vw;max-width:760px;max-height:760px;right:-14vw;top:6vh;
   border-radius:50%;filter:blur(84px);opacity:var(--glowo);pointer-events:none;
   background:radial-gradient(circle,var(--glowc),transparent 68%)}
 
@@ -53,9 +58,9 @@ nav b{color:var(--gold);font-weight:600}
 /* Kept clear of the headline: centred on the hero it cut straight through
    "ideas into" and neither the type nor the object survived it. Lower-right,
    partly off-canvas, so it reads as an object in the room rather than a sticker. */
-.orbit{position:absolute;right:-26vw;bottom:-12vh;width:82vw;height:82vw;max-width:560px;max-height:560px;
+.orbit{position:absolute;right:-18vw;bottom:-10vh;width:82vw;height:82vw;max-width:560px;max-height:560px;
   pointer-events:none;opacity:.95;z-index:0}
-@media(min-width:900px){.orbit{right:-4vw;bottom:-14vh;width:40vw;height:40vw;opacity:1}}
+@media(min-width:900px){.orbit{right:0;bottom:-14vh;width:40vw;height:40vw;opacity:1}}
 /* type always wins over the object */
 .hero .k,.hero h1,.hero p,.hero .scroll{position:relative;z-index:2}
 #orbitcv{width:100%;height:100%;display:block}
@@ -125,8 +130,10 @@ nav b{color:var(--gold);font-weight:600}
 
 <div class="pad">
   <section class="hero">
-    <div class="glow"></div>
-    <div class="orbit" aria-hidden="true"><canvas id="orbitcv"></canvas></div>
+    <div class="herofx" aria-hidden="true">
+      <div class="glow"></div>
+      <div class="orbit"><canvas id="orbitcv"></canvas></div>
+    </div>
     <div class="k mono">Freelance web developer</div>
     <h1>I engineer ideas into <em>impact.</em></h1>
     <p id="intro"></p>
