@@ -34,7 +34,15 @@ nav{position:fixed;z-index:50;top:0;left:0;right:0;display:flex;justify-content:
 nav b{color:var(--gold);font-weight:600}
 
 /* ---------- 1. hero ---------- */
-.hero{min-height:100svh;display:grid;align-content:center;padding:18vh 0 12vh;position:relative}
+/* Taken from D8: the headline is pinned and its two lines part as you scroll,
+   which here also uncovers the orbit sitting behind them. The stage is the
+   scroll distance; the pin is what stays on screen while it plays. */
+.hero.stage{height:215vh;position:relative;display:block;padding:0}
+.pin{position:sticky;top:0;height:100svh;display:grid;align-content:center;overflow:hidden}
+.heroinner{position:relative;z-index:2}
+h1.split{display:block}
+.ln{display:block;will-change:transform}
+@media(prefers-reduced-motion:reduce){.ln{transform:none!important}}
 /* The decoration clips here, not on .hero. .hero sits inside .pad, which is
    28px narrower than the screen, so clipping there stopped the glow short of
    the edge and left a visible vertical seam down the right side. This breaks
@@ -43,9 +51,9 @@ nav b{color:var(--gold);font-weight:600}
 .herofx{position:absolute;top:0;bottom:0;left:50%;transform:translateX(-50%);width:100vw;
   overflow:hidden;pointer-events:none;z-index:0}
 .hero .k{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
-.hero h1{font-weight:800;font-size:clamp(44px,11.5vw,142px);line-height:.92;letter-spacing:-.05em}
+.hero h1{font-weight:800;font-size:clamp(36px,9.4vw,122px);line-height:.94;letter-spacing:-.05em;margin:0}
 .hero h1 em{font-style:normal;color:var(--gold)}
-.hero p{margin-top:28px;max-width:48ch;color:var(--dim);line-height:1.8;font-size:15.5px}
+.hero p{margin-top:26px;max-width:46ch;color:var(--dim);line-height:1.8;font-size:15.5px;will-change:transform,opacity}
 .hero .scroll{margin-top:40px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
 .glow{position:absolute;width:70vw;height:70vw;max-width:760px;max-height:760px;right:-14vw;top:6vh;
   border-radius:50%;filter:blur(84px);opacity:var(--glowo);pointer-events:none;
@@ -129,15 +137,22 @@ nav b{color:var(--gold);font-weight:600}
 <nav><b id="nb"></b><span style="display:flex;gap:14px;align-items:center">Available<button id="tt" aria-label="Toggle theme" style="pointer-events:auto;background:none;border:1px solid var(--line);color:var(--gold);border-radius:99px;padding:7px 12px;font:inherit;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer">Dark</button></span></nav>
 
 <div class="pad">
-  <section class="hero">
-    <div class="herofx" aria-hidden="true">
-      <div class="glow"></div>
-      <div class="orbit"><canvas id="orbitcv"></canvas></div>
+  <section class="hero stage" id="s1">
+    <div class="pin">
+      <div class="herofx" aria-hidden="true">
+        <div class="glow"></div>
+        <div class="orbit"><canvas id="orbitcv"></canvas></div>
+      </div>
+      <div class="heroinner">
+        <div class="k mono" id="k0">Freelance web developer</div>
+        <h1 class="split">
+          <span class="ln" id="k1">I engineer ideas</span>
+          <span class="ln" id="k2">into <em>impact.</em></span>
+        </h1>
+        <p id="intro"></p>
+        <div class="scroll mono" id="k4">Scroll ↓</div>
+      </div>
     </div>
-    <div class="k mono">Freelance web developer</div>
-    <h1>I engineer ideas into <em>impact.</em></h1>
-    <p id="intro"></p>
-    <div class="scroll mono">Scroll ↓</div>
   </section>
 
   <section class="torchwrap">
@@ -255,6 +270,56 @@ tt.addEventListener("click", () => {
   try { localStorage.setItem("d9theme", next || "light"); } catch { /* private mode */ }
   paint();
 });
+
+// D8's pinned split, driven off the stage's own scroll progress. The lines part,
+// the strapline rises between them, and the orbit — which sits behind the type —
+// is uncovered as they go. Everything is a pure function of p, so it tracks the
+// scrollbar exactly rather than animating on a timer.
+(function heroSplit(){
+  const stage = document.getElementById("s1");
+  const reducedMo = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const orbitEl = document.querySelector(".orbit");
+  const glowEl = document.querySelector(".glow");
+  if (!stage) return;
+
+  function frame(){
+    const travel = stage.offsetHeight - innerHeight;
+    const p = travel > 0 ? Math.max(0, Math.min(1, -stage.getBoundingClientRect().top / travel)) : 0;
+    if (reducedMo) return;
+
+    const ease = p * p * (3 - 2 * p);         // smoothstep, so the parting settles
+    // The lines part horizontally on a wide screen. On a phone they cannot:
+    // left-aligned type has only the ~14px page gutter before the screen edge,
+    // so any meaningful travel slices it mid-word ("ngineer ideas"). There the
+    // parting goes vertical instead — same idea, nothing to clip against.
+    const wide = innerWidth >= 900;
+    const fade = 1 - ease * 0.88;
+    const sc = 1 - ease * 0.13;
+    if (wide) {
+      k1.style.transform = `translateX(${-ease * 26}vw) scale(${sc})`;
+      k2.style.transform = `translateX(${ease * 26}vw) scale(${sc})`;
+    } else {
+      k1.style.transform = `translateY(${-ease * 9}vh) scale(${sc})`;
+      k2.style.transform = `translateY(${ease * 9}vh) scale(${sc})`;
+    }
+    k1.style.opacity = k2.style.opacity = String(fade);
+    k0.style.opacity = String(Math.max(0, 1 - p * 3));
+
+    // strapline rises into the gap the lines leave behind
+    const t = Math.max(0, Math.min(1, (p - 0.16) * 2.2));
+    intro.style.opacity = String(t);
+    intro.style.transform = `translateY(${(1 - t) * 30}px)`;
+    k4.style.opacity = String(Math.max(0, 1 - p * 4));
+
+    // the object emerges as the type clears it
+    orbitEl.style.transform = `scale(${0.82 + ease * 0.24})`;
+    orbitEl.style.opacity = String(0.45 + ease * 0.55);
+    glowEl.style.opacity = String(0.16 + ease * 0.3);
+  }
+  addEventListener("scroll", frame, { passive: true });
+  addEventListener("resize", frame);
+  frame();
+})();
 
 window.reveal(); window.switcher("9");
 </script>
