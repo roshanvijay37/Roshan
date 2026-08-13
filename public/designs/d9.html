@@ -60,18 +60,6 @@ h1.split{display:block}
   background:radial-gradient(circle,var(--glowc),transparent 68%)}
 
 
-/* An orbit of geometry, not of words. The rejected component put skill names on
-   a rotating sphere: unreadable while moving, and half of them always facing
-   away. Rings carry no text, so rotation costs nothing in legibility. */
-/* Kept clear of the headline: centred on the hero it cut straight through
-   "ideas into" and neither the type nor the object survived it. Lower-right,
-   partly off-canvas, so it reads as an object in the room rather than a sticker. */
-.orbit{position:absolute;right:-18vw;bottom:-10vh;width:82vw;height:82vw;max-width:560px;max-height:560px;
-  pointer-events:none;opacity:.95;z-index:0}
-@media(min-width:900px){.orbit{right:0;bottom:-14vh;width:40vw;height:40vw;opacity:1}}
-/* type always wins over the object */
-.hero .k,.hero h1,.hero p,.hero .scroll{position:relative;z-index:2}
-#orbitcv{width:100%;height:100%;display:block}
 
 /* ---------- 2. the spotlight statement ---------- */
 .torchwrap{padding:8vh 0 12vh}
@@ -141,8 +129,7 @@ h1.split{display:block}
     <div class="pin">
       <div class="herofx" aria-hidden="true">
         <div class="glow"></div>
-        <div class="orbit"><canvas id="orbitcv"></canvas></div>
-      </div>
+        </div>
       <div class="heroinner">
         <div class="k mono" id="k0">Freelance web developer</div>
         <h1 class="split">
@@ -278,7 +265,6 @@ tt.addEventListener("click", () => {
 (function heroSplit(){
   const stage = document.getElementById("s1");
   const reducedMo = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const orbitEl = document.querySelector(".orbit");
   const glowEl = document.querySelector(".glow");
   if (!stage) return;
 
@@ -318,10 +304,8 @@ tt.addEventListener("click", () => {
     intro.style.transform = `translateY(${(1 - t) * 30}px)`;
     k4.style.opacity = String(Math.max(0, 1 - p * 4));
 
-    // the object emerges as the type clears it
-    orbitEl.style.transform = `scale(${0.82 + ease * 0.24})`;
-    orbitEl.style.opacity = String(0.45 + ease * 0.55);
-    glowEl.style.opacity = String(0.16 + ease * 0.3);
+    // the glow stays, quietly: it is the only thing left carrying the corner
+    glowEl.style.opacity = String(0.22 + ease * 0.16);
   }
   addEventListener("scroll", frame, { passive: true });
   addEventListener("resize", frame);
@@ -330,6 +314,5 @@ tt.addEventListener("click", () => {
 
 window.reveal(); window.switcher("9");
 </script>
-<script type="module" src="orbit.js"></script>
 </body>
 </html>
