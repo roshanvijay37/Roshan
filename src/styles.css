@@ -50,6 +50,11 @@
   /* Gold has to go deep on a light ground — anything brighter than this is
      unreadable as text, which is the usual failure of gold themes. */
   --violet: #8a6a14;
+  --acc-1: #8a6a14;
+  --acc-2: #9a5a1c;
+  --acc-3: #5c701c;
+  --acc-4: #a1521f;
+  --acc-5: #7a5c2a;
   --cyan: #9a5a1c;
   --lime: #5c701c;
   --danger: #a83a2c;
@@ -118,6 +123,11 @@
   --glass-b: rgba(255, 240, 205, 0.028);
 
   --violet: #e6c374;
+  --acc-1: #e6c374;
+  --acc-2: #d1a05a;
+  --acc-3: #b6cf72;
+  --acc-4: #e08a5c;
+  --acc-5: #c9a86a;
   --cyan: #d1a05a;
   --lime: #b6cf72;
   --danger: #ff9a8d;
@@ -835,17 +845,65 @@ footer > a:last-child:hover { color: var(--text-hi); }
 
 /* ---- Work: full-width editorial rows ---------------------------------- */
 .project-list { display: grid; gap: 0; perspective: 1600px; }
-.project-row {
+
+/* Taken from the D2 direction: a panel rather than a row, with a glow that
+   tracks the pointer and a rule in the project's own accent. The whole card is
+   the link — a card that looks pressable but only responds on one small word
+   inside it is a worse target, especially on a phone. */
+.project-card {
+  position: relative;
   display: block;
-  padding: clamp(56px, 6.5vw, 104px) 0;
-  border-top: 1px solid var(--line);
+  overflow: hidden;
+  padding: clamp(24px, 4vw, 46px);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: linear-gradient(150deg, var(--glass-a), var(--glass-b));
+  color: inherit;
+  transition: border-color .4s, transform .4s cubic-bezier(.2, .8, .2, 1);
 }
-.project-row.flip { direction: rtl; }
-.project-row.flip > * { direction: ltr; }
+.project-card:hover { border-color: var(--tint-6); transform: translateY(-3px); }
+.project-card:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+/* Sits under the content, over the panel — a glow painted on top would wash the
+   type it is meant to light. */
+.project-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(560px 240px at var(--mx, 50%) var(--my, 0%), var(--wash-violet), transparent 62%);
+  transition: opacity .5s;
+}
+.project-card:hover::after { opacity: 1; }
+.project-card > * { position: relative; z-index: 1; }
+.project-topline {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+  color: var(--accent);
+  font: 500 11px "DM Mono", monospace;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.project-go { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.project-card:hover .project-go { color: var(--text-hi); }
+.project-card h3 {
+  margin: 22px 0 14px;
+  font-size: clamp(30px, 4.4vw, 54px);
+  letter-spacing: -.045em;
+  font-weight: 500;
+  line-height: 1.02;
+}
+.project-bar {
+  display: block;
+  height: 2px;
+  margin-top: 26px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+}
 .project-topline { display: flex; align-items: center; gap: 14px; }
-.project-idx { color: var(--text-1); font: 500 11px "DM Mono", monospace; letter-spacing: .1em; }
 .project-year { margin-left: auto; color: var(--text-5); font: 10px "DM Mono", monospace; }
-.project-body h3 { margin: 18px 0 16px; font-size: clamp(30px, 3.6vw, 46px); letter-spacing: -.045em; font-weight: 500; line-height: 1.02; }
 .project-summary { margin: 0; color: var(--text-2); font-size: clamp(15px, 1.25vw, 17px); line-height: 1.66; }
 .project-detail { margin: 14px 0 0; color: var(--text-4); font-size: 13px; line-height: 1.7; }
 .stack-list { display: flex; flex-wrap: wrap; gap: 7px; margin: 26px 0 0; padding: 0; list-style: none; }
@@ -858,23 +916,9 @@ footer > a:last-child:hover { color: var(--text-hi); }
   letter-spacing: .06em;
   text-transform: uppercase;
 }
-.project-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 28px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid var(--line);
-  color: var(--text-1);
-  font-size: 13px;
-  font-weight: 600;
-  transition: border-color .25s, gap .25s;
-}
-.project-link:hover { border-color: var(--text-1); gap: 12px; }
 
 @media (max-width: 980px) {
   .service-grid { grid-template-columns: 1fr; }
-  .project-row, .project-row.flip { grid-template-columns: 1fr; direction: ltr; gap: 28px; }
 }
 
 /* ---- Kinetic type wall ------------------------------------------------ */

@@ -205,7 +205,7 @@ function Work() {
         {projects.map((project, index) => (
           <Reveal key={project.title}>
             <Scroll3D intensity={0.55} lift={0.7}>
-              <ProjectRow project={project} flip={index % 2 === 1} />
+              <ProjectRow project={project} />
             </Scroll3D>
           </Reveal>
         ))}

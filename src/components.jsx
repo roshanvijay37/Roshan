@@ -250,23 +250,36 @@ export function MagneticLink({ children, className = "", ...props }) {
 // carry a title; a row has room for what the thing is, what was hard about it,
 // and what it was built with — which is the difference between a gallery and a
 // portfolio someone can judge.
-export function ProjectRow({ project, flip }) {
+export function ProjectRow({ project }) {
+  // The glow is written straight to CSS custom properties rather than held in
+  // state: it changes on every pointer move, and re-rendering five cards at
+  // that rate to move a gradient is work for nothing.
+  const track = (event) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    event.currentTarget.style.setProperty("--mx", `${event.clientX - rect.left}px`);
+    event.currentTarget.style.setProperty("--my", `${event.clientY - rect.top}px`);
+  };
+
   return (
-    <article className={flip ? "project-row flip" : "project-row"}>
-      <div className="project-body">
-        <div className="project-topline">
-          <span className="project-idx">{project.index}</span>
-          <span className="eyebrow">{project.type}</span>
-        </div>
-        <h3>{project.title}</h3>
-        <p className="project-summary">{project.summary}</p>
-        <ul className="stack-list">
-          {project.stack.map((item) => <li key={item}>{item}</li>)}
-        </ul>
-        <a className="project-link" href={project.href} target="_blank" rel="noreferrer">
-          Visit live site <ArrowUpRight size={16} />
-        </a>
+    <a
+      className="project-card"
+      href={project.href}
+      target="_blank"
+      rel="noreferrer"
+      style={{ "--accent": `var(${project.accent})` }}
+      onPointerMove={track}
+      aria-label={`${project.title} — ${project.type}, opens in a new tab`}
+    >
+      <div className="project-topline">
+        <span>{project.index} — {project.type}</span>
+        <span className="project-go">Visit <ArrowUpRight size={13} /></span>
       </div>
-    </article>
+      <h3>{project.title}</h3>
+      <p className="project-summary">{project.summary}</p>
+      <ul className="stack-list">
+        {project.stack.map((item) => <li key={item}>{item}</li>)}
+      </ul>
+      <span className="project-bar" />
+    </a>
   );
 }

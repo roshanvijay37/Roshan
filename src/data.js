@@ -10,6 +10,7 @@ export const projects = [
     stack: ["Next.js", "TypeScript", "Supabase", "Zustand", "Realtime audio"],
     href: "https://chatu.in",
     index: "01",
+    accent: "--acc-1",
   },
   {
     title: "Kateel Construction",
@@ -19,6 +20,7 @@ export const projects = [
     stack: ["Next.js", "TypeScript", "Supabase", "Tailwind", "Vercel"],
     href: "https://kateel.in",
     index: "02",
+    accent: "--acc-2",
   },
   {
     title: "Adhishtam Digital",
@@ -28,6 +30,7 @@ export const projects = [
     stack: ["HTML", "CSS", "JavaScript", "GSAP-style motion"],
     href: "https://adhishtam.com",
     index: "03",
+    accent: "--acc-3",
   },
   {
     title: "Shobha Digital Studio",
@@ -37,6 +40,7 @@ export const projects = [
     stack: ["Astro", "Tailwind", "Lenis", "OGL"],
     href: "https://shobhadigitalstudio.in",
     index: "04",
+    accent: "--acc-4",
   },
   {
     title: "Belvai Temple",
@@ -46,6 +50,7 @@ export const projects = [
     stack: ["HTML", "CSS", "JavaScript"],
     href: "https://belvaitemple.in",
     index: "05",
+    accent: "--acc-5",
   },
 ];
 
