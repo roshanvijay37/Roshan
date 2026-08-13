@@ -47,16 +47,21 @@ window.switcher = (current) => {
   const bar = document.createElement("div");
   bar.innerHTML =
     '<a href="/designs/">← all</a>' +
-    ["1","2","3","4","5","6","7","8","9"].map((n) =>
+    ["1","2","3","4","5","6","7","8","9","10","11","12","13"].map((n) =>
       `<a href="/designs/d${n}.html"${n === current ? ' class="on"' : ""}>${n}</a>`).join("");
+  // Thirteen entries no longer fit a phone, so the bar scrolls inside itself
+  // rather than running off the screen and taking the last few with it.
   bar.style.cssText =
     "position:fixed;z-index:9999;left:50%;transform:translateX(-50%);bottom:14px;display:flex;gap:4px;" +
-    "background:rgba(12,10,7,.9);backdrop-filter:blur(14px);padding:6px;border-radius:999px;" +
-    "font:600 11px/1 ui-monospace,monospace;letter-spacing:.08em";
+    "background:rgba(12,10,7,.92);backdrop-filter:blur(14px);padding:6px;border-radius:999px;" +
+    "font:600 11px/1 ui-monospace,monospace;letter-spacing:.08em;" +
+    "max-width:calc(100vw - 20px);overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch";
   bar.querySelectorAll("a").forEach((a) => {
     // nowrap or "← all" breaks onto two lines and the pill grows a second row.
     a.style.cssText = "color:#c9bda3;text-decoration:none;padding:8px 11px;border-radius:999px;white-space:nowrap";
     if (a.classList.contains("on")) a.style.cssText += ";background:#e6c374;color:#171208";
   });
   document.body.appendChild(bar);
+  const active = bar.querySelector("a.on");
+  if (active) active.scrollIntoView({ block: "nearest", inline: "center" });
 };

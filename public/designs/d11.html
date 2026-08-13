@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D11 — Live Screens</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f3e9;--ink:#171208;--gold:#8a6a14;--dim:#6d6450;--line:rgba(23,18,8,.13);--chrome:#e8e1d1}
+:root[data-theme="dark"]{--bg:#0b0906;--ink:#f2eadb;--gold:#e6c374;--dim:#948a73;--line:rgba(242,234,219,.13);--chrome:#1b1710}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);font-family:Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 28px,1200px);margin:auto}
+[data-r]{opacity:0;transform:translateY(26px);transition:all .95s cubic-bezier(.2,.75,.2,1)}
+[data-r="in"]{opacity:1;transform:none}
+
+nav{position:fixed;z-index:40;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:16px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.16em;text-transform:uppercase;border-radius:99px;padding:7px 12px;cursor:pointer}
+
+.hero{min-height:88svh;display:grid;align-content:center;padding:20vh 0 8vh}
+.hero .k{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
+.hero h1{font-weight:800;font-size:clamp(40px,10vw,120px);line-height:.96;letter-spacing:-.045em}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{margin-top:26px;max-width:48ch;color:var(--dim);line-height:1.8;font-size:15.5px}
+
+/* THE idea: every project is a browser window showing the real thing.
+   The frame is the argument — these are sites, not case studies. */
+.reel{padding:6vh 0 14vh;display:grid;gap:clamp(48px,9vh,110px)}
+.shot{display:grid;gap:20px}
+@media(min-width:900px){
+  .shot{grid-template-columns:1.25fr .75fr;gap:44px;align-items:center}
+  .shot:nth-child(even) .win{order:2}
+}
+.win{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--chrome);
+  box-shadow:0 30px 70px rgba(0,0,0,.14);transform:perspective(1400px) rotateX(6deg);transform-origin:50% 0;
+  transition:transform .8s cubic-bezier(.2,.75,.2,1)}
+.shot[data-r="in"] .win{transform:perspective(1400px) rotateX(0deg)}
+.bar{display:flex;align-items:center;gap:7px;padding:9px 12px;background:var(--chrome);border-bottom:1px solid var(--line)}
+.bar i{width:9px;height:9px;border-radius:50%;background:rgba(128,120,100,.42)}
+.bar .url{margin-left:8px;font-size:10.5px;color:var(--dim);letter-spacing:.04em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.view{aspect-ratio:16/10;position:relative;overflow:hidden;background:var(--c);display:grid;place-items:center;padding:22px}
+.view b{font-weight:800;font-size:clamp(26px,5.4vw,54px);color:rgba(255,255,255,.94);letter-spacing:-.04em;text-align:center;line-height:1.05}
+.view .sub{position:absolute;left:18px;bottom:16px;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.72)}
+.view .sheen{position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.28),transparent 46%)}
+.info h3{font-weight:800;font-size:clamp(24px,4.4vw,38px);letter-spacing:-.035em;line-height:1.05}
+.info .t{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-top:9px}
+.info p{color:var(--dim);font-size:14.5px;line-height:1.72;margin-top:14px}
+.info .st{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
+.info .st span{font-size:10px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.info a.go{display:inline-flex;gap:8px;margin-top:20px;background:var(--ink);color:var(--bg);text-decoration:none;
+  padding:14px 20px;border-radius:99px;font-weight:700;font-size:13.5px}
+
+.sec{padding:12vh 0}
+.lab{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.sec h2{font-weight:800;font-size:clamp(28px,6vw,62px);letter-spacing:-.04em;line-height:1}
+.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:5vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:20px 0 24px}
+.sv h4{font-weight:700;font-size:19px;margin:0 0 8px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.7}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:5vh}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:8px 10px;border-radius:99px;color:var(--dim)}
+.cta{padding:12vh 0 15vh;text-align:center}
+.cta h2{font-weight:800;font-size:clamp(32px,8vw,96px);letter-spacing:-.05em;line-height:.98}
+.btn{display:inline-block;margin-top:28px;background:var(--gold);color:#120e05;text-decoration:none;padding:17px 26px;border-radius:99px;font-weight:700;font-size:14px}
+</style>
+</head>
+<body>
+<nav><b id="nb"></b><button id="tt">Dark</button></nav>
+<div class="pad">
+  <section class="hero">
+    <div class="k mono">Freelance web developer</div>
+    <h1>Don't read about it.<br><em>Go and click it.</em></h1>
+    <p id="intro"></p>
+  </section>
+
+  <section class="reel" id="reel"></section>
+
+  <section class="sec">
+    <div class="lab mono">Services</div>
+    <h2 data-r>What you can buy.</h2>
+    <div class="grid" id="svc"></div>
+    <div class="chips" id="chips" data-r></div>
+  </section>
+  <section class="cta" data-r>
+    <h2>Have an idea?</h2>
+    <a class="btn" id="wa" href="#">Message me on WhatsApp →</a>
+  </section>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name; intro.textContent = S.intro; wa.href = S.wa;
+
+// The window frame does the arguing — it says "this is a running site".
+reel.innerHTML = S.projects.map(p => `
+  <div class="shot" data-r style="--c:${p.c}">
+    <a class="win" href="${p.href}" target="_blank" rel="noreferrer">
+      <div class="bar"><i></i><i></i><i></i><span class="url mono">${p.href.replace("https://","")}</span></div>
+      <div class="view"><span class="sheen"></span><b>${p.t}</b><span class="sub mono">${p.type}</span></div>
+    </a>
+    <div class="info">
+      <h3>${p.t}</h3>
+      <div class="t mono">${p.type}</div>
+      <p>${p.s}</p>
+      <div class="st">${p.stack.map(x => `<span class="mono">${x}</span>`).join("")}</div>
+      <a class="go" href="${p.href}" target="_blank" rel="noreferrer">Visit live site ↗</a>
+    </div>
+  </div>`).join("");
+
+svc.innerHTML = S.services.map(s => `<div class="sv" data-r><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML = S.skills.map(t => `<span class="mono">${t}</span>`).join("");
+
+const root = document.documentElement;
+try { if (localStorage.getItem("d11theme") === "dark") root.setAttribute("data-theme","dark"); } catch {}
+const paint = () => tt.textContent = root.getAttribute("data-theme") === "dark" ? "Light" : "Dark";
+paint();
+tt.onclick = () => { const d = root.getAttribute("data-theme") === "dark";
+  if (d) root.removeAttribute("data-theme"); else root.setAttribute("data-theme","dark");
+  try { localStorage.setItem("d11theme", d ? "light" : "dark"); } catch {} paint(); };
+
+window.reveal(".shot, [data-r]"); window.switcher("11");
+</script>
+</body>
+</html>

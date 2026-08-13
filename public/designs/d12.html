@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D12 — Archive Index</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f2ea;--ink:#141209;--gold:#7d5f10;--dim:#6b6353;--line:rgba(20,18,9,.15);--hi:rgba(125,95,16,.07)}
+:root[data-theme="dark"]{--bg:#0a0a08;--ink:#eeead d;--ink:#eeeade;--gold:#e0c078;--dim:#8f8877;--line:rgba(238,234,222,.14);--hi:rgba(224,192,120,.08)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);font-family:"Inter Tight",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.pad{width:min(100% - 26px,1240px);margin:auto}
+
+/* An archive, not a showcase. Dense, factual, scannable — the register of
+   someone with a body of work rather than someone selling a vibe. */
+header{padding:72px 0 34px;border-bottom:2px solid var(--ink)}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+h1{font-weight:800;font-size:clamp(30px,6.4vw,64px);letter-spacing:-.04em;line-height:.98;max-width:16ch}
+h1 em{font-style:normal;color:var(--gold)}
+.top .right{text-align:right;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);display:grid;gap:6px}
+header p{margin-top:22px;max-width:58ch;color:var(--dim);line-height:1.75;font-size:15px}
+button.tt{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.16em;text-transform:uppercase;border-radius:2px;padding:7px 11px;cursor:pointer}
+
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:560px}
+thead th{text-align:left;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);
+  font-weight:500;padding:16px 12px 12px 0;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none}
+thead th .ar{opacity:.35;margin-left:5px}
+thead th.on .ar{opacity:1}
+tbody td{padding:20px 12px 20px 0;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr{transition:background .25s}
+tbody tr:hover{background:var(--hi)}
+td.name a{color:inherit;text-decoration:none;font-weight:800;font-size:clamp(17px,2.6vw,24px);letter-spacing:-.03em}
+td.name a:hover{color:var(--gold)}
+td.name .sum{color:var(--dim);font-size:13px;line-height:1.6;margin-top:7px;max-width:52ch;font-weight:400}
+td.kind,td.stack,td.go{font-size:11px;color:var(--dim);letter-spacing:.04em}
+td.stack{max-width:230px}
+td.go a{color:var(--gold);text-decoration:none;white-space:nowrap}
+.swatch{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:8px;vertical-align:1px}
+
+section{padding:64px 0}
+.lab{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+h2{font-weight:800;font-size:clamp(22px,4.2vw,38px);letter-spacing:-.03em}
+.svc{display:grid;grid-template-columns:1fr;gap:0;margin-top:26px;border-top:1px solid var(--line)}
+@media(min-width:800px){.svc{grid-template-columns:repeat(3,1fr);gap:28px}}
+.sv{padding:18px 0;border-bottom:1px solid var(--line)}
+@media(min-width:800px){.sv{border-bottom:0}}
+.sv h4{font-weight:700;font-size:17px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13px;line-height:1.65;margin-top:7px}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:26px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;color:var(--dim)}
+footer{border-top:2px solid var(--ink);padding:44px 0 96px;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:center}
+footer h3{font-weight:800;font-size:clamp(22px,4.6vw,40px);letter-spacing:-.035em}
+.btn{background:var(--ink);color:var(--bg);text-decoration:none;padding:15px 22px;font-weight:700;font-size:13.5px;border-radius:2px}
+</style>
+</head>
+<body>
+<div class="pad">
+  <header>
+    <div class="top">
+      <h1>Web developer. <em>Everything here is running.</em></h1>
+      <div class="right">
+        <span id="loc">India — available</span>
+        <span><button class="tt" id="tt">Dark</button></span>
+      </div>
+    </div>
+    <p id="intro"></p>
+  </header>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr>
+        <th data-k="t" class="on">Project <span class="ar">↑</span></th>
+        <th data-k="type">Kind <span class="ar">↕</span></th>
+        <th data-k="stack">Built with <span class="ar">↕</span></th>
+        <th></th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <section>
+    <div class="lab mono">Services</div>
+    <h2>What you can buy.</h2>
+    <div class="svc" id="svc"></div>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <footer>
+    <h3>Have an idea?</h3>
+    <a class="btn" id="wa" href="#">Message me on WhatsApp →</a>
+  </footer>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+intro.textContent = S.intro; wa.href = S.wa;
+
+let data = [...S.projects], key = "t", dir = 1;
+function draw(){
+  rows.innerHTML = data.map(p => `
+    <tr>
+      <td class="name"><a href="${p.href}" target="_blank" rel="noreferrer"><span class="swatch" style="background:${p.c}"></span>${p.t}</a>
+        <div class="sum">${p.s}</div></td>
+      <td class="kind mono">${p.type}</td>
+      <td class="stack mono">${p.stack.join(" · ")}</td>
+      <td class="go mono"><a href="${p.href}" target="_blank" rel="noreferrer">Visit ↗</a></td>
+    </tr>`).join("");
+}
+draw();
+
+// Sorting is the point: an archive you can interrogate reads as a real body of
+// work, where a curated carousel reads as a pitch.
+document.querySelectorAll("thead th[data-k]").forEach(th => th.addEventListener("click", () => {
+  const k = th.dataset.k;
+  dir = k === key ? -dir : 1; key = k;
+  document.querySelectorAll("thead th").forEach(o => { o.classList.remove("on"); const a = o.querySelector(".ar"); if (a) a.textContent = "↕"; });
+  th.classList.add("on"); th.querySelector(".ar").textContent = dir > 0 ? "↑" : "↓";
+  data.sort((a, b) => (Array.isArray(a[k]) ? a[k].join() : a[k]).localeCompare(Array.isArray(b[k]) ? b[k].join() : b[k]) * dir);
+  draw();
+}));
+
+svc.innerHTML = S.services.map(s => `<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML = S.skills.map(t => `<span class="mono">${t}</span>`).join("");
+
+const root = document.documentElement;
+try { if (localStorage.getItem("d12theme") === "dark") root.setAttribute("data-theme","dark"); } catch {}
+const paint = () => tt.textContent = root.getAttribute("data-theme") === "dark" ? "Light" : "Dark";
+paint();
+tt.onclick = () => { const d = root.getAttribute("data-theme") === "dark";
+  if (d) root.removeAttribute("data-theme"); else root.setAttribute("data-theme","dark");
+  try { localStorage.setItem("d12theme", d ? "light" : "dark"); } catch {} paint(); };
+
+window.switcher("12");
+</script>
+</body>
+</html>
