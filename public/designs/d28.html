@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D28 — Blueprint</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d2233;--ink:#dceaf3;--gold:#7fd4ff;--dim:#88a8bd;--line:rgba(220,234,243,.24);--grid:rgba(220,234,243,.09)}
+:root[data-theme="light"]{--bg:#eef4f8;--ink:#0d2233;--gold:#12688f;--dim:#4e6b7d;--line:rgba(13,34,51,.22);--grid:rgba(13,34,51,.09)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:26px 26px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.pad{width:min(100% - 24px,1140px);margin:auto}
+/* Drafting paper: measured, annotated, dimensioned. The register is "here is
+   how the thing is built", which is a different pitch from "look how nice". */
+nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:13px 16px;border-bottom:1px solid var(--line);background:var(--bg);
+  font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;padding:6px 10px;cursor:pointer}
+.hero{padding:18vh 0 7vh;position:relative}
+.hero .stamp{border:1px solid var(--line);display:inline-block;padding:8px 12px;font-family:"IBM Plex Mono",monospace;
+  font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
+.hero h1{font-weight:600;font-size:clamp(36px,9vw,104px);line-height:.98;letter-spacing:-.035em}
+.hero p{margin-top:22px;max-width:50ch;color:var(--dim);line-height:1.75;font-size:15px}
+.dim{display:flex;align-items:center;gap:10px;margin-top:28px;color:var(--dim);font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase}
+.dim .ln{flex:1;height:1px;background:var(--line);position:relative}
+.dim .ln::before,.dim .ln::after{content:"";position:absolute;top:-3px;width:1px;height:7px;background:var(--line)}
+.dim .ln::before{left:0}.dim .ln::after{right:0}
+.sheet{border:1px solid var(--line);margin-top:5vh}
+.srow{display:grid;grid-template-columns:1fr;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+@media(min-width:860px){.srow{grid-template-columns:64px 1fr 240px}}
+.srow:last-child{border-bottom:0}
+.srow:hover{background:rgba(127,212,255,.05)}
+.srow .no{padding:16px;border-right:1px solid var(--line);font-family:"IBM Plex Mono",monospace;
+  font-size:11px;color:var(--gold);letter-spacing:.1em;display:none}
+@media(min-width:860px){.srow .no{display:block}}
+.srow .mid{padding:18px 16px}
+.srow h3{font-weight:600;font-size:clamp(21px,3.6vw,30px);letter-spacing:-.025em}
+.srow .kind{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+.srow p{color:var(--dim);font-size:14px;line-height:1.65;margin-top:9px;max-width:56ch}
+.srow .spec{padding:18px 16px;border-top:1px solid var(--line);font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--dim);line-height:1.9}
+@media(min-width:860px){.srow .spec{border-top:0;border-left:1px solid var(--line)}}
+.srow .spec b{color:var(--ink);font-weight:500}
+.sec{padding:9vh 0}
+.lab{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec h2{font-weight:600;font-size:clamp(24px,5vw,48px);letter-spacing:-.03em}
+.grid{display:grid;grid-template-columns:1fr;border:1px solid var(--line);margin-top:3vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{padding:18px 16px;border-bottom:1px solid var(--line)}
+@media(min-width:820px){.sv{border-bottom:0;border-right:1px solid var(--line)}.sv:last-child{border-right:0}}
+.sv h4{font-weight:600;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:7px}
+.chips{display:flex;flex-wrap:wrap;gap:0;margin-top:3vh}
+.chips span{font-family:"IBM Plex Mono",monospace;font-size:11px;border:1px solid var(--line);padding:8px 10px;margin:-1px 0 0 -1px;color:var(--dim)}
+.cta{padding:8vh 0 13vh;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border-top:1px solid var(--line)}
+.cta h2{font-weight:600;font-size:clamp(24px,5.4vw,50px);letter-spacing:-.03em}
+.btn{background:var(--gold);color:#08202e;text-decoration:none;padding:14px 20px;font-weight:600;font-size:13.5px;font-family:"IBM Plex Mono",monospace;letter-spacing:.06em}
+</style></head><body>
+<nav><b id="nb"></b><span style="display:flex;gap:10px;align-items:center">Sheet 1 of 1 <button id="tt">Light</button></span></nav>
+<div class="pad">
+  <section class="hero">
+    <span class="stamp">Freelance web developer — India</span>
+    <h1>Everything here<br>is documented,<br>and everything runs.</h1>
+    <p id="intro"></p>
+    <div class="dim"><span>Scope</span><span class="ln"></span><span>Products, sites, systems</span></div>
+  </section>
+  <div class="sheet" id="sheet"></div>
+  <section class="sec"><div class="lab">Services</div><h2>What you can commission.</h2>
+    <div class="grid" id="svc"></div>
+    <div class="lab" style="margin-top:5vh">Materials</div><div class="chips" id="chips"></div></section>
+  <section class="cta"><h2>Have an idea?</h2><a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section>
+</div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name; intro.textContent = S.intro; wa.href = S.wa;
+sheet.innerHTML = S.projects.map((p, i) => `
+  <a class="srow" href="${p.href}" target="_blank" rel="noreferrer">
+    <div class="no">${String(i + 1).padStart(2, "0")}</div>
+    <div class="mid"><div class="kind">${p.type}</div><h3>${p.t}</h3><p>${p.s}</p></div>
+    <div class="spec"><b>URL</b> ${p.href.replace("https://","")}<br>
+      <b>Stack</b> ${p.stack.join(", ")}<br><b>Status</b> live ↗</div></a>`).join("");
+svc.innerHTML = S.services.map(s => `<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML = S.skills.map(t => `<span>${t}</span>`).join("");
+const root = document.documentElement;
+try { if (localStorage.getItem("d28t") === "light") root.setAttribute("data-theme","light"); } catch {}
+const paint = () => tt.textContent = root.getAttribute("data-theme") === "light" ? "Dark" : "Light"; paint();
+tt.onclick = () => { const l = root.getAttribute("data-theme") === "light";
+  if (l) root.removeAttribute("data-theme"); else root.setAttribute("data-theme","light");
+  try { localStorage.setItem("d28t", l ? "dark" : "light"); } catch {} paint(); };
+window.switcher("28");
+</script></body></html>

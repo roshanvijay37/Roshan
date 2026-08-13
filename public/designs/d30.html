@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D30 — Skew Scroll</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;700;900&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f0e0b;--ink:#f2ecdd;--gold:#e6c374;--dim:#8f887a;--line:rgba(242,236,221,.14)}
+:root[data-theme="light"]{--bg:#f4f1e7;--ink:#131109;--gold:#7d5f10;--dim:#6a6353;--line:rgba(19,17,9,.14)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);font-family:Chivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}
+nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:16px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.16em;text-transform:uppercase;border-radius:99px;padding:7px 12px;cursor:pointer}
+/* Scroll velocity is the material: the faster you move, the more the content
+   skews and lags, then it springs back when you stop. Nothing loops on a timer.
+   The whole page reacts to how you read it. */
+.skew{will-change:transform}
+.hero{min-height:88svh;display:grid;align-content:center;padding:20vh 0 8vh}
+.hero .k{font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.hero h1{font-weight:900;font-size:clamp(42px,11.5vw,144px);line-height:.9;letter-spacing:-.05em}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{margin-top:26px;max-width:46ch;color:var(--dim);line-height:1.78;font-size:15.5px}
+.vel{position:fixed;z-index:55;right:16px;bottom:64px;font-family:"DM Mono",monospace;font-size:10.5px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-align:right;line-height:1.5}
+.vel b{color:var(--gold);font-variant-numeric:tabular-nums}
+.sec{padding:11vh 0}
+.lab{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.sec h2{font-weight:900;font-size:clamp(28px,6.2vw,66px);letter-spacing:-.045em;line-height:1}
+.item{display:block;text-decoration:none;color:inherit;border-top:1px solid var(--line);padding:26px 0;overflow:hidden}
+.item h3{font-weight:900;font-size:clamp(30px,8.6vw,86px);letter-spacing:-.05em;line-height:.98}
+.item .meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:10px;
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.item p{color:var(--dim);font-size:14.5px;line-height:1.7;margin-top:12px;max-width:56ch}
+.item .st{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.item .st span{font-size:10px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:5vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:18px 0 22px}
+.sv h4{font-weight:700;font-size:19px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.68;margin-top:7px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:5vh}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:8px 10px;border-radius:99px;color:var(--dim)}
+.cta{padding:12vh 0 16vh;text-align:center}
+.cta h2{font-weight:900;font-size:clamp(32px,8.6vw,104px);letter-spacing:-.05em;line-height:.96}
+.btn{display:inline-block;margin-top:26px;background:var(--gold);color:#120f06;text-decoration:none;padding:17px 26px;border-radius:99px;font-weight:700;font-size:14px}
+@media(prefers-reduced-motion:reduce){.skew{transform:none!important}.vel{display:none}}
+</style></head><body>
+<nav><b id="nb"></b><button id="tt">Light</button></nav>
+<div class="vel mono">Scroll velocity<br><b id="v">0.0</b></div>
+<div class="pad">
+  <section class="hero skew"><div class="k mono">Freelance web developer</div>
+    <h1>Move fast.<br><em>It bends.</em></h1><p id="intro"></p></section>
+  <section class="sec"><div class="lab mono skew">Selected work</div>
+    <h2 class="skew">All of it live.</h2><div id="list"></div></section>
+  <section class="sec"><div class="lab mono skew">Services</div><h2 class="skew">What you can buy.</h2>
+    <div class="grid" id="svc"></div><div class="chips skew" id="chips"></div></section>
+  <section class="cta skew"><h2>Have an idea?</h2><a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section>
+</div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name; intro.textContent = S.intro; wa.href = S.wa;
+list.innerHTML = S.projects.map(p => `
+  <a class="item skew" href="${p.href}" target="_blank" rel="noreferrer">
+    <h3>${p.t}</h3>
+    <div class="meta mono"><span>${p.type}</span><span>Visit ↗</span></div>
+    <p>${p.s}</p>
+    <div class="st">${p.stack.map(x=>`<span class="mono">${x}</span>`).join("")}</div></a>`).join("");
+svc.innerHTML = S.services.map(s => `<div class="sv skew"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML = S.skills.map(t => `<span class="mono">${t}</span>`).join("");
+
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (!reduced) {
+  const els = [...document.querySelectorAll(".skew")];
+  let prev = scrollY, vel = 0, smooth = 0;
+  addEventListener("scroll", () => { vel = scrollY - prev; prev = scrollY; }, { passive: true });
+  (function loop(){
+    smooth += (vel - smooth) * 0.12;
+    vel *= 0.82;
+    const s = Math.max(-7, Math.min(7, smooth * 0.16));   // clamped: past ~7deg it stops reading as motion and starts reading as broken
+    els.forEach((el, i) => {
+      const dir = i % 2 ? 1 : -1;
+      el.style.transform = `skewY(${s * 0.5}deg) translateY(${-s * 1.6 * dir}px)`;
+    });
+    document.getElementById("v").textContent = Math.abs(smooth).toFixed(1);
+    requestAnimationFrame(loop);
+  })();
+}
+
+const root = document.documentElement;
+try { if (localStorage.getItem("d30t") === "light") root.setAttribute("data-theme","light"); } catch {}
+const paint = () => tt.textContent = root.getAttribute("data-theme") === "light" ? "Dark" : "Light"; paint();
+tt.onclick = () => { const l = root.getAttribute("data-theme") === "light";
+  if (l) root.removeAttribute("data-theme"); else root.setAttribute("data-theme","light");
+  try { localStorage.setItem("d30t", l ? "dark" : "light"); } catch {} paint(); };
+window.switcher("30");
+</script></body></html>

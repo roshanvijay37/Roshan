@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D23 — Aurora</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;800&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07060b;--ink:#f1edf7;--gold:#e6c374;--dim:#a49cb4;--line:rgba(241,237,247,.14);--glass:rgba(255,255,255,.05)}
+:root[data-theme="light"]{--bg:#f6f3fb;--ink:#150f1c;--gold:#7d5f10;--dim:#5f5870;--line:rgba(21,15,28,.13);--glass:rgba(255,255,255,.55)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);font-family:Sora,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto;position:relative;z-index:2}
+/* A painted aurora on canvas rather than four blurred divs: real moving colour
+   fields, cheap to run, and it never lands in the same place twice. */
+#aur{position:fixed;inset:0;z-index:0;filter:blur(58px) saturate(135%);opacity:.85}
+:root[data-theme="light"] #aur{opacity:.55}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
+nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:16px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+nav b{color:var(--gold)}
+nav button{background:var(--glass);border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.16em;text-transform:uppercase;border-radius:99px;padding:7px 12px;cursor:pointer;backdrop-filter:blur(12px)}
+.hero{min-height:92svh;display:grid;align-content:center;padding:20vh 0 8vh}
+.hero .k{font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
+.hero h1{font-weight:800;font-size:clamp(42px,11vw,140px);line-height:.94;letter-spacing:-.05em}
+.hero h1 em{font-style:normal;background:linear-gradient(96deg,#e6c374,#f0a5c0 46%,#8fb7ee);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin-top:28px;max-width:48ch;color:var(--dim);line-height:1.8;font-size:15.5px;font-weight:300}
+.glass{background:var(--glass);border:1px solid var(--line);border-radius:20px;backdrop-filter:blur(22px)}
+.sec{padding:11vh 0}
+.lab{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.sec h2{font-weight:800;font-size:clamp(28px,6vw,64px);letter-spacing:-.04em;line-height:1}
+.list{display:grid;gap:16px;margin-top:5vh}
+.card{padding:24px 22px 26px;text-decoration:none;color:inherit;display:block;transition:transform .4s,border-color .4s}
+.card:hover{transform:translateY(-3px);border-color:var(--gold)}
+.card .top{display:flex;justify-content:space-between;gap:12px;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.card h3{font-weight:800;font-size:clamp(24px,5vw,44px);letter-spacing:-.04em;margin:14px 0 10px;line-height:1.03}
+.card p{color:var(--dim);font-size:14.5px;line-height:1.72;font-weight:300;max-width:56ch}
+.card .st{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
+.card .st span{font-size:10px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.grid3{display:grid;gap:14px;grid-template-columns:1fr;margin-top:5vh}
+@media(min-width:820px){.grid3{grid-template-columns:repeat(3,1fr)}}
+.sv{padding:22px 20px 26px}
+.sv h4{font-weight:600;font-size:19px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.7;margin-top:8px;font-weight:300}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:5vh}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:8px 11px;border-radius:99px;color:var(--dim)}
+.cta{padding:13vh 0 16vh;text-align:center}
+.cta h2{font-weight:800;font-size:clamp(32px,8.4vw,102px);letter-spacing:-.05em;line-height:.98}
+.btn{display:inline-block;margin-top:28px;background:linear-gradient(96deg,#e6c374,#c79a4e);color:#130f06;
+  text-decoration:none;padding:17px 26px;border-radius:99px;font-weight:700;font-size:14px}
+</style></head><body>
+<canvas id="aur"></canvas><div class="grain"></div>
+<nav><b id="nb"></b><button id="tt">Light</button></nav>
+<div class="pad">
+  <section class="hero"><div class="k mono">Freelance web developer</div>
+    <h1>Software with a <em>surface worth touching.</em></h1><p id="intro"></p></section>
+  <section class="sec"><div class="lab mono">Selected work</div><h2>All of it live.</h2>
+    <div class="list" id="list"></div></section>
+  <section class="sec"><div class="lab mono">Services</div><h2>What you can buy.</h2>
+    <div class="grid3" id="svc"></div><div class="chips" id="chips"></div></section>
+  <section class="cta"><h2>Have an idea?</h2><a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section>
+</div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name; intro.textContent = S.intro; wa.href = S.wa;
+list.innerHTML = S.projects.map(p => `
+  <a class="card glass" href="${p.href}" target="_blank" rel="noreferrer">
+    <div class="top mono"><span>${p.type}</span><span>Visit ↗</span></div>
+    <h3>${p.t}</h3><p>${p.s}</p>
+    <div class="st">${p.stack.map(x => `<span class="mono">${x}</span>`).join("")}</div></a>`).join("");
+svc.innerHTML = S.services.map(s => `<div class="sv glass"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML = S.skills.map(t => `<span class="mono">${t}</span>`).join("");
+
+// aurora
+const cv = document.getElementById("aur"), ctx = cv.getContext("2d");
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const HUES = [["#e6c374","#b8873b"],["#c98fb0","#7e5a86"],["#7fa3d8","#43597f"],["#9cc07a","#4f6b3c"]];
+let blobs = [];
+function size(){
+  cv.width = Math.round(innerWidth / 3); cv.height = Math.round(innerHeight / 3);
+  blobs = HUES.map((h, i) => ({ h, x: Math.random(), y: Math.random(),
+    vx: (Math.random() - .5) * 0.00035, vy: (Math.random() - .5) * 0.00035, r: 0.42 + i * 0.06 }));
+}
+size(); addEventListener("resize", size);
+function paintAur(){
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  ctx.globalCompositeOperation = "lighter";
+  blobs.forEach(b => {
+    if (!reduced) { b.x += b.vx; b.y += b.vy;
+      if (b.x < -.2 || b.x > 1.2) b.vx *= -1; if (b.y < -.2 || b.y > 1.2) b.vy *= -1; }
+    const g = ctx.createRadialGradient(b.x * cv.width, b.y * cv.height, 0, b.x * cv.width, b.y * cv.height, b.r * cv.width);
+    g.addColorStop(0, b.h[0]); g.addColorStop(0.55, b.h[1]); g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g; ctx.beginPath();
+    ctx.arc(b.x * cv.width, b.y * cv.height, b.r * cv.width, 0, Math.PI * 2); ctx.fill();
+  });
+  requestAnimationFrame(paintAur);
+}
+paintAur();
+
+const root = document.documentElement;
+try { if (localStorage.getItem("d23t") === "light") root.setAttribute("data-theme","light"); } catch {}
+const paint = () => tt.textContent = root.getAttribute("data-theme") === "light" ? "Dark" : "Light"; paint();
+tt.onclick = () => { const l = root.getAttribute("data-theme") === "light";
+  if (l) root.removeAttribute("data-theme"); else root.setAttribute("data-theme","light");
+  try { localStorage.setItem("d23t", l ? "dark" : "light"); } catch {} paint(); };
+window.switcher("23");
+</script></body></html>

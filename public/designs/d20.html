@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D20 — Split-flap</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#111310;--ink:#e9e6d8;--gold:#e0c274;--dim:#8b8878;--line:rgba(233,230,216,.16);--slat:#1c1e19}
+:root[data-theme="light"]{--bg:#eceadd;--ink:#15170f;--gold:#7a5c0e;--dim:#5f5c4e;--line:rgba(21,23,15,.18);--slat:#dedbcb}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.pad{width:min(100% - 24px,1120px);margin:auto}
+nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:14px 16px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.16em;text-transform:uppercase;border-radius:3px;padding:7px 11px;cursor:pointer}
+
+/* A departures board. Each character is a slat that shuffles through the
+   alphabet before landing — the arrival of the text is the animation. */
+.flap{display:flex;flex-wrap:wrap;gap:3px}
+.flap i{display:grid;place-items:center;min-width:.72em;padding:6px 3px;background:var(--slat);
+  border-radius:3px;font-style:normal;font-variant-numeric:tabular-nums;
+  box-shadow:inset 0 -1px 0 rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.05)}
+.flap i.sp{background:transparent;box-shadow:none;min-width:.34em}
+.big .flap i{font-size:clamp(19px,5.4vw,42px);font-weight:600;padding:9px 5px}
+.hero{padding:19vh 0 7vh}
+.hero .k{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.hero p{max-width:46ch;color:var(--dim);line-height:1.78;font-size:15.5px;margin-top:22px}
+.board{border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:8vh}
+.brow{display:grid;grid-template-columns:1fr auto;gap:10px;padding:14px 14px;border-bottom:1px solid var(--line);
+  text-decoration:none;color:inherit;align-items:center}
+.brow:last-child{border-bottom:0}
+.brow:hover{background:rgba(224,194,116,.06)}
+.brow .kind{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+.brow .go{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+.brow p{color:var(--dim);font-size:13px;line-height:1.6;margin-top:8px;max-width:54ch}
+.head{display:flex;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--line);
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);background:rgba(0,0,0,.14)}
+.sec{padding:10vh 0}
+.lab{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.grid{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:16px 0 20px}
+.sv h4{font-weight:700;font-size:19px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.68;margin-top:7px}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:4vh}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:3px;color:var(--dim)}
+.cta{padding:9vh 0 14vh}
+.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#151109;text-decoration:none;padding:15px 22px;border-radius:4px;font-weight:700;font-size:14px}
+</style></head><body>
+<nav><b id="nb"></b><button id="tt">Light</button></nav>
+<div class="pad">
+  <section class="hero">
+    <div class="k mono">Freelance web developer</div>
+    <div class="big"><div class="flap mono" data-flap="NOW BOARDING"></div></div>
+    <div class="big" style="margin-top:8px"><div class="flap mono" data-flap="FIVE LIVE SITES"></div></div>
+    <p id="intro"></p>
+  </section>
+
+  <div class="board">
+    <div class="head mono"><span>Project</span><span>Status</span></div>
+    <div id="rows"></div>
+  </div>
+
+  <section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+    <div class="chips" id="chips"></div></section>
+  <section class="cta"><div class="big"><div class="flap mono" data-flap="HAVE AN IDEA"></div></div>
+    <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section>
+</div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name; intro.textContent = S.intro; wa.href = S.wa;
+
+rows.innerHTML = S.projects.map(p => `
+  <a class="brow" href="${p.href}" target="_blank" rel="noreferrer">
+    <div><div class="kind mono">${p.type}</div>
+      <div class="flap mono" data-flap="${p.t.toUpperCase()}"></div>
+      <p>${p.s}</p></div>
+    <span class="go mono">Live ↗</span></a>`).join("");
+svc.innerHTML = S.services.map(s => `<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML = S.skills.map(t => `<span class="mono">${t}</span>`).join("");
+
+const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.&-";
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function build(el){
+  const text = el.dataset.flap;
+  el.innerHTML = [...text].map(c => c === " " ? '<i class="sp"></i>' : `<i>${reduced ? c : "&nbsp;"}</i>`).join("");
+  if (reduced) return;
+  [...el.children].forEach((cell, i) => {
+    if (cell.classList.contains("sp")) return;
+    const target = text[i].toUpperCase();
+    let spins = 6 + i * 2;
+    const t = setInterval(() => {
+      cell.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+      if (--spins <= 0) { clearInterval(t); cell.textContent = target; }
+    }, 45);
+  });
+}
+// only run a board when it comes into view, so the effect is not wasted offscreen
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { build(e.target); io.unobserve(e.target); }
+}), { threshold: 0.4 });
+document.querySelectorAll("[data-flap]").forEach(el => io.observe(el));
+
+const root = document.documentElement;
+try { if (localStorage.getItem("d20t") === "light") root.setAttribute("data-theme","light"); } catch {}
+const paint = () => tt.textContent = root.getAttribute("data-theme") === "light" ? "Dark" : "Light"; paint();
+tt.onclick = () => { const l = root.getAttribute("data-theme") === "light";
+  if (l) root.removeAttribute("data-theme"); else root.setAttribute("data-theme","light");
+  try { localStorage.setItem("d20t", l ? "dark" : "light"); } catch {} paint(); };
+window.switcher("20");
+</script></body></html>

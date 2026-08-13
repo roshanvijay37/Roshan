@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D22 — Neubrutalist</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5e9c9;--ink:#120f07;--gold:#f2b705;--pink:#e8734a;--blue:#5b8ee0;--green:#69a84f;--dim:#5c5545}
+:root[data-theme="dark"]{--bg:#151208;--ink:#f6eed7;--gold:#f2c235;--pink:#ef8a63;--blue:#7ba6ec;--green:#8ec46f;--dim:#9a9280}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);font-family:"Space Grotesk",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 24px,1140px);margin:auto}
+/* Hard 3px borders and a solid offset shadow — no blur anywhere. Everything
+   looks like it could be picked up off the page. */
+.box{border:3px solid var(--ink);box-shadow:6px 6px 0 var(--ink);background:var(--bg)}
+nav{position:fixed;z-index:60;top:12px;left:50%;transform:translateX(-50%);width:min(100% - 24px,1140px);
+  display:flex;justify-content:space-between;align-items:center;padding:10px 14px;
+  border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);background:var(--gold);
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#141005}
+nav button{background:var(--ink);color:var(--bg);border:0;font:inherit;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;padding:7px 11px;cursor:pointer;font-weight:700}
+.hero{padding:20vh 0 6vh}
+.hero h1{font-weight:700;font-size:clamp(40px,11.5vw,128px);line-height:.92;letter-spacing:-.045em}
+.hero h1 mark{background:var(--pink);color:var(--bg);padding:0 .12em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.hero p{max-width:44ch;font-size:16px;line-height:1.72;margin-top:22px;color:var(--dim)}
+.tag{display:inline-block;background:var(--ink);color:var(--bg);font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;font-weight:700;padding:7px 11px;margin-bottom:20px}
+.grid{display:grid;gap:20px;grid-template-columns:1fr;margin-top:6vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(2,1fr)}.grid > a:first-child{grid-column:span 2}}
+.card{padding:0;overflow:hidden;text-decoration:none;color:inherit;transition:transform .16s,box-shadow .16s}
+.card:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--ink)}
+.card .band{background:var(--c);border-bottom:3px solid var(--ink);padding:22px 18px;display:flex;
+  justify-content:space-between;align-items:flex-end;gap:12px;min-height:120px}
+.card .band h3{font-weight:700;font-size:clamp(24px,5.4vw,44px);letter-spacing:-.04em;line-height:1;color:#fff}
+.card .band span{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.86);white-space:nowrap}
+.card .body{padding:16px 18px 20px}
+.card .kind{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.card p{font-size:14px;line-height:1.66;margin-top:9px;color:var(--dim)}
+.card .st{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.card .st span{font-size:10px;border:2px solid var(--ink);padding:5px 8px;font-weight:500}
+.sec{padding:9vh 0}
+.sec h2{font-weight:700;font-size:clamp(28px,6.4vw,62px);letter-spacing:-.04em;line-height:1}
+.svc{display:grid;gap:18px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.svc{grid-template-columns:repeat(3,1fr)}}
+.sv{padding:18px 16px 22px}
+.sv h4{font-weight:700;font-size:20px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.68;margin-top:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4vh}
+.chips span{font-size:11px;border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:7px 10px;font-weight:500;background:var(--bg)}
+.cta{padding:8vh 0 14vh;text-align:center}
+.cta .box{padding:34px 20px 38px}
+.cta h2{font-size:clamp(28px,7.6vw,74px)}
+.btn{display:inline-block;margin-top:22px;background:var(--gold);color:#141005;border:3px solid var(--ink);
+  box-shadow:5px 5px 0 var(--ink);text-decoration:none;padding:15px 22px;font-weight:700;font-size:15px}
+</style></head><body>
+<nav><span id="nb"></span><span style="display:flex;gap:12px;align-items:center">Available <button id="tt">Dark</button></span></nav>
+<div class="pad">
+  <section class="hero">
+    <span class="tag">Freelance web developer</span>
+    <h1>I build sites that <mark>actually run.</mark></h1>
+    <p id="intro"></p>
+  </section>
+  <div class="grid" id="list"></div>
+  <section class="sec"><h2>What you can buy.</h2><div class="svc" id="svc"></div>
+    <div class="chips" id="chips"></div></section>
+  <section class="cta"><div class="box"><h2>Have an idea?</h2>
+    <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></div></section>
+</div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name; intro.textContent = S.intro; wa.href = S.wa;
+list.innerHTML = S.projects.map(p => `
+  <a class="card box" href="${p.href}" target="_blank" rel="noreferrer" style="--c:${p.c}">
+    <div class="band"><h3>${p.t}</h3><span class="mono">Visit ↗</span></div>
+    <div class="body"><div class="kind mono">${p.type} — ${p.href.replace("https://","")}</div>
+      <p>${p.s}</p>
+      <div class="st">${p.stack.map(x => `<span class="mono">${x}</span>`).join("")}</div></div></a>`).join("");
+svc.innerHTML = S.services.map(s => `<div class="sv box"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML = S.skills.map(t => `<span class="mono">${t}</span>`).join("");
+const root = document.documentElement;
+try { if (localStorage.getItem("d22t") === "dark") root.setAttribute("data-theme","dark"); } catch {}
+const paint = () => tt.textContent = root.getAttribute("data-theme") === "dark" ? "Light" : "Dark"; paint();
+tt.onclick = () => { const d = root.getAttribute("data-theme") === "dark";
+  if (d) root.removeAttribute("data-theme"); else root.setAttribute("data-theme","dark");
+  try { localStorage.setItem("d22t", d ? "light" : "dark"); } catch {} paint(); };
+window.switcher("22");
+</script></body></html>

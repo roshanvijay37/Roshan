@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D24 — Broadsheet</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,800;1,500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f4f0e4;--ink:#161309;--gold:#7a5c10;--dim:#5b5546;--rule:rgba(22,19,9,.26)}
+:root[data-theme="dark"]{--paper:#0c0b07;--ink:#eee9d9;--gold:#dcbd72;--dim:#96907e;--rule:rgba(238,233,217,.24)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--paper);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);font-family:"Source Serif 4",Georgia,serif;-webkit-font-smoothing:antialiased}
+.disp{font-family:"Playfair Display",Georgia,serif}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 24px,1160px);margin:auto}
+/* A broadsheet: masthead rules, multi-column text, a drop cap, small caps
+   labels. Serif does the talking; nothing animates for its own sake. */
+.mast{padding:22px 0 12px;border-bottom:1px solid var(--rule)}
+.mast .line{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;
+  font-family:"DM Mono",monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.mast button{background:none;border:1px solid var(--rule);color:var(--gold);font-family:"DM Mono",monospace;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:6px 10px;cursor:pointer}
+.mast h1{font-weight:800;font-size:clamp(34px,8.6vw,86px);letter-spacing:-.02em;line-height:1;margin:16px 0 12px}
+.rule2{height:3px;background:var(--ink);margin:0}
+.rule1{height:1px;background:var(--rule);margin:0}
+.lede{padding:22px 0 26px;border-bottom:1px solid var(--rule)}
+.lede p{font-size:18px;line-height:1.62;max-width:62ch}
+.lede p::first-letter{float:left;font-family:"Playfair Display",serif;font-weight:800;font-size:64px;
+  line-height:.78;padding:6px 10px 0 0;color:var(--gold)}
+.cols{columns:1;column-gap:34px;padding:22px 0}
+@media(min-width:760px){.cols{columns:2}}
+@media(min-width:1040px){.cols{columns:3}}
+.piece{break-inside:avoid;margin:0 0 26px;padding-bottom:18px;border-bottom:1px solid var(--rule);display:block;text-decoration:none;color:inherit}
+.piece .kick{font-family:"DM Mono",monospace;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.piece h2{font-family:"Playfair Display",serif;font-weight:800;font-size:26px;letter-spacing:-.01em;line-height:1.08;margin:7px 0 8px}
+.piece .band{height:5px;background:var(--c);margin-bottom:10px}
+.piece p{font-size:14.5px;line-height:1.6;color:var(--dim)}
+.piece .by{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-top:10px}
+.piece:hover h2{text-decoration:underline;text-underline-offset:3px}
+.sect{padding:24px 0}
+.sect h3{font-family:"Playfair Display",serif;font-weight:800;font-size:clamp(22px,4vw,34px);letter-spacing:-.01em}
+.small{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.svc{columns:1;column-gap:30px}
+@media(min-width:800px){.svc{columns:3}}
+.sv{break-inside:avoid;margin-bottom:18px}
+.sv h4{font-family:"Playfair Display",serif;font-weight:800;font-size:19px;margin-bottom:5px}
+.sv p{font-size:14px;line-height:1.58;color:var(--dim)}
+.chips{font-family:"DM Mono",monospace;font-size:12.5px;color:var(--dim);line-height:2.1;letter-spacing:.03em}
+.foot{border-top:3px solid var(--ink);padding:26px 0 74px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.foot h3{font-family:"Playfair Display",serif;font-weight:800;font-size:clamp(24px,5.4vw,46px);font-style:italic}
+.btn{background:var(--ink);color:var(--paper);text-decoration:none;padding:14px 20px;font-family:"DM Mono",monospace;
+  font-size:12.5px;letter-spacing:.1em;text-transform:uppercase}
+</style></head><body>
+<div class="pad">
+  <div class="mast">
+    <div class="line"><span id="nb"></span><span style="display:flex;gap:12px;align-items:center">Freelance — India <button id="tt">Dark</button></span></div>
+    <h1 class="disp">Sites, Built and Shipped</h1>
+    <div class="line"><span>Portfolio edition</span><span>Everything herein is live</span></div>
+  </div>
+  <div class="rule2"></div>
+  <div class="lede"><p id="intro"></p></div>
+  <div class="small" style="padding-top:18px">Selected work</div>
+  <div class="cols" id="cols"></div>
+  <div class="rule1"></div>
+  <div class="sect"><div class="small">Services</div><h3 class="disp">What you can commission</h3>
+    <div class="svc" id="svc" style="margin-top:16px"></div></div>
+  <div class="rule1"></div>
+  <div class="sect"><div class="small">Built with</div><div class="chips" id="chips"></div></div>
+  <div class="foot"><h3 class="disp">Have an idea?</h3><a class="btn" id="wa" href="#">Message me on WhatsApp</a></div>
+</div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name; intro.textContent = S.intro; wa.href = S.wa;
+cols.innerHTML = S.projects.map(p => `
+  <a class="piece" href="${p.href}" target="_blank" rel="noreferrer" style="--c:${p.c}">
+    <div class="band"></div><div class="kick">${p.type}</div>
+    <h2>${p.t}</h2><p>${p.s}</p>
+    <div class="by">${p.stack.join(" · ")} — visit ↗</div></a>`).join("");
+svc.innerHTML = S.services.map(s => `<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.textContent = S.skills.join("  ·  ");
+const root = document.documentElement;
+try { if (localStorage.getItem("d24t") === "dark") root.setAttribute("data-theme","dark"); } catch {}
+const paint = () => tt.textContent = root.getAttribute("data-theme") === "dark" ? "Light" : "Dark"; paint();
+tt.onclick = () => { const d = root.getAttribute("data-theme") === "dark";
+  if (d) root.removeAttribute("data-theme"); else root.setAttribute("data-theme","dark");
+  try { localStorage.setItem("d24t", d ? "light" : "dark"); } catch {} paint(); };
+window.switcher("24");
+</script></body></html>

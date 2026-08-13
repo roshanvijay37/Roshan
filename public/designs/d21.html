@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D21 — Conversation</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#ece5da;--panel:#fbf8f2;--mine:#dcf0c8;--ink:#14120c;--gold:#7d5f10;--dim:#6b6455;--line:rgba(20,18,12,.12)}
+:root[data-theme="dark"]{--bg:#0d0c09;--panel:#171510;--mine:#243020;--ink:#f0eadd;--gold:#e6c374;--dim:#8f8877;--line:rgba(240,234,221,.12)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.pad{width:min(100% - 20px,720px);margin:auto;padding:74px 0 120px}
+
+/* The portfolio as a conversation. Your contact button is already WhatsApp —
+   this makes the whole page speak in that register instead of switching
+   register at the very end. */
+.top{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;align-items:center;gap:11px;
+  padding:11px 14px;background:var(--panel);border-bottom:1px solid var(--line)}
+.top .av{width:38px;height:38px;border-radius:50%;background:var(--gold);color:#151009;
+  display:grid;place-items:center;font-weight:700;font-size:17px}
+.top .who{line-height:1.25}
+.top .who b{font-size:14.5px;font-weight:600}
+.top .who span{font-size:11px;color:var(--dim)}
+.top button{margin-left:auto;background:none;border:1px solid var(--line);color:var(--gold);font:inherit;
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;border-radius:99px;padding:7px 11px;cursor:pointer}
+.day{text-align:center;margin:20px 0 14px}
+.day span{background:var(--panel);border:1px solid var(--line);color:var(--dim);font-size:10.5px;
+  letter-spacing:.14em;text-transform:uppercase;padding:5px 12px;border-radius:99px}
+.msg{max-width:86%;padding:11px 14px;border-radius:16px;margin-bottom:9px;position:relative;
+  background:var(--panel);border-bottom-left-radius:5px;font-size:15px;line-height:1.6;
+  box-shadow:0 1px 2px rgba(0,0,0,.07);opacity:0;transform:translateY(10px);transition:all .45s cubic-bezier(.2,.8,.2,1)}
+.msg.in{opacity:1;transform:none}
+.msg.me{margin-left:auto;background:var(--mine);border-radius:16px;border-bottom-right-radius:5px}
+.msg .t{display:block;text-align:right;font-size:10px;color:var(--dim);margin-top:5px}
+.msg a{color:var(--gold)}
+.card{padding:0;overflow:hidden;max-width:86%}
+.card .band{height:76px;background:var(--c);display:grid;place-items:center}
+.card .band b{color:rgba(255,255,255,.95);font-weight:700;font-size:19px;letter-spacing:-.02em}
+.card .in2{padding:11px 14px 13px}
+.card .kind{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.card h3{font-size:17px;font-weight:600;margin:6px 0 5px}
+.card p{font-size:13.5px;color:var(--dim);line-height:1.6}
+.card .go{display:block;margin-top:10px;padding-top:9px;border-top:1px solid var(--line);
+  color:var(--gold);font-size:13px;font-weight:600;text-decoration:none}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:5px 8px;border-radius:99px;color:var(--dim)}
+.typing{display:inline-flex;gap:4px;align-items:center;padding:13px 16px}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--dim);animation:bo 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bo{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-5px);opacity:1}}
+.composer{position:fixed;z-index:60;left:0;right:0;bottom:0;display:flex;gap:9px;padding:10px 12px 14px;
+  background:var(--panel);border-top:1px solid var(--line)}
+.composer .fake{flex:1;border:1px solid var(--line);border-radius:99px;padding:12px 16px;color:var(--dim);font-size:14px}
+.composer a{background:var(--gold);color:#151009;text-decoration:none;border-radius:99px;
+  display:grid;place-items:center;padding:0 18px;font-weight:700;font-size:14px}
+@media(prefers-reduced-motion:reduce){.msg{opacity:1;transform:none}.typing i{animation:none}}
+</style></head><body>
+<div class="top">
+  <div class="av" id="av">R</div>
+  <div class="who"><b id="nb"></b><br><span>online — usually replies fast</span></div>
+  <button id="tt">Dark</button>
+</div>
+<div class="pad"><div class="day"><span>Today</span></div><div id="thread"></div></div>
+<div class="composer"><div class="fake">Ask me about a project…</div><a id="wa" href="#">Send</a></div>
+
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name; wa.href = S.wa;
+
+// Scripted so it reads like a real exchange rather than a wall of bubbles.
+const script = [
+  { me: false, html: "Hey — I'm Roshan. I build web products for founders and small teams." },
+  { me: true,  html: "What have you actually shipped?" },
+  { me: false, html: "Five sites, all running right now. Have a look —" },
+  ...S.projects.map(p => ({ me: false, card: p })),
+  { me: true,  html: "What do you take on?" },
+  { me: false, html: S.services.map(s => `<b>${s.t}</b> — ${s.b}`).join("<br><br>") },
+  { me: true,  html: "And what do you build with?" },
+  { me: false, chips: true },
+  { me: false, html: `Fastest way to reach me is WhatsApp. <a href="${S.wa}" target="_blank" rel="noreferrer">Message me →</a>` },
+];
+
+const thread = document.getElementById("thread");
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const time = (i) => { const m = 9 * 60 + 12 + i * 3; return String(Math.floor(m / 60)).padStart(2,"0") + ":" + String(m % 60).padStart(2,"0"); };
+
+function bubble(item, i){
+  const d = document.createElement("div");
+  d.className = "msg" + (item.me ? " me" : "") + (item.card ? " card" : "");
+  if (item.card) {
+    const p = item.card;
+    d.style.setProperty("--c", p.c);
+    d.innerHTML = `<div class="band"><b>${p.t}</b></div><div class="in2">
+      <div class="kind">${p.type}</div><h3>${p.t}</h3><p>${p.s}</p>
+      <a class="go" href="${p.href}" target="_blank" rel="noreferrer">Open ${p.href.replace("https://","")} ↗</a></div>`;
+  } else if (item.chips) {
+    d.innerHTML = `<div class="chips">${S.skills.map(t => `<span>${t}</span>`).join("")}</div><span class="t">${time(i)}</span>`;
+  } else {
+    d.innerHTML = item.html + `<span class="t">${time(i)}</span>`;
+  }
+  thread.appendChild(d);
+  requestAnimationFrame(() => d.classList.add("in"));
+}
+
+if (reduced) { script.forEach(bubble); }
+else {
+  let i = 0;
+  (function next(){
+    if (i >= script.length) return;
+    const item = script[i];
+    if (!item.me) {
+      const t = document.createElement("div");
+      t.className = "msg typing";
+      t.innerHTML = "<i></i><i></i><i></i>";
+      thread.appendChild(t);
+      requestAnimationFrame(() => t.classList.add("in"));
+      setTimeout(() => { t.remove(); bubble(item, i); i++; setTimeout(next, 420); }, 620);
+    } else { bubble(item, i); i++; setTimeout(next, 520); }
+  })();
+}
+
+const root = document.documentElement;
+try { if (localStorage.getItem("d21t") === "dark") root.setAttribute("data-theme","dark"); } catch {}
+const paint = () => tt.textContent = root.getAttribute("data-theme") === "dark" ? "Light" : "Dark"; paint();
+tt.onclick = () => { const d = root.getAttribute("data-theme") === "dark";
+  if (d) root.removeAttribute("data-theme"); else root.setAttribute("data-theme","dark");
+  try { localStorage.setItem("d21t", d ? "light" : "dark"); } catch {} paint(); };
+window.switcher("21");
+</script></body></html>

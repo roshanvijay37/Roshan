@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D29 — Ledger</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#efe6d5;--card:#faf5ea;--ink:#241a0e;--gold:#8a5a14;--red:#a03a26;--dim:#6d6151;--line:rgba(36,26,14,.2)}
+:root[data-theme="dark"]{--bg:#100c07;--card:#1a140d;--ink:#f0e6d4;--gold:#e0a95c;--red:#e07a5f;--dim:#96897a;--line:rgba(240,230,212,.18)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.fr{font-family:Fraunces,Georgia,serif}
+.pad{width:min(100% - 24px,1080px);margin:auto}
+/* A bound ledger: ruled lines, a stitched spine, entries written in by hand.
+   Warm and analogue where every other direction is a screen. */
+nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:14px 16px;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:2px;padding:6px 10px;cursor:pointer}
+.book{background:var(--card);border:1px solid var(--line);border-radius:4px;margin-top:76px;
+  box-shadow:0 18px 44px rgba(0,0,0,.14);position:relative;overflow:hidden}
+.book::before{content:"";position:absolute;left:34px;top:0;bottom:0;width:1px;background:var(--red);opacity:.42}
+@media(max-width:640px){.book::before{left:20px}}
+.book .ruled{background-image:repeating-linear-gradient(var(--card) 0 33px,var(--line) 33px 34px)}
+.head{padding:26px 22px 20px 50px;border-bottom:2px solid var(--ink)}
+@media(max-width:640px){.head{padding-left:32px}}
+.head .k{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+.head h1{font-weight:900;font-size:clamp(30px,7vw,64px);letter-spacing:-.02em;line-height:1.02;margin:10px 0 0}
+.head p{color:var(--dim);font-size:15px;line-height:1.7;margin-top:14px;max-width:52ch}
+.entry{display:block;text-decoration:none;color:inherit;padding:16px 22px 18px 50px;border-bottom:1px solid var(--line)}
+@media(max-width:640px){.entry{padding-left:32px}}
+.entry:hover{background:rgba(138,90,20,.05)}
+.entry .top{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+.entry h3{font-weight:700;font-size:clamp(20px,4vw,32px);letter-spacing:-.015em}
+.entry .amt{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+.entry .kind{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-top:4px}
+.entry p{color:var(--dim);font-size:14px;line-height:1.66;margin-top:9px;max-width:56ch}
+.entry .st{font-size:11px;color:var(--dim);margin-top:9px;letter-spacing:.03em}
+.sect{padding:22px 22px 24px 50px;border-bottom:1px solid var(--line)}
+@media(max-width:640px){.sect{padding-left:32px}}
+.sect .k{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.sect h2{font-weight:700;font-size:clamp(21px,4vw,32px);letter-spacing:-.015em;margin-bottom:12px}
+.sv{margin-bottom:14px}
+.sv h4{font-weight:700;font-size:17px}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.62;margin-top:4px;max-width:54ch}
+.chips{color:var(--dim);font-size:13.5px;line-height:2}
+.close{padding:26px 22px 30px 50px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+@media(max-width:640px){.close{padding-left:32px}}
+.close h2{font-weight:900;font-size:clamp(22px,5vw,40px);font-style:italic}
+.btn{background:var(--ink);color:var(--card);text-decoration:none;padding:14px 20px;border-radius:3px;font-weight:500;font-size:13.5px}
+footer{padding:20px 0 90px;text-align:center;color:var(--dim);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+</style></head><body>
+<nav><b id="nb"></b><span style="display:flex;gap:10px;align-items:center">Available <button id="tt">Dark</button></span></nav>
+<div class="pad">
+  <div class="book">
+    <div class="head">
+      <div class="k">Freelance web developer — India</div>
+      <h1 class="fr">A record of things<br>actually delivered.</h1>
+      <p id="intro"></p>
+    </div>
+    <div class="ruled" id="entries"></div>
+    <div class="sect"><div class="k">Services</div><h2 class="fr">What you can commission</h2><div id="svc"></div></div>
+    <div class="sect"><div class="k">Built with</div><div class="chips" id="chips"></div></div>
+    <div class="close"><h2 class="fr">Have an idea?</h2><a class="btn" id="wa" href="#">Message me on WhatsApp →</a></div>
+  </div>
+  <footer id="fn"></footer>
+</div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name; intro.textContent = S.intro; wa.href = S.wa; fn.textContent = S.name;
+entries.innerHTML = S.projects.map(p => `
+  <a class="entry" href="${p.href}" target="_blank" rel="noreferrer">
+    <div class="top"><h3 class="fr">${p.t}</h3><span class="amt">Live ↗</span></div>
+    <div class="kind">${p.type} — ${p.href.replace("https://","")}</div>
+    <p>${p.s}</p><div class="st">${p.stack.join(" · ")}</div></a>`).join("");
+svc.innerHTML = S.services.map(s => `<div class="sv"><h4 class="fr">${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.textContent = S.skills.join(" · ");
+const root = document.documentElement;
+try { if (localStorage.getItem("d29t") === "dark") root.setAttribute("data-theme","dark"); } catch {}
+const paint = () => tt.textContent = root.getAttribute("data-theme") === "dark" ? "Light" : "Dark"; paint();
+tt.onclick = () => { const d = root.getAttribute("data-theme") === "dark";
+  if (d) root.removeAttribute("data-theme"); else root.setAttribute("data-theme","dark");
+  try { localStorage.setItem("d29t", d ? "light" : "dark"); } catch {} paint(); };
+window.switcher("29");
+</script></body></html>
