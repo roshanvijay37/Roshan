@@ -230,7 +230,12 @@ function WhatsAppGlyph({ size = 20 }) {
 function Contact() {
   return (
     <section className="section-pad contact" id="contact">
-      <div className="contact-glow" />
+      {/* The glow clips against this, not against the section. The section is
+          48px narrower than the screen, so clipping there cut the wash off in a
+          hard vertical line 80px from the edge. */}
+      <div className="contact-fx" aria-hidden="true">
+        <div className="contact-glow" />
+      </div>
       <Reveal className="contact-intro">
         <span className="section-number">04 / CONTACT</span>
         <h2>Have an ambitious idea?<br /><em>Let&apos;s give it gravity.</em></h2>

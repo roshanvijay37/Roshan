@@ -648,14 +648,27 @@ button, a { -webkit-tap-highlight-color: transparent; }
    grid holding the contact form, and once that went the lone remaining child sat
    centred in a 70vh box with dead space under the buttons. The section already
    gets its breathing room from the shared padding rule above. */
-.contact { display: grid; grid-template-columns: 1fr; overflow: hidden; }
+.contact { display: grid; grid-template-columns: 1fr; }
+/* Breaks out to the full viewport so the wash reaches the screen edge. Clipping
+   on .contact instead left a visible vertical seam where the tint stopped, 80px
+   in from the edge, because the section is narrower than the window. */
+.contact-fx {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
 .contact-intro { max-width: 760px; }
 .contact-glow {
   position: absolute;
-  z-index: -1;
   width: 700px;
   height: 700px;
-  left: -320px;
+  left: -240px;
   bottom: -260px;
   border-radius: 50%;
   background: radial-gradient(circle, var(--contact-wash), transparent 65%);
