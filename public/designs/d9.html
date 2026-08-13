@@ -299,14 +299,18 @@ tt.addEventListener("click", () => {
       k1.style.transform = `translateX(${-ease * 26}vw) scale(${sc})`;
       k2.style.transform = `translateX(${ease * 26}vw) scale(${sc})`;
     } else {
-      k1.style.transform = `translateY(${-ease * 9}vh) scale(${sc})`;
-      k2.style.transform = `translateY(${ease * 9}vh) scale(${sc})`;
+      // Both lines leave upward, staggered. Parting them apart vertically sent
+      // the lower one straight down into the strapline and the two rendered on
+      // top of each other for the whole transition. Nothing travels into
+      // occupied space now; the stagger still reads as the lines separating.
+      k1.style.transform = `translateY(${-ease * 16}vh) scale(${sc})`;
+      k2.style.transform = `translateY(${-ease * 8}vh) scale(${sc})`;
     }
     k1.style.opacity = k2.style.opacity = String(fade);
     k0.style.opacity = String(Math.max(0, 1 - p * 3));
 
     // strapline rises into the gap the lines leave behind
-    const t = Math.max(0, Math.min(1, (p - 0.16) * 2.2));
+    const t = Math.max(0, Math.min(1, (p - 0.30) * 2.6));
     intro.style.opacity = String(t);
     intro.style.transform = `translateY(${(1 - t) * 30}px)`;
     k4.style.opacity = String(Math.max(0, 1 - p * 4));
