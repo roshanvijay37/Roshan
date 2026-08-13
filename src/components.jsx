@@ -1,5 +1,5 @@
 import {
-  animate, motion, useInView, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform,
+  motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform,
 } from "framer-motion";
 import { ArrowUpRight, Moon, Sun } from "lucide-react";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
@@ -213,34 +213,6 @@ export function Marquee({
       <div ref={trackRef}>{children}</div>
     </div>
   );
-}
-
-// Counts up to the number embedded in `value` ("04+" -> 0…4, keeping the pad and suffix).
-export function CountUp({ value }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  const reduced = useReducedMotion();
-  const match = /^(\d+)(.*)$/.exec(value);
-  // Primitives only — `match` is a fresh array each render, and depending on it
-  // would restart the animation on every tick it schedules.
-  const numeric = match ? match[1] : "";
-  const suffix = match ? match[2] : "";
-  const target = numeric ? Number(numeric) : 0;
-  const [shown, setShown] = useState(0);
-
-  useEffect(() => {
-    if (!numeric || reduced || !inView) return;
-    const controls = animate(0, target, {
-      duration: 1.15,
-      ease,
-      onUpdate: (v) => setShown(Math.round(v)),
-    });
-    return () => controls.stop();
-  }, [inView, target, numeric, reduced]);
-
-  if (!numeric) return <strong ref={ref}>{value}</strong>;
-  const display = reduced ? target : shown;
-  return <strong ref={ref}>{String(display).padStart(numeric.length, "0")}{suffix}</strong>;
 }
 
 export function MagneticLink({ children, className = "", ...props }) {

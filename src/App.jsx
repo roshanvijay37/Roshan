@@ -125,7 +125,6 @@ function Hero({ revealed }) {
       </motion.div>
       <motion.div className="hero-side-note" initial={{ opacity: 0 }} animate={{ opacity: revealed ? 1 : 0 }} transition={{ delay: 0.9 }}>
         <span>Based in India</span>
-        <span>04+ years building products</span>
       </motion.div>
       <a href="#about" className="scroll-cue" aria-label="Scroll to about">
         <span>Scroll to discover</span><ArrowDown size={16} />
