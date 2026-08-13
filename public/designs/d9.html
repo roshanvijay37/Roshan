@@ -293,7 +293,10 @@ tt.addEventListener("click", () => {
     // so any meaningful travel slices it mid-word ("ngineer ideas"). There the
     // parting goes vertical instead — same idea, nothing to clip against.
     const wide = innerWidth >= 900;
-    const fade = 1 - ease * 0.88;
+    // Reaches zero, and early. At 1 - ease*0.88 the headline never went below
+    // 12% opacity, so it stayed on screen as a smudge above the strapline for
+    // the whole rest of the hero.
+    const fade = Math.max(0, 1 - ease * 1.9);
     const sc = 1 - ease * 0.13;
     if (wide) {
       k1.style.transform = `translateX(${-ease * 26}vw) scale(${sc})`;
