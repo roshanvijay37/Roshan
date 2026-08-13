@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D92 — Exploded</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f2e9;--ink:#141109;--gold:#7d5f10;--dim:#6a6353;--line:rgba(20,17,9,.15);}
+:root[data-theme="dark"]{--bg:#0b0a07;--ink:#f0eade;--gold:#e6c374;--dim:#8e8776;--line:rgba(240,234,222,.15)}*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:15px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:6px 11px;cursor:pointer}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}
+.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}.hero{padding:18vh 0 3vh}
+.hero h1{font-weight:800;font-size:clamp(30px,7.6vw,80px);letter-spacing:-.045em;line-height:1.02}
+.hero p{margin-top:16px;max-width:46ch;color:var(--dim);line-height:1.75;font-size:15px}
+body{font-family:"Space Grotesk",system-ui,sans-serif}
+/* An exploded assembly drawing: the layers of a build separate as you scroll,
+   with leader lines to labels. It shows a stack as a physical object. */
+.exw{height:340vh;position:relative}
+.exs{position:sticky;top:0;height:100svh;display:grid;place-items:center;overflow:hidden;perspective:1200px}
+.asm{position:relative;width:min(84vw,460px);transform-style:preserve-3d}
+.pl{position:absolute;left:0;right:0;height:96px;border-radius:12px;border:1px solid var(--line);
+  background:var(--bg);display:flex;align-items:center;gap:12px;padding:0 16px;will-change:transform;
+  box-shadow:0 14px 30px rgba(0,0,0,.16)}
+.pl i{width:12px;height:12px;border-radius:3px;background:var(--c);flex:none}
+.pl b{font-weight:700;font-size:16px;letter-spacing:-.02em}
+.pl span{font-family:"DM Mono",monospace;font-size:10.5px;color:var(--dim);margin-left:auto;text-align:right}
+.legend{position:absolute;left:0;right:0;bottom:6vh;text-align:center;font-family:"DM Mono",monospace;
+  font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.rows{margin-top:5vh}
+.rw{display:block;text-decoration:none;color:inherit;padding:18px 0;border-top:1px solid var(--line)}
+.rw h3{font-weight:700;font-size:clamp(21px,4.4vw,36px);letter-spacing:-.035em}
+.rw .k{font-family:"DM Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-top:5px}
+.rw p{color:var(--dim);font-size:14px;line-height:1.66;margin-top:8px;max-width:56ch}
+@media(prefers-reduced-motion:reduce){.exw{height:auto}.exs{position:static;height:auto;padding:4vh 0}
+ .asm{height:auto}.pl{position:relative;transform:none!important;margin-bottom:10px}}
+</style></head><body>
+<nav><b id="nb"></b><span style="display:flex;gap:10px;align-items:center"><button id="tt">Dark</button></span></nav><div class="pad"><section class="hero"><h1>Taken apart.</h1><p id="intro"></p></section></div>
+ <div class="exw" id="exw"><div class="exs"><div class="asm" id="asm"></div><div class="legend">Scroll to separate the layers</div></div></div>
+ <div class="pad"><div class="rows" id="rows"></div><section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+  <div class="chips" id="chips"></div></section><section class="sec"><h2 style="font-weight:700;font-size:clamp(26px,6vw,58px);letter-spacing:-.04em">Have an idea?</h2>
+  <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+const LAYERS=[{n:"Interface",d:"React · Next.js · Astro"},{n:"Motion",d:"Framer Motion · Three.js · GLSL"},
+ {n:"Data",d:"Supabase · PostgreSQL"},{n:"Server",d:"Node.js · .NET Core"},{n:"Delivery",d:"Vercel · GitHub Pages"}];
+asm.innerHTML=LAYERS.map((l,i)=>`<div class="pl" style="--c:${S.projects[i%S.projects.length].c}">
+  <i></i><b>${l.n}</b><span>${l.d}</span></div>`).join("");
+rows.innerHTML=S.projects.map(p=>`<a class="rw" href="${p.href}" target="_blank" rel="noreferrer">
+  <h3>${p.t}</h3><div class="k">${p.type} — visit ↗</div><p>${p.s}</p></a>`).join("");
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const pls=[...asm.children],exw=document.getElementById("exw");
+function frame(){const tr=exw.offsetHeight-innerHeight;
+  const p=tr>0?Math.max(0,Math.min(1,-exw.getBoundingClientRect().top/tr)):0;
+  const e=p*p*(3-2*p);
+  pls.forEach((el,i)=>{const mid=(pls.length-1)/2;
+    el.style.transform=`translateY(${((i-mid)*128*e).toFixed(1)}px) translateZ(${(-i*30*e).toFixed(1)}px) rotateX(${(e*8).toFixed(1)}deg)`;
+    el.style.opacity=String(.35+e*.65);});}
+addEventListener("scroll",frame,{passive:true});addEventListener("resize",frame);frame();
+const root = document.documentElement;
+const KEY = "d92t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("92");
+</script></body></html>

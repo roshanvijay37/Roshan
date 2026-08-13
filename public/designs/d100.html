@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D100 — One Hundred</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f2e9;--ink:#141109;--gold:#7d5f10;--dim:#6a6353;--line:rgba(20,17,9,.15);}
+:root[data-theme="dark"]{--bg:#0b0a07;--ink:#f0eade;--gold:#e6c374;--dim:#8e8776;--line:rgba(240,234,222,.15)}*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:15px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:6px 11px;cursor:pointer}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}
+.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}
+body{font-family:Inter,system-ui,sans-serif}
+/* The hundredth. Restraint on purpose: after ninety-nine ideas, the argument is
+   that the work needs one page, one column, and nothing else. */
+.pad{width:min(100% - 26px,660px)}
+.hero{padding:22vh 0 4vh}
+.hero .n{font-family:"Instrument Serif",Georgia,serif;font-size:clamp(84px,26vw,220px);line-height:.82;
+  color:var(--gold);letter-spacing:-.04em}
+.hero h1{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;
+  font-size:clamp(26px,6.4vw,54px);letter-spacing:-.01em;line-height:1.1;margin-top:14px}
+.hero p{margin-top:20px;color:var(--dim);line-height:1.8;font-size:16px}
+.note{border-left:2px solid var(--gold);padding:4px 0 4px 16px;margin-top:24px;color:var(--dim);
+  font-size:14.5px;line-height:1.75;font-style:italic}
+.list{margin-top:6vh}
+.row{display:block;text-decoration:none;color:inherit;padding:19px 0;border-top:1px solid var(--line)}
+.row .t{font-family:"Instrument Serif",serif;font-size:26px;letter-spacing:-.01em}
+.row .k{font-family:"DM Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-top:4px}
+.row p{color:var(--dim);font-size:14.5px;line-height:1.7;margin-top:8px}
+.sec h2{font-family:"Instrument Serif",serif;font-weight:400;font-size:clamp(24px,5.4vw,42px);letter-spacing:-.01em}
+.grid{grid-template-columns:1fr!important}
+.btn{background:var(--ink);color:var(--bg)}
+</style></head><body>
+<nav><b id="nb"></b><span style="display:flex;gap:10px;align-items:center"><button id="tt">Dark</button></span></nav><div class="pad">
+ <section class="hero"><div class="n">100</div>
+  <h1>Ninety-nine ways to say it.<br>This is the plainest.</h1>
+  <p id="intro"></p>
+  <div class="note">Every direction before this one dressed the same five links differently.
+   The links did not change. That is worth knowing before picking one.</div></section>
+ <div class="list" id="list"></div><section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+  <div class="chips" id="chips"></div></section><section class="sec"><h2 style="font-weight:700;font-size:clamp(26px,6vw,58px);letter-spacing:-.04em">Have an idea?</h2>
+  <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+list.innerHTML=S.projects.map(p=>`<a class="row" href="${p.href}" target="_blank" rel="noreferrer">
+  <div class="t">${p.t}</div><div class="k">${p.type} — ${p.href.replace("https://","")} ↗</div><p>${p.s}</p></a>`).join("");
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const root = document.documentElement;
+const KEY = "d100t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("100");
+</script></body></html>

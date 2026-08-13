@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D90 — Classifieds</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f2e9;--ink:#141109;--gold:#7d5f10;--dim:#6a6353;--line:rgba(20,17,9,.15);--paper:#f0ece0}
+:root[data-theme="dark"]{--bg:#0b0a07;--ink:#f0eade;--gold:#e6c374;--dim:#8e8776;--line:rgba(240,234,222,.15)}
+:root[data-theme="dark"]{--paper:#0e0d09}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}
+.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}
+body{font-family:"Source Serif 4",Georgia,serif;background:var(--paper)}
+.pad{width:min(100% - 22px,1100px);padding:44px 0 110px}
+/* Small ads. Dense columns, hairline rules, ALL CAPS openers — the least
+   designed thing possible, which is a stance of its own. */
+.mast{border-bottom:3px double var(--ink);padding-bottom:12px;display:flex;justify-content:space-between;
+  align-items:baseline;gap:14px;flex-wrap:wrap}
+.mast h1{font-family:"Playfair Display",serif;font-weight:900;font-size:clamp(26px,6vw,54px);letter-spacing:-.01em}
+.mast .m{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.mast button{background:none;border:1px solid var(--line);color:var(--gold);font-family:"DM Mono",monospace;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;cursor:pointer}
+.lede{padding:16px 0;border-bottom:1px solid var(--line);font-size:16px;line-height:1.7;max-width:62ch}
+.ads{columns:1;column-gap:28px;column-rule:1px solid var(--line);padding:18px 0}
+@media(min-width:700px){.ads{columns:2}}
+@media(min-width:1020px){.ads{columns:3}}
+.ad{break-inside:avoid;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line);
+  display:block;text-decoration:none;color:inherit}
+.ad .hd{font-family:"Playfair Display",serif;font-weight:700;font-size:16px;text-transform:uppercase;letter-spacing:.02em}
+.ad p{font-size:14px;line-height:1.55;margin-top:5px}
+.ad .c{font-family:"DM Mono",monospace;font-size:11px;color:var(--gold);margin-top:6px;letter-spacing:.04em}
+.head2{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);
+  padding:14px 0 8px;border-top:1px solid var(--line)}
+.foot{border-top:3px double var(--ink);padding-top:18px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+.foot h3{font-family:"Playfair Display",serif;font-weight:900;font-size:clamp(20px,4.4vw,34px)}
+.btn2{background:var(--ink);color:var(--paper);text-decoration:none;padding:13px 19px;font-family:"DM Mono",monospace;
+  font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+</style></head><body>
+<div class="pad">
+  <div class="mast"><h1 id="nb"></h1><span class="m">Classifieds — situations available</span><button id="tt">Dark</button></div>
+  <div class="lede" id="intro"></div>
+  <div class="head2">Work — completed and live</div>
+  <div class="ads" id="ads"></div>
+  <div class="head2">Services offered</div><div class="ads" id="svc2"></div>
+  <div class="head2">Skills</div><div style="font-size:14px;line-height:1.9;color:var(--dim)" id="chips"></div>
+  <div class="foot" style="margin-top:22px"><h3>Have an idea?</h3><a class="btn2" id="wa" href="#">Message me on WhatsApp</a></div>
+ </div><div style="display:none"><div id="svc"></div></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+ads.innerHTML=S.projects.map(p=>`<a class="ad" href="${p.href}" target="_blank" rel="noreferrer">
+  <div class="hd">${p.t} — ${p.type}</div><p>${p.s}</p>
+  <div class="c">${p.href.replace("https://","")} · ${p.stack.join(", ")}</div></a>`).join("");
+svc2.innerHTML=S.services.map(s=>`<div class="ad"><div class="hd">${s.t}</div><p>${s.b}</p></div>`).join("");
+chips.textContent=S.skills.join(" · ")+".";
+const root = document.documentElement;
+const KEY = "d90t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("90");
+</script></body></html>

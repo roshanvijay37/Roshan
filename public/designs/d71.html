@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D71 — ASCII</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0a07;--ink:#f0eade;--gold:#e6c374;--dim:#8e8776;--line:rgba(240,234,222,.15);--acc:#8fbf5a}
+:root[data-theme="light"]{--bg:#f5f2e9;--ink:#141109;--gold:#7d5f10;--dim:#6a6353;--line:rgba(20,17,9,.15)}*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:15px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:6px 11px;cursor:pointer}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}
+.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}
+body{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13.5px;line-height:1.55}
+.mono{font-family:inherit}
+/* Everything drawn in characters — the box rules, the bar charts, the logo.
+   No images, no shapes, just the grid a terminal gives you. */
+.hero{padding:17vh 0 3vh}
+.art{white-space:pre;font-size:clamp(6px,1.8vw,13px);line-height:1.05;color:var(--gold);overflow-x:auto}
+.hero h1{font-weight:600;font-size:clamp(20px,4.6vw,38px);letter-spacing:-.01em;margin-top:18px}
+.hero p{margin-top:14px;max-width:62ch;color:var(--dim);line-height:1.7}
+.box{border:1px solid var(--line);margin-top:4vh}
+.bh{padding:9px 13px;border-bottom:1px solid var(--line);color:var(--gold);letter-spacing:.14em;text-transform:uppercase;font-size:11px}
+.r{display:block;padding:14px 13px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+.r:last-child{border-bottom:0}
+.r:hover{background:rgba(230,195,116,.06)}
+.r .t{color:var(--ink);font-weight:600;font-size:16px}
+.r .u{color:var(--acc)}
+.r .d{color:var(--dim);margin-top:5px;max-width:62ch}
+/* pre-formatted rows get their own scroller — a 20-cell bar plus a label is
+   wider than a 390px screen and was pushing the whole page sideways. */
+.r .bar{color:var(--gold);margin-top:6px;white-space:pre;overflow-x:auto;scrollbar-width:none}
+.r .s,.r .d{overflow-wrap:anywhere}
+.r .s{color:var(--dim);margin-top:4px}
+</style></head><body>
+<nav><b id="nb"></b><span style="display:flex;gap:10px;align-items:center"><button id="tt">Dark</button></span></nav><div class="pad"><section class="hero">
+ <div class="art" id="art"></div>
+ <h1>five things, all of them running</h1><p id="intro"></p></section>
+ <div class="box"><div class="bh">selected work</div><div id="rows"></div></div>
+ <section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+  <div class="chips" id="chips"></div></section><section class="sec"><h2 style="font-weight:700;font-size:clamp(26px,6vw,58px);letter-spacing:-.04em">Have an idea?</h2>
+  <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+art.textContent=[
+" ____   ___  ____  _   _    _    _   _",
+"|  _ \\ / _ \\/ ___|| | | |  / \\  | \\ | |",
+"| |_) | | | \\___ \\| |_| | / _ \\ |  \\| |",
+"|  _ <| |_| |___) |  _  |/ ___ \\| |\\  |",
+"|_| \\_\\\\___/|____/|_| |_/_/   \\_\\_| \\_|"].join("\n");
+rows.innerHTML=S.projects.map(p=>{
+  const n=Math.min(20,p.stack.length*4);
+  return `<a class="r" href="${p.href}" target="_blank" rel="noreferrer">
+   <div><span class="t">${p.t}</span> <span class="u">// ${p.href.replace("https://","")}</span></div>
+   <div class="d">${p.s}</div>
+   <div class="bar">[${"#".repeat(n)}${".".repeat(20-n)}] ${p.type}</div>
+   <div class="s">stack: ${p.stack.join(" + ")}</div></a>`}).join("");
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const root = document.documentElement;
+const KEY = "d71t", ALT = "light";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Dark" : "Light"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("71");
+</script></body></html>

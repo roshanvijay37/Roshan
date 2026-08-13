@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D72 — Rain</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#04070a;--ink:#dff3e4;--gold:#7dffa8;--dim:#7d9c88;--line:rgba(125,255,168,.18)}
+:root[data-theme="light"]{--bg:#eff5f0;--ink:#06110a;--gold:#1d7a45;--dim:#4d6455;--line:rgba(29,122,69,.22)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:15px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:6px 11px;cursor:pointer}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}
+.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}.hero{padding:18vh 0 3vh}
+.hero h1{font-weight:800;font-size:clamp(30px,7.6vw,80px);letter-spacing:-.045em;line-height:1.02}
+.hero p{margin-top:16px;max-width:46ch;color:var(--dim);line-height:1.75;font-size:15px}
+body{font-family:Inter,system-ui,sans-serif}
+#rain{position:fixed;inset:0;z-index:0;opacity:.28}
+.pad{position:relative;z-index:2}
+.hero h1{font-family:"Share Tech Mono",monospace;font-weight:400;letter-spacing:0}
+.row{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:6px;
+  padding:18px 18px 20px;margin-bottom:12px;background:rgba(4,7,10,.6);backdrop-filter:blur(6px)}
+:root[data-theme="light"] .row{background:rgba(255,255,255,.7)}
+.row:hover{border-color:var(--gold)}
+.row .k{font-family:"Share Tech Mono",monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.row h3{font-family:"Share Tech Mono",monospace;font-size:clamp(22px,4.6vw,38px);margin:7px 0 8px;letter-spacing:0}
+.row p{color:var(--dim);font-size:14px;line-height:1.66;max-width:56ch}
+.row .st{font-family:"Share Tech Mono",monospace;font-size:12px;color:var(--dim);margin-top:10px}
+</style></head><body>
+<canvas id="rain"></canvas><nav><b id="nb"></b><span style="display:flex;gap:10px;align-items:center"><button id="tt">Dark</button></span></nav><div class="pad"><section class="hero"><h1>wake up.<br>the work is live.</h1><p id="intro"></p></section>
+ <div id="list" style="margin-top:4vh"></div><section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+  <div class="chips" id="chips"></div></section><section class="sec"><h2 style="font-weight:700;font-size:clamp(26px,6vw,58px);letter-spacing:-.04em">Have an idea?</h2>
+  <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+list.innerHTML=S.projects.map(p=>`<a class="row" href="${p.href}" target="_blank" rel="noreferrer">
+  <div class="k">${p.type}</div><h3>${p.t}</h3><p>${p.s}</p>
+  <div class="st">&gt; ${p.stack.join(" :: ")}</div></a>`).join("");
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const cv=document.getElementById("rain"),ctx=cv.getContext("2d");
+const CH="ROSHANVIJAY01</>{}[]#$&*";
+let cols=[],fs=15;
+function size(){cv.width=innerWidth;cv.height=innerHeight;
+  cols=Array(Math.ceil(cv.width/fs)).fill(0).map(()=>Math.random()*-60);}
+size();addEventListener("resize",size);
+const rm=matchMedia("(prefers-reduced-motion: reduce)").matches;
+let last=0;
+(function loop(t){
+  if(t-last>62&&!rm){last=t;
+    const light=document.documentElement.getAttribute("data-theme")==="light";
+    ctx.fillStyle=light?"rgba(239,245,240,.16)":"rgba(4,7,10,.16)";
+    ctx.fillRect(0,0,cv.width,cv.height);
+    ctx.font=fs+"px 'Share Tech Mono',monospace";
+    ctx.fillStyle=light?"#1d7a45":"#7dffa8";
+    cols.forEach((y,i)=>{ctx.fillText(CH[Math.floor(Math.random()*CH.length)],i*fs,y*fs);
+      cols[i]=y*fs>cv.height&&Math.random()>.975?0:y+1;});}
+  requestAnimationFrame(loop);})(0);
+const root = document.documentElement;
+const KEY = "d72t", ALT = "light";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Dark" : "Light"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("72");
+</script></body></html>

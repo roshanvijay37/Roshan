@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D78 — Certificate</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f2e9;--ink:#141109;--gold:#7d5f10;--dim:#6a6353;--line:rgba(20,17,9,.15);--card:#fbf6e8;--edge:#8a6a14}
+:root[data-theme="dark"]{--bg:#0b0a07;--ink:#f0eade;--gold:#e6c374;--dim:#8e8776;--line:rgba(240,234,222,.15)}
+:root[data-theme="dark"]{--card:#14110a;--edge:#e6c374}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}
+.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}
+body{font-family:Inter,system-ui,sans-serif}
+.pad{width:min(100% - 20px,860px);padding:52px 0 110px}
+/* An engraved certificate — guilloche border, small caps, a seal. Formal to the
+   point of being funny, which is the point. */
+.cert{background:var(--card);border:2px solid var(--edge);padding:8px;box-shadow:0 18px 48px rgba(0,0,0,.16)}
+.inner{border:1px solid var(--edge);padding:34px 24px 40px;text-align:center;position:relative;
+  background-image:repeating-linear-gradient(45deg,transparent 0 9px,rgba(138,106,20,.05) 9px 10px)}
+.cinz{font-family:Cinzel,Georgia,serif}
+.inner .k{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold)}
+.inner h1{font-family:Cinzel,serif;font-weight:700;font-size:clamp(26px,6vw,52px);letter-spacing:.02em;margin:14px 0 8px}
+.inner .name{font-family:Cinzel,serif;font-weight:600;font-size:clamp(22px,5vw,40px);color:var(--gold);margin:18px 0 6px}
+.inner p{color:var(--dim);font-size:14.5px;line-height:1.72;max-width:52ch;margin:12px auto 0}
+.orn{display:flex;align-items:center;gap:12px;margin:24px 0 18px;color:var(--edge)}
+.orn::before,.orn::after{content:"";flex:1;height:1px;background:var(--edge);opacity:.5}
+.orn span{font-family:Cinzel,serif;font-size:13px;letter-spacing:.24em;text-transform:uppercase}
+.works{display:grid;gap:0;text-align:left}
+.wk{display:block;text-decoration:none;color:inherit;padding:13px 0;border-bottom:1px solid rgba(138,106,20,.28)}
+.wk:last-child{border-bottom:0}
+.wk .n{font-family:Cinzel,serif;font-weight:600;font-size:19px}
+.wk .u{font-family:"DM Mono",monospace;font-size:11px;color:var(--gold);letter-spacing:.08em}
+.wk p{color:var(--dim);font-size:13.5px;line-height:1.6;margin-top:5px;max-width:none}
+.seal{width:86px;height:86px;border-radius:50%;border:2px solid var(--edge);display:grid;place-items:center;
+  margin:26px auto 0;font-family:Cinzel,serif;font-weight:700;font-size:24px;color:var(--gold);
+  background:repeating-conic-gradient(from 0deg,rgba(138,106,20,.14) 0 6deg,transparent 6deg 12deg)}
+.wa{display:inline-block;margin-top:20px;background:var(--edge);color:var(--card);text-decoration:none;
+  padding:13px 22px;font-family:Cinzel,serif;font-weight:600;font-size:14px;letter-spacing:.06em}
+#tt{position:fixed;top:14px;right:14px;z-index:60;background:none;border:1px solid var(--line);color:var(--gold);
+  font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:6px 10px;cursor:pointer}
+</style></head><body>
+<button id="tt">Dark</button><div class="pad"><div class="cert"><div class="inner">
+  <div class="k">This is to certify that</div>
+  <div class="name" id="nb"></div>
+  <h1 class="cinz">has actually shipped</h1>
+  <p id="intro"></p>
+  <div class="orn"><span>The works</span></div>
+  <div class="works" id="works"></div>
+  <div class="orn"><span>Disciplines</span></div>
+  <div id="svcn" style="color:var(--dim);font-size:14px;line-height:1.9"></div>
+  <div class="seal">R</div>
+  <a class="wa" id="wa" href="#">Commission something</a>
+ </div></div></div><div style="display:none"><div id="svc"></div><div id="chips"></div></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+works.innerHTML=S.projects.map(p=>`<a class="wk" href="${p.href}" target="_blank" rel="noreferrer">
+  <div><span class="n">${p.t}</span> <span class="u">${p.href.replace("https://","")}</span></div>
+  <p>${p.s}</p></a>`).join("");
+svcn.innerHTML=S.services.map(s=>"<b>"+s.t+"</b> — "+s.b).join("<br>")+"<br><br><span style='font-size:12.5px'>"+S.skills.join(" · ")+"</span>";
+const root = document.documentElement;
+const KEY = "d78t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("78");
+</script></body></html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D73 — Typewriter</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#cfc9b8;--paper:#f6f1e3;--ink:#211d15;--gold:#6d5a12;--dim:#5f584a;--line:rgba(33,29,21,.24)}
+:root[data-theme="dark"]{--bg:#0a0907;--paper:#141209;--ink:#e9e2d0;--gold:#d3b76e;--dim:#8d8674;--line:rgba(233,226,208,.22)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}
+.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}
+body{font-family:"Courier Prime",ui-monospace,monospace;font-size:15px;line-height:1.78}
+.pad{width:min(100% - 20px,720px);padding:46px 0 110px}
+/* A typed page: a paper sheet with a real margin, struck characters and a
+   carriage line that types the heading out when it comes into view. */
+.sheet{background:var(--paper);padding:44px 32px 54px;box-shadow:0 16px 44px rgba(0,0,0,.22);position:relative}
+.sheet::before{content:"";position:absolute;left:52px;top:0;bottom:0;width:1px;background:rgba(180,60,40,.34)}
+h1{font-family:"Special Elite",cursive;font-size:clamp(24px,5.4vw,42px);font-weight:400;letter-spacing:.01em;line-height:1.2}
+.cur::after{content:"|";animation:bl 1s steps(1) infinite;color:var(--gold)}
+@keyframes bl{50%{opacity:0}}
+.meta{color:var(--dim);font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;margin-top:6px}
+.hr{border-top:1px dashed var(--line);margin:22px 0}
+.e{display:block;text-decoration:none;color:inherit;padding:14px 0;border-bottom:1px dashed var(--line)}
+.e:hover{background:rgba(109,90,18,.06)}
+.e .n{font-family:"Special Elite",cursive;font-size:20px}
+.e .u{color:var(--gold);font-size:12.5px}
+.e p{color:var(--dim);font-size:14px;margin-top:5px}
+.e .s{font-size:12.5px;color:var(--dim);margin-top:4px}
+.sig{font-family:"Special Elite",cursive;font-size:26px;margin-top:26px;transform:rotate(-2deg);display:inline-block}
+.wa{display:inline-block;margin-top:14px;background:var(--ink);color:var(--paper);text-decoration:none;
+  padding:12px 18px;letter-spacing:.06em;font-weight:700;font-size:13.5px}
+#tt{position:fixed;top:14px;right:14px;z-index:60;background:none;border:1px solid var(--line);color:var(--gold);
+  font-family:"Courier Prime",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;cursor:pointer}
+</style></head><body>
+<button id="tt">Dark</button><div class="pad"><div class="sheet">
+  <h1 id="h1" class="cur"></h1>
+  <div class="meta" id="nb"></div>
+  <div class="hr"></div><p id="intro"></p>
+  <div class="hr"></div><div class="meta">Enclosed — five live sites</div>
+  <div id="items"></div>
+  <div class="hr"></div><div class="meta">Services</div><div id="svc"></div>
+  <div class="meta" style="margin-top:18px">Materials</div><div id="chips" style="color:var(--dim);font-size:13.5px"></div>
+  <div class="sig">Roshan</div><br><a class="wa" id="wa" href="#">Message me on WhatsApp</a>
+</div></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+items.innerHTML=S.projects.map(p=>`<a class="e" href="${p.href}" target="_blank" rel="noreferrer">
+  <div><span class="n">${p.t}</span> <span class="u">${p.href.replace("https://","")}</span></div>
+  <p>${p.s}</p><div class="s">${p.type} — ${p.stack.join(", ")}</div></a>`).join("");
+svc.innerHTML=S.services.map(s=>`<div class="e" style="cursor:default"><span class="n">${s.t}</span><p>${s.b}</p></div>`).join("");
+chips.textContent=S.skills.join(", ")+".";
+const TXT="Dear client,";
+const h=document.getElementById("h1");
+if(matchMedia("(prefers-reduced-motion: reduce)").matches){h.textContent=TXT;h.classList.remove("cur");}
+else{let i=0;const t=setInterval(()=>{h.textContent=TXT.slice(0,++i);if(i>=TXT.length){clearInterval(t)}},78);}
+const root = document.documentElement;
+const KEY = "d73t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("73");
+</script></body></html>

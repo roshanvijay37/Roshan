@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D98 — Card Holder</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f2e9;--ink:#141109;--gold:#7d5f10;--dim:#6a6353;--line:rgba(20,17,9,.15);--card:#fdfbf6}
+:root[data-theme="dark"]{--bg:#0b0a07;--ink:#f0eade;--gold:#e6c374;--dim:#8e8776;--line:rgba(240,234,222,.15)}
+:root[data-theme="dark"]{--card:#15130c}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:15px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:6px 11px;cursor:pointer}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}
+.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}.hero{padding:18vh 0 3vh}
+.hero h1{font-weight:800;font-size:clamp(30px,7.6vw,80px);letter-spacing:-.045em;line-height:1.02}
+.hero p{margin-top:16px;max-width:46ch;color:var(--dim);line-height:1.75;font-size:15px}
+body{font-family:Inter,system-ui,sans-serif}
+/* A stack of business cards fanned out. Tap one and it comes to the front —
+   the format is already how people exchange details. */
+.holder{position:relative;height:min(64vh,470px);margin-top:5vh;perspective:1200px}
+.bc{position:absolute;left:50%;top:50%;width:min(86vw,352px);aspect-ratio:1.72;margin:0;
+  transform:translate(-50%,-50%);background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:20px 22px;box-shadow:0 16px 34px rgba(0,0,0,.18);cursor:pointer;
+  transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .4s;display:flex;flex-direction:column;justify-content:space-between}
+.bc .k{font-family:"DM Mono",monospace;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.bc h3{font-weight:700;font-size:clamp(20px,4.4vw,28px);letter-spacing:-.03em;margin-top:8px}
+.bc p{color:var(--dim);font-size:12.5px;line-height:1.55;margin-top:6px}
+.bc .ft{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.bc .ft .u{font-family:"DM Mono",monospace;font-size:10.5px;color:var(--gold);letter-spacing:.06em}
+.bc .ft i{width:26px;height:26px;border-radius:6px;background:var(--c);flex:none}
+.hint{text-align:center;font-family:"DM Mono",monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.idx{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.idx button{background:none;border:1px solid var(--line);color:var(--dim);font:inherit;font-size:12px;
+  padding:8px 13px;border-radius:99px;cursor:pointer}
+.idx button.on{background:var(--c2);color:#fff;border-color:transparent}
+</style></head><body>
+<nav><b id="nb"></b><span style="display:flex;gap:10px;align-items:center"><button id="tt">Dark</button></span></nav><div class="pad"><section class="hero"><h1>Take a card.</h1><p id="intro"></p></section>
+ <div class="holder" id="holder"></div><div class="hint">Tap a card</div>
+ <div class="idx" id="idx"></div><section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+  <div class="chips" id="chips"></div></section><section class="sec"><h2 style="font-weight:700;font-size:clamp(26px,6vw,58px);letter-spacing:-.04em">Have an idea?</h2>
+  <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+holder.innerHTML=S.projects.map((p,i)=>`<div class="bc" data-i="${i}" style="--c:${p.c}">
+  <div><div class="k">${p.type}</div><h3>${p.t}</h3><p>${p.s}</p></div>
+  <div class="ft"><a class="u" href="${p.href}" target="_blank" rel="noreferrer">${p.href.replace("https://","")} ↗</a><i></i></div></div>`).join("");
+idx.innerHTML=S.projects.map((p,i)=>`<button data-i="${i}">${p.t}</button>`).join("");
+const cards=[...holder.children];
+function fan(front){
+  cards.forEach((c,i)=>{const d=(i-front+cards.length)%cards.length;
+    c.style.transform=`translate(-50%,-50%) translateY(${d*17}px) translateZ(${-d*42}px) rotate(${d*2.2}deg)`;
+    c.style.zIndex=String(cards.length-d);
+    c.style.opacity=String(d>3?0:1);});
+  idx.querySelectorAll("button").forEach((b,n)=>{b.classList.toggle("on",n===front);b.style.setProperty("--c2",S.projects[n].c)});}
+cards.forEach(c=>c.addEventListener("click",e=>{if(e.target.closest("a"))return;fan(+c.dataset.i)}));
+idx.querySelectorAll("button").forEach(b=>b.onclick=()=>fan(+b.dataset.i));
+fan(0);
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const root = document.documentElement;
+const KEY = "d98t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("98");
+</script></body></html>

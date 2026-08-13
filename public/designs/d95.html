@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D95 — Crate</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0a07;--ink:#f0eade;--gold:#e6c374;--dim:#8e8776;--line:rgba(240,234,222,.15);--sleeve:#161309}
+:root[data-theme="light"]{--bg:#f5f2e9;--ink:#141109;--gold:#7d5f10;--dim:#6a6353;--line:rgba(20,17,9,.15)}
+:root[data-theme="light"]{--sleeve:#eae4d4}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:15px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:6px 11px;cursor:pointer}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}
+.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}.hero{padding:18vh 0 3vh}
+.hero h1{font-weight:800;font-size:clamp(30px,7.6vw,80px);letter-spacing:-.045em;line-height:1.02}
+.hero p{margin-top:16px;max-width:46ch;color:var(--dim);line-height:1.75;font-size:15px}
+body{font-family:Archivo,system-ui,sans-serif}
+.hero h1{font-weight:900}
+/* Flicking through a crate: sleeves stand at an angle, the front one squares up
+   when selected. Horizontal browsing that feels like digging, not scrolling. */
+.crate{display:flex;gap:0;overflow-x:auto;padding:5vh 0 3vh;scrollbar-width:none;scroll-snap-type:x mandatory}
+.crate::-webkit-scrollbar{display:none}
+.sl{flex:none;width:min(70vw,270px);margin-right:-70px;scroll-snap-align:center;
+  transform:rotateY(-24deg);transform-origin:left center;transition:transform .4s,margin .4s;cursor:pointer}
+.sl.on{transform:rotateY(0);margin-right:16px;z-index:5}
+.sl .sleeve{aspect-ratio:1;background:var(--sleeve);border:1px solid var(--line);border-radius:3px;padding:14px;
+  display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 14px 30px rgba(0,0,0,.3)}
+.sl .art{flex:1;background:var(--c);border-radius:2px;display:grid;place-items:center;padding:12px}
+.sl .art b{color:rgba(255,255,255,.96);font-weight:900;font-size:20px;letter-spacing:-.03em;text-align:center;line-height:1.08}
+.sl .cat{font-family:"DM Mono",monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-top:10px}
+.detail{border:1px solid var(--line);border-radius:12px;padding:20px 18px 24px;margin-top:2vh}
+.detail .k{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.detail h3{font-weight:900;font-size:clamp(23px,5vw,42px);letter-spacing:-.04em;margin:9px 0 10px}
+.detail p{color:var(--dim);font-size:14.5px;line-height:1.72;max-width:54ch}
+.detail .st{display:flex;gap:6px;flex-wrap:wrap;margin-top:13px}
+.detail .st span{font-family:"DM Mono",monospace;font-size:10px;border:1px solid var(--line);padding:6px 9px;border-radius:99px;color:var(--dim)}
+.detail a{display:inline-block;margin-top:15px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:12px 18px;border-radius:99px;font-weight:700;font-size:13.5px}
+.hint{font-family:"DM Mono",monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+</style></head><body>
+<nav><b id="nb"></b><span style="display:flex;gap:10px;align-items:center"><button id="tt">Dark</button></span></nav><div class="pad"><section class="hero"><h1>Dig<br>through it.</h1><p id="intro"></p></section>
+ <div class="crate" id="crate"></div><div class="hint">Swipe the crate</div>
+ <div class="detail" id="detail"></div><section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+  <div class="chips" id="chips"></div></section><section class="sec"><h2 style="font-weight:700;font-size:clamp(26px,6vw,58px);letter-spacing:-.04em">Have an idea?</h2>
+  <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+crate.innerHTML=S.projects.map((p,i)=>`<div class="sl${i===0?" on":""}" data-i="${i}" style="--c:${p.c}">
+  <div class="sleeve"><div class="art"><b>${p.t}</b></div><div class="cat">${p.type}</div></div></div>`).join("");
+function pick(i){const p=S.projects[i];
+  crate.querySelectorAll(".sl").forEach((s,x)=>s.classList.toggle("on",x===i));
+  detail.innerHTML=`<div class="k">${p.type} — ${p.href.replace("https://","")}</div><h3>${p.t}</h3><p>${p.s}</p>
+   <div class="st">${p.stack.map(x=>`<span>${x}</span>`).join("")}</div>
+   <a href="${p.href}" target="_blank" rel="noreferrer">Visit live site ↗</a>`;}
+crate.querySelectorAll(".sl").forEach(s=>s.onclick=()=>pick(+s.dataset.i));
+pick(0);
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const root = document.documentElement;
+const KEY = "d95t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("95");
+</script></body></html>

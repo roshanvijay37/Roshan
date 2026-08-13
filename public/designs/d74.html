@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D74 — Polaroids</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f2e9;--ink:#141109;--gold:#7d5f10;--dim:#6a6353;--line:rgba(20,17,9,.15);--card:#fdfcf7}
+:root[data-theme="dark"]{--bg:#0b0a07;--ink:#f0eade;--gold:#e6c374;--dim:#8e8776;--line:rgba(240,234,222,.15)}
+:root[data-theme="dark"]{--card:#17150f}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:15px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:6px 11px;cursor:pointer}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}
+.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}.hero{padding:18vh 0 3vh}
+.hero h1{font-weight:800;font-size:clamp(30px,7.6vw,80px);letter-spacing:-.045em;line-height:1.02}
+.hero p{margin-top:16px;max-width:46ch;color:var(--dim);line-height:1.75;font-size:15px}
+body{font-family:Inter,system-ui,sans-serif}
+.hero h1{font-family:Caveat,cursive;font-weight:700;font-size:clamp(40px,10vw,104px);letter-spacing:0;line-height:.96}
+/* Instant photos scattered on a table, each captioned by hand. The white
+   border and the tilt do all the work; no other chrome needed. */
+.table{display:flex;flex-wrap:wrap;gap:22px;justify-content:center;padding:5vh 0 2vh}
+.po{background:var(--card);padding:12px 12px 42px;box-shadow:0 12px 30px rgba(0,0,0,.2);
+  transform:rotate(var(--r));transition:transform .3s,box-shadow .3s;text-decoration:none;color:inherit;
+  width:min(88%,268px);position:relative}
+.po:hover{transform:rotate(0) translateY(-6px);box-shadow:0 20px 44px rgba(0,0,0,.28);z-index:5}
+.po .img{aspect-ratio:1;background:var(--c);display:grid;place-items:center;padding:14px}
+.po .img b{color:rgba(255,255,255,.96);font-weight:700;font-size:22px;letter-spacing:-.02em;text-align:center}
+.po .cap{position:absolute;left:12px;right:12px;bottom:11px;font-family:Caveat,cursive;font-size:20px;line-height:1.1}
+.po .cap span{display:block;font-family:Inter,sans-serif;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gold);margin-top:2px}
+.notes{margin-top:5vh}
+.nt{display:grid;grid-template-columns:1fr;gap:4px;padding:15px 0;border-top:1px solid var(--line);text-decoration:none;color:inherit}
+@media(min-width:760px){.nt{grid-template-columns:190px 1fr 110px;gap:18px;align-items:baseline}}
+.nt .n{font-family:Caveat,cursive;font-size:24px}
+.nt p{color:var(--dim);font-size:13.5px;line-height:1.62}
+.nt .g{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+</style></head><body>
+<nav><b id="nb"></b><span style="display:flex;gap:10px;align-items:center"><button id="tt">Dark</button></span></nav><div class="pad"><section class="hero"><h1>Snapshots<br>from the work.</h1><p id="intro"></p></section>
+ <div class="table" id="table"></div><div class="notes" id="notes"></div><section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+  <div class="chips" id="chips"></div></section><section class="sec"><h2 style="font-weight:700;font-size:clamp(26px,6vw,58px);letter-spacing:-.04em">Have an idea?</h2>
+  <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+const R=["-3.4deg","2.6deg","-1.8deg","3.4deg","-2.4deg"];
+table.innerHTML=S.projects.map((p,i)=>`<a class="po" href="${p.href}" target="_blank" rel="noreferrer"
+  style="--c:${p.c};--r:${R[i%R.length]}"><div class="img"><b>${p.t}</b></div>
+  <div class="cap">${p.t}<span>${p.type}</span></div></a>`).join("");
+notes.innerHTML=S.projects.map(p=>`<a class="nt" href="${p.href}" target="_blank" rel="noreferrer">
+  <div class="n">${p.t}</div><p>${p.s}</p><div class="g mono">Visit ↗</div></a>`).join("");
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const root = document.documentElement;
+const KEY = "d74t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("74");
+</script></body></html>
