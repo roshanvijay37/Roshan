@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D1 — Editorial Brutalist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f1e8;--ink:#14110b;--gold:#7d5f10;--rule:rgba(20,17,11,.16);--mut:#6d654f}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{color:var(--ink);font-family:"Inter Tight",system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.pad{width:min(100% - 36px,1280px);margin:auto}
+[data-r]{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+[data-r="in"]{opacity:1;transform:none}
+
+/* masthead: a newspaper plate, not a nav bar */
+.mast{border-bottom:2px solid var(--ink);padding:16px 0 10px;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.mast .n{font:900 13px/1 "Inter Tight";letter-spacing:.24em;text-transform:uppercase}
+.mast .r{font:400 13px/1 "Instrument Serif";font-style:italic;color:var(--mut)}
+
+/* hero: type IS the design */
+.hero{padding:7vh 0 5vh}
+.hero h1{font-weight:900;letter-spacing:-.045em;line-height:.83;font-size:clamp(58px,13.5vw,205px);text-transform:uppercase}
+.hero h1 em{font-family:"Instrument Serif";font-style:italic;font-weight:400;text-transform:none;letter-spacing:-.02em;color:var(--gold)}
+.hero .sub{display:grid;grid-template-columns:1fr;gap:18px;border-top:1px solid var(--rule);margin-top:38px;padding-top:20px}
+@media(min-width:840px){.hero .sub{grid-template-columns:1fr 1fr 1fr}}
+.hero .sub p{font-size:15px;line-height:1.65;max-width:40ch;color:var(--mut)}
+.hero .sub .lab{font:700 10px/1 ui-monospace,monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
+
+.sechead{display:flex;flex-wrap:wrap;gap:6px;justify-content:space-between;align-items:baseline;border-top:2px solid var(--ink);padding-top:12px;margin-top:7vh}
+.sechead span{white-space:nowrap}
+@media(min-width:840px){.sechead{margin-top:9vh}}
+.sechead h2{font:900 clamp(26px,4.4vw,54px)/1 "Inter Tight";letter-spacing:-.035em;text-transform:uppercase}
+.sechead span{font:700 10px/1 ui-monospace,monospace;letter-spacing:.2em;color:var(--gold)}
+
+/* work: a numbered index. image only on hover — the list is the art */
+.idx{border-top:1px solid var(--rule)}
+/* Mobile stacks. The old `52px 1fr` had four children in two columns, so the
+   description landed in the 52px number column and rendered one word per line. */
+.row{display:grid;grid-template-columns:1fr;gap:9px;align-items:baseline;padding:24px 0;border-bottom:1px solid var(--rule);text-decoration:none;color:inherit;position:relative;transition:padding-left .5s cubic-bezier(.2,.7,.2,1)}
+@media(min-width:840px){.row{grid-template-columns:64px minmax(0,1fr) 210px 130px;gap:26px}.row:hover{padding-left:18px}}
+.row .num{font:700 11px/1 ui-monospace,monospace;color:var(--gold);letter-spacing:.1em}
+.row .t{font-weight:900;font-size:clamp(27px,4.6vw,58px);letter-spacing:-.035em;line-height:1}
+.row .d{font-size:13px;color:var(--mut);line-height:1.6}
+.row .go{font:700 10px/1 ui-monospace,monospace;letter-spacing:.16em;color:var(--gold);text-transform:uppercase}
+.row:hover .t{font-style:italic;font-family:"Instrument Serif";font-weight:400;letter-spacing:-.01em}
+.row .swatch{position:absolute;right:0;top:50%;width:0;height:62%;transform:translateY(-50%);transition:width .55s cubic-bezier(.2,.7,.2,1);opacity:.9}
+@media(min-width:840px){.row:hover .swatch{width:92px}}
+
+/* services + skills as a dense table, very print */
+.tbl{display:grid;grid-template-columns:1fr;border-top:1px solid var(--rule)}
+@media(min-width:760px){.tbl{grid-template-columns:repeat(3,1fr)}}
+.cell{padding:26px 22px 30px 0;border-bottom:1px solid var(--rule)}
+.cell h3{font-weight:900;font-size:20px;letter-spacing:-.02em;margin:8px 0 8px}
+.cell p{font-size:13px;line-height:1.65;color:var(--mut)}
+.cell .n{font:700 10px/1 ui-monospace,monospace;color:var(--gold);letter-spacing:.18em}
+.skills{display:flex;flex-wrap:wrap;gap:7px;padding:26px 0 0}
+.skills span{font:700 11px/1 ui-monospace,monospace;letter-spacing:.06em;border:1px solid var(--rule);padding:9px 11px;border-radius:2px;color:var(--mut)}
+
+.cta{padding:11vh 0 8vh;border-top:2px solid var(--ink);margin-top:9vh}
+.cta h2{font-weight:900;font-size:clamp(38px,9vw,124px);letter-spacing:-.045em;line-height:.86;text-transform:uppercase}
+.cta h2 em{font-family:"Instrument Serif";font-style:italic;font-weight:400;text-transform:none;color:var(--gold)}
+.btn{display:inline-block;margin-top:32px;background:var(--ink);color:var(--bg);text-decoration:none;padding:17px 26px;border-radius:2px;font:700 12px/1 "Inter Tight";letter-spacing:.1em;text-transform:uppercase}
+footer{border-top:1px solid var(--rule);padding:20px 0 90px;font:500 11px/1.6 ui-monospace,monospace;color:var(--mut);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="pad">
+  <div class="mast"><div class="n" id="mn"></div><div class="r" id="mr"></div></div>
+
+  <section class="hero">
+    <h1 id="h1"></h1>
+    <div class="sub" data-r>
+      <div><div class="lab">What I do</div><p id="intro"></p></div>
+      <div><div class="lab">Availability</div><p>Open to freelance work — product builds, marketing sites and systems that need to hold up.</p></div>
+      <div><div class="lab">Where</div><p>India, working with founders and small teams anywhere.</p></div>
+    </div>
+  </section>
+
+  <div class="sechead" data-r><h2>Selected work</h2><span>05 PROJECTS — ALL LIVE</span></div>
+  <div class="idx" id="idx"></div>
+
+  <div class="sechead" data-r><h2>What you can buy</h2><span>SERVICES</span></div>
+  <div class="tbl" id="svc"></div>
+  <div class="skills" id="sk"></div>
+
+  <section class="cta" data-r>
+    <h2>Have an idea?<br><em>Let's build it.</em></h2>
+    <a class="btn" id="wa" href="#">Message me on WhatsApp →</a>
+  </section>
+  <footer><span id="fn"></span><span>D1 — Editorial Brutalist</span></footer>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+mn.textContent = S.name; mr.textContent = S.role; intro.textContent = S.intro;
+h1.innerHTML = "I engineer<br>ideas into<br><em>impact.</em>";
+fn.textContent = S.name + " — " + new Date().getFullYear();
+wa.href = S.wa;
+
+idx.innerHTML = S.projects.map(p => `
+  <a class="row" href="${p.href}" target="_blank" rel="noreferrer" data-r>
+    <span class="num">${p.i}</span>
+    <span class="t">${p.t}</span>
+    <span class="d">${p.s}</span>
+    <span class="go">Visit ↗</span>
+    <span class="swatch" style="background:${p.c}"></span>
+  </a>`).join("");
+
+svc.innerHTML = S.services.map(s => `
+  <div class="cell" data-r><div class="n">${s.n}</div><h3>${s.t}</h3><p>${s.b}</p></div>`).join("");
+sk.innerHTML = S.skills.map(t => `<span>${t}</span>`).join("");
+
+window.reveal(); window.switcher("1");
+</script>
+</body>
+</html>

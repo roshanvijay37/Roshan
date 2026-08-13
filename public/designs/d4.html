@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D4 — Split Sticky</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e0c07;--panel:#12100a;--ink:#f4ecdb;--gold:#e6c374;--dim:#9a8f75;--line:rgba(244,236,219,.11)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);scroll-behavior:smooth}
+body{color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+[data-r]{opacity:0;transform:translateY(22px);transition:all .9s cubic-bezier(.2,.75,.2,1)}
+[data-r="in"]{opacity:1;transform:none}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+
+/* Grid items default to min-width:auto, so a long chip row forced the column
+   wider than the viewport and the whole page scrolled sideways. */
+.shell{display:grid;grid-template-columns:1fr;min-height:100svh}
+.shell > *{min-width:0}
+@media(min-width:960px){.shell{grid-template-columns:38% 62%}}
+
+/* left: fixed identity panel, the magazine masthead */
+.left{padding:34px 28px;border-bottom:1px solid var(--line);background:var(--panel)}
+@media(min-width:960px){.left{position:sticky;top:0;height:100svh;border-right:1px solid var(--line);border-bottom:none;
+  display:flex;flex-direction:column;justify-content:space-between;padding:44px 40px}}
+.mark{width:46px;height:46px;border-radius:50%;background:var(--gold);color:#120e05;display:grid;place-items:center;font-weight:900;font-size:21px}
+.left h1{font-weight:900;font-size:clamp(31px,3.5vw,52px);line-height:.98;letter-spacing:-.04em;margin-top:30px}
+.left h1 em{font-style:normal;color:var(--gold)}
+.left p{color:var(--dim);line-height:1.75;font-size:14.5px;margin-top:18px;max-width:38ch}
+.lnav{display:flex;gap:16px;flex-wrap:wrap;margin-top:26px}
+.lnav a{color:var(--dim);text-decoration:none;font-size:11px;letter-spacing:.16em;text-transform:uppercase;border-bottom:1px solid transparent;padding-bottom:3px}
+.lnav a:hover{color:var(--gold);border-color:var(--gold)}
+.avail{display:flex;align-items:center;gap:9px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-top:30px}
+.avail i{width:7px;height:7px;border-radius:50%;background:#8fbf5a;box-shadow:0 0 0 0 rgba(143,191,90,.6);animation:pulse 2.4s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 11px rgba(143,191,90,0)}100%{box-shadow:0 0 0 0 rgba(143,191,90,0)}}
+.wa{display:inline-block;margin-top:24px;background:var(--gold);color:#120e05;text-decoration:none;padding:15px 22px;border-radius:10px;font-weight:700;font-size:13.5px}
+
+/* right: the scrolling column */
+.right{padding:34px 24px 120px}
+@media(min-width:960px){.right{padding:64px 56px 140px}}
+.blk{margin-bottom:12vh}
+.lab{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:22px;display:flex;justify-content:space-between}
+.item{display:block;text-decoration:none;color:inherit;border-top:1px solid var(--line);padding:26px 0;position:relative;transition:padding .5s cubic-bezier(.2,.75,.2,1)}
+.item:hover{padding-left:14px}
+.item .hd{display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+.item h3{font-weight:900;font-size:clamp(23px,3.3vw,38px);letter-spacing:-.035em;line-height:1.05}
+.item .yr{font-size:10.5px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;white-space:nowrap}
+.item p{color:var(--dim);font-size:14px;line-height:1.72;margin-top:12px;max-width:56ch}
+.item .st{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
+.item .st span{font-size:10px;letter-spacing:.06em;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.item .glow{position:absolute;left:-14px;top:0;bottom:0;width:2px;background:var(--c);transform:scaleY(0);transform-origin:top;transition:transform .55s cubic-bezier(.2,.75,.2,1)}
+.item:hover .glow{transform:scaleY(1)}
+
+.sv{border-top:1px solid var(--line);padding:22px 0}
+.sv .hd{display:flex;gap:14px;align-items:baseline}
+.sv .n{font-size:10px;letter-spacing:.2em;color:var(--gold)}
+.sv h4{font-weight:700;font-size:19px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.7;margin-top:9px;max-width:54ch}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font-size:10.5px;letter-spacing:.05em;border:1px solid var(--line);padding:8px 10px;border-radius:6px;color:var(--dim)}
+.end{border-top:1px solid var(--line);padding-top:26px;color:var(--dim);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="left">
+    <div>
+      <div class="mark">R</div>
+      <h1>I engineer ideas into <em>impact.</em></h1>
+      <p id="intro"></p>
+      <nav class="lnav"><a href="#work">Work</a><a href="#services">Services</a><a href="#stack">Stack</a><a id="wa2" href="#">Contact</a></nav>
+    </div>
+    <div>
+      <div class="avail"><i></i> Available for freelance</div>
+      <a class="wa" id="wa" href="#">Message me on WhatsApp →</a>
+    </div>
+  </aside>
+
+  <main class="right">
+    <section class="blk" id="work">
+      <div class="lab mono"><span>Selected work</span><span id="cnt"></span></div>
+      <div id="list"></div>
+    </section>
+    <section class="blk" id="services">
+      <div class="lab mono"><span>Services</span><span>What you can buy</span></div>
+      <div id="svc"></div>
+    </section>
+    <section class="blk" id="stack">
+      <div class="lab mono"><span>Stack</span><span>15 tools</span></div>
+      <div class="chips" id="chips" data-r></div>
+    </section>
+    <div class="end mono"><span id="fn"></span> — D4 Split Sticky</div>
+  </main>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+intro.textContent = S.intro; fn.textContent = S.name;
+wa.href = S.wa; wa2.href = S.wa; cnt.textContent = "0" + S.projects.length + " live";
+
+list.innerHTML = S.projects.map(p => `
+  <a class="item" href="${p.href}" target="_blank" rel="noreferrer" data-r style="--c:${p.c}">
+    <span class="glow"></span>
+    <div class="hd"><h3>${p.t}</h3><span class="yr mono">${p.type} ↗</span></div>
+    <p>${p.s}</p>
+    <div class="st">${p.stack.map(x => `<span class="mono">${x}</span>`).join("")}</div>
+  </a>`).join("");
+
+svc.innerHTML = S.services.map(s => `
+  <div class="sv" data-r><div class="hd"><span class="n mono">${s.n}</span><h4>${s.t}</h4></div><p>${s.b}</p></div>`).join("");
+chips.innerHTML = S.skills.map(t => `<span class="mono">${t}</span>`).join("");
+
+window.reveal(); window.switcher("4");
+</script>
+</body>
+</html>

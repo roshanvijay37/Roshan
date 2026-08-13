@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D2 — Dark Cinematic</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080703;--ink:#f6ecd8;--gold:#e6c374;--dim:#a08e6a;--line:rgba(230,195,116,.14)}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{color:var(--ink);font-family:Sora,system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.pad{width:min(100% - 34px,1200px);margin:auto;position:relative;z-index:2}
+[data-r]{opacity:0;transform:translateY(30px);filter:blur(6px);transition:all 1.05s cubic-bezier(.16,.8,.24,1)}
+[data-r="in"]{opacity:1;transform:none;filter:none}
+
+/* the distortion/gradient blobs the awwwards front page is full of */
+.aura{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;will-change:transform}
+.b1{width:60vw;height:60vw;background:radial-gradient(circle,#8a6a14,transparent 68%);top:-18vw;right:-14vw}
+.b2{width:52vw;height:52vw;background:radial-gradient(circle,#7a3f1c,transparent 66%);bottom:-16vw;left:-14vw}
+.b3{width:38vw;height:38vw;background:radial-gradient(circle,#4d4a12,transparent 68%);top:44%;left:36%}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.055;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+nav{position:fixed;z-index:20;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:20px min(3vw,26px);font:600 11px/1 ui-monospace,monospace;letter-spacing:.18em;text-transform:uppercase;
+  backdrop-filter:blur(10px);background:linear-gradient(180deg,rgba(8,7,3,.85),transparent)}
+nav b{color:var(--gold)}
+
+.hero{min-height:100svh;display:grid;align-content:center;padding:16vh 0 10vh}
+.kick{font:600 11px/1 ui-monospace,monospace;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:26px}
+.hero h1{font-weight:800;font-size:clamp(46px,10.5vw,152px);line-height:.9;letter-spacing:-.045em}
+.hero h1 span{display:block;overflow:hidden}
+.hero h1 i{display:block;font-style:normal;transform:translateY(105%);animation:rise 1.15s cubic-bezier(.16,.85,.2,1) forwards}
+.hero h1 span:nth-child(2) i{animation-delay:.1s}.hero h1 span:nth-child(3) i{animation-delay:.2s}
+@keyframes rise{to{transform:none}}
+.hero h1 em{font-style:normal;background:linear-gradient(96deg,#e6c374,#fff3d6 44%,#b8873b);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin-top:34px;max-width:52ch;color:var(--dim);font-size:16px;line-height:1.8;font-weight:300}
+
+.sec{padding:12vh 0}
+.eyebrow{font:600 11px/1 ui-monospace,monospace;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.sec h2{font-weight:800;font-size:clamp(30px,6vw,74px);letter-spacing:-.04em;line-height:1}
+
+/* work: full-bleed cards that scale as they enter — cinematic, one at a time */
+.card{margin-top:6vh;border:1px solid var(--line);border-radius:22px;padding:clamp(24px,4.4vw,54px);
+  background:linear-gradient(150deg,rgba(230,195,116,.07),rgba(230,195,116,.015));position:relative;overflow:hidden;
+  text-decoration:none;color:inherit;display:block}
+.card::after{content:"";position:absolute;inset:0;background:radial-gradient(600px 260px at var(--mx,50%) var(--my,0%),rgba(230,195,116,.14),transparent 62%);opacity:0;transition:opacity .5s}
+.card:hover::after{opacity:1}
+.card .top{display:flex;justify-content:space-between;font:600 10px/1 ui-monospace,monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.card h3{font-weight:800;font-size:clamp(30px,6.4vw,68px);letter-spacing:-.04em;margin:24px 0 12px;line-height:1}
+.card p{color:var(--dim);max-width:56ch;line-height:1.75;font-weight:300;font-size:15px}
+.card .st{display:flex;gap:7px;flex-wrap:wrap;margin-top:24px}
+.card .st b{font:500 10px/1 ui-monospace,monospace;letter-spacing:.07em;color:var(--dim);border:1px solid var(--line);padding:8px 10px;border-radius:99px}
+.card .bar{height:2px;margin-top:26px;background:linear-gradient(90deg,var(--c),transparent)}
+
+.grid3{display:grid;gap:18px;margin-top:6vh;grid-template-columns:1fr}
+@media(min-width:820px){.grid3{grid-template-columns:repeat(3,1fr)}}
+.sv{border:1px solid var(--line);border-radius:18px;padding:28px 24px 32px;background:rgba(230,195,116,.03)}
+.sv .n{font:600 10px/1 ui-monospace,monospace;color:var(--gold);letter-spacing:.2em}
+.sv h4{font-weight:700;font-size:20px;margin:14px 0 10px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:14px;line-height:1.7;font-weight:300}
+
+.marq{margin-top:8vh;overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 0}
+.marq div{display:flex;gap:34px;width:max-content;animation:sl 26s linear infinite}
+.marq b{font-weight:800;font-size:clamp(19px,3.1vw,34px);letter-spacing:-.02em;color:transparent;-webkit-text-stroke:1px rgba(230,195,116,.5)}
+@keyframes sl{to{transform:translateX(-50%)}}
+
+.cta{text-align:center;padding:16vh 0 12vh}
+.cta h2{font-size:clamp(36px,8.5vw,110px);font-weight:800;letter-spacing:-.045em;line-height:.94}
+.btn{display:inline-flex;gap:10px;align-items:center;margin-top:36px;background:linear-gradient(96deg,#e6c374,#b8873b);color:#120e05;
+  text-decoration:none;padding:19px 30px;border-radius:99px;font-weight:700;font-size:14px}
+footer{padding:22px 0 96px;border-top:1px solid var(--line);color:var(--dim);font:500 11px/1.6 ui-monospace,monospace;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+</style>
+</head>
+<body>
+<div class="aura"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="grain"></div>
+<nav><b id="nb"></b><span id="nr"></span></nav>
+
+<div class="pad">
+  <section class="hero">
+    <div class="kick">Freelance web developer</div>
+    <h1><span><i>I engineer</i></span><span><i>ideas into</i></span><span><i><em>impact.</em></i></span></h1>
+    <p id="intro"></p>
+  </section>
+
+  <section class="sec">
+    <div class="eyebrow" data-r>Selected work</div>
+    <h2 data-r>Five things,<br>all of them live.</h2>
+    <div id="work"></div>
+  </section>
+
+  <section class="sec">
+    <div class="eyebrow" data-r>Services</div>
+    <h2 data-r>What you can buy.</h2>
+    <div class="grid3" id="svc"></div>
+    <div class="marq"><div id="mq"></div></div>
+  </section>
+
+  <section class="cta" data-r>
+    <h2>Have an idea?<br>Let's give it gravity.</h2>
+    <a class="btn" id="wa" href="#">Message me on WhatsApp →</a>
+  </section>
+  <footer><span id="fn"></span><span>D2 — Dark Cinematic</span></footer>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name; nr.textContent = "Available for work"; intro.textContent = S.intro;
+fn.textContent = S.name; wa.href = S.wa;
+
+work.innerHTML = S.projects.map(p => `
+  <a class="card" href="${p.href}" target="_blank" rel="noreferrer" data-r style="--c:${p.c}">
+    <div class="top"><span>${p.i} — ${p.type}</span><span>Visit ↗</span></div>
+    <h3>${p.t}</h3><p>${p.s}</p>
+    <div class="st">${p.stack.map(x => `<b>${x}</b>`).join("")}</div>
+    <div class="bar"></div>
+  </a>`).join("");
+
+svc.innerHTML = S.services.map(s => `
+  <div class="sv" data-r><div class="n">${s.n}</div><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+mq.innerHTML = [...S.skills, ...S.skills].map(t => `<b>${t}</b>`).join("");
+
+// pointer glow follows the cursor inside each card
+document.querySelectorAll(".card").forEach(c => c.addEventListener("pointermove", e => {
+  const r = c.getBoundingClientRect();
+  c.style.setProperty("--mx", (e.clientX - r.left) + "px");
+  c.style.setProperty("--my", (e.clientY - r.top) + "px");
+}));
+
+// blobs drift with scroll — the parallax the trend list calls out
+addEventListener("scroll", () => {
+  const y = scrollY;
+  document.querySelector(".b1").style.transform = `translate3d(0,${y * .12}px,0)`;
+  document.querySelector(".b2").style.transform = `translate3d(0,${y * -.08}px,0)`;
+  document.querySelector(".b3").style.transform = `translate3d(0,${y * .05}px,0)`;
+}, { passive: true });
+
+window.reveal(); window.switcher("2");
+</script>
+</body>
+</html>

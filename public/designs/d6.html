@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D6 — Spotlight Reveal</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07060a;--ink:#efe7d6;--gold:#e6c374;--dim:#8f8571;--line:rgba(239,231,214,.12)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);scroll-behavior:smooth;overflow-x:hidden}
+body{color:var(--ink);font-family:"Bricolage Grotesque",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 30px,1160px);margin:auto}
+[data-r]{opacity:0;transform:translateY(24px);transition:all .95s cubic-bezier(.2,.75,.2,1)}
+[data-r="in"]{opacity:1;transform:none}
+
+/* THE feature: a torch that follows pointer (or drifts on touch), lighting a
+   hidden layer underneath. Desktop gets the cursor; mobile gets a slow orbit. */
+.torch{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(circle 190px at var(--x,50%) var(--y,40%),rgba(230,195,116,.20),transparent 62%)}
+.stagelight{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:20px;min-height:60svh;
+  display:grid;place-items:center;text-align:center;padding:44px 22px;background:#0a0810}
+.stagelight .under{position:absolute;inset:0;display:grid;place-items:center;padding:44px 22px;
+  background:linear-gradient(140deg,#e6c374,#b8873b);color:#120e05;
+  -webkit-mask-image:radial-gradient(circle 130px at var(--lx,50%) var(--ly,50%),#000 0 58%,transparent 72%);
+  mask-image:radial-gradient(circle 130px at var(--lx,50%) var(--ly,50%),#000 0 58%,transparent 72%)}
+.stagelight h2,.stagelight .under h2{font-weight:800;font-size:clamp(29px,7vw,64px);letter-spacing:-.04em;line-height:1.02}
+.stagelight .hint{margin-top:16px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.stagelight .under .hint{color:rgba(18,14,5,.66)}
+
+nav{position:fixed;z-index:20;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:18px 16px;
+  font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,rgba(7,6,10,.9),transparent)}
+nav b{color:var(--gold);font-weight:600}
+
+.hero{position:relative;z-index:2;padding:20vh 0 12vh}
+.hero .k{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
+.hero h1{font-weight:800;font-size:clamp(42px,11vw,140px);line-height:.92;letter-spacing:-.05em}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{margin-top:28px;max-width:50ch;color:var(--dim);line-height:1.8;font-size:15.5px}
+
+.sec{position:relative;z-index:2;padding:11vh 0}
+.lab{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.sec h2{font-weight:800;font-size:clamp(28px,6vw,64px);letter-spacing:-.04em;line-height:1.02}
+
+.item{display:block;text-decoration:none;color:inherit;border-top:1px solid var(--line);padding:24px 0;position:relative}
+.item h3{font-weight:800;font-size:clamp(25px,5.4vw,44px);letter-spacing:-.035em;line-height:1.05}
+.item .t{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-top:9px}
+.item p{color:var(--dim);font-size:14px;line-height:1.72;margin-top:12px;max-width:56ch}
+.item .st{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.item .st span{font-size:10px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.item .fill{position:absolute;left:0;right:0;top:0;bottom:0;background:var(--c);opacity:0;transition:opacity .45s;pointer-events:none;mix-blend-mode:soft-light}
+.item:hover .fill{opacity:.4}
+
+.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:5vh}
+@media(min-width:800px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border:1px solid var(--line);border-radius:16px;padding:24px 20px 28px;background:rgba(239,231,214,.025)}
+.sv .n{font-size:10px;letter-spacing:.2em;color:var(--gold)}
+.sv h4{font-weight:700;font-size:19px;margin:12px 0 9px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.7}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4vh}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:8px 10px;border-radius:99px;color:var(--dim)}
+.cta{text-align:center;padding:12vh 0 14vh}
+.btn{display:inline-block;margin-top:26px;background:var(--gold);color:#120e05;text-decoration:none;padding:17px 26px;border-radius:99px;font-weight:700;font-size:14px}
+</style>
+</head>
+<body>
+<div class="torch" id="torch"></div>
+<nav><b id="nb"></b><span>Available</span></nav>
+
+<div class="pad">
+  <section class="hero">
+    <div class="k mono">Freelance web developer</div>
+    <h1>I engineer ideas into <em>impact.</em></h1>
+    <p id="intro"></p>
+  </section>
+
+  <section class="sec">
+    <div class="stagelight" id="stage">
+      <div>
+        <h2>Most portfolios<br>tell you things.</h2>
+        <div class="hint mono" id="h1x">Move your cursor · or drag</div>
+      </div>
+      <div class="under" id="under">
+        <div>
+          <h2>This one<br>shows you.</h2>
+          <div class="hint mono">Five live sites. Go and click them.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="lab mono">Selected work</div>
+    <h2 data-r>Five things, all live.</h2>
+    <div id="list" style="margin-top:5vh"></div>
+  </section>
+
+  <section class="sec">
+    <div class="lab mono">Services</div>
+    <h2 data-r>What you can buy.</h2>
+    <div class="grid" id="svc"></div>
+    <div class="chips" id="chips" data-r></div>
+  </section>
+
+  <section class="cta" data-r>
+    <h2 style="font-weight:800;font-size:clamp(32px,8vw,86px);letter-spacing:-.045em;line-height:1">Have an idea?</h2>
+    <a class="btn" id="wa" href="#">Message me on WhatsApp →</a>
+  </section>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name; intro.textContent = S.intro; wa.href = S.wa;
+
+list.innerHTML = S.projects.map(p => `
+  <a class="item" href="${p.href}" target="_blank" rel="noreferrer" data-r style="--c:${p.c}">
+    <span class="fill"></span>
+    <h3>${p.t}</h3><div class="t mono">${p.i} — ${p.type} ↗</div><p>${p.s}</p>
+    <div class="st">${p.stack.map(x => `<span class="mono">${x}</span>`).join("")}</div>
+  </a>`).join("");
+svc.innerHTML = S.services.map(s => `
+  <div class="sv" data-r><div class="n mono">${s.n}</div><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML = S.skills.map(t => `<span class="mono">${t}</span>`).join("");
+
+const stage = document.getElementById("stage"), under = document.getElementById("under");
+const fine = matchMedia("(pointer:fine)").matches;
+
+function light(px, py){
+  torch.style.setProperty("--x", px + "px");
+  torch.style.setProperty("--y", py + "px");
+  const r = stage.getBoundingClientRect();
+  under.style.setProperty("--lx", (px - r.left) + "px");
+  under.style.setProperty("--ly", (py - r.top) + "px");
+}
+if (fine) {
+  addEventListener("pointermove", (e) => light(e.clientX, e.clientY));
+} else {
+  // Touch has no hover, so the torch orbits by itself and follows any drag.
+  h1x.textContent = "Drag across the panel";
+  let t = 0;
+  (function loop(){
+    t += 0.012;
+    const r = stage.getBoundingClientRect();
+    light(r.left + r.width * (0.5 + Math.cos(t) * 0.3), r.top + r.height * (0.5 + Math.sin(t * 1.3) * 0.3));
+    requestAnimationFrame(loop);
+  })();
+  stage.addEventListener("touchmove", (e) => {
+    const tch = e.touches[0]; light(tch.clientX, tch.clientY);
+  }, { passive: true });
+}
+
+window.reveal(); window.switcher("6");
+</script>
+</body>
+</html>

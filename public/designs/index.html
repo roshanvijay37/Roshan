@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eight directions — pick one</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,700;9..40,900&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e0c07;--ink:#f4ecdb;--gold:#e6c374;--dim:#9a8f75;--line:rgba(244,236,219,.13)}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.pad{width:min(100% - 32px,940px);margin:auto;padding:52px 0 90px}
+h1{font-weight:900;font-size:clamp(29px,6vw,50px);letter-spacing:-.04em;line-height:1.02}
+.sub{color:var(--dim);line-height:1.75;margin-top:16px;max-width:60ch;font-size:15px}
+.grid{display:grid;gap:14px;margin-top:38px;grid-template-columns:1fr}
+@media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+a.card{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:16px;
+  padding:24px;background:linear-gradient(150deg,rgba(230,195,116,.07),rgba(230,195,116,.02));transition:.35s}
+a.card:hover{border-color:var(--gold);transform:translateY(-3px)}
+.tag{font:500 10px/1 "DM Mono",monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+h2{font-weight:900;font-size:23px;letter-spacing:-.03em;margin:12px 0 9px}
+.card p{color:var(--dim);font-size:13.5px;line-height:1.7}
+.for{margin-top:14px;font:500 11px/1.6 "DM Mono",monospace;color:var(--dim);border-top:1px solid var(--line);padding-top:12px}
+.for b{color:var(--gold);font-weight:500}
+.note{margin-top:34px;border:1px solid var(--line);border-radius:14px;padding:20px 22px;color:var(--dim);font-size:13.5px;line-height:1.75}
+.note b{color:var(--ink)}
+.links{margin-top:22px;display:flex;gap:10px;flex-wrap:wrap}
+.links a{color:var(--gold);font:500 12px/1 "DM Mono",monospace;text-decoration:none;border:1px solid var(--line);padding:11px 14px;border-radius:99px}
+</style>
+</head>
+<body>
+<div class="pad">
+  <h1>Eight directions.<br>Tell me which one.</h1>
+  <p class="sub">Each is your real content — the same five projects, three services and fifteen tools — in a different
+  design language taken from what is currently winning on Awwwards. Open them on your phone and scroll properly.
+  Judge the <em>feel</em>; every one of them is rough and none is finished.</p>
+
+  <div class="grid">
+    <a class="card" href="d1.html">
+      <div class="tag">D1</div><h2>Editorial Brutalist</h2>
+      <p>A newspaper plate. Enormous uppercase type, hard rules, a numbered index instead of picture cards.
+      Serif italic accents in gold. Hovering a project turns its name italic and slides a colour swatch in.</p>
+      <div class="for"><b>Feels:</b> confident, expensive, design-literate. <b>Risk:</b> austere — no images at all.</div>
+    </a>
+    <a class="card" href="d2.html">
+      <div class="tag">D2</div><h2>Dark Cinematic</h2>
+      <p>Near-black with blurred gold gradient blobs drifting on scroll, film grain over everything, gradient text,
+      lines that rise into place. Project cards glow where your cursor is.</p>
+      <div class="for"><b>Feels:</b> premium, moody, agency. <b>Risk:</b> the most common look on Awwwards.</div>
+    </a>
+    <a class="card" href="d3.html">
+      <div class="tag">D3</div><h2>Horizontal Scroll</h2>
+      <p>Work pins to the screen and travels sideways as you scroll down, with a progress bar and a live counter.
+      Light and airy everywhere else.</p>
+      <div class="for"><b>Feels:</b> playful, technical, memorable. <b>Risk:</b> some people fight the scroll.</div>
+    </a>
+    <a class="card" href="d4.html">
+      <div class="tag">D4</div><h2>Split Sticky</h2>
+      <p>Your name, pitch and WhatsApp button pinned on the left forever; work scrolls past on the right.
+      The contact button never leaves the screen.</p>
+      <div class="for"><b>Feels:</b> editorial, calm, businesslike. <b>Best for:</b> actually getting hired.</div>
+    </a>
+    <a class="card" href="d5.html">
+      <div class="tag">D5</div><h2>Full-screen Deck</h2>
+      <p>Every project owns an entire screen in its own colour, with snap scrolling that clicks from one to the next.
+      Condensed poster type, soft blurred shapes, and the browser chrome tints to match the panel you are on.</p>
+      <div class="for"><b>Feels:</b> bold, poster-like, impossible to skim past. <b>Risk:</b> five screens of scrolling before contact.</div>
+    </a>
+    <a class="card" href="d6.html">
+      <div class="tag">D6</div><h2>Spotlight Reveal</h2>
+      <p>A torch follows your finger and lights a hidden gold layer underneath — one message on top, a different one
+      beneath. On phone it orbits by itself and follows your drag. Project rows wash with their colour.</p>
+      <div class="for"><b>Feels:</b> experimental, memorable, a bit of theatre. <b>Risk:</b> gimmick if overused.</div>
+    </a>
+    <a class="card" href="d7.html">
+      <div class="tag">D7</div><h2>Bento Grid</h2>
+      <p>Everything is a tile — hero, live-project count, each project, each service, the WhatsApp card, a ticker of
+      the stack. Two columns on phone, six on desktop. The most current layout on this list.</p>
+      <div class="for"><b>Feels:</b> modern, product-like, scannable in seconds. <b>Best for:</b> people who skim.</div>
+    </a>
+    <a class="card" href="d8.html">
+      <div class="tag">D8</div><h2>Kinetic Type</h2>
+      <p>No sections — one continuous scroll where type is the animation. The hero splits apart as you leave it,
+      then each project title tracks across the screen while its block is pinned, with a colour rule filling underneath.</p>
+      <div class="for"><b>Feels:</b> "more animation than website" — which is what you asked for. <b>Risk:</b> the least conventional.</div>
+    </a>
+  </div>
+
+  <div class="note">
+    <b>Say a number.</b> Or mix them — "D7 tiles with D5's colours", "D8 motion but D4's sticky contact".
+    You can also tell me what you hate; that is just as useful. Whichever wins gets rebuilt properly in React
+    with your real 3D scene, the gold theme, both light and dark, and reduced-motion handling.
+  </div>
+
+  </div>
+</body>
+</html>

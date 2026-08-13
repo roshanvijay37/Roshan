@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D7 — Bento Grid</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=General+Sans:wght@400;500;600;700&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0b07;--tile:#15120c;--ink:#f2ead9;--gold:#e6c374;--dim:#948a73;--line:rgba(242,234,217,.1)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);font-family:"General Sans","Inter",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 24px,1240px);margin:auto;padding:74px 0 100px}
+[data-r]{opacity:0;transform:translateY(20px) scale(.985);transition:all .8s cubic-bezier(.2,.75,.2,1)}
+[data-r="in"]{opacity:1;transform:none}
+
+nav{position:fixed;z-index:30;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:16px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:rgba(13,11,7,.82);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+nav b{color:var(--gold);font-weight:600}
+
+/* Bento: everything is a tile. Mobile = 2 columns, desktop = 6. */
+.bento{display:grid;gap:10px;grid-template-columns:repeat(2,1fr);grid-auto-rows:minmax(96px,auto)}
+@media(min-width:760px){.bento{grid-template-columns:repeat(6,1fr);gap:14px;grid-auto-rows:minmax(112px,auto)}}
+.t{background:var(--tile);border:1px solid var(--line);border-radius:18px;padding:18px;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:space-between;text-decoration:none;color:inherit;transition:.4s}
+a.t:hover{border-color:var(--gold);transform:translateY(-3px)}
+.t .k{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.t h3{font-weight:700;letter-spacing:-.03em;line-height:1.02}
+.t p{color:var(--dim);font-size:13px;line-height:1.65}
+
+/* spans */
+.hero{grid-column:span 2;grid-row:span 3}
+.big{grid-column:span 2;grid-row:span 2}
+.wide{grid-column:span 2}
+.sq{grid-column:span 1;grid-row:span 1}
+@media(min-width:760px){
+  .hero{grid-column:span 4;grid-row:span 3}
+  .big{grid-column:span 2;grid-row:span 3}
+  .wide{grid-column:span 3;grid-row:span 2}
+  .sq{grid-column:span 2;grid-row:span 2}
+  .full{grid-column:span 6}
+}
+.full{grid-column:span 2}
+
+.hero h1{font-weight:700;font-size:clamp(34px,8.6vw,74px);letter-spacing:-.045em;line-height:.98}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{margin-top:14px;max-width:44ch;font-size:14px}
+.avail{display:inline-flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.avail i{width:6px;height:6px;border-radius:50%;background:#8fbf5a}
+
+.stat{align-items:flex-start}
+.stat b{font-weight:700;font-size:clamp(30px,7vw,50px);letter-spacing:-.04em;line-height:1;display:block}
+.stat span{color:var(--dim);font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-top:6px;display:block}
+
+.proj h3{font-size:clamp(19px,4vw,27px);margin:10px 0 6px}
+.proj .bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--c)}
+.proj .go{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-top:12px}
+
+.wa{background:linear-gradient(140deg,#e6c374,#b8873b);color:#120e05;border:none}
+.wa h3{font-size:clamp(20px,4.6vw,30px)}
+.wa p{color:rgba(18,14,5,.72)}
+.wa .k{color:rgba(18,14,5,.62)}
+
+.mq{overflow:hidden;justify-content:center}
+.mq div{display:flex;gap:20px;width:max-content;animation:sl 22s linear infinite}
+.mq b{font-size:13px;color:var(--dim);white-space:nowrap;font-weight:500}
+@keyframes sl{to{transform:translateX(-50%)}}
+</style>
+</head>
+<body>
+<nav><b id="nb"></b><span>Available for freelance</span></nav>
+<div class="pad">
+  <div class="bento" id="b"></div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name;
+
+const tiles = [];
+tiles.push(`<div class="t hero" data-r>
+  <div><span class="avail"><i></i> Available</span>
+  <h1 style="margin-top:16px">I engineer ideas into <em>impact.</em></h1></div>
+  <p>${S.intro}</p></div>`);
+
+tiles.push(`<div class="t big stat" data-r><div><span class="k mono">Live now</span>
+  <b style="margin-top:14px">05</b><span>projects running</span></div>
+  <div><b>15</b><span>tools in the stack</span></div></div>`);
+
+S.projects.forEach((p, i) => {
+  tiles.push(`<a class="t ${i === 0 ? "wide" : "sq"} proj" href="${p.href}" target="_blank" rel="noreferrer"
+      data-r style="--c:${p.c}">
+    <div><span class="k mono">${p.i} — ${p.type}</span><h3>${p.t}</h3>
+    ${i === 0 ? `<p>${p.s}</p>` : ""}</div>
+    <div class="go mono">Visit ↗</div><span class="bar"></span></a>`);
+});
+
+S.services.forEach(s => {
+  tiles.push(`<div class="t sq" data-r><div><span class="k mono">${s.n}</span>
+    <h3 style="font-size:18px;margin:10px 0 6px">${s.t}</h3></div><p>${s.b}</p></div>`);
+});
+
+tiles.push(`<a class="t wide wa" href="${S.wa}" target="_blank" rel="noreferrer" data-r>
+  <div><span class="k mono">Contact</span><h3 style="margin-top:10px">Have an idea?<br>Let's build it.</h3></div>
+  <p>Message me on WhatsApp →</p></a>`);
+
+tiles.push(`<div class="t full mq" data-r><div>${[...S.skills, ...S.skills].map(t => `<b>${t}</b>`).join("")}</div></div>`);
+
+b.innerHTML = tiles.join("");
+window.reveal(); window.switcher("7");
+</script>
+</body>
+</html>

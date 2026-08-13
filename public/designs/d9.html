@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D9 — Spotlight + Deck</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script type="importmap">
+{ "imports": {
+    "three": "https://unpkg.com/three@0.181.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.181.0/examples/jsm/"
+} }
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+/* Light is the default and dark is the opt-in, matching the real site. */
+:root{--bg:#fcfaf4;--ink:#1b170f;--gold:#8a6a14;--dim:#6f6650;--line:rgba(27,23,15,.14);
+  --navfade:rgba(252,250,244,.92);--glowc:#8a6a14;--glowo:.30}
+:root[data-theme="dark"]{--bg:#0a0806;--ink:#f2ead9;--gold:#e6c374;--dim:#948a73;
+  --line:rgba(242,234,217,.12);--navfade:rgba(10,8,6,.9);--glowc:#8a6a14;--glowo:.42}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);font-family:"Bricolage Grotesque",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.anton{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:-.01em;line-height:.86}
+.pad{width:min(100% - 28px,1180px);margin:auto}
+[data-r]{opacity:0;transform:translateY(24px);transition:all .95s cubic-bezier(.2,.75,.2,1)}
+[data-r="in"]{opacity:1;transform:none}
+
+nav{position:fixed;z-index:50;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:17px 16px;
+  font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--navfade),transparent);pointer-events:none}
+nav b{color:var(--gold);font-weight:600}
+
+/* ---------- 1. hero ---------- */
+/* overflow:hidden because .glow deliberately bleeds past the right edge — without
+   it the whole document grew to 462px on a 390px phone and scrolled sideways. */
+.hero{min-height:100svh;display:grid;align-content:center;padding:18vh 0 12vh;position:relative;overflow:hidden}
+.hero .k{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
+.hero h1{font-weight:800;font-size:clamp(44px,11.5vw,142px);line-height:.92;letter-spacing:-.05em}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{margin-top:28px;max-width:48ch;color:var(--dim);line-height:1.8;font-size:15.5px}
+.hero .scroll{margin-top:40px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.glow{position:absolute;width:70vw;height:70vw;max-width:760px;max-height:760px;right:-22vw;top:6vh;
+  border-radius:50%;filter:blur(84px);opacity:var(--glowo);pointer-events:none;
+  background:radial-gradient(circle,var(--glowc),transparent 68%)}
+
+
+/* An orbit of geometry, not of words. The rejected component put skill names on
+   a rotating sphere: unreadable while moving, and half of them always facing
+   away. Rings carry no text, so rotation costs nothing in legibility. */
+/* Kept clear of the headline: centred on the hero it cut straight through
+   "ideas into" and neither the type nor the object survived it. Lower-right,
+   partly off-canvas, so it reads as an object in the room rather than a sticker. */
+.orbit{position:absolute;right:-26vw;bottom:-12vh;width:82vw;height:82vw;max-width:560px;max-height:560px;
+  pointer-events:none;opacity:.95;z-index:0}
+@media(min-width:900px){.orbit{right:-4vw;bottom:-14vh;width:40vw;height:40vw;opacity:1}}
+/* type always wins over the object */
+.hero .k,.hero h1,.hero p,.hero .scroll{position:relative;z-index:2}
+#orbitcv{width:100%;height:100%;display:block}
+
+/* ---------- 2. the spotlight statement ---------- */
+.torchwrap{padding:8vh 0 12vh}
+.torch{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:22px;
+  min-height:74svh;display:grid;place-items:center;text-align:center;padding:52px 22px;background:#0d0a12;
+  --ink:#f2ead9;--dim:#948a73;color:#f2ead9}
+.torch .layer{position:absolute;inset:0;display:grid;place-items:center;padding:52px 22px;z-index:2}
+/* Masking the text was wrong. The two sentences are different lengths, so at the
+   mask boundary you always saw fragments of both at once — it read as garbled,
+   not as a swap. Instead the light is its own decorative layer, and the two
+   messages crossfade as a whole based on how near it is to the centre. */
+.torch .light{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(circle var(--rad,210px) at var(--lx,50%) var(--ly,50%),
+    #f0d79a 0%,#e6c374 42%,#b8873b 62%,transparent 74%)}
+.torch .over,.torch .under{transition:opacity .28s linear}
+.torch .under{color:#120e05}
+.torch h2{font-weight:800;font-size:clamp(30px,7.6vw,72px);letter-spacing:-.045em;line-height:1}
+.torch .hint{margin-top:18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.torch .under .hint{color:rgba(18,14,5,.62)}
+
+/* ---------- 3. the deck ---------- */
+.deck{scroll-snap-type:y mandatory;overflow-y:auto;height:100svh;scrollbar-width:none}
+.deck::-webkit-scrollbar{display:none}
+.panel{min-height:100svh;scroll-snap-align:start;scroll-snap-stop:always;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:center;padding:12vh 24px;color:#12100a}
+@media(min-width:900px){.panel{padding:14vh 7vw}}
+.panel .type{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;opacity:.66}
+.panel h3{font-size:clamp(42px,12.5vw,138px);margin:14px 0 0}
+.panel p{margin-top:20px;max-width:42ch;line-height:1.7;font-size:15.5px;opacity:.84}
+.panel .st{display:flex;gap:6px;flex-wrap:wrap;margin-top:24px}
+.panel .st span{font-size:10px;border:1px solid rgba(18,16,10,.32);padding:8px 10px;border-radius:99px}
+.panel .go{display:inline-flex;align-items:center;gap:8px;margin-top:30px;background:#12100a;color:#f7f2e6;
+  text-decoration:none;padding:15px 22px;border-radius:99px;font-weight:600;font-size:13.5px;width:max-content}
+.orb{position:absolute;border-radius:50%;filter:blur(58px);opacity:.5;pointer-events:none}
+.o1{width:76vw;height:76vw;right:-26vw;top:-20vw;background:rgba(255,255,255,.5)}
+.o2{width:56vw;height:56vw;left:-22vw;bottom:-24vw;background:rgba(0,0,0,.2)}
+/* no counter — the rail shows position without ever saying how many */
+.rail{position:absolute;right:10px;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:7px}
+.rail i{width:6px;height:6px;border-radius:50%;background:rgba(18,16,10,.28);transition:.35s}
+.rail i.on{background:#12100a;transform:scale(1.6)}
+.deckhead{position:absolute;top:6vh;left:24px;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;opacity:.6;z-index:20}
+@media(min-width:900px){.deckhead{left:7vw}}
+
+/* ---------- 4/5. services + contact ---------- */
+.sec{padding:13vh 0}
+.lab{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.sec h2{font-weight:800;font-size:clamp(29px,6.2vw,66px);letter-spacing:-.04em;line-height:1.02}
+.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:6vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:22px 0 26px}
+.sv h4{font-weight:700;font-size:20px;margin:0 0 9px;letter-spacing:-.025em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.7}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:5vh}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:8px 10px;border-radius:99px;color:var(--dim)}
+.cta{text-align:center;padding:14vh 0 16vh}
+.cta h2{font-weight:800;font-size:clamp(34px,9vw,110px);letter-spacing:-.05em;line-height:.96}
+.cta h2 em{font-style:normal;color:var(--gold)}
+.btn{display:inline-block;margin-top:30px;background:var(--gold);color:#120e05;text-decoration:none;
+  padding:18px 28px;border-radius:99px;font-weight:700;font-size:14px}
+</style>
+</head>
+<body>
+<nav><b id="nb"></b><span style="display:flex;gap:14px;align-items:center">Available<button id="tt" aria-label="Toggle theme" style="pointer-events:auto;background:none;border:1px solid var(--line);color:var(--gold);border-radius:99px;padding:7px 12px;font:inherit;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer">Dark</button></span></nav>
+
+<div class="pad">
+  <section class="hero">
+    <div class="glow"></div>
+    <div class="orbit" aria-hidden="true"><canvas id="orbitcv"></canvas></div>
+    <div class="k mono">Freelance web developer</div>
+    <h1>I engineer ideas into <em>impact.</em></h1>
+    <p id="intro"></p>
+    <div class="scroll mono">Scroll ↓</div>
+  </section>
+
+  <section class="torchwrap">
+    <div class="torch" id="stage">
+      <div class="light" id="light"></div>
+      <div class="layer over"><div>
+        <h2>Most portfolios<br>tell you things.</h2>
+        <div class="hint mono" id="hint">Move your cursor</div>
+      </div></div>
+      <div class="layer under" id="under"><div>
+        <h2>This one<br>shows you.</h2>
+        <div class="hint mono">Every project below is live. Go and click them.</div>
+      </div></div>
+    </div>
+  </section>
+</div>
+
+<!-- the deck: its own snap container so it does not hijack the whole page -->
+<div class="deck" id="deck"></div>
+
+<div class="pad">
+  <section class="sec">
+    <div class="lab mono">Services</div>
+    <h2 data-r>What you can buy.</h2>
+    <div class="grid" id="svc"></div>
+    <div class="chips" id="chips" data-r></div>
+  </section>
+  <section class="cta" data-r>
+    <h2>Have an idea?<br><em>Let's build it.</em></h2>
+    <a class="btn" id="wa" href="#">Message me on WhatsApp →</a>
+  </section>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name; intro.textContent = S.intro; wa.href = S.wa;
+
+// No index, no "of five", no counts anywhere — the type label does the work.
+deck.innerHTML = S.projects.map((p, i) => `
+  <section class="panel" style="background:${p.c}">
+    <div class="orb o1"></div><div class="orb o2"></div>
+    ${i === 0 ? '<div class="deckhead mono">Selected work</div>' : ""}
+    <div style="position:relative;z-index:2">
+      <div class="type mono">${p.type}</div>
+      <h3 class="anton">${p.t}</h3>
+      <p>${p.s}</p>
+      <div class="st">${p.stack.map(x => `<span class="mono">${x}</span>`).join("")}</div>
+      <a class="go" href="${p.href}" target="_blank" rel="noreferrer">Visit live site ↗</a>
+    </div>
+  </section>`).join("") +
+  `<div class="rail" id="rail">${S.projects.map(() => "<i></i>").join("")}</div>`;
+
+svc.innerHTML = S.services.map(s => `
+  <div class="sv" data-r><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML = S.skills.map(t => `<span class="mono">${t}</span>`).join("");
+
+// rail follows the deck's own scroll
+const panels = [...deck.querySelectorAll(".panel")];
+const dots = [...document.querySelectorAll("#rail i")];
+const io = new IntersectionObserver((es) => {
+  es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const i = panels.indexOf(e.target);
+    dots.forEach((d, n) => d.classList.toggle("on", n === i));
+  });
+}, { root: deck, threshold: 0.55 });
+panels.forEach(p => io.observe(p));
+
+// spotlight
+const stage = document.getElementById("stage"), under = document.getElementById("under");
+const fine = matchMedia("(pointer:fine)").matches;
+const over = stage.querySelector(".over");
+function light(px, py){
+  const r = stage.getBoundingClientRect();
+  const x = px - r.left, y = py - r.top;
+  stage.style.setProperty("--lx", x + "px");
+  stage.style.setProperty("--ly", y + "px");
+  // Crossfade the whole message on proximity to centre, so neither sentence is
+  // ever shown half-erased.
+  const dx = (x - r.width / 2) / (r.width / 2);
+  const dy = (y - r.height / 2) / (r.height / 2);
+  // Narrow band + smoothstep: the swap should feel decisive, not linger at 50/50
+  // where both sentences are half-visible.
+  let t = Math.max(0, Math.min(1, (0.78 - Math.hypot(dx, dy)) / 0.30));
+  t = t * t * (3 - 2 * t);
+  under.style.opacity = t;
+  over.style.opacity = 1 - t;
+}
+if (fine) {
+  addEventListener("pointermove", e => light(e.clientX, e.clientY));
+} else {
+  // Touch has no hover: drift on its own, and follow a drag.
+  hint.textContent = "Drag across";
+  stage.style.setProperty("--rad", "150px");
+  let t = 0;
+  (function loop(){
+    t += 0.011;
+    const r = stage.getBoundingClientRect();
+    light(r.left + r.width * (0.5 + Math.cos(t) * 0.28), r.top + r.height * (0.5 + Math.sin(t * 1.4) * 0.26));
+    requestAnimationFrame(loop);
+  })();
+  stage.addEventListener("touchmove", e => light(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+}
+
+// theme
+const root = document.documentElement;
+const saved = (() => { try { return localStorage.getItem("d9theme"); } catch { return null; } })();
+if (saved === "dark") root.setAttribute("data-theme", "dark");
+const paint = () => { tt.textContent = root.getAttribute("data-theme") === "dark" ? "Light" : "Dark"; };
+paint();
+tt.addEventListener("click", () => {
+  const next = root.getAttribute("data-theme") === "dark" ? null : "dark";
+  if (next) root.setAttribute("data-theme", next); else root.removeAttribute("data-theme");
+  try { localStorage.setItem("d9theme", next || "light"); } catch { /* private mode */ }
+  paint();
+});
+
+window.reveal(); window.switcher("9");
+</script>
+<script type="module" src="orbit.js"></script>
+</body>
+</html>

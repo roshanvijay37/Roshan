@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D5 — Full-screen Deck</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#12100a;--cream:#f7f2e6}
+*{box-sizing:border-box;margin:0}
+html{background:var(--ink);scroll-snap-type:y mandatory;overflow-x:hidden}
+body{font-family:Inter,system-ui,sans-serif;color:var(--cream);-webkit-font-smoothing:antialiased}
+section{min-height:100svh;scroll-snap-align:start;scroll-snap-stop:always;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:center;padding:96px 22px 92px}
+@media(min-width:900px){section{padding:110px 6vw 100px}}
+.anton{font-family:Anton,Impact,sans-serif;font-weight:400;letter-spacing:-.01em;text-transform:uppercase;line-height:.86}
+
+/* colour-blocked panels — each project owns a full screen and a hue */
+.hero{background:var(--ink)}
+.hero h1{font-size:clamp(52px,15vw,168px)}
+.hero .gold{color:#e6c374}
+.hero p{margin-top:24px;max-width:44ch;color:#a2977c;line-height:1.75;font-size:15px}
+.hero .foot{position:absolute;left:22px;right:22px;bottom:26px;display:flex;justify-content:space-between;
+  font:500 10px/1 ui-monospace,monospace;letter-spacing:.2em;text-transform:uppercase;color:#7d745e}
+@media(min-width:900px){.hero .foot{left:6vw;right:6vw}}
+
+.proj{color:#12100a}
+.proj .idx{font:500 11px/1 ui-monospace,monospace;letter-spacing:.24em;text-transform:uppercase;opacity:.62}
+.proj h2{font-size:clamp(44px,13vw,150px);margin:14px 0 0}
+.proj .type{font:500 11px/1 ui-monospace,monospace;letter-spacing:.2em;text-transform:uppercase;opacity:.62;margin-top:16px}
+.proj p{margin-top:20px;max-width:40ch;line-height:1.7;font-size:15px;opacity:.82}
+.proj .st{display:flex;gap:6px;flex-wrap:wrap;margin-top:24px}
+.proj .st span{font:500 10px/1 ui-monospace,monospace;border:1px solid rgba(18,16,10,.3);padding:8px 10px;border-radius:99px}
+.proj .go{display:inline-flex;align-items:center;gap:8px;margin-top:30px;background:#12100a;color:#f7f2e6;
+  text-decoration:none;padding:15px 22px;border-radius:99px;font-weight:700;font-size:13.5px;width:max-content}
+/* a big soft shape, the "irregular blurred form" the trend list calls out */
+.orb{position:absolute;border-radius:50%;filter:blur(56px);opacity:.5;pointer-events:none}
+.o1{width:74vw;height:74vw;right:-24vw;top:-18vw;background:rgba(255,255,255,.55)}
+.o2{width:56vw;height:56vw;left:-20vw;bottom:-22vw;background:rgba(0,0,0,.22)}
+
+.end{background:#e6c374;color:#12100a;text-align:center;align-items:center}
+.end h2{font-size:clamp(42px,12vw,132px)}
+.end a{display:inline-block;margin-top:28px;background:#12100a;color:#f7f2e6;text-decoration:none;
+  padding:17px 26px;border-radius:99px;font-weight:700;font-size:14px}
+.end .sk{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:34px;max-width:640px}
+.end .sk span{font:500 10px/1 ui-monospace,monospace;border:1px solid rgba(18,16,10,.32);padding:7px 9px;border-radius:99px}
+
+/* progress rail */
+.rail{position:fixed;right:9px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:7px}
+.rail i{width:6px;height:6px;border-radius:50%;background:rgba(247,242,230,.32);transition:.35s}
+.rail i.on{background:#e6c374;transform:scale(1.55)}
+</style>
+</head>
+<body>
+<div class="rail" id="rail"></div>
+
+<section class="hero" data-c="#12100a">
+  <h1 class="anton">I engineer<br>ideas into<br><span class="gold">impact.</span></h1>
+  <p id="intro"></p>
+  <div class="foot"><span id="fn"></span><span>Scroll ↓</span></div>
+</section>
+
+<div id="decks"></div>
+
+<section class="end" data-c="#e6c374">
+  <h2 class="anton">Let's build<br>something.</h2>
+  <a id="wa" href="#">Message me on WhatsApp →</a>
+  <div class="sk" id="sk"></div>
+</section>
+
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+intro.textContent = S.intro; fn.textContent = S.name; wa.href = S.wa;
+sk.innerHTML = S.skills.map(t => `<span>${t}</span>`).join("");
+
+// Each project gets its own screen and its own colour.
+decks.innerHTML = S.projects.map(p => `
+  <section class="proj" data-c="${p.c}" style="background:${p.c}">
+    <div class="orb o1"></div><div class="orb o2"></div>
+    <div style="position:relative;z-index:2">
+      <div class="idx">${p.i} / 05</div>
+      <h2 class="anton">${p.t}</h2>
+      <div class="type">${p.type}</div>
+      <p>${p.s}</p>
+      <div class="st">${p.stack.map(x => `<span>${x}</span>`).join("")}</div>
+      <a class="go" href="${p.href}" target="_blank" rel="noreferrer">Visit live site ↗</a>
+    </div>
+  </section>`).join("");
+
+const secs = [...document.querySelectorAll("section")];
+rail.innerHTML = secs.map(() => "<i></i>").join("");
+const dots = [...rail.children];
+
+// Light the rail, and tint the browser chrome to match the panel in view.
+const io = new IntersectionObserver((es) => {
+  es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const i = secs.indexOf(e.target);
+    dots.forEach((d, n) => d.classList.toggle("on", n === i));
+    document.documentElement.style.background = e.target.dataset.c;
+  });
+}, { threshold: 0.55 });
+secs.forEach(s => io.observe(s));
+
+window.switcher("5");
+</script>
+</body>
+</html>

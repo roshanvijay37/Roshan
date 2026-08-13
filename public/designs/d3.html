@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D3 — Horizontal Scroll</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fbf7ec;--ink:#171208;--gold:#8a6a14;--dim:#6f6650;--line:rgba(23,18,8,.14)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg)}
+body{color:var(--ink);font-family:Archivo,system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.pad{width:min(100% - 34px,1240px);margin:auto}
+[data-r]{opacity:0;transform:translateY(24px);transition:all .95s cubic-bezier(.2,.75,.2,1)}
+[data-r="in"]{opacity:1;transform:none}
+
+nav{position:fixed;z-index:30;top:16px;left:50%;transform:translateX(-50%);width:min(100% - 28px,1240px);
+  display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-radius:99px;
+  background:rgba(251,247,236,.82);backdrop-filter:blur(18px);border:1px solid var(--line);
+  font:600 11px/1 ui-monospace,monospace;letter-spacing:.16em;text-transform:uppercase}
+nav b{color:var(--gold)}
+
+.hero{min-height:94svh;display:grid;align-content:center;padding:18vh 0 8vh}
+.hero h1{font-weight:900;font-size:clamp(50px,11.5vw,168px);line-height:.86;letter-spacing:-.05em}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .meta{display:flex;gap:26px;flex-wrap:wrap;margin-top:36px;font:600 11px/1 ui-monospace,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.hero p{margin-top:26px;max-width:50ch;color:var(--dim);line-height:1.75;font-size:16px}
+
+/* THE feature: work pinned and scrolled sideways */
+.pin{position:relative;height:520vh}
+.stick{position:sticky;top:0;height:100svh;display:flex;align-items:center;overflow:hidden}
+.track{display:flex;gap:clamp(18px,2.6vw,40px);padding-left:max(24px,calc(50vw - 620px));will-change:transform}
+.slide{flex:0 0 auto;width:min(78vw,470px);border:1px solid var(--line);border-radius:20px;overflow:hidden;
+  background:#fff;text-decoration:none;color:inherit;display:flex;flex-direction:column}
+.slide .vis{height:min(42svh,320px);position:relative;overflow:hidden}
+.slide .vis i{position:absolute;inset:0;background:var(--c);opacity:.9}
+.slide .vis b{position:absolute;left:0;right:0;bottom:0;top:0;display:grid;place-items:center;
+  font-weight:900;font-size:clamp(40px,7vw,86px);color:rgba(255,255,255,.9);letter-spacing:-.05em}
+.slide .body{padding:22px 22px 26px}
+.slide .n{font:600 10px/1 ui-monospace,monospace;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}
+.slide h3{font-weight:900;font-size:26px;letter-spacing:-.03em;margin:12px 0 8px}
+.slide p{color:var(--dim);font-size:13.5px;line-height:1.65}
+.slide .st{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
+.slide .st span{font:600 10px/1 ui-monospace,monospace;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.pinhead{position:absolute;top:12vh;left:50%;transform:translateX(-50%);width:min(100% - 34px,1240px);
+  display:flex;justify-content:space-between;align-items:baseline;pointer-events:none;z-index:5}
+.pinhead h2{font-weight:900;font-size:clamp(24px,4.6vw,52px);letter-spacing:-.04em}
+.pinhead span{font:600 10px/1 ui-monospace,monospace;letter-spacing:.2em;color:var(--gold)}
+.prog{position:absolute;left:0;bottom:9vh;height:2px;background:var(--gold);width:0}
+
+.sec{padding:14vh 0}
+.sec h2{font-weight:900;font-size:clamp(28px,5.4vw,66px);letter-spacing:-.04em;line-height:1;margin-bottom:6vh}
+.grid3{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:820px){.grid3{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:2px solid var(--ink);padding:20px 0 0}
+.sv .n{font:600 10px/1 ui-monospace,monospace;color:var(--gold);letter-spacing:.2em}
+.sv h4{font-weight:800;font-size:21px;margin:12px 0 9px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.7}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:5vh}
+.chips span{font:600 11px/1 ui-monospace,monospace;border:1px solid var(--line);padding:9px 12px;border-radius:99px;color:var(--dim)}
+
+.cta{padding:12vh 0 10vh;border-top:2px solid var(--ink)}
+.cta h2{font-weight:900;font-size:clamp(36px,8.6vw,116px);letter-spacing:-.05em;line-height:.9}
+.cta h2 em{font-style:italic;color:var(--gold)}
+.btn{display:inline-block;margin-top:30px;background:var(--ink);color:var(--bg);text-decoration:none;
+  padding:18px 28px;border-radius:99px;font-weight:700;font-size:14px}
+footer{padding:20px 0 96px;border-top:1px solid var(--line);color:var(--dim);font:600 11px/1.6 ui-monospace,monospace;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+</style>
+</head>
+<body>
+<nav><b id="nb"></b><span>Available for freelance</span></nav>
+
+<div class="pad">
+  <section class="hero">
+    <h1>I engineer<br>ideas into<br><em>impact.</em></h1>
+    <p id="intro"></p>
+    <div class="meta"><span>Freelance</span><span>India</span><span>05 live projects</span></div>
+  </section>
+</div>
+
+<section class="pin" id="pin">
+  <div class="stick">
+    <div class="pinhead pad"><h2>Selected work</h2><span id="cnt"></span></div>
+    <div class="track" id="track"></div>
+    <div class="prog" id="prog"></div>
+  </div>
+</section>
+
+<div class="pad">
+  <section class="sec">
+    <h2 data-r>What you can buy.</h2>
+    <div class="grid3" id="svc"></div>
+    <div class="chips" id="chips" data-r></div>
+  </section>
+  <section class="cta" data-r>
+    <h2>Have an idea?<br><em>Let's build it.</em></h2>
+    <a class="btn" id="wa" href="#">Message me on WhatsApp →</a>
+  </section>
+  <footer><span id="fn"></span><span>D3 — Horizontal Scroll</span></footer>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name; intro.textContent = S.intro; fn.textContent = S.name;
+wa.href = S.wa; cnt.textContent = "01 — 0" + S.projects.length;
+
+track.innerHTML = S.projects.map(p => `
+  <a class="slide" href="${p.href}" target="_blank" rel="noreferrer" style="--c:${p.c}">
+    <div class="vis"><i></i><b>${p.t.split(" ")[0]}</b></div>
+    <div class="body">
+      <div class="n">${p.i} — ${p.type}</div>
+      <h3>${p.t}</h3><p>${p.s}</p>
+      <div class="st">${p.stack.map(x => `<span>${x}</span>`).join("")}</div>
+    </div>
+  </a>`).join("");
+
+svc.innerHTML = S.services.map(s => `
+  <div class="sv" data-r><div class="n">${s.n}</div><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML = S.skills.map(t => `<span>${t}</span>`).join("");
+
+// Vertical scroll inside the pinned block drives horizontal travel.
+const pin = document.getElementById("pin");
+function onScroll(){
+  const r = pin.getBoundingClientRect();
+  const total = pin.offsetHeight - innerHeight;
+  const p = Math.max(0, Math.min(1, -r.top / total));
+  const dist = track.scrollWidth - innerWidth + 48;
+  track.style.transform = `translate3d(${-p * dist}px,0,0)`;
+  prog.style.width = (p * 100) + "%";
+  const i = Math.min(S.projects.length, Math.floor(p * S.projects.length) + 1);
+  cnt.textContent = "0" + i + " — 0" + S.projects.length;
+}
+addEventListener("scroll", onScroll, { passive:true });
+addEventListener("resize", onScroll);
+onScroll();
+window.reveal(); window.switcher("3");
+</script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D8 — Kinetic Type</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f1e4;--ink:#141009;--gold:#8a6a14;--dim:#6c6350;--line:rgba(20,16,9,.14)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden}
+body{color:var(--ink);font-family:"Familjen Grotesk",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1200px);margin:auto}
+
+/* No sections in the normal sense — one continuous typographic scroll where
+   each block pins and transforms. "More animation than website." */
+.stage{height:230vh;position:relative}
+.pin{position:sticky;top:0;height:100svh;display:grid;place-items:center;overflow:hidden}
+.line{font-weight:700;letter-spacing:-.05em;line-height:.9;text-align:center;will-change:transform}
+.l1{font-size:clamp(46px,15vw,190px)}
+.l2{font-size:clamp(38px,12vw,150px);color:var(--gold)}
+.sm{font-size:clamp(14px,3vw,20px);letter-spacing:.02em;font-weight:500;color:var(--dim);max-width:24ch;line-height:1.5}
+
+nav{position:fixed;z-index:40;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:15px 16px;
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);mix-blend-mode:difference;filter:invert(1)}
+
+/* the work reel: each project pins and its title slides through */
+.reel{position:relative}
+.slab{height:150vh;position:relative}
+.slab .in{position:sticky;top:0;height:100svh;display:flex;flex-direction:column;justify-content:center;
+  padding:0 22px;overflow:hidden;border-top:1px solid var(--line)}
+.slab .huge{font-weight:700;font-size:clamp(38px,11.5vw,140px);letter-spacing:-.05em;line-height:.92;white-space:nowrap;will-change:transform}
+.slab .meta{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.slab p{margin-top:18px;max-width:46ch;line-height:1.7;font-size:15px;color:var(--dim)}
+.slab a.go{margin-top:24px;display:inline-flex;gap:8px;background:var(--ink);color:var(--bg);text-decoration:none;
+  padding:14px 20px;border-radius:99px;font-size:13px;font-weight:600;width:max-content}
+.slab .rule{position:absolute;left:0;bottom:16%;height:3px;background:var(--c);width:0;will-change:width}
+
+.blk{padding:14vh 0}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.svc{display:grid;gap:0;grid-template-columns:1fr}
+@media(min-width:820px){.svc{grid-template-columns:repeat(3,1fr);gap:24px}}
+.sv{border-top:2px solid var(--ink);padding:18px 0 26px}
+.sv .n{font-size:10px;letter-spacing:.2em;color:var(--gold)}
+.sv h4{font-weight:700;font-size:20px;margin:10px 0 8px;letter-spacing:-.025em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.7}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:26px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:8px 10px;border-radius:99px;color:var(--dim)}
+.cta{text-align:center;padding:16vh 0 18vh}
+.cta h2{font-weight:700;font-size:clamp(38px,11vw,140px);letter-spacing:-.05em;line-height:.92}
+.cta h2 em{font-style:normal;color:var(--gold)}
+.btn{display:inline-block;margin-top:28px;background:var(--ink);color:var(--bg);text-decoration:none;padding:17px 26px;border-radius:99px;font-weight:600;font-size:14px}
+</style>
+</head>
+<body>
+<nav><span id="nb"></span><span>Freelance</span></nav>
+
+<div class="stage" id="s1">
+  <div class="pin">
+    <div>
+      <div class="line l1" id="k1">I engineer</div>
+      <div class="line l2" id="k2">impact.</div>
+      <div class="line sm" id="k3" style="margin:22px auto 0"></div>
+    </div>
+  </div>
+</div>
+
+<div class="reel" id="reel"></div>
+
+<div class="pad">
+  <section class="blk">
+    <div class="lab mono">Services</div>
+    <div class="svc" id="svc"></div>
+    <div class="chips" id="chips"></div>
+  </section>
+  <section class="cta">
+    <h2>Have an idea?<br><em>Let's build it.</em></h2>
+    <a class="btn" id="wa" href="#">Message me on WhatsApp →</a>
+  </section>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name; k3.textContent = S.intro; wa.href = S.wa;
+
+reel.innerHTML = S.projects.map(p => `
+  <div class="slab" data-slab style="--c:${p.c}">
+    <div class="in">
+      <div class="huge" data-huge>${p.t}</div>
+      <div class="meta mono"><span>${p.i} / 05</span><span>${p.type}</span></div>
+      <p>${p.s}</p>
+      <a class="go" href="${p.href}" target="_blank" rel="noreferrer">Visit live site ↗</a>
+      <span class="rule" data-rule></span>
+    </div>
+  </div>`).join("");
+
+svc.innerHTML = S.services.map(s => `
+  <div class="sv"><div class="n mono">${s.n}</div><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML = S.skills.map(t => `<span class="mono">${t}</span>`).join("");
+
+const s1 = document.getElementById("s1");
+const slabs = [...document.querySelectorAll("[data-slab]")];
+
+function frame(){
+  // Hero: the two lines part and the strapline fades up as you scroll away.
+  const r1 = s1.getBoundingClientRect();
+  const p1 = Math.max(0, Math.min(1, -r1.top / (s1.offsetHeight - innerHeight)));
+  k1.style.transform = `translateX(${-p1 * 34}vw) scale(${1 - p1 * 0.14})`;
+  k2.style.transform = `translateX(${p1 * 34}vw) scale(${1 - p1 * 0.14})`;
+  k3.style.opacity = Math.max(0, Math.min(1, (p1 - 0.22) * 3));
+  k3.style.transform = `translateY(${(1 - Math.min(1, p1 * 2)) * 26}px)`;
+
+  // Each project title tracks across the screen while its slab is pinned.
+  slabs.forEach((sl) => {
+    const r = sl.getBoundingClientRect();
+    const p = Math.max(0, Math.min(1, -r.top / (sl.offsetHeight - innerHeight)));
+    sl.querySelector("[data-huge]").style.transform = `translateX(${(0.5 - p) * 46}vw)`;
+    sl.querySelector("[data-rule]").style.width = (p * 100) + "%";
+  });
+}
+addEventListener("scroll", frame, { passive: true });
+addEventListener("resize", frame);
+frame();
+window.switcher("8");
+</script>
+</body>
+</html>
