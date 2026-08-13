@@ -47,7 +47,7 @@ window.switcher = (current) => {
   const bar = document.createElement("div");
   bar.innerHTML =
     '<a href="/designs/">← all</a>' +
-    ["1","2","3","4","5","6","7","8","9","10","11","12","13"].map((n) =>
+    Array.from({length:18},(_,i)=>String(i+1)).map((n) =>
       `<a href="/designs/d${n}.html"${n === current ? ' class="on"' : ""}>${n}</a>`).join("");
   // Thirteen entries no longer fit a phone, so the bar scrolls inside itself
   // rather than running off the screen and taking the last few with it.

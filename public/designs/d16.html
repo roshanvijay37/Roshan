@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D16 — Stacking Cards</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f2e8;--ink:#14110a;--gold:#7d5f10;--dim:#6b6353;--line:rgba(20,17,10,.14)}
+:root[data-theme="dark"]{--bg:#0a0906;--ink:#f1ead9;--gold:#e6c374;--dim:#8f8775;--line:rgba(241,234,217,.13)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);font-family:Outfit,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1120px);margin:auto}
+
+nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:16px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.16em;text-transform:uppercase;border-radius:99px;padding:7px 12px;cursor:pointer}
+
+.hero{min-height:82svh;display:grid;align-content:center;padding:19vh 0 6vh}
+.hero .k{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.hero h1{font-weight:900;font-size:clamp(40px,10.5vw,128px);line-height:.94;letter-spacing:-.05em}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{margin-top:24px;max-width:46ch;color:var(--dim);line-height:1.78;font-size:15.5px}
+
+/* Each card sticks, and the next slides over it — the deck literally stacks up
+   as you read, so the previous project is still visible underneath. */
+.stack{padding:4vh 0 18vh}
+.sticky{position:sticky;top:0;height:100svh;display:grid;place-items:center;padding:12vh 0 4vh}
+.card{width:100%;border-radius:20px;overflow:hidden;border:1px solid var(--line);
+  background:var(--bg);box-shadow:0 -8px 44px rgba(0,0,0,.13);display:grid}
+@media(min-width:860px){.card{grid-template-columns:1fr 1fr}}
+.card .face{background:var(--c);min-height:180px;display:grid;place-items:center;padding:26px;position:relative}
+.card .face b{color:rgba(255,255,255,.96);font-weight:900;font-size:clamp(28px,5.6vw,54px);letter-spacing:-.04em;text-align:center;line-height:1.04}
+.card .face .no{position:absolute;top:14px;left:16px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+.card .body{padding:24px 22px 28px;display:grid;align-content:center;gap:12px}
+.card .k{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.card h3{font-weight:900;font-size:clamp(24px,4.6vw,40px);letter-spacing:-.04em;line-height:1.04}
+.card p{color:var(--dim);font-size:14px;line-height:1.7}
+.card .st{display:flex;gap:6px;flex-wrap:wrap}
+.card .st span{font-size:10px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.card .go{display:inline-flex;gap:8px;background:var(--ink);color:var(--bg);text-decoration:none;
+  padding:13px 19px;border-radius:99px;font-weight:700;font-size:13px;width:max-content}
+
+.sec{padding:10vh 0}
+.lab{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.sec h2{font-weight:900;font-size:clamp(28px,6vw,60px);letter-spacing:-.04em;line-height:1}
+.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:5vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:2px solid var(--ink);padding:18px 0 22px}
+.sv h4{font-weight:700;font-size:19px;margin:0 0 8px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.7}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:5vh}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:8px 10px;border-radius:99px;color:var(--dim)}
+.cta{padding:10vh 0 15vh;text-align:center}
+.cta h2{font-weight:900;font-size:clamp(32px,8.4vw,98px);letter-spacing:-.05em;line-height:.96}
+.btn{display:inline-block;margin-top:26px;background:var(--gold);color:#130f06;text-decoration:none;padding:17px 26px;border-radius:99px;font-weight:700;font-size:14px}
+@media(prefers-reduced-motion:reduce){.sticky{position:static;height:auto;padding:3vh 0}}
+</style>
+</head>
+<body>
+<nav><b id="nb"></b><button id="tt">Dark</button></nav>
+<div class="pad">
+  <section class="hero">
+    <div class="k mono">Freelance web developer</div>
+    <h1>Work that <em>stacks up.</em></h1>
+    <p id="intro"></p>
+  </section>
+
+  <div class="stack" id="stack"></div>
+
+  <section class="sec">
+    <div class="lab mono">Services</div>
+    <h2>What you can buy.</h2>
+    <div class="grid" id="svc"></div>
+    <div class="chips" id="chips"></div>
+  </section>
+  <section class="cta">
+    <h2>Have an idea?</h2>
+    <a class="btn" id="wa" href="#">Message me on WhatsApp →</a>
+  </section>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name; intro.textContent = S.intro; wa.href = S.wa;
+
+stack.innerHTML = S.projects.map((p, i) => `
+  <div class="sticky" style="top:${i * 14}px;z-index:${i + 1}">
+    <div class="card" style="--c:${p.c}">
+      <div class="face"><span class="no mono">${p.type}</span><b>${p.t}</b></div>
+      <div class="body">
+        <div class="k mono">${p.href.replace("https://","")}</div>
+        <h3>${p.t}</h3><p>${p.s}</p>
+        <div class="st">${p.stack.map(x => `<span class="mono">${x}</span>`).join("")}</div>
+        <a class="go" href="${p.href}" target="_blank" rel="noreferrer">Visit live site ↗</a>
+      </div>
+    </div>
+  </div>`).join("");
+
+svc.innerHTML = S.services.map(s => `<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML = S.skills.map(t => `<span class="mono">${t}</span>`).join("");
+
+// Each card shrinks a little as the next one covers it, so the stack reads as
+// depth rather than as cards simply disappearing behind one another.
+const cards = [...document.querySelectorAll(".sticky")];
+function frame(){
+  cards.forEach((s, i) => {
+    const next = cards[i + 1];
+    if (!next) { s.querySelector(".card").style.transform = ""; return; }
+    const r = next.getBoundingClientRect();
+    const p = Math.max(0, Math.min(1, 1 - r.top / innerHeight));
+    s.querySelector(".card").style.transform = `scale(${1 - p * 0.06}) translateY(${-p * 10}px)`;
+    s.querySelector(".card").style.filter = `brightness(${1 - p * 0.06})`;
+  });
+}
+addEventListener("scroll", frame, { passive: true });
+addEventListener("resize", frame);
+frame();
+
+const root = document.documentElement;
+try { if (localStorage.getItem("d16theme") === "dark") root.setAttribute("data-theme","dark"); } catch {}
+const paint = () => tt.textContent = root.getAttribute("data-theme") === "dark" ? "Light" : "Dark";
+paint();
+tt.onclick = () => { const d = root.getAttribute("data-theme") === "dark";
+  if (d) root.removeAttribute("data-theme"); else root.setAttribute("data-theme","dark");
+  try { localStorage.setItem("d16theme", d ? "light" : "dark"); } catch {} paint(); };
+
+window.switcher("16");
+</script>
+</body>
+</html>

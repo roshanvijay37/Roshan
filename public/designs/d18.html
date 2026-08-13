@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D18 — Dither</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#e6e2d3;--ink:#111008;--gold:#7a5c0e;--dim:#5d574a;--line:rgba(17,16,8,.28)}
+:root[data-theme="dark"]{--paper:#0c0c0a;--ink:#dcd7c4;--gold:#d8b866;--dim:#8b8574;--line:rgba(220,215,196,.26)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--paper);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;position:relative}
+.px{font-family:VT323,ui-monospace,monospace}
+.pad{width:min(100% - 24px,1080px);margin:auto}
+
+/* A 1-bit world: one ink on one paper, halftone dots instead of greys, hard
+   edges everywhere. Nothing else in this set looks remotely like it. */
+body::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.5;
+  background-image:radial-gradient(var(--line) 0.9px,transparent 0.9px);background-size:4px 4px;mix-blend-mode:multiply}
+:root[data-theme="dark"] body::before{mix-blend-mode:screen;opacity:.34}
+.wrap{position:relative;z-index:2}
+
+nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;border-bottom:2px solid var(--ink);background:var(--paper);
+  font-size:19px;letter-spacing:.06em;text-transform:uppercase}
+nav button{background:var(--ink);color:var(--paper);border:0;font-family:VT323,monospace;font-size:17px;
+  letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;cursor:pointer}
+
+.hero{padding:22vh 0 8vh}
+.hero .k{font-size:20px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.hero h1{font-size:clamp(46px,13vw,150px);line-height:.86;letter-spacing:.01em;text-transform:uppercase;margin:12px 0 0}
+.hero p{margin-top:22px;max-width:46ch;color:var(--dim);line-height:1.75;font-size:15px}
+
+.rule{height:2px;background:var(--ink);margin:0}
+.lab{font-size:20px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);padding:16px 0 10px}
+
+.item{display:block;text-decoration:none;color:inherit;border-top:2px solid var(--ink);padding:22px 0;position:relative}
+.item .hd{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.item h3{font-size:clamp(30px,8vw,72px);line-height:.9;text-transform:uppercase;letter-spacing:.01em}
+.item .go{font-size:19px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+.item .kind{font-size:19px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:6px}
+.item p{color:var(--dim);font-size:14px;line-height:1.7;margin-top:12px;max-width:56ch}
+.item .st{display:flex;gap:0;flex-wrap:wrap;margin-top:14px}
+.item .st span{font-family:VT323,monospace;font-size:17px;letter-spacing:.06em;border:2px solid var(--ink);padding:2px 9px;margin:-2px 0 0 -2px}
+/* the halftone swatch stands in for a screenshot, in period */
+.item .tone{position:absolute;right:0;top:22px;width:74px;height:74px;border:2px solid var(--ink);
+  background-image:radial-gradient(var(--ink) 1.6px,transparent 1.6px);background-size:7px 7px;background-color:var(--c);opacity:.9}
+@media(max-width:640px){.item .tone{display:none}}
+
+.grid{display:grid;grid-template-columns:1fr;border-top:2px solid var(--ink)}
+@media(min-width:800px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{padding:18px 16px 22px;border-bottom:2px solid var(--ink)}
+@media(min-width:800px){.sv{border-right:2px solid var(--ink)}.sv:last-child{border-right:0}}
+.sv h4{font-size:22px;text-transform:uppercase;letter-spacing:.04em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.68;margin-top:8px}
+.chips{display:flex;flex-wrap:wrap;gap:0;margin-top:18px}
+.chips span{font-family:VT323,monospace;font-size:18px;border:2px solid var(--ink);padding:3px 10px;margin:-2px 0 0 -2px;letter-spacing:.06em}
+.cta{padding:12vh 0 16vh;text-align:center}
+.cta h2{font-size:clamp(34px,10vw,110px);text-transform:uppercase;line-height:.9;letter-spacing:.01em}
+.btn{display:inline-block;margin-top:24px;background:var(--ink);color:var(--paper);text-decoration:none;
+  font-family:VT323,monospace;font-size:24px;letter-spacing:.1em;text-transform:uppercase;padding:10px 22px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav><span class="px" id="nb"></span><button class="px" id="tt">Dark</button></nav>
+<div class="pad">
+  <section class="hero">
+    <div class="k px">Freelance web developer</div>
+    <h1 class="px">Built to<br>be used.</h1>
+    <p id="intro"></p>
+  </section>
+
+  <div class="lab px">Selected work</div>
+  <div id="list"></div>
+
+  <div class="lab px">Services</div>
+  <div class="grid" id="svc"></div>
+
+  <div class="lab px">Built with</div>
+  <div class="chips" id="chips"></div>
+
+  <section class="cta">
+    <h2 class="px">Have an idea?</h2>
+    <a class="btn" id="wa" href="#">Message me on WhatsApp</a>
+  </section>
+</div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name; intro.textContent = S.intro; wa.href = S.wa;
+
+list.innerHTML = S.projects.map(p => `
+  <a class="item" href="${p.href}" target="_blank" rel="noreferrer" style="--c:${p.c}">
+    <span class="tone"></span>
+    <div class="hd"><h3 class="px">${p.t}</h3><span class="go px">Visit ↗</span></div>
+    <div class="kind px">${p.type} — ${p.href.replace("https://","")}</div>
+    <p>${p.s}</p>
+    <div class="st">${p.stack.map(x => `<span>${x}</span>`).join("")}</div>
+  </a>`).join("");
+
+svc.innerHTML = S.services.map(s => `<div class="sv"><h4 class="px">${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML = S.skills.map(t => `<span>${t}</span>`).join("");
+
+const root = document.documentElement;
+try { if (localStorage.getItem("d18theme") === "dark") root.setAttribute("data-theme","dark"); } catch {}
+const paint = () => tt.textContent = root.getAttribute("data-theme") === "dark" ? "Light" : "Dark";
+paint();
+tt.onclick = () => { const d = root.getAttribute("data-theme") === "dark";
+  if (d) root.removeAttribute("data-theme"); else root.setAttribute("data-theme","dark");
+  try { localStorage.setItem("d18theme", d ? "light" : "dark"); } catch {} paint(); };
+
+window.switcher("18");
+</script>
+</body>
+</html>

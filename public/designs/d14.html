@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D14 — Cursor Gallery</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;900&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f1e6;--ink:#131009;--gold:#7d5f10;--dim:#6a6252;--line:rgba(19,16,9,.14)}
+:root[data-theme="dark"]{--bg:#090907;--ink:#f0e9d9;--gold:#e6c374;--dim:#8f8674;--line:rgba(240,233,217,.13)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);font-family:"Schibsted Grotesk",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1220px);margin:auto}
+
+nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:16px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.16em;text-transform:uppercase;border-radius:99px;padding:7px 12px;cursor:pointer}
+
+.hero{min-height:78svh;display:grid;align-content:center;padding:19vh 0 7vh}
+.hero .k{font-size:10.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.hero h1{font-weight:900;font-size:clamp(40px,10.5vw,132px);line-height:.92;letter-spacing:-.05em}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{margin-top:24px;max-width:46ch;color:var(--dim);line-height:1.78;font-size:15.5px}
+
+/* The list is enormous names; the preview chases the pointer. On touch there is
+   no hover, so the panel pins under whichever row you tapped instead. */
+.list{border-top:1px solid var(--line);margin-top:8vh}
+.row{display:block;text-decoration:none;color:inherit;border-bottom:1px solid var(--line);
+  padding:22px 0;position:relative;transition:padding-left .45s cubic-bezier(.2,.75,.2,1)}
+@media(hover:hover){.row:hover{padding-left:16px}}
+.row h3{font-weight:900;font-size:clamp(28px,7.6vw,74px);letter-spacing:-.045em;line-height:1;transition:opacity .3s}
+.row .meta{display:flex;justify-content:space-between;gap:12px;margin-top:10px;
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+@media(hover:hover){.list:hover .row h3{opacity:.34}.list .row:hover h3{opacity:1}}
+
+#peek{position:fixed;z-index:50;width:230px;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.9);
+  transition:opacity .3s,transform .3s;border-radius:12px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.28)}
+#peek.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#peek .face{aspect-ratio:4/3;display:grid;place-items:center;background:var(--c);padding:16px}
+#peek .face b{color:#fff;font-weight:900;font-size:22px;letter-spacing:-.03em;text-align:center;line-height:1.05}
+#peek .cap{background:var(--ink);color:var(--bg);font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding:9px 12px}
+
+/* touch fallback */
+.drawer{overflow:hidden;max-height:0;transition:max-height .5s cubic-bezier(.2,.75,.2,1)}
+.row.open .drawer{max-height:340px}
+.drawer .inner{padding:14px 0 4px}
+.drawer .band{height:118px;border-radius:10px;background:var(--c);display:grid;place-items:center}
+.drawer .band b{color:#fff;font-weight:900;font-size:24px;letter-spacing:-.03em}
+.drawer p{color:var(--dim);font-size:14px;line-height:1.7;margin-top:12px}
+.drawer .st{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.drawer .st span{font-size:10px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.drawer .go{display:inline-block;margin-top:14px;color:var(--gold);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+
+.sec{padding:12vh 0}
+.lab{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.sec h2{font-weight:900;font-size:clamp(28px,6vw,62px);letter-spacing:-.04em;line-height:1}
+.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:5vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:2px solid var(--ink);padding:18px 0 22px}
+.sv h4{font-weight:700;font-size:19px;margin:0 0 8px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.7}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:5vh}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:8px 10px;border-radius:99px;color:var(--dim)}
+.cta{padding:12vh 0 15vh}
+.cta h2{font-weight:900;font-size:clamp(34px,9vw,104px);letter-spacing:-.05em;line-height:.95}
+.btn{display:inline-block;margin-top:28px;background:var(--ink);color:var(--bg);text-decoration:none;padding:17px 26px;border-radius:99px;font-weight:700;font-size:14px}
+</style>
+</head>
+<body>
+<div id="peek"><div class="face"><b id="pkn"></b></div><div class="cap mono" id="pkc"></div></div>
+<nav><b id="nb"></b><button id="tt">Dark</button></nav>
+
+<div class="pad">
+  <section class="hero">
+    <div class="k mono">Freelance web developer</div>
+    <h1>Five sites.<br><em>All of them running.</em></h1>
+    <p id="intro"></p>
+  </section>
+
+  <div class="list" id="list"></div>
+
+  <section class="sec">
+    <div class="lab mono">Services</div>
+    <h2>What you can buy.</h2>
+    <div class="grid" id="svc"></div>
+    <div class="chips" id="chips"></div>
+  </section>
+  <section class="cta">
+    <h2>Have an idea?</h2>
+    <a class="btn" id="wa" href="#">Message me on WhatsApp →</a>
+  </section>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name; intro.textContent = S.intro; wa.href = S.wa;
+
+list.innerHTML = S.projects.map(p => `
+  <a class="row" href="${p.href}" target="_blank" rel="noreferrer"
+     data-n="${p.t}" data-c="${p.c}" data-k="${p.type}" style="--c:${p.c}">
+    <h3>${p.t}</h3>
+    <div class="meta mono"><span>${p.type}</span><span>Visit ↗</span></div>
+    <div class="drawer"><div class="inner">
+      <div class="band"><b>${p.t}</b></div>
+      <p>${p.s}</p>
+      <div class="st">${p.stack.map(x => `<span class="mono">${x}</span>`).join("")}</div>
+      <span class="go mono">Open ${p.href.replace("https://","")} ↗</span>
+    </div></div>
+  </a>`).join("");
+svc.innerHTML = S.services.map(s => `<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML = S.skills.map(t => `<span class="mono">${t}</span>`).join("");
+
+const fine = matchMedia("(hover:hover)").matches;
+if (fine) {
+  const peek = document.getElementById("peek");
+  let x = innerWidth / 2, y = innerHeight / 2, tx = x, ty = y;
+  addEventListener("pointermove", e => { tx = e.clientX; ty = e.clientY; });
+  (function loop(){ x += (tx - x) * 0.16; y += (ty - y) * 0.16;
+    peek.style.left = x + "px"; peek.style.top = y + "px"; requestAnimationFrame(loop); })();
+  document.querySelectorAll(".row").forEach(r => {
+    r.addEventListener("pointerenter", () => {
+      pkn.textContent = r.dataset.n; pkc.textContent = r.dataset.k;
+      peek.querySelector(".face").style.setProperty("--c", r.dataset.c);
+      peek.classList.add("on");
+    });
+    r.addEventListener("pointerleave", () => peek.classList.remove("on"));
+  });
+} else {
+  // Touch has no hover state, so the first tap opens the detail and the second
+  // follows the link — otherwise the preview would be unreachable on a phone.
+  document.querySelectorAll(".row").forEach(r => r.addEventListener("click", e => {
+    if (!r.classList.contains("open")) {
+      e.preventDefault();
+      document.querySelectorAll(".row.open").forEach(o => o !== r && o.classList.remove("open"));
+      r.classList.add("open");
+    }
+  }));
+}
+
+const root = document.documentElement;
+try { if (localStorage.getItem("d14theme") === "dark") root.setAttribute("data-theme","dark"); } catch {}
+const paint = () => tt.textContent = root.getAttribute("data-theme") === "dark" ? "Light" : "Dark";
+paint();
+tt.onclick = () => { const d = root.getAttribute("data-theme") === "dark";
+  if (d) root.removeAttribute("data-theme"); else root.setAttribute("data-theme","dark");
+  try { localStorage.setItem("d14theme", d ? "light" : "dark"); } catch {} paint(); };
+
+window.switcher("14");
+</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D17 — Swiss Poster</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#efe9d8;--ink:#100e08;--gold:#b8873b;--red:#b8452e;--blue:#2c4a6e;--olive:#5f6b25;--dim:#5d564a}
+:root[data-theme="dark"]{--paper:#100e08;--ink:#efe9d8;--gold:#e6c374;--red:#e0765c;--blue:#7fa3cc;--olive:#a9b95c;--dim:#9a9384}
+*{box-sizing:border-box;margin:0}
+html{background:var(--paper);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.black{font-family:"Archivo Black",Impact,sans-serif;font-weight:400;letter-spacing:-.035em;line-height:.86;text-transform:uppercase}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 22px,1280px);margin:auto}
+
+/* A printed poster: flat colour fields, a hard grid, no gradients, no shadows,
+   no rounded corners anywhere. The rule and the block do all the work. */
+.sheet{border-left:2px solid var(--ink);border-right:2px solid var(--ink)}
+.band{border-bottom:2px solid var(--ink);padding:26px 20px}
+.band.tight{padding:14px 20px}
+.grid2{display:grid;grid-template-columns:1fr}
+@media(min-width:880px){.grid2{grid-template-columns:1fr 1fr}.grid2 > *:first-child{border-right:2px solid var(--ink)}}
+
+.top{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+  font-size:10.5px;letter-spacing:.22em;text-transform:uppercase}
+.top button{background:none;border:2px solid var(--ink);color:var(--ink);font:inherit;font-size:10px;
+  letter-spacing:.16em;text-transform:uppercase;padding:6px 10px;cursor:pointer}
+h1{font-size:clamp(46px,15.5vw,190px)}
+.lede{font-size:15px;line-height:1.65;max-width:44ch;color:var(--dim);margin-top:18px}
+
+.slab{padding:24px 20px;border-bottom:2px solid var(--ink);color:var(--paper);position:relative;display:block;text-decoration:none}
+.slab .no{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;opacity:.78}
+.slab h2{font-size:clamp(34px,10.5vw,104px);margin:8px 0 0}
+.slab .meta{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:14px;
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.86}
+.slab p{margin-top:14px;max-width:52ch;font-size:14px;line-height:1.6;opacity:.92}
+.slab .st{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.slab .st span{font-size:10px;border:1.5px solid rgba(255,255,255,.5);padding:6px 8px}
+.slab::after{content:"";position:absolute;inset:0;background:var(--ink);opacity:0;transition:opacity .25s}
+.slab:hover::after{opacity:.14}
+
+.cell{padding:22px 20px}
+.cell .k{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+.cell h3{font-size:24px;margin:10px 0 8px;letter-spacing:-.02em;font-weight:600}
+.cell p{color:var(--dim);font-size:13.5px;line-height:1.68}
+.chips{display:flex;flex-wrap:wrap;gap:0}
+.chips span{font-size:10.5px;border:1px solid var(--ink);padding:9px 11px;margin:-1px 0 0 -1px;letter-spacing:.05em}
+.foot{padding:30px 20px 40px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.foot h2{font-size:clamp(28px,7vw,64px)}
+.btn{background:var(--ink);color:var(--paper);text-decoration:none;padding:16px 22px;font-weight:600;font-size:13.5px;letter-spacing:.02em}
+.mark{display:flex;gap:0;border-bottom:2px solid var(--ink)}
+.mark i{flex:1;height:14px}
+</style>
+</head>
+<body>
+<div class="pad"><div class="sheet">
+
+  <div class="band tight top">
+    <span id="nb"></span>
+    <span style="display:flex;gap:12px;align-items:center">Freelance — India <button id="tt">Dark</button></span>
+  </div>
+
+  <div class="mark" id="mark"></div>
+
+  <div class="band">
+    <h1 class="black">Sites<br>that<br>ship.</h1>
+    <p class="lede" id="intro"></p>
+  </div>
+
+  <div id="slabs"></div>
+
+  <div class="band tight"><span class="mono" style="font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)">Services</span></div>
+  <div class="grid2" id="svc"></div>
+
+  <div class="band tight"><span class="mono" style="font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)">Built with</span></div>
+  <div class="chips" id="chips"></div>
+
+  <div class="foot">
+    <h2 class="black">Have an idea?</h2>
+    <a class="btn" id="wa" href="#">Message me on WhatsApp →</a>
+  </div>
+</div></div>
+
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name.toUpperCase(); intro.textContent = S.intro; wa.href = S.wa;
+
+mark.innerHTML = S.projects.map(p => `<i style="background:${p.c}"></i>`).join("");
+
+slabs.innerHTML = S.projects.map(p => `
+  <a class="slab" href="${p.href}" target="_blank" rel="noreferrer" style="background:${p.c}">
+    <div class="no mono">${p.type}</div>
+    <h2 class="black">${p.t}</h2>
+    <div class="meta mono"><span>${p.href.replace("https://","")}</span><span>Visit ↗</span></div>
+    <p>${p.s}</p>
+    <div class="st">${p.stack.map(x => `<span class="mono">${x}</span>`).join("")}</div>
+  </a>`).join("");
+
+svc.innerHTML = S.services.map((s, i) => `
+  <div class="cell" style="${i < S.services.length - 1 ? "border-bottom:2px solid var(--ink)" : ""}">
+    <div class="k mono">Service</div><h3>${s.t}</h3><p>${s.b}</p></div>`).join("");
+chips.innerHTML = S.skills.map(t => `<span class="mono">${t}</span>`).join("");
+
+const root = document.documentElement;
+try { if (localStorage.getItem("d17theme") === "dark") root.setAttribute("data-theme","dark"); } catch {}
+const paint = () => tt.textContent = root.getAttribute("data-theme") === "dark" ? "Light" : "Dark";
+paint();
+tt.onclick = () => { const d = root.getAttribute("data-theme") === "dark";
+  if (d) root.removeAttribute("data-theme"); else root.setAttribute("data-theme","dark");
+  try { localStorage.setItem("d17theme", d ? "light" : "dark"); } catch {} paint(); };
+
+window.switcher("17");
+</script>
+</body>
+</html>

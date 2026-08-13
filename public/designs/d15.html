@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D15 — Draggable Board</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eeeade;--ink:#141109;--gold:#7d5f10;--dim:#6a6252;--line:rgba(20,17,9,.16);--dot:rgba(20,17,9,.14)}
+:root[data-theme="dark"]{--bg:#0a0a08;--ink:#efe8d8;--gold:#e6c374;--dim:#8e8674;--line:rgba(239,232,216,.15);--dot:rgba(239,232,216,.12)}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Space Grotesk",system-ui,sans-serif;
+  overflow:hidden;-webkit-font-smoothing:antialiased;touch-action:none}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+
+/* An infinite pinboard you drag. Nothing scrolls; you move the surface itself,
+   which is a different verb from every other direction here. */
+#board{position:fixed;inset:0;cursor:grab;
+  background-image:radial-gradient(var(--dot) 1.2px,transparent 1.2px);background-size:34px 34px}
+#board.drag{cursor:grabbing}
+#plane{position:absolute;left:0;top:0;will-change:transform}
+.card{position:absolute;width:min(74vw,320px);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  background:var(--bg);text-decoration:none;color:inherit;box-shadow:0 18px 44px rgba(0,0,0,.13);
+  transition:transform .35s cubic-bezier(.2,.75,.2,1),box-shadow .35s}
+.card:hover{transform:translateY(-4px) rotate(0deg)!important;box-shadow:0 26px 60px rgba(0,0,0,.2);z-index:5}
+.card .band{height:104px;background:var(--c);display:grid;place-items:center;position:relative}
+.card .band b{color:rgba(255,255,255,.95);font-weight:700;font-size:22px;letter-spacing:-.03em;text-align:center;padding:0 12px}
+.card .body{padding:14px 15px 17px}
+.card .k{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.card h3{font-weight:700;font-size:19px;letter-spacing:-.03em;margin:8px 0 6px}
+.card p{color:var(--dim);font-size:12.5px;line-height:1.6}
+.card .go{margin-top:11px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+
+.note{position:absolute;width:min(78vw,340px);padding:20px 22px;border-radius:14px;border:1px dashed var(--line)}
+.note.title{border:0;padding:0}
+.note h1{font-weight:700;font-size:clamp(32px,8.4vw,64px);letter-spacing:-.045em;line-height:.98}
+.note h1 em{font-style:normal;color:var(--gold)}
+.note p{color:var(--dim);font-size:14px;line-height:1.7;margin-top:14px}
+.note h4{font-weight:700;font-size:17px;letter-spacing:-.02em}
+.note .k{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:9px}
+.note .chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.note .chips span{font-size:10px;border:1px solid var(--line);padding:6px 8px;border-radius:99px;color:var(--dim)}
+.note .wa{display:inline-block;margin-top:12px;background:var(--gold);color:#131008;text-decoration:none;
+  padding:12px 18px;border-radius:99px;font-weight:700;font-size:13px}
+
+.hud{position:fixed;z-index:20;left:0;right:0;top:0;display:flex;justify-content:space-between;align-items:center;
+  padding:16px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);pointer-events:none}
+.hud b{color:var(--gold)}
+.hud .right{display:flex;gap:8px;pointer-events:auto}
+.hud button{background:var(--bg);border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.16em;text-transform:uppercase;border-radius:99px;padding:8px 12px;cursor:pointer}
+.hint{position:fixed;z-index:20;left:50%;transform:translateX(-50%);bottom:62px;font-size:10.5px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--dim);pointer-events:none;transition:opacity .5s}
+</style>
+</head>
+<body>
+<div class="hud"><b id="nb"></b><span class="right"><button id="rc">Recentre</button><button id="tt">Dark</button></span></div>
+<div class="hint mono" id="hint">Drag to explore</div>
+<div id="board"><div id="plane"></div></div>
+
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent = S.name;
+
+const plane = document.getElementById("plane"), board = document.getElementById("board");
+const items = [];
+
+items.push({ x: -170, y: -290, html: `<div class="note title">
+  <h1>I build things<br><em>you can visit.</em></h1><p>${S.intro}</p></div>` });
+
+S.projects.forEach((p, i) => {
+  const ring = [[210,-330],[430,-60],[80,120],[-300,60],[-140,340]][i];
+  items.push({ x: ring[0], y: ring[1], rot: (i % 2 ? 1.6 : -1.8),
+    html: `<a class="card" href="${p.href}" target="_blank" rel="noreferrer" style="--c:${p.c}">
+      <div class="band"><b>${p.t}</b></div>
+      <div class="body"><div class="k mono">${p.type}</div><h3>${p.t}</h3><p>${p.s}</p>
+      <div class="go mono">Visit ↗</div></div></a>` });
+});
+
+items.push({ x: 380, y: 300, html: `<div class="note"><div class="k mono">Services</div>
+  ${S.services.map(s => `<h4>${s.t}</h4><p style="margin:6px 0 14px">${s.b}</p>`).join("")}</div>` });
+items.push({ x: -420, y: -180, html: `<div class="note"><div class="k mono">Stack</div>
+  <div class="chips">${S.skills.map(t => `<span class="mono">${t}</span>`).join("")}</div></div>` });
+items.push({ x: 150, y: 470, html: `<div class="note"><div class="k mono">Contact</div>
+  <h4>Have an idea?</h4><a class="wa" href="${S.wa}" target="_blank" rel="noreferrer">Message me on WhatsApp →</a></div>` });
+
+plane.innerHTML = items.map(it =>
+  `<div style="position:absolute;left:${it.x}px;top:${it.y}px;transform:rotate(${it.rot||0}deg)">${it.html}</div>`).join("");
+
+// drag the surface — pointer events cover mouse and touch in one path
+let px = 0, py = 0, ox = 0, oy = 0, dragging = false, moved = 0;
+function place(){ plane.style.transform = `translate3d(${ox}px,${oy}px,0)`; }
+function centre(){ ox = innerWidth / 2; oy = innerHeight / 2; place(); }
+centre();
+
+board.addEventListener("pointerdown", e => { dragging = true; moved = 0; px = e.clientX; py = e.clientY;
+  board.classList.add("drag"); board.setPointerCapture(e.pointerId); });
+board.addEventListener("pointermove", e => {
+  if (!dragging) return;
+  const dx = e.clientX - px, dy = e.clientY - py;
+  moved += Math.abs(dx) + Math.abs(dy);
+  ox += dx; oy += dy; px = e.clientX; py = e.clientY; place();
+  if (moved > 60) hint.style.opacity = "0";
+});
+const end = () => { dragging = false; board.classList.remove("drag"); };
+board.addEventListener("pointerup", end);
+board.addEventListener("pointercancel", end);
+// a drag that ends on a card must not also open it
+board.addEventListener("click", e => { if (moved > 8) { e.preventDefault(); e.stopPropagation(); } }, true);
+addEventListener("resize", centre);
+rc.onclick = centre;
+
+const root = document.documentElement;
+try { if (localStorage.getItem("d15theme") === "dark") root.setAttribute("data-theme","dark"); } catch {}
+const paint = () => tt.textContent = root.getAttribute("data-theme") === "dark" ? "Light" : "Dark";
+paint();
+tt.onclick = () => { const d = root.getAttribute("data-theme") === "dark";
+  if (d) root.removeAttribute("data-theme"); else root.setAttribute("data-theme","dark");
+  try { localStorage.setItem("d15theme", d ? "light" : "dark"); } catch {} paint(); };
+
+window.switcher("15");
+</script>
+</body>
+</html>
