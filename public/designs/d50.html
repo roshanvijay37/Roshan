@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D50 — Index Cards</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;500;700&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#d9d3c4;--card:#fdfaf0;--ink:#1b1810;--gold:#8a5a14;--red:#b04a35;--dim:#6b6555;--line:rgba(27,24,16,.18)}
+:root[data-theme="dark"]{--bg:#0d0c09;--card:#191710;--ink:#efe9da;--gold:#e0a95c;--red:#e07a5f;--dim:#8f8878;--line:rgba(239,233,218,.18)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}
+body{font-family:Inter,system-ui,sans-serif}
+.hand{font-family:Caveat,cursive}
+.pad{width:min(100% - 22px,1120px);margin:auto;padding:74px 0 110px}
+nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:15px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:6px 11px;cursor:pointer}
+/* Ruled index cards pinned up, each tilted slightly. Handwriting for the notes,
+   print for the facts — the mix is the whole character. */
+.stack{display:grid;gap:20px;grid-template-columns:1fr}
+@media(min-width:720px){.stack{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1040px){.stack{grid-template-columns:repeat(3,1fr)}}
+.ic{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:18px 18px 20px;
+  box-shadow:0 10px 26px rgba(0,0,0,.14);position:relative;text-decoration:none;color:inherit;
+  background-image:repeating-linear-gradient(var(--card) 0 27px,var(--line) 27px 28px);
+  transform:rotate(var(--r));transition:transform .3s}
+.ic:hover{transform:rotate(0deg) translateY(-4px)}
+.ic::before{content:"";position:absolute;left:0;right:0;top:44px;height:1px;background:var(--red);opacity:.5}
+.ic .pin{position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:14px;height:14px;border-radius:50%;
+  background:var(--c);box-shadow:0 2px 5px rgba(0,0,0,.3)}
+.ic h3{font-family:Caveat,cursive;font-weight:700;font-size:30px;line-height:1;margin-bottom:12px}
+.ic .k{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.ic p{font-family:Caveat,cursive;font-size:19px;line-height:28px;color:var(--dim)}
+.ic .st{font-family:"DM Mono",monospace;font-size:10.5px;color:var(--dim);margin-top:12px;line-height:1.7}
+.ic .go{display:inline-block;margin-top:10px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.hero{padding:14vh 0 5vh}
+.hero h1{font-family:Caveat,cursive;font-weight:700;font-size:clamp(40px,10vw,104px);line-height:.92}
+.hero p{margin-top:14px;max-width:46ch;color:var(--dim);line-height:1.75;font-size:15px}
+</style></head><body>
+<nav><b id="nb"></b><span style="display:flex;gap:10px;align-items:center"><button id="tt">Dark</button></span></nav><div class="pad"><section class="hero"><h1>Five cards,<br>five live sites.</h1><p id="intro"></p></section>
+ <div class="stack" id="stack"></div><section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+  <div class="chips" id="chips"></div></section><section class="sec"><h2 style="font-weight:700;font-size:clamp(26px,6vw,58px);letter-spacing:-.04em">Have an idea?</h2>
+  <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+const R=["-1.6deg","1.2deg","-.8deg","1.8deg","-1.2deg"];
+stack.innerHTML=S.projects.map((p,i)=>`<a class="ic" href="${p.href}" target="_blank" rel="noreferrer"
+  style="--c:${p.c};--r:${R[i%R.length]}"><span class="pin"></span>
+  <h3>${p.t}</h3><div class="k mono">${p.type}</div><p>${p.s}</p>
+  <div class="st">${p.stack.join(" · ")}</div><span class="go mono">Visit ↗</span></a>`).join("");
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const root = document.documentElement;
+const KEY = "d50t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("50");
+</script></body></html>

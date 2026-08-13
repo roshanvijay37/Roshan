@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D32 — Gallery Wall</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2efe7;--ink:#1a1710;--gold:#7a5c10;--dim:#6b6455;--line:rgba(26,23,16,.16);--wall:#e8e3d7}
+:root[data-theme="dark"]{--bg:#131210;--ink:#ece7dc;--gold:#d9bb74;--dim:#918b7c;--line:rgba(236,231,220,.16);--wall:#1b1a17}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}
+body{font-family:Inter,system-ui,sans-serif;background:var(--wall)}
+nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:15px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:6px 11px;cursor:pointer}
+.hero{padding:20vh 0 6vh;text-align:center}
+.hero h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:clamp(38px,9vw,104px);line-height:1;letter-spacing:-.02em}
+.hero p{margin:20px auto 0;max-width:44ch;color:var(--dim);line-height:1.75;font-size:15px}
+/* Works hung on a wall, each with a printed placard beneath it. Generous space
+   around everything — the gap is the design. */
+.wall{display:grid;gap:11vh;padding:8vh 0 12vh}
+.work{display:grid;justify-items:center;text-align:center}
+.frame{width:min(88%,540px);aspect-ratio:4/3;background:var(--c);border:14px solid var(--bg);
+  box-shadow:0 20px 50px rgba(0,0,0,.16);display:grid;place-items:center;transition:transform .5s}
+.work:hover .frame{transform:translateY(-6px)}
+.frame b{font-family:"Cormorant Garamond",serif;font-weight:600;color:rgba(255,255,255,.95);font-size:clamp(26px,5vw,50px)}
+.placard{margin-top:20px;background:var(--bg);border:1px solid var(--line);padding:14px 18px;max-width:min(88%,430px)}
+.placard .t{font-family:"Cormorant Garamond",serif;font-size:21px;font-weight:600}
+.placard .m{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-top:5px}
+.placard p{color:var(--dim);font-size:13px;line-height:1.6;margin-top:9px}
+.placard a{display:inline-block;margin-top:9px;color:var(--gold);font-size:11px;letter-spacing:.14em;text-transform:uppercase;text-decoration:none}
+.sec{padding:9vh 0;text-align:center}
+.sec h2{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(26px,5vw,48px)}
+.grid{display:grid;gap:16px;grid-template-columns:1fr;margin-top:4vh;text-align:left}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:16px 0}
+.sv h4{font-family:"Cormorant Garamond",serif;font-size:20px;font-weight:600}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:4vh}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 10px;color:var(--dim)}
+.btn{display:inline-block;margin-top:22px;background:var(--ink);color:var(--bg);text-decoration:none;padding:15px 24px;font-size:14px}
+</style></head><body>
+<nav><b id="nb"></b><span style="display:flex;gap:10px;align-items:center"><button id="tt">Dark</button></span></nav><div class="pad">
+  <section class="hero"><h1>A room of<br>working things.</h1><p id="intro"></p></section>
+  <div class="wall" id="wall"></div>
+  <section class="sec"><h2>What you can commission</h2><div class="grid" id="svc"></div>
+    <div class="chips" id="chips"></div></section>
+  <section class="sec"><h2>Have an idea?</h2><a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section>
+</div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+wall.innerHTML=S.projects.map(p=>`<div class="work"><div class="frame" style="--c:${p.c}"><b>${p.t}</b></div>
+  <div class="placard"><div class="t">${p.t}</div><div class="m mono">${p.type}</div><p>${p.s}</p>
+  <a class="mono" href="${p.href}" target="_blank" rel="noreferrer">Visit ↗</a></div></div>`).join("");
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const root = document.documentElement;
+const KEY = "d32t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("32");
+</script></body></html>

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D47 — Book</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e7e0cf;--page:#faf6ea;--ink:#1c1710;--gold:#7a5a12;--dim:#66604f;--line:rgba(28,23,16,.2)}
+:root[data-theme="dark"]{--bg:#0b0a07;--page:#16130d;--ink:#efe8d8;--gold:#dcbc74;--dim:#918a78;--line:rgba(239,232,216,.2)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}
+body{font-family:"Crimson Pro",Georgia,serif;font-size:17px}
+.pad{width:min(100% - 20px,860px);margin:auto;padding:48px 0 110px}
+/* A bound book with a visible spine and pages you turn. Only one spread at a
+   time, which forces a pace instead of a scroll. */
+.book{background:var(--page);border-radius:4px;box-shadow:0 22px 56px rgba(0,0,0,.22);position:relative;
+  min-height:min(74vh,620px);display:grid;grid-template-columns:1fr}
+@media(min-width:800px){.book{grid-template-columns:1fr 1fr}
+ .book::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:22px;transform:translateX(-50%);
+  background:linear-gradient(90deg,transparent,rgba(0,0,0,.1),transparent)}}
+.pg{padding:34px 28px}
+.pg.l{border-bottom:1px solid var(--line)}
+@media(min-width:800px){.pg.l{border-bottom:0;border-right:1px solid var(--line)}}
+.folio{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.pg h2{font-weight:700;font-size:clamp(26px,5vw,46px);letter-spacing:-.015em;line-height:1.05;margin:12px 0 14px}
+.pg p{color:var(--dim);line-height:1.72;margin-bottom:12px}
+.pg .band{height:120px;background:var(--c);border-radius:3px;display:grid;place-items:center;margin-bottom:14px}
+.pg .band b{color:rgba(255,255,255,.96);font-weight:700;font-size:24px}
+.pg .st{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
+.pg .st span{font-family:"DM Mono",monospace;font-size:10px;border:1px solid var(--line);padding:5px 8px;color:var(--dim)}
+.pg a{display:inline-block;margin-top:12px;color:var(--gold);font-family:"DM Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;text-decoration:none}
+.turn{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:18px}
+.turn button{background:none;border:1px solid var(--line);color:var(--ink);font-family:"DM Mono",monospace;
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:10px 15px;border-radius:3px;cursor:pointer}
+.turn button:disabled{opacity:.34;cursor:default}
+.turn .of{font-family:"DM Mono",monospace;font-size:11px;color:var(--dim);letter-spacing:.14em}
+#tt{position:fixed;top:14px;right:14px;z-index:60;background:none;border:1px solid var(--line);color:var(--gold);
+  font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:6px 10px;cursor:pointer}
+</style></head><body>
+<button id="tt">Dark</button><div class="pad">
+  <div class="book"><div class="pg l" id="pl"></div><div class="pg r" id="pr"></div></div>
+  <div class="turn"><button id="prev">← Back</button><span class="of" id="of"></span><button id="next">Next →</button></div>
+  <span id="nb" style="display:none"></span>
+  <section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+  <div class="chips" id="chips"></div></section><section class="sec"><h2 style="font-weight:700;font-size:clamp(26px,6vw,58px);letter-spacing:-.04em">Have an idea?</h2>
+  <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+const SPREADS=[{l:`<div class="folio">Frontispiece</div><h2>${S.name}</h2><p>${S.intro}</p>
+   <p>Freelance, India. Everything in this book is live — the links go to running sites, not case studies.</p>`,
+  r:`<div class="folio">Contents</div>${S.projects.map((p,i)=>`<p><b>${i+1}.</b> ${p.t} — <span style="color:var(--gold)">${p.type}</span></p>`).join("")}`},
+ ...S.projects.map((p,i)=>({l:`<div class="folio">Plate ${i+1}</div><div class="band" style="--c:${p.c}"><b>${p.t}</b></div>
+   <p style="font-size:15px">${p.type}</p>`,
+  r:`<div class="folio">${p.href.replace("https://","")}</div><h2>${p.t}</h2><p>${p.s}</p>
+   <div class="st">${p.stack.map(x=>`<span>${x}</span>`).join("")}</div>
+   <a href="${p.href}" target="_blank" rel="noreferrer">Visit the live site ↗</a>`}))];
+let sp=0;
+function draw(){pl.innerHTML=SPREADS[sp].l;pr.innerHTML=SPREADS[sp].r;
+  of.textContent=`${sp+1} / ${SPREADS.length}`;
+  prev.disabled=sp===0;next.disabled=sp===SPREADS.length-1;}
+prev.onclick=()=>{if(sp>0){sp--;draw()}};
+next.onclick=()=>{if(sp<SPREADS.length-1){sp++;draw()}};
+draw();
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const root = document.documentElement;
+const KEY = "d47t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("47");
+</script></body></html>

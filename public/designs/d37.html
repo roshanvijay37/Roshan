@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D37 — Star Chart</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080a14;--ink:#e9ecf7;--gold:#e6c374;--dim:#8b90a8;--line:rgba(233,236,247,.15)}
+:root[data-theme="light"]{--bg:#eef0f7;--ink:#0c0f1c;--gold:#6d5410;--dim:#5b6079;--line:rgba(12,15,28,.15)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:15px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:6px 11px;cursor:pointer}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}
+body{font-family:Inter,system-ui,sans-serif}
+#sky{position:fixed;inset:0;z-index:0}
+.pad{position:relative;z-index:2}
+.hero{padding:20vh 0 6vh}
+.hero h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:clamp(36px,9vw,102px);line-height:1;letter-spacing:-.02em}
+.hero p{margin-top:20px;max-width:46ch;color:var(--dim);line-height:1.78;font-size:15px}
+/* Projects as a constellation: each one a named star, joined by faint lines. */
+.const{position:relative;height:min(78vh,620px);margin:4vh 0 6vh}
+.star{position:absolute;text-decoration:none;color:inherit;transform:translate(-50%,-50%);text-align:center}
+.star i{display:block;width:14px;height:14px;border-radius:50%;background:var(--c);margin:0 auto 9px;
+  box-shadow:0 0 22px var(--c);transition:transform .35s}
+.star:hover i{transform:scale(1.6)}
+.star b{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(15px,2.8vw,25px);white-space:nowrap}
+.star span{display:block;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-top:3px}
+.legend{display:grid;gap:0}
+.lrow{display:grid;grid-template-columns:1fr;gap:5px;padding:15px 0;border-top:1px solid var(--line);text-decoration:none;color:inherit}
+@media(min-width:760px){.lrow{grid-template-columns:180px 1fr 120px;gap:18px;align-items:baseline}}
+.lrow .n{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:21px}
+.lrow p{color:var(--dim);font-size:13.5px;line-height:1.62}
+.lrow .g{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+</style></head><body>
+<canvas id="sky"></canvas><nav><b id="nb"></b><span style="display:flex;gap:10px;align-items:center"><button id="tt">Dark</button></span></nav><div class="pad">
+ <section class="hero"><h1>A small<br>constellation.</h1><p id="intro"></p></section>
+ <div class="const" id="const"></div><div class="legend" id="legend"></div><section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+  <div class="chips" id="chips"></div></section><section class="sec"><h2 style="font-weight:700;font-size:clamp(26px,6vw,58px);letter-spacing:-.04em">Have an idea?</h2>
+  <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+const POS=[[22,18],[70,30],[40,52],[78,68],[26,80]];
+const el=document.getElementById("const");
+el.innerHTML=S.projects.map((p,i)=>`<a class="star" href="${p.href}" target="_blank" rel="noreferrer"
+  style="left:${POS[i][0]}%;top:${POS[i][1]}%;--c:${p.c}"><i></i><b>${p.t}</b><span>${p.type}</span></a>`).join("")
+ +`<svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 100 100" preserveAspectRatio="none">
+   ${POS.slice(0,-1).map((a,i)=>{const b=POS[i+1];return `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="currentColor" stroke-width=".18" opacity=".34"/>`}).join("")}
+  </svg>`;
+legend.innerHTML=S.projects.map(p=>`<a class="lrow" href="${p.href}" target="_blank" rel="noreferrer">
+  <div class="n">${p.t}</div><p>${p.s}</p><div class="g mono">${p.type} ↗</div></a>`).join("");
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+// a quiet starfield; regenerated on resize so density stays even
+const cv=document.getElementById("sky"),ctx=cv.getContext("2d");
+let stars=[];
+function seed(){cv.width=innerWidth;cv.height=innerHeight;
+  stars=Array.from({length:Math.round(innerWidth*innerHeight/9000)},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.1+.2,a:Math.random()}));}
+seed();addEventListener("resize",seed);
+const rm=matchMedia("(prefers-reduced-motion: reduce)").matches;
+(function draw(t){ctx.clearRect(0,0,cv.width,cv.height);
+  const light=document.documentElement.getAttribute("data-theme")==="light";
+  stars.forEach((s,i)=>{const tw=rm?.6:.45+Math.sin(t/900+i)*.32;
+    ctx.globalAlpha=Math.max(.08,tw*s.a);ctx.fillStyle=light?"#4a5070":"#dfe4f5";
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.3);ctx.fill();});
+  requestAnimationFrame(draw);})(0);
+const root = document.documentElement;
+const KEY = "d37t", ALT = "light";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Dark" : "Light"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("37");
+</script></body></html>

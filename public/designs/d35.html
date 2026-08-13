@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D35 — Receipt</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#dedbd2;--paper:#faf8f2;--ink:#1a1814;--gold:#6f5a12;--dim:#6d675a;--line:rgba(26,24,20,.3)}
+:root[data-theme="dark"]{--bg:#0c0c0a;--paper:#171613;--ink:#e9e5da;--gold:#d5b872;--dim:#8d887b;--line:rgba(233,229,218,.26)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}
+body{font-family:"Courier Prime",ui-monospace,monospace;font-size:14px;line-height:1.6}
+.pad{width:min(100% - 20px,520px);margin:auto;padding:44px 0 110px}
+/* A thermal receipt: torn edges, dotted rules, everything itemised in a single
+   narrow column. The whole page is one printed slip. */
+.slip{background:var(--paper);padding:26px 22px 34px;position:relative;box-shadow:0 14px 40px rgba(0,0,0,.16)}
+.slip::before,.slip::after{content:"";position:absolute;left:0;right:0;height:10px;
+  background:repeating-linear-gradient(135deg,var(--paper) 0 7px,transparent 7px 14px)}
+.slip::before{top:-9px;transform:scaleY(-1)}.slip::after{bottom:-9px}
+.c{text-align:center}
+h1{font-size:20px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.sub{font-size:12px;color:var(--dim);letter-spacing:.06em;margin-top:5px}
+.hr{border-top:1px dashed var(--line);margin:16px 0}
+.li{display:flex;justify-content:space-between;gap:12px;align-items:baseline;text-decoration:none;color:inherit;padding:7px 0}
+.li:hover{background:rgba(111,90,18,.07)}
+.li .l{flex:1}
+.li .n{font-weight:700}
+.li .d{color:var(--dim);font-size:12px;line-height:1.5;margin-top:3px}
+.li .r{color:var(--gold);white-space:nowrap;font-size:12px}
+.tot{display:flex;justify-content:space-between;font-weight:700;letter-spacing:.06em;padding-top:5px}
+.small{font-size:12px;color:var(--dim)}
+.bar{margin-top:18px;height:46px;background-image:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 9px)}
+.wa{display:block;text-align:center;margin-top:16px;background:var(--ink);color:var(--paper);
+  text-decoration:none;padding:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:13px}
+#tt{position:fixed;top:14px;right:14px;z-index:60;background:none;border:1px solid var(--line);color:var(--gold);
+  font:inherit;font-size:11px;padding:5px 10px;cursor:pointer;text-transform:uppercase;letter-spacing:.1em}
+</style></head><body>
+<button id="tt">Dark</button><div class="pad"><div class="slip">
+  <div class="c"><h1 id="nb"></h1><div class="sub">Freelance web developer — India</div>
+    <div class="sub">Available for work</div></div>
+  <div class="hr"></div><div class="small" id="intro"></div>
+  <div class="hr"></div><div class="small" style="letter-spacing:.1em;text-transform:uppercase">Items delivered</div>
+  <div id="items"></div>
+  <div class="hr"></div><div id="svc"></div>
+  <div class="hr"></div><div class="small" style="letter-spacing:.1em;text-transform:uppercase">Materials</div>
+  <div class="small" id="chips" style="margin-top:6px"></div>
+  <div class="hr"></div>
+  <div class="tot"><span>Total shipped</span><span>ALL LIVE</span></div>
+  <div class="bar"></div>
+  <div class="c small" style="margin-top:12px">Thank you — come again</div>
+  <a class="wa" id="wa" href="#">Message me on WhatsApp</a>
+</div></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+items.innerHTML=S.projects.map(p=>`<a class="li" href="${p.href}" target="_blank" rel="noreferrer">
+  <span class="l"><span class="n">${p.t}</span><span class="d">${p.s}</span>
+  <span class="d">${p.stack.join(" / ")}</span></span><span class="r">LIVE ↗</span></a>`).join("");
+svc.innerHTML=S.services.map(s=>`<div class="li" style="cursor:default"><span class="l">
+  <span class="n">${s.t}</span><span class="d">${s.b}</span></span></div>`).join("");
+chips.textContent=S.skills.join(" / ");
+const root = document.documentElement;
+const KEY = "d35t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("35");
+</script></body></html>

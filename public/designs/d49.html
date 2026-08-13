@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D49 — Search</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f2e9;--ink:#141109;--gold:#7d5f10;--dim:#6a6353;--line:rgba(20,17,9,.15);--visited:#5b3fa8}
+:root[data-theme="dark"]{--bg:#0b0a07;--ink:#f0eade;--gold:#e6c374;--dim:#8e8776;--line:rgba(240,234,222,.15)}
+:root[data-theme="dark"]{--visited:#b9a3ee}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}
+body{font-family:Inter,system-ui,sans-serif}
+.pad{width:min(100% - 24px,760px);margin:auto;padding:34px 0 110px}
+/* Search results, because that is how someone would actually find this. The
+   query is already typed; the answers are the work. */
+.bar{display:flex;gap:9px;align-items:center;border:1px solid var(--line);border-radius:99px;padding:11px 16px;
+  box-shadow:0 3px 14px rgba(0,0,0,.07);position:sticky;top:12px;background:var(--bg);z-index:20}
+.bar input{flex:1;border:0;background:none;color:inherit;font:inherit;font-size:15px;outline:none}
+.bar button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:6px 10px;cursor:pointer}
+.stat{font-size:12.5px;color:var(--dim);margin:14px 0 6px}
+.res{padding:16px 0;border-bottom:1px solid var(--line)}
+.res .u{font-size:12.5px;color:var(--dim);display:flex;align-items:center;gap:7px}
+.res .u i{width:15px;height:15px;border-radius:50%;background:var(--c);flex:none}
+.res h3{margin:5px 0 4px}
+.res h3 a{color:var(--visited);text-decoration:none;font-weight:500;font-size:19px}
+.res h3 a:hover{text-decoration:underline}
+.res p{color:var(--dim);font-size:13.5px;line-height:1.6}
+.res .st{font-size:11.5px;color:var(--dim);margin-top:6px;font-family:"DM Mono",monospace}
+.res mark{background:rgba(230,195,116,.34);color:inherit;padding:0 2px}
+.side{border:1px solid var(--line);border-radius:12px;padding:18px;margin:22px 0}
+.side h4{font-weight:600;font-size:17px}
+.side .m{font-size:12.5px;color:var(--dim);margin-top:5px}
+.side .row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-top:1px solid var(--line);font-size:13px;margin-top:9px}
+.side .row span:last-child{color:var(--dim);text-align:right}
+.side a{display:inline-block;margin-top:13px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:11px 16px;border-radius:8px;font-weight:700;font-size:13.5px}
+</style></head><body>
+<div class="pad">
+  <div class="bar"><span class="mono" style="color:var(--gold);font-size:13px">⌕</span>
+    <input id="q" value="freelance web developer india who has actually shipped" readonly aria-label="Search">
+    <button id="tt">Dark</button></div>
+  <div class="stat mono" id="stat"></div>
+  <div id="res"></div>
+  <div class="side" id="side"></div>
+  <span id="nb" style="display:none"></span>
+  <section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+  <div class="chips" id="chips"></div></section><section class="sec"><h2 style="font-weight:700;font-size:clamp(26px,6vw,58px);letter-spacing:-.04em">Have an idea?</h2>
+  <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+stat.textContent="About 5 results — every one of them live";
+res.innerHTML=S.projects.map(p=>`<div class="res" style="--c:${p.c}">
+  <div class="u"><i></i>${p.href.replace("https://","")} › ${p.type.toLowerCase()}</div>
+  <h3><a href="${p.href}" target="_blank" rel="noreferrer">${p.t} — ${p.type}</a></h3>
+  <p>${p.s.replace(/\b(live|built|real users|trust)\b/gi,m=>"<mark>"+m+"</mark>")}</p>
+  <div class="st">${p.stack.join(" · ")}</div></div>`).join("");
+side.innerHTML=`<h4>${S.name}</h4><div class="m">Freelance web developer · India</div>
+  <div class="row"><span>Status</span><span>Available for work</span></div>
+  <div class="row"><span>Builds</span><span>${S.services.map(s=>s.t).join(", ")}</span></div>
+  <div class="row"><span>Works in</span><span>${S.skills.slice(0,6).join(", ")}…</span></div>
+  <a href="${S.wa}" target="_blank" rel="noreferrer">Message on WhatsApp →</a>`;
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const root = document.documentElement;
+const KEY = "d49t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("49");
+</script></body></html>

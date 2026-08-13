@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D34 — Transit</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4ee;--ink:#14130e;--gold:#7d5f10;--dim:#67624f;--line:rgba(20,19,14,.16)}
+:root[data-theme="dark"]{--bg:#0c0c09;--ink:#eeece0;--gold:#e6c374;--dim:#8d8878;--line:rgba(238,236,224,.16)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}
+body{font-family:Barlow,system-ui,sans-serif}
+nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:15px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:6px 11px;cursor:pointer}
+.hero{padding:19vh 0 4vh}
+.hero h1{font-weight:700;font-size:clamp(34px,8.4vw,92px);letter-spacing:-.03em;line-height:1}
+.hero p{margin-top:18px;max-width:46ch;color:var(--dim);line-height:1.75;font-size:15px}
+/* A transit line. Each project is a station on the route, connected by a
+   coloured trunk that changes hue between stops. */
+.line{position:relative;padding:5vh 0 3vh 0}
+.stop{position:relative;padding:0 0 42px 44px;text-decoration:none;color:inherit;display:block}
+.stop::before{content:"";position:absolute;left:11px;top:6px;bottom:-6px;width:4px;background:linear-gradient(var(--c),var(--c2,var(--c)))}
+.stop:last-child::before{bottom:auto;height:14px}
+.stop .dot{position:absolute;left:2px;top:2px;width:22px;height:22px;border-radius:50%;
+  background:var(--bg);border:4px solid var(--c);transition:transform .3s}
+.stop:hover .dot{transform:scale(1.22)}
+.stop .kind{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.stop h3{font-weight:700;font-size:clamp(22px,4.6vw,38px);letter-spacing:-.03em;margin:5px 0 8px}
+.stop p{color:var(--dim);font-size:14px;line-height:1.68;max-width:52ch}
+.stop .st{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.stop .st span{font-size:10px;border:1px solid var(--line);padding:6px 8px;border-radius:99px;color:var(--dim)}
+.stop .go{display:inline-block;margin-top:11px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.key{display:flex;flex-wrap:wrap;gap:14px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.key i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.sec{padding:8vh 0}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.grid{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0}
+.sv h4{font-weight:700;font-size:18px}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.btn{display:inline-block;margin-top:20px;background:var(--ink);color:var(--bg);text-decoration:none;padding:15px 22px;border-radius:99px;font-weight:600;font-size:14px}
+</style></head><body>
+<nav><b id="nb"></b><span style="display:flex;gap:10px;align-items:center"><button id="tt">Dark</button></span></nav><div class="pad">
+  <section class="hero"><h1>The line so far.</h1><p id="intro"></p></section>
+  <div class="key" id="key"></div>
+  <div class="line" id="line"></div>
+  <section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+    <div class="chips" id="chips"></div></section>
+  <section class="sec"><h2 style="font-weight:700;font-size:clamp(24px,5.4vw,46px);letter-spacing:-.03em">Have an idea?</h2>
+    <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section>
+</div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+key.innerHTML=S.projects.map(p=>`<span><i style="background:${p.c}"></i>${p.type}</span>`).join("");
+line.innerHTML=S.projects.map((p,i)=>{const nx=S.projects[i+1];
+ return `<a class="stop" href="${p.href}" target="_blank" rel="noreferrer" style="--c:${p.c};--c2:${nx?nx.c:p.c}">
+  <span class="dot"></span><div class="kind mono">${p.type}</div><h3>${p.t}</h3><p>${p.s}</p>
+  <div class="st">${p.stack.map(x=>`<span class="mono">${x}</span>`).join("")}</div>
+  <span class="go mono">Visit ${p.href.replace("https://","")} ↗</span></a>`}).join("");
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const root = document.documentElement;
+const KEY = "d34t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("34");
+</script></body></html>

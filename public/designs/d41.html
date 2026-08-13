@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D41 — Tabs</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f2e9;--ink:#141109;--gold:#7d5f10;--dim:#6a6353;--line:rgba(20,17,9,.15);--chrome:#e6e1d4}
+:root[data-theme="dark"]{--bg:#0b0a07;--ink:#f0eade;--gold:#e6c374;--dim:#8e8776;--line:rgba(240,234,222,.15)}
+:root[data-theme="dark"]{--chrome:#17150f}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}
+body{font-family:Inter,system-ui,sans-serif}
+/* A browser with the work already open in tabs. Switching tab switches project;
+   nothing scrolls to find anything. */
+.win{max-width:1160px;margin:60px auto 0;width:calc(100% - 22px);border:1px solid var(--line);
+  border-radius:11px;overflow:hidden;box-shadow:0 26px 60px rgba(0,0,0,.16)}
+.bar{display:flex;gap:2px;padding:8px 8px 0;background:var(--chrome);overflow-x:auto;scrollbar-width:none}
+.bar::-webkit-scrollbar{display:none}
+.tab{border:0;background:transparent;color:var(--dim);font:inherit;font-size:12.5px;padding:10px 14px;
+  border-radius:8px 8px 0 0;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:7px}
+.tab i{width:9px;height:9px;border-radius:2px;background:var(--c)}
+.tab.on{background:var(--bg);color:var(--ink);font-weight:600}
+.addr{display:flex;align-items:center;gap:9px;padding:9px 12px;background:var(--bg);border-bottom:1px solid var(--line)}
+.addr .u{flex:1;border:1px solid var(--line);border-radius:99px;padding:7px 13px;font-size:12px;color:var(--dim);
+  font-family:"DM Mono",monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.addr button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:6px 10px;cursor:pointer}
+.page{padding:30px 22px 40px;min-height:60svh;background:var(--bg)}
+.page .k{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.page h2{font-weight:700;font-size:clamp(26px,5.6vw,54px);letter-spacing:-.04em;margin:10px 0 14px;line-height:1.02}
+.page p{color:var(--dim);font-size:15px;line-height:1.74;max-width:54ch}
+.page .band{height:7px;background:var(--c);margin:16px 0}
+.page .st{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.page .st span{font-size:10px;border:1px solid var(--line);padding:6px 9px;border-radius:99px;color:var(--dim)}
+.page a.go{display:inline-block;margin-top:16px;background:var(--ink);color:var(--bg);text-decoration:none;
+  padding:13px 19px;border-radius:99px;font-weight:600;font-size:13.5px}
+.pad{padding-bottom:12vh}
+</style></head><body>
+<div class="win">
+  <div class="bar" id="bar"></div>
+  <div class="addr"><span class="u" id="url"></span><button id="tt">Dark</button></div>
+  <div class="page" id="page"></div>
+ </div>
+ <div class="pad"><span id="nb" style="display:none"></span><section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+  <div class="chips" id="chips"></div></section><section class="sec"><h2 style="font-weight:700;font-size:clamp(26px,6vw,58px);letter-spacing:-.04em">Have an idea?</h2>
+  <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+const TABS=[{t:"about",u:"roshanvijay.com"},...S.projects.map(p=>({t:p.t,u:p.href.replace("https://",""),p}))];
+bar.innerHTML=TABS.map((t,i)=>`<button class="tab${i===0?" on":""}" data-i="${i}" style="--c:${t.p?t.p.c:"var(--gold)"}"><i></i>${t.t}</button>`).join("");
+function show(i){
+  const t=TABS[i];
+  bar.querySelectorAll(".tab").forEach((b,n)=>b.classList.toggle("on",n===i));
+  url.textContent="https://"+t.u;
+  page.innerHTML = t.p
+   ? `<div class="k mono">${t.p.type}</div><h2>${t.p.t}</h2><div class="band" style="--c:${t.p.c}"></div>
+      <p>${t.p.s}</p><div class="st" style="margin-top:14px">${t.p.stack.map(x=>`<span class="mono">${x}</span>`).join("")}</div>
+      <a class="go" href="${t.p.href}" target="_blank" rel="noreferrer">Open the real thing ↗</a>`
+   : `<div class="k mono">Freelance web developer</div><h2>${S.name}</h2><p>${S.intro}</p>
+      <p style="margin-top:12px">Every other tab is a site that is live right now. Click through them.</p>`;
+  const t2=bar.querySelectorAll(".tab")[i]; if(t2)t2.scrollIntoView({inline:"center",block:"nearest"});
+}
+bar.querySelectorAll(".tab").forEach(b=>b.onclick=()=>show(+b.dataset.i));
+show(0);
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const root = document.documentElement;
+const KEY = "d41t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("41");
+</script></body></html>

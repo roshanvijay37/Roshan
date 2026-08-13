@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D45 — Timeline</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f2e9;--ink:#141109;--gold:#7d5f10;--dim:#6a6353;--line:rgba(20,17,9,.15);}
+:root[data-theme="dark"]{--bg:#0b0a07;--ink:#f0eade;--gold:#e6c374;--dim:#8e8776;--line:rgba(240,234,222,.15)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:15px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:6px 11px;cursor:pointer}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}
+body{font-family:Sora,system-ui,sans-serif}
+.hero{padding:19vh 0 3vh}
+.hero h1{font-weight:800;font-size:clamp(30px,7.6vw,82px);letter-spacing:-.045em;line-height:1.02}
+.hero p{margin-top:18px;max-width:46ch;color:var(--dim);line-height:1.75;font-size:15px}
+/* A spine with entries alternating either side on wide screens, all on one side
+   on a phone where alternating would just look broken. */
+.tl{position:relative;padding:5vh 0}
+.tl::before{content:"";position:absolute;left:9px;top:0;bottom:0;width:2px;background:var(--line)}
+@media(min-width:900px){.tl::before{left:50%;transform:translateX(-1px)}}
+.ev{position:relative;padding:0 0 40px 34px}
+@media(min-width:900px){.ev{width:50%;padding:0 0 52px 0}
+  .ev:nth-child(odd){left:0;padding-right:42px;text-align:right}
+  .ev:nth-child(even){left:50%;padding-left:42px}}
+.ev .dot{position:absolute;left:2px;top:5px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:3px solid var(--c)}
+@media(min-width:900px){.ev:nth-child(odd) .dot{left:auto;right:-9px}.ev:nth-child(even) .dot{left:-9px}}
+.ev .k{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.ev h3{font-weight:800;font-size:clamp(20px,4.2vw,34px);letter-spacing:-.03em;margin:6px 0 8px;line-height:1.05}
+.ev p{color:var(--dim);font-size:14px;line-height:1.68}
+.ev .st{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
+@media(min-width:900px){.ev:nth-child(odd) .st{justify-content:flex-end}}
+.ev .st span{font-size:10px;border:1px solid var(--line);padding:5px 8px;border-radius:99px;color:var(--dim)}
+.ev a{display:inline-block;margin-top:10px;color:var(--gold);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;text-decoration:none}
+</style></head><body>
+<nav><b id="nb"></b><span style="display:flex;gap:10px;align-items:center"><button id="tt">Dark</button></span></nav><div class="pad"><section class="hero"><h1>How it got built.</h1><p id="intro"></p></section>
+ <div class="tl" id="tl"></div><section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+  <div class="chips" id="chips"></div></section><section class="sec"><h2 style="font-weight:700;font-size:clamp(26px,6vw,58px);letter-spacing:-.04em">Have an idea?</h2>
+  <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+tl.innerHTML=S.projects.map(p=>`<div class="ev" style="--c:${p.c}"><span class="dot"></span>
+  <div class="k mono">${p.type}</div><h3>${p.t}</h3><p>${p.s}</p>
+  <div class="st">${p.stack.map(x=>`<span class="mono">${x}</span>`).join("")}</div>
+  <a class="mono" href="${p.href}" target="_blank" rel="noreferrer">Visit ↗</a></div>`).join("");
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const root = document.documentElement;
+const KEY = "d45t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("45");
+</script></body></html>

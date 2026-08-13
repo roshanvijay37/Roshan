@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D39 — Magazine</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2eee4;--ink:#100e09;--gold:#8a2f22;--dim:#5f594b;--line:rgba(16,14,9,.2)}
+:root[data-theme="dark"]{--bg:#0b0a07;--ink:#f1ece0;--gold:#e07a5f;--dim:#8f8878;--line:rgba(241,236,224,.2)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:15px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:6px 11px;cursor:pointer}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}
+body{font-family:Inter,system-ui,sans-serif}
+.bod{font-family:"Bodoni Moda",Georgia,serif}
+/* A magazine cover, then spreads. The cover line runs behind and around a
+   blocked-out portrait area the way a real cover does. */
+.cover{min-height:100svh;display:grid;align-content:center;padding:16vh 0 8vh;position:relative;border-bottom:3px solid var(--ink)}
+.cover .ttl{font-family:"Bodoni Moda",serif;font-weight:900;font-size:clamp(56px,20vw,240px);line-height:.8;letter-spacing:-.04em}
+.cover .strap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:10.5px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--dim);border-top:1px solid var(--line);padding-top:12px;margin-top:20px}
+.cover .lines{position:absolute;right:0;top:22vh;width:min(46%,320px);display:grid;gap:14px;text-align:right}
+@media(max-width:760px){.cover .lines{position:static;width:auto;text-align:left;margin-top:26px}}
+.cover .lines div{font-family:"Bodoni Moda",serif;font-style:italic;font-size:clamp(15px,2.6vw,21px);color:var(--dim)}
+.cover .lines b{font-style:normal;color:var(--ink)}
+.spread{padding:9vh 0;border-bottom:1px solid var(--line);display:grid;gap:22px}
+@media(min-width:880px){.spread{grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+  .spread:nth-child(even) .plate{order:2}}
+.plate{aspect-ratio:5/6;background:var(--c);display:grid;place-items:center;padding:20px}
+.plate b{font-family:"Bodoni Moda",serif;font-weight:700;font-size:clamp(26px,5vw,50px);color:rgba(255,255,255,.96);text-align:center;line-height:1.05}
+.copy .no{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.copy h2{font-family:"Bodoni Moda",serif;font-weight:900;font-size:clamp(28px,5.6vw,56px);letter-spacing:-.02em;line-height:1.02;margin:10px 0 12px}
+.copy p{color:var(--dim);font-size:15.5px;line-height:1.72;max-width:48ch}
+.copy p::first-letter{font-family:"Bodoni Moda",serif;font-weight:900;font-size:52px;float:left;line-height:.8;padding:5px 9px 0 0;color:var(--gold)}
+.copy .st{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.copy .st span{font-size:10px;border:1px solid var(--line);padding:6px 9px;color:var(--dim)}
+.copy a{display:inline-block;margin-top:14px;color:var(--gold);font-size:11px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none}
+</style></head><body>
+<nav><b id="nb"></b><span style="display:flex;gap:10px;align-items:center"><button id="tt">Dark</button></span></nav><div class="pad">
+  <section class="cover"><div class="ttl bod">ROSHAN</div>
+    <div class="strap"><span id="nb2">Freelance web developer</span><span>India — available</span><span>Portfolio no. 01</span></div>
+    <div class="lines"><div><b>Five sites</b> that people actually use</div>
+      <div>Voice-first social, built for <b>trust</b></div><div>A temple, in <b>Kannada</b></div></div>
+    <p id="intro" style="margin-top:26px;max-width:44ch;color:var(--dim);line-height:1.75;font-size:15px"></p></section>
+  <div id="spreads"></div><section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+  <div class="chips" id="chips"></div></section><section class="sec"><h2 style="font-weight:700;font-size:clamp(26px,6vw,58px);letter-spacing:-.04em">Have an idea?</h2>
+  <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+spreads.innerHTML=S.projects.map((p,i)=>`<section class="spread">
+  <div class="plate" style="--c:${p.c}"><b>${p.t}</b></div>
+  <div class="copy"><div class="no mono">${p.type}</div><h2>${p.t}</h2><p>${p.s}</p>
+  <div class="st">${p.stack.map(x=>`<span class="mono">${x}</span>`).join("")}</div>
+  <a class="mono" href="${p.href}" target="_blank" rel="noreferrer">Visit ${p.href.replace("https://","")} ↗</a></div></section>`).join("");
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const root = document.documentElement;
+const KEY = "d39t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("39");
+</script></body></html>
