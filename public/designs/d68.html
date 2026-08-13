@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D68 — Compare</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f2e9;--ink:#141109;--gold:#7d5f10;--dim:#6a6353;--line:rgba(20,17,9,.15);}
+:root[data-theme="dark"]{--bg:#0b0a07;--ink:#f0eade;--gold:#e6c374;--dim:#8e8776;--line:rgba(240,234,222,.15)}*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}nav{position:fixed;z-index:60;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;
+  padding:15px 18px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:linear-gradient(180deg,var(--bg),transparent)}
+nav b{color:var(--gold)}
+nav button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:6px 11px;cursor:pointer}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}
+.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}.hero{padding:18vh 0 3vh}
+.hero h1{font-weight:800;font-size:clamp(30px,7.6vw,80px);letter-spacing:-.045em;line-height:1.02}
+.hero p{margin-top:16px;max-width:46ch;color:var(--dim);line-height:1.75;font-size:15px}
+body{font-family:Inter,system-ui,sans-serif}
+/* A wipe handle between "the brief" and "what shipped". Drag it and one state
+   replaces the other — the clearest way to show a before and an after. */
+.cmp{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);margin-top:4vh;
+  aspect-ratio:16/11;user-select:none;touch-action:pan-y}
+@media(min-width:860px){.cmp{aspect-ratio:16/7}}
+.side{position:absolute;inset:0;display:grid;place-items:center;padding:26px;text-align:center}
+.side.a{background:var(--bg)}
+.side.a .in{border:2px dashed var(--line);border-radius:10px;padding:20px 22px;max-width:440px}
+.side.a h3{font-weight:800;font-size:clamp(19px,3.4vw,28px);letter-spacing:-.03em}
+.side.a p{color:var(--dim);font-size:13.5px;line-height:1.62;margin-top:9px}
+.side.b{background:var(--c);clip-path:inset(0 0 0 var(--x,50%))}
+.side.b h3{color:rgba(255,255,255,.97);font-weight:800;font-size:clamp(23px,4.6vw,42px);letter-spacing:-.035em}
+.side.b p{color:rgba(255,255,255,.9);font-size:13.5px;line-height:1.62;margin-top:9px;max-width:44ch}
+.side.b .go{display:inline-block;margin-top:12px;background:rgba(255,255,255,.94);color:#181206;
+  padding:9px 15px;border-radius:99px;font-weight:700;font-size:12.5px;text-decoration:none}
+.handle{position:absolute;top:0;bottom:0;left:var(--x,50%);width:3px;background:#fff;box-shadow:0 0 12px rgba(0,0,0,.4);cursor:ew-resize}
+.handle::after{content:"⟺";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:36px;height:36px;border-radius:50%;background:#fff;color:#191307;display:grid;place-items:center;font-size:14px}
+.picker{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
+.picker button{background:none;border:1px solid var(--line);color:var(--dim);font:inherit;font-size:12px;
+  padding:8px 13px;border-radius:99px;cursor:pointer}
+.picker button.on{background:var(--c2);color:#fff;border-color:transparent}
+</style></head><body>
+<nav><b id="nb"></b><span style="display:flex;gap:10px;align-items:center"><button id="tt">Dark</button></span></nav><div class="pad"><section class="hero"><h1>The brief,<br>and what shipped.</h1><p id="intro"></p></section>
+ <div class="cmp" id="cmp"><div class="side a"><div class="in"><h3 id="ah"></h3><p id="ap"></p></div></div>
+  <div class="side b" id="sb"></div><div class="handle" id="hd"></div></div>
+ <div class="picker" id="picker"></div><section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+  <div class="chips" id="chips"></div></section><section class="sec"><h2 style="font-weight:700;font-size:clamp(26px,6vw,58px);letter-spacing:-.04em">Have an idea?</h2>
+  <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+let cur=0;
+function show(i){cur=i;const p=S.projects[i];
+  cmp.style.setProperty("--c",p.c);
+  ah.textContent="Brief — "+p.type;
+  ap.textContent="A client needed "+p.type.toLowerCase()+". Nothing existed yet.";
+  sb.innerHTML=`<div><h3>${p.t}</h3><p>${p.s}</p>
+   <a class="go" href="${p.href}" target="_blank" rel="noreferrer">Visit ${p.href.replace("https://","")} ↗</a></div>`;
+  picker.querySelectorAll("button").forEach((b,n)=>{b.classList.toggle("on",n===i);b.style.setProperty("--c2",S.projects[n].c)});}
+picker.innerHTML=S.projects.map((p,i)=>`<button data-i="${i}">${p.t}</button>`).join("");
+picker.querySelectorAll("button").forEach(b=>b.onclick=()=>show(+b.dataset.i));
+show(0);
+let drag=false;
+const set=cx=>{const r=cmp.getBoundingClientRect();
+  const x=Math.max(0,Math.min(100,((cx-r.left)/r.width)*100));
+  cmp.style.setProperty("--x",x+"%");hd.style.left=x+"%";};
+cmp.addEventListener("pointerdown",e=>{drag=true;cmp.setPointerCapture(e.pointerId);set(e.clientX)});
+cmp.addEventListener("pointermove",e=>{if(drag)set(e.clientX)});
+const up=()=>drag=false;
+cmp.addEventListener("pointerup",up);cmp.addEventListener("pointercancel",up);
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const root = document.documentElement;
+const KEY = "d68t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("68");
+</script></body></html>

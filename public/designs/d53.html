@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D53 — Deck</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800;900&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0b08;--ink:#f1ebdd;--gold:#e6c374;--dim:#8e8776;--line:rgba(241,235,221,.15)}
+:root[data-theme="light"]{--bg:#f6f3ea;--ink:#141109;--gold:#7d5f10;--dim:#6a6353;--line:rgba(20,17,9,.15)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}
+.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}
+body{font-family:Archivo,system-ui,sans-serif}
+/* A presentation. One idea per screen, arrow keys or swipe, a slide counter —
+   the format a client already knows how to sit through. */
+.stage{height:100svh;display:grid;place-items:center;padding:60px 24px;position:relative;overflow:hidden}
+.slide{max-width:900px;width:100%;display:none}
+.slide.on{display:block;animation:in .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes in{from{opacity:0;transform:translateY(18px)}}
+.slide .k{font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.slide h1{font-weight:900;font-size:clamp(32px,8vw,88px);letter-spacing:-.045em;line-height:1}
+.slide h1 em{font-style:normal;color:var(--gold)}
+.slide p{margin-top:20px;max-width:52ch;color:var(--dim);line-height:1.76;font-size:16px}
+.slide .band{height:9px;background:var(--c);margin:22px 0}
+.slide .st{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
+.slide .st span{font-size:10.5px;border:1px solid var(--line);padding:7px 10px;border-radius:99px;color:var(--dim)}
+.slide a.go{display:inline-block;margin-top:22px;background:var(--gold);color:#131006;text-decoration:none;
+  padding:15px 22px;border-radius:99px;font-weight:700;font-size:14px}
+.hud{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;justify-content:space-between;align-items:center;
+  padding:14px 18px;font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.hud button{background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  border-radius:99px;padding:7px 12px;cursor:pointer;letter-spacing:.14em}
+.hud .mid{display:flex;gap:8px;align-items:center}
+.dots{display:flex;gap:5px}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--gold);transform:scale(1.4)}
+.pad{display:none}
+</style></head><body>
+<div class="stage" id="stage"></div>
+ <div class="hud"><span id="nb"></span>
+  <span class="mid"><button id="prev">←</button><span class="dots" id="dots"></span><button id="next">→</button></span>
+  <span style="display:flex;gap:10px;align-items:center"><span id="ctr"></span><button id="tt">Light</button></span></div>
+ <div class="pad"><span id="intro"></span><div id="svc"></div><div id="chips"></div><a id="wa" href="#"></a></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+const SL=[{k:"Freelance web developer",h:"I build things you can <em>go and use.</em>",p:S.intro},
+ ...S.projects.map(p=>({k:p.type,h:p.t,p:p.s,c:p.c,st:p.stack,href:p.href})),
+ {k:"Services",h:"What you can buy.",p:S.services.map(s=>s.t+" — "+s.b).join("  ·  ")},
+ {k:"Contact",h:"Have an idea?",p:"The fastest route is WhatsApp.",cta:S.wa}];
+stage.innerHTML=SL.map((s,i)=>`<div class="slide${i===0?" on":""}">
+  <div class="k mono">${s.k}</div><h1>${s.h}</h1>
+  ${s.c?`<div class="band" style="--c:${s.c}"></div>`:""}
+  <p>${s.p}</p>
+  ${s.st?`<div class="st">${s.st.map(x=>`<span class="mono">${x}</span>`).join("")}</div>`:""}
+  ${s.href?`<a class="go" href="${s.href}" target="_blank" rel="noreferrer">Visit ${s.href.replace("https://","")} ↗</a>`:""}
+  ${s.cta?`<a class="go" href="${s.cta}" target="_blank" rel="noreferrer">Message me on WhatsApp →</a>`:""}
+ </div>`).join("");
+dots.innerHTML=SL.map(()=>"<i></i>").join("");
+let i=0;
+function go(n){i=Math.max(0,Math.min(SL.length-1,n));
+  stage.querySelectorAll(".slide").forEach((s,x)=>s.classList.toggle("on",x===i));
+  dots.querySelectorAll("i").forEach((d,x)=>d.classList.toggle("on",x===i));
+  ctr.textContent=(i+1)+" / "+SL.length;}
+go(0);
+prev.onclick=()=>go(i-1); next.onclick=()=>go(i+1);
+addEventListener("keydown",e=>{if(e.key==="ArrowRight"||e.key===" ")go(i+1);if(e.key==="ArrowLeft")go(i-1)});
+// swipe, since a phone has no arrow keys
+let sx=0; stage.addEventListener("touchstart",e=>sx=e.touches[0].clientX,{passive:true});
+stage.addEventListener("touchend",e=>{const d=e.changedTouches[0].clientX-sx; if(Math.abs(d)>48)go(i+(d<0?1:-1))},{passive:true});
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const root = document.documentElement;
+const KEY = "d53t", ALT = "light";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Dark" : "Light"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("53");
+</script></body></html>

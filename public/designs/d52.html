@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D52 — Finder</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f2e9;--ink:#141109;--gold:#7d5f10;--dim:#6a6353;--line:rgba(20,17,9,.15);--chrome:#e8e3d6;--sel:rgba(125,95,16,.14)}
+:root[data-theme="dark"]{--bg:#0b0a07;--ink:#f0eade;--gold:#e6c374;--dim:#8e8776;--line:rgba(240,234,222,.15)}
+:root[data-theme="dark"]{--chrome:#17150f;--sel:rgba(230,195,116,.16)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg);overflow-x:hidden;scroll-behavior:smooth}
+body{color:var(--ink);-webkit-font-smoothing:antialiased}
+.mono{font-family:"DM Mono",ui-monospace,monospace}
+.pad{width:min(100% - 26px,1160px);margin:auto}.grid{display:grid;gap:14px;grid-template-columns:1fr;margin-top:4vh}
+@media(min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
+.sv{border-top:1px solid var(--line);padding:15px 0 19px}
+.sv h4{font-weight:700;font-size:18px;letter-spacing:-.02em}
+.sv p{color:var(--dim);font-size:13.5px;line-height:1.66;margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.chips span{font-size:10.5px;border:1px solid var(--line);padding:7px 9px;border-radius:99px;color:var(--dim)}
+.lab{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.sec{padding:9vh 0}
+.btn{display:inline-block;margin-top:20px;background:var(--gold);color:#141005;text-decoration:none;
+  padding:15px 23px;border-radius:99px;font-weight:700;font-size:14px}
+body{font-family:Inter,system-ui,sans-serif}
+.pad{padding-bottom:11vh}
+.win{max-width:1120px;margin:56px auto 0;width:calc(100% - 22px);border:1px solid var(--line);border-radius:11px;
+  overflow:hidden;box-shadow:0 26px 60px rgba(0,0,0,.17)}
+.tb{display:flex;align-items:center;gap:9px;padding:9px 12px;background:var(--chrome);border-bottom:1px solid var(--line)}
+.tb i{width:9px;height:9px;border-radius:50%;background:rgba(130,124,106,.5)}
+.tb .p{margin-left:8px;font-size:11.5px;color:var(--dim);font-family:"DM Mono",monospace}
+.tb button{margin-left:auto;background:none;border:1px solid var(--line);color:var(--gold);font:inherit;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:5px 10px;cursor:pointer}
+.cols{display:grid;grid-template-columns:1fr;min-height:min(66vh,540px)}
+@media(min-width:800px){.cols{grid-template-columns:190px 1fr}}
+.side{border-bottom:1px solid var(--line);padding:10px}
+@media(min-width:800px){.side{border-bottom:0;border-right:1px solid var(--line)}}
+.side .g{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);padding:8px 8px 5px}
+.side button{display:flex;align-items:center;gap:8px;width:100%;background:none;border:0;color:inherit;font:inherit;
+  font-size:13.5px;padding:8px 9px;border-radius:6px;cursor:pointer;text-align:left}
+.side button.on{background:var(--sel);color:var(--gold);font-weight:600}
+.side button i{width:11px;height:11px;border-radius:2px;background:var(--c);flex:none}
+.view{padding:18px 18px 26px}
+.view .k{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.view h2{font-weight:700;font-size:clamp(23px,4.6vw,40px);letter-spacing:-.035em;margin:9px 0 12px}
+.view p{color:var(--dim);font-size:14.5px;line-height:1.72;max-width:54ch}
+.view .band{height:96px;border-radius:8px;background:var(--c);display:grid;place-items:center;margin:14px 0}
+.view .band b{color:rgba(255,255,255,.96);font-weight:700;font-size:22px}
+.meta{display:grid;grid-template-columns:1fr;gap:0;margin-top:14px;font-size:12.5px;font-family:"DM Mono",monospace}
+.meta div{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-top:1px solid var(--line);color:var(--dim)}
+.meta div b{color:var(--ink);font-weight:500;text-align:right}
+.view a.go{display:inline-block;margin-top:16px;background:var(--ink);color:var(--bg);text-decoration:none;
+  padding:12px 18px;border-radius:8px;font-weight:600;font-size:13.5px}
+</style></head><body>
+<div class="win"><div class="tb"><i></i><i></i><i></i><span class="p" id="path"></span><button id="tt">Dark</button></div>
+  <div class="cols"><div class="side" id="side"></div><div class="view" id="view"></div></div></div>
+ <div class="pad"><span id="nb" style="display:none"></span><section class="sec"><div class="lab mono">Services</div><div class="grid" id="svc"></div>
+  <div class="chips" id="chips"></div></section><section class="sec"><h2 style="font-weight:700;font-size:clamp(26px,6vw,58px);letter-spacing:-.04em">Have an idea?</h2>
+  <a class="btn" id="wa" href="#">Message me on WhatsApp →</a></section></div>
+<script src="shared.js"></script>
+<script>
+const S = window.SITE;
+nb.textContent=S.name; if(window.intro)intro.textContent=S.intro; if(window.wa)wa.href=S.wa;
+side.innerHTML='<div class="g mono">Work</div>'+S.projects.map((p,i)=>
+  `<button data-i="${i}" class="${i===0?"on":""}" style="--c:${p.c}"><i></i>${p.t}</button>`).join("");
+function open(i){const p=S.projects[i];
+  side.querySelectorAll("button").forEach((b,n)=>b.classList.toggle("on",n===i));
+  path.textContent="~/work/"+p.t.toLowerCase().replace(/\s+/g,"-");
+  view.innerHTML=`<div class="k mono">${p.type}</div><h2>${p.t}</h2>
+   <div class="band" style="--c:${p.c}"><b>${p.t}</b></div><p>${p.s}</p>
+   <div class="meta"><div><span>URL</span><b>${p.href.replace("https://","")}</b></div>
+    <div><span>Stack</span><b>${p.stack.join(", ")}</b></div>
+    <div><span>Status</span><b>Live</b></div></div>
+   <a class="go" href="${p.href}" target="_blank" rel="noreferrer">Open ↗</a>`;}
+side.querySelectorAll("button").forEach(b=>b.onclick=()=>open(+b.dataset.i));
+open(0);
+svc.innerHTML=S.services.map(s=>`<div class="sv"><h4>${s.t}</h4><p>${s.b}</p></div>`).join("");
+chips.innerHTML=S.skills.map(t=>`<span class="mono">${t}</span>`).join("");
+const root = document.documentElement;
+const KEY = "d52t", ALT = "dark";
+try { if (localStorage.getItem(KEY) === ALT) root.setAttribute("data-theme", ALT); } catch {}
+const paint = () => { const el = document.getElementById("tt"); if (el) el.textContent = root.getAttribute("data-theme") === ALT ? "Light" : "Dark"; };
+paint();
+{ const el = document.getElementById("tt"); if (el) el.onclick = () => {
+  const on = root.getAttribute("data-theme") === ALT;
+  if (on) root.removeAttribute("data-theme"); else root.setAttribute("data-theme", ALT);
+  try { localStorage.setItem(KEY, on ? "off" : ALT); } catch {}
+  paint(); }; }
+window.switcher("52");
+</script></body></html>
