@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Video One — generated reel</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0a07;--card:#151310;--ink:#f1ebdf;--gold:#e6c374;--dim:#8f8776;--line:rgba(241,235,223,.15)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg)}
+body{color:var(--ink);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+  min-height:100svh;display:grid;place-items:start center;padding:26px 18px 54px}
+.wrap{width:min(100%,430px);display:grid;gap:16px}
+h1{font-size:19px;font-weight:600;letter-spacing:-.02em;margin-top:7px}
+.k{font-family:"DM Mono",monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+/* Capped by height as well as width — a 9:16 video given only a width runs off
+   the bottom of a laptop screen, which is the case this page exists to check. */
+video{width:100%;max-height:72svh;aspect-ratio:9/16;object-fit:contain;display:block;
+  border-radius:14px;border:1px solid var(--line);background:#000}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+a.btn{flex:1;text-align:center;background:var(--gold);color:#141005;text-decoration:none;
+  padding:13px 16px;border-radius:10px;font-weight:600;font-size:13.5px;white-space:nowrap}
+a.ghost{background:none;border:1px solid var(--line);color:var(--gold)}
+.meta{display:grid;grid-template-columns:1fr auto;gap:6px 14px;font-family:"DM Mono",monospace;
+  font-size:11.5px;color:var(--dim);border-top:1px solid var(--line);padding-top:14px}
+.meta b{color:var(--ink);font-weight:500;text-align:right}
+.panel{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:14px 16px}
+.panel h2{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold);font-weight:400;margin-bottom:9px}
+.panel p{font-size:13.5px;line-height:1.68;color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font-family:"DM Mono",monospace;font-size:11px;color:var(--dim);
+  border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+ol{margin:0;padding-left:17px;font-size:13px;line-height:1.75;color:var(--dim)}
+ol b{color:var(--ink);font-weight:500}
+.note{color:var(--dim);font-size:12.5px;line-height:1.65}
+.note b{color:var(--ink);font-weight:500}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <div class="k">Generated reel · test one</div>
+    <h1>Why lorry drivers track fuel mileage</h1>
+  </div>
+
+  <video src="reel.mp4" controls playsinline preload="metadata" poster=""></video>
+
+  <div class="actions">
+    <a class="btn" href="reel.mp4" download>Download</a>
+    <a class="btn ghost" href="reel.mp4" target="_blank" rel="noreferrer">Open file</a>
+  </div>
+
+  <div class="meta">
+    <span>Resolution</span><b>1080 × 1920</b>
+    <span>Aspect</span><b>9:16</b>
+    <span>Duration</span><b>30.5 s</b>
+    <span>Size</span><b>8.0 MB</b>
+    <span>Audio</span><b>AAC, voiced</b>
+    <span>Subtitles</span><b>burned in</b>
+  </div>
+
+  <div class="panel">
+    <h2>Narration — written by the local model</h2>
+    <p>Why do lorry drivers track fuel mileage? Fuel mileage is one of the critical factors
+    affecting the operational efficiency of lorry drivers. By monitoring their fuel usage, they
+    can identify areas for cost savings and improve their fuel economy. Tracking this metric
+    helps drivers understand the performance of their trucks and ensure they are making the
+    most efficient use of their resources.</p>
+  </div>
+
+  <div class="panel">
+    <h2>Stock footage searched for</h2>
+    <div class="chips">
+      <span>fuel mileage tracking</span><span>lorry driver efficiency</span>
+      <span>fuel consumption monitoring</span><span>environmental sustainability</span>
+      <span>operational cost optimization</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>How it was made</h2>
+    <ol>
+      <li><b>Script</b> — qwen2.5-coder:3b on this machine, via Ollama. No API, no cost.</li>
+      <li><b>Search terms</b> — same model, asked to turn the script into stock queries.</li>
+      <li><b>Footage</b> — 8 portrait clips pulled from Pexels and cut to 4s each.</li>
+      <li><b>Voice</b> — Microsoft Edge TTS, also free.</li>
+      <li><b>Subtitles</b> — faster-whisper transcribed the voice track and burned it in.</li>
+      <li><b>Assembly</b> — MoviePy, rendered locally.</li>
+    </ol>
+  </div>
+
+  <p class="note"><b>What to judge it on.</b> The pipeline works end to end and costs nothing to run.
+  The weak link is the writing — a 3B model on CPU produces serviceable but flat copy, and it
+  opens by restating the title. Point the same pipeline at a stronger model and only step one
+  changes; everything after it stays as it is.</p>
+</div>
+</body>
+</html>
