@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Polo GT TSI — 9:16 reel</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0a07;--card:#151310;--ink:#f1ebdf;--gold:#e6c374;--red:#d9534a;--dim:#8f8776;--line:rgba(241,235,223,.15)}
+*{box-sizing:border-box;margin:0}
+html{background:var(--bg)}
+body{color:var(--ink);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+  min-height:100svh;display:grid;place-items:start center;padding:26px 18px 54px}
+.wrap{width:min(100%,430px);display:grid;gap:16px}
+h1{font-size:19px;font-weight:600;letter-spacing:-.02em;margin-top:7px}
+.k{font-family:"DM Mono",monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+/* Height-capped as well as width-capped — a 9:16 video given only a width runs
+   off the bottom of a laptop screen. */
+video{width:100%;max-height:72svh;aspect-ratio:9/16;object-fit:contain;display:block;
+  border-radius:14px;border:1px solid var(--line);background:#000}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+a.btn{flex:1;text-align:center;background:var(--gold);color:#141005;text-decoration:none;
+  padding:13px 16px;border-radius:10px;font-weight:600;font-size:13.5px;white-space:nowrap}
+a.ghost{background:none;border:1px solid var(--line);color:var(--gold)}
+.meta{display:grid;grid-template-columns:1fr auto;gap:6px 14px;font-family:"DM Mono",monospace;
+  font-size:11.5px;color:var(--dim);border-top:1px solid var(--line);padding-top:14px}
+.meta b{color:var(--ink);font-weight:500;text-align:right}
+.panel{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:14px 16px}
+.panel h2{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold);font-weight:400;margin-bottom:11px}
+ol.shots{margin:0;padding:0;list-style:none;display:grid;gap:7px}
+ol.shots li{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:baseline;font-size:13px}
+ol.shots time{font-family:"DM Mono",monospace;font-size:11.5px;color:var(--gold)}
+ol.shots span{color:var(--ink)}
+ol.shots em{font-family:"DM Mono",monospace;font-style:normal;font-size:11px;color:var(--dim)}
+ol.shots li.hero span{color:var(--gold);font-weight:500}
+.note{color:var(--dim);font-size:12.5px;line-height:1.65}
+.note b{color:var(--ink);font-weight:500}
+.note + .note{margin-top:9px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <div class="k">Reel cut · client edit</div>
+    <h1>Volkswagen Polo GT TSI — modification review</h1>
+  </div>
+
+  <video src="reel.mp4" poster="poster.jpg" controls playsinline preload="metadata" loop></video>
+
+  <div class="actions">
+    <a class="btn" href="reel.mp4" download>Download</a>
+    <a class="btn ghost" href="reel.mp4" target="_blank" rel="noreferrer">Open file</a>
+  </div>
+
+  <div class="meta">
+    <span>Resolution</span><b>1080 × 1920</b>
+    <span>Aspect</span><b>9:16</b>
+    <span>Duration</span><b>30.00 s</b>
+    <span>Frame rate</span><b>24 fps</b>
+    <span>Size</span><b>17.8 MB</b>
+    <span>Audio</span><b>none — add at upload</b>
+  </div>
+
+  <div class="panel">
+    <h2>The cut — 9 shots</h2>
+    <ol class="shots">
+      <li><time>0:00</time><span>Headlight &amp; DRL detail</span><em>3.5s</em></li>
+      <li><time>0:03.5</time><span>Front-on reveal, GT badge</span><em>3.0s</em></li>
+      <li><time>0:06.5</time><span>Wheel and tyre</span><em>3.5s</em></li>
+      <li><time>0:10</time><span>Side pass, red caliper</span><em>3.0s</em></li>
+      <li><time>0:13</time><span>Rear, spoiler and diffuser</span><em>3.5s</em></li>
+      <li class="hero"><time>0:16.5</time><span>Rear 3/4, tail lights lit</span><em>4.0s</em></li>
+      <li><time>0:20.5</time><span>Interior reveal</span><em>3.0s</em></li>
+      <li><time>0:23.5</time><span>Steering wheel, ambient strip</span><em>3.5s</em></li>
+      <li><time>0:27</time><span>GTI badge, dash</span><em>3.0s</em></li>
+    </ol>
+  </div>
+
+  <div class="panel">
+    <h2>How it was cut</h2>
+    <p class="note">Cut from the <b>4K master</b>, not the 1080p. A 9:16 crop keeps only 56% of a
+    16:9 frame's width — from 4K that is still 1215px, so the finished 1080-wide reel involves no
+    upscaling anywhere.</p>
+    <p class="note">Every shot got its <b>own crop offset</b>. A plain centre crop fails on this
+    footage: the car sits left of centre in the rear shots, right of centre at the front-on
+    reveal, and one framing lands on empty road.</p>
+    <p class="note"><b>Silent by design.</b> The source is one continuous voiceover at a low, even
+    level, so there is no per-shot sound to cut with — nine hard cuts through it would sound
+    broken. Add a track at upload instead, where the platform's own library is licensed.</p>
+  </div>
+</div>
+</body>
+</html>
