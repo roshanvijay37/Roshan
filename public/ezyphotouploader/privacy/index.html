@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy Policy — Ezy Photo Uploader</title>
+<meta name="description" content="How Ezy Photo Uploader handles your photographs, your Google account and your device data. No servers, no analytics, no sharing.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Cyanotype: the blue of a contact print, on cool paper. Neutrals carry a
+   slight blue bias so they read as chosen rather than inherited grey. */
+:root{
+  --paper:#f6f7f9; --card:#ffffff; --ink:#141821; --ink-2:#4a5468; --ink-3:#79839a;
+  --blue:#1c4e80; --blue-soft:#e7eef6; --rule:#dde3ec; --shadow:0 1px 2px rgba(20,24,33,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0e1218; --card:#161c25; --ink:#e8ecf3; --ink-2:#a2adc0; --ink-3:#6f7b8f;
+    --blue:#7fb2e8; --blue-soft:#182634; --rule:#252d3a; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0e1218; --card:#161c25; --ink:#e8ecf3; --ink-2:#a2adc0; --ink-3:#6f7b8f;
+  --blue:#7fb2e8; --blue-soft:#182634; --rule:#252d3a; --shadow:none;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Public Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+  font-size:16.5px; line-height:1.65; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:44rem;margin:0 auto;padding:clamp(28px,6vw,72px) clamp(18px,5vw,32px) 96px}
+
+/* ---- masthead ---- */
+header{border-bottom:2px solid var(--ink);padding-bottom:22px;margin-bottom:40px}
+.eyebrow{
+  font-family:"JetBrains Mono",ui-monospace,monospace; font-size:11px; font-weight:500;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--blue); margin:0 0 14px
+}
+h1{
+  font-family:Newsreader,Georgia,serif; font-weight:500; font-size:clamp(34px,7vw,50px);
+  line-height:1.08; letter-spacing:-.015em; margin:0 0 12px; text-wrap:balance
+}
+.sub{color:var(--ink-2);font-size:17px;margin:0;max-width:34rem}
+.stamp{
+  display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:20px;
+  font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11.5px;color:var(--ink-3)
+}
+.stamp b{color:var(--ink-2);font-weight:500}
+
+/* ---- the summary box, the part most people will actually read ---- */
+.summary{
+  background:var(--blue-soft); border:1px solid var(--rule); border-left:3px solid var(--blue);
+  border-radius:4px; padding:20px 22px; margin:0 0 44px
+}
+.summary h2{
+  font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;font-weight:500;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--blue);margin:0 0 12px
+}
+.summary ul{margin:0;padding-left:1.1em;display:grid;gap:7px}
+.summary li{font-size:15.5px;color:var(--ink)}
+
+/* ---- numbered sections: the document really is a sequence of clauses ---- */
+section{margin:0 0 40px;scroll-margin-top:20px}
+section > h2{
+  font-family:Newsreader,Georgia,serif;font-weight:600;font-size:24px;letter-spacing:-.01em;
+  margin:0 0 14px;display:flex;gap:14px;align-items:baseline;text-wrap:balance
+}
+section > h2 .n{
+  font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;font-weight:500;
+  color:var(--blue);flex:none;padding-top:2px
+}
+section p{margin:0 0 14px;color:var(--ink-2)}
+section p strong{color:var(--ink);font-weight:600}
+section ul{margin:0 0 14px;padding-left:1.15em;color:var(--ink-2);display:grid;gap:8px}
+code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.9em;color:var(--ink)}
+a{color:var(--blue);text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:2px}
+
+/* ---- permissions table ---- */
+.table-scroll{overflow-x:auto;margin:0 0 14px;border:1px solid var(--rule);border-radius:4px;background:var(--card);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:30rem;font-size:14.5px}
+th,td{text-align:left;padding:11px 16px;border-bottom:1px solid var(--rule);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{
+  font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10.5px;font-weight:500;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);background:var(--paper)
+}
+td:first-child{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12.5px;color:var(--ink);white-space:nowrap}
+td:last-child{color:var(--ink-2)}
+
+footer{border-top:1px solid var(--rule);padding-top:22px;margin-top:56px;color:var(--ink-3);font-size:14px}
+footer a{font-weight:500}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Ezy Photo Uploader · Android</p>
+  <h1>Privacy Policy</h1>
+  <p class="sub">Ezy Photo Uploader moves photographs from your camera to your own Google&nbsp;Drive. Everything below describes an app that has no server behind it.</p>
+  <div class="stamp">
+    <span>Effective <b>8 September 2026</b></span>
+    <span>Package <b>com.roshanvijay.ezyphotouploader</b></span>
+    <span>Developer <b>Roshan Vijay</b></span>
+  </div>
+</header>
+
+<div class="summary">
+  <h2>In short</h2>
+  <ul>
+    <li>There is no server. Your photographs travel from your camera to your phone to <em>your</em> Google&nbsp;Drive, and nowhere else.</li>
+    <li>The developer cannot see your photographs, your Drive, or your account.</li>
+    <li>No analytics, no crash reporting, no advertising, no tracking, no third parties.</li>
+    <li>Nothing is sold, shared or transmitted to anyone.</li>
+  </ul>
+</div>
+
+<section id="who">
+  <h2><span class="n">01</span> Who this policy is from</h2>
+  <p>Ezy Photo Uploader is published by <strong>Roshan Vijay</strong>, an individual developer, and this policy covers the Android application <strong>com.roshanvijay.ezyphotouploader</strong> and nothing else.</p>
+</section>
+
+<section id="architecture">
+  <h2><span class="n">02</span> The app has no backend</h2>
+  <p>This is the fact that determines everything else. The app runs an FTP receiver on your phone, holds a queue on your phone, and uploads directly from your phone to Google&nbsp;Drive using the Google Drive API.</p>
+  <p>There is <strong>no server operated by the developer</strong> — no account system, no database, no logging service, no cloud storage. Your photographs are never sent to the developer, because there is nowhere for them to be sent.</p>
+</section>
+
+<section id="on-device">
+  <h2><span class="n">03</span> What the app stores on your phone</h2>
+  <p>All of the following lives in the private storage area of the app, readable only by this app, and is removed entirely when you uninstall it:</p>
+  <ul>
+    <li><strong>Photographs received from your camera</strong>, held until they have uploaded and you delete the event.</li>
+    <li><strong>An upload queue</strong> — filenames, file sizes, a content checksum used to detect duplicates, upload status and error messages. This is a database on disk so that a queue survives the app being closed or the phone restarting.</li>
+    <li><strong>Event names</strong> that you type, and the Drive folder id the app created for each one.</li>
+    <li><strong>Settings</strong> — the FTP port and password, and your upload preferences.</li>
+    <li><strong>A diagnostic log</strong> of connection and upload events, kept on the device to help you troubleshoot. Passwords are masked before they reach it. It is never uploaded anywhere.</li>
+  </ul>
+</section>
+
+<section id="google">
+  <h2><span class="n">04</span> Your Google account and your Drive</h2>
+  <p>You sign in with your own Google account so that the app can upload to your own Drive. Sign-in is handled by Google Play services; the app receives short-lived access tokens from Google and <strong>stores no password and no long-lived token of its own</strong>.</p>
+  <p>The app requests exactly one permission, the narrowest one that can write to Drive:</p>
+  <ul>
+    <li><strong><code>drive.file</code></strong> — access limited to files and folders <em>this app itself created</em>. The app cannot read, list, modify or delete anything else in your Drive. Your existing documents and photographs are invisible to it.</li>
+  </ul>
+  <p>Your email address is shown in the app so you can confirm which account is in use. It is read from Google Play services on demand and is not transmitted anywhere by the app.</p>
+  <p>Data you upload to Google Drive is then governed by the <a href="https://policies.google.com/privacy" rel="noopener">Google Privacy Policy</a> and by your own Drive settings.</p>
+</section>
+
+<section id="sharing">
+  <h2><span class="n">05</span> Sharing a folder by QR code</h2>
+  <p>The app can generate a QR code linking to the Drive folder for an event. This is <strong>off unless you turn it on</strong>, per event.</p>
+  <p>Turning it on asks Google to make that one folder viewable by <strong>anyone who has the link</strong>. That is a deliberate act of publication: anyone you give the code to, and anyone they pass it to, can view the photographs in that folder. Only the folder you chose is affected. You can revoke it at any time from the app, or from Google Drive directly.</p>
+</section>
+
+<section id="not-collected">
+  <h2><span class="n">06</span> What the app does not do</h2>
+  <p>Stated plainly, because absence is hard to prove from the outside:</p>
+  <ul>
+    <li>No analytics or usage tracking of any kind is built into the app.</li>
+    <li>No crash-reporting service. No advertising, and no advertising identifier is read.</li>
+    <li>No location is requested or recorded. The app does not hold the location permission.</li>
+    <li>No contacts, calendar, microphone, call or SMS data is accessed.</li>
+    <li>No data is sold, rented, shared or disclosed to any third party.</li>
+    <li>No account is created with the developer, because there is no such account to create.</li>
+  </ul>
+</section>
+
+<section id="permissions">
+  <h2><span class="n">07</span> Permissions, and why each one exists</h2>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Permission</th><th>Why the app needs it</th></tr></thead>
+    <tbody>
+      <tr><td>INTERNET</td><td>To upload your photographs to Google Drive.</td></tr>
+      <tr><td>ACCESS_NETWORK_STATE</td><td>To know whether there is a connection, so uploads wait instead of failing.</td></tr>
+      <tr><td>ACCESS_WIFI_STATE</td><td>To show you the Wi-Fi address of the phone, which you type into the camera.</td></tr>
+      <tr><td>FOREGROUND_SERVICE<br>FOREGROUND_SERVICE_DATA_SYNC</td><td>To keep receiving and uploading while the phone is in your pocket. Without it Android suspends the app within minutes and photographs stop arriving.</td></tr>
+      <tr><td>POST_NOTIFICATIONS</td><td>To show the ongoing status notification Android requires for that service.</td></tr>
+      <tr><td>WAKE_LOCK</td><td>To finish an upload in progress rather than abandoning it when the screen sleeps.</td></tr>
+      <tr><td>GET_ACCOUNTS</td><td>Used by Google Play services to obtain a Drive access token for the account you chose.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The app does not request camera, microphone, location, contacts or access to your device photo library.</p>
+</section>
+
+<section id="security">
+  <h2><span class="n">08</span> Security, honestly stated</h2>
+  <p>The link between your camera and your phone uses <strong>plain FTP, not FTPS</strong>, because the camera hardware this app is built for requires a certificate installed on the camera to do otherwise. It is protected by a username and password you control, and is intended for the hotspot of your own phone, or a network you trust.</p>
+  <p>On a network you do not control, someone on that same network could in principle observe that transfer. Use the phone hotspot, which is the recommended setup and the one the documentation describes.</p>
+  <p>The upload from your phone to Google Drive is always encrypted over HTTPS.</p>
+</section>
+
+<section id="retention">
+  <h2><span class="n">09</span> Keeping and deleting your data</h2>
+  <p>Photographs stay on the phone until you delete the event or uninstall the app. Uninstalling removes every file, the queue database, the settings and the log — Android deletes the private storage of the app along with it.</p>
+  <p>Photographs already uploaded to Google Drive belong to your Drive and are unaffected by uninstalling; delete them there if you want them gone.</p>
+  <p>You can withdraw access to your Drive at any time at <a href="https://myaccount.google.com/permissions" rel="noopener">myaccount.google.com/permissions</a>.</p>
+  <p>Because the developer holds no data about you, there is no data for the developer to delete, export or correct on request.</p>
+</section>
+
+<section id="children">
+  <h2><span class="n">10</span> Children</h2>
+  <p>This app is a tool for photographers and is not directed at children. It does not knowingly collect anything from anyone, of any age.</p>
+</section>
+
+<section id="changes">
+  <h2><span class="n">11</span> Changes to this policy</h2>
+  <p>If the app changes in a way that affects this policy, this page is updated and the effective date at the top changes with it. Material changes will also be described in the release notes on Google Play.</p>
+</section>
+
+<section id="contact">
+  <h2><span class="n">12</span> Contact</h2>
+  <p>Questions about this policy, or about the app: <a href="mailto:roshanshetty010100@gmail.com">roshanshetty010100@gmail.com</a>.</p>
+</section>
+
+<footer>
+  <p>Ezy Photo Uploader · <a href="https://roshanvijay.com/">roshanvijay.com</a></p>
+</footer>
+
+</div>
+</body>
+</html>
