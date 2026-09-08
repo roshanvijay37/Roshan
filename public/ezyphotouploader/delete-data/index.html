@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Delete your data — Ezy Photo Uploader</title>
+<meta name="description" content="How to delete the data held by Ezy Photo Uploader: what is removed, what is kept, and the exact steps.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Same cyanotype system as the privacy policy, so the two pages read as one set. */
+:root{
+  --paper:#f6f7f9; --card:#ffffff; --ink:#141821; --ink-2:#4a5468; --ink-3:#79839a;
+  --blue:#1c4e80; --blue-soft:#e7eef6; --rule:#dde3ec; --shadow:0 1px 2px rgba(20,24,33,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0e1218; --card:#161c25; --ink:#e8ecf3; --ink-2:#a2adc0; --ink-3:#6f7b8f;
+    --blue:#7fb2e8; --blue-soft:#182634; --rule:#252d3a; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0e1218; --card:#161c25; --ink:#e8ecf3; --ink-2:#a2adc0; --ink-3:#6f7b8f;
+  --blue:#7fb2e8; --blue-soft:#182634; --rule:#252d3a; --shadow:none;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Public Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+  font-size:16.5px; line-height:1.65; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:42rem;margin:0 auto;padding:clamp(28px,6vw,64px) clamp(18px,5vw,32px) 90px}
+header{border-bottom:2px solid var(--ink);padding-bottom:20px;margin-bottom:34px}
+.eyebrow{
+  font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;font-weight:500;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--blue);margin:0 0 12px
+}
+h1{
+  font-family:Newsreader,Georgia,serif;font-weight:500;font-size:clamp(32px,7vw,46px);
+  line-height:1.08;letter-spacing:-.015em;margin:0 0 12px;text-wrap:balance
+}
+.sub{color:var(--ink-2);font-size:17px;margin:0;max-width:33rem}
+.stamp{
+  display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:18px;
+  font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11.5px;color:var(--ink-3)
+}
+.stamp b{color:var(--ink-2);font-weight:500}
+h2{
+  font-family:Newsreader,Georgia,serif;font-weight:600;font-size:23px;letter-spacing:-.01em;
+  margin:0 0 12px;text-wrap:balance
+}
+section{margin:0 0 34px}
+p{margin:0 0 13px;color:var(--ink-2)}
+p strong{color:var(--ink);font-weight:600}
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:14px}
+ol.steps li{
+  counter-increment:s;position:relative;padding:14px 16px 14px 52px;
+  background:var(--card);border:1px solid var(--rule);border-radius:6px;box-shadow:var(--shadow);
+  color:var(--ink-2)
+}
+ol.steps li::before{
+  content:counter(s);position:absolute;left:16px;top:14px;
+  width:24px;height:24px;border-radius:5px;background:var(--blue);color:var(--paper);
+  font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;
+  display:grid;place-items:center
+}
+ol.steps b{color:var(--ink);font-weight:600;display:block;margin-bottom:3px}
+.table-scroll{overflow-x:auto;border:1px solid var(--rule);border-radius:6px;background:var(--card);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:28rem;font-size:14.5px}
+th,td{text-align:left;padding:11px 15px;border-bottom:1px solid var(--rule);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{
+  font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10.5px;font-weight:500;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);background:var(--paper)
+}
+td:first-child{color:var(--ink)}
+td:last-child{color:var(--ink-2)}
+.note{
+  background:var(--blue-soft);border:1px solid var(--rule);border-left:3px solid var(--blue);
+  border-radius:0 5px 5px 0;padding:15px 18px;font-size:15.5px;color:var(--ink-2)
+}
+.note b{color:var(--ink)}
+a{color:var(--blue);text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:2px}
+footer{border-top:1px solid var(--rule);padding-top:20px;margin-top:44px;color:var(--ink-3);font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Ezy Photo Uploader · Android</p>
+  <h1>Delete your data</h1>
+  <p class="sub">Everything <strong>Ezy Photo Uploader</strong> holds about you sits either on your own phone or in your own Google&nbsp;Drive. You can remove all of it yourself, without asking anyone.</p>
+  <div class="stamp">
+    <span>App <b>Ezy Photo Uploader</b></span>
+    <span>Developer <b>Roshan Vijay</b></span>
+    <span>Package <b>com.roshanvijay.ezyphotouploader</b></span>
+  </div>
+</header>
+
+<section>
+  <div class="note">
+    <b>There is no account to delete.</b> The app has no server and no sign-up — it never creates an account for you, and the developer holds no copy of your photographs or your details. That is why deletion is something you carry out directly rather than request.
+  </div>
+</section>
+
+<section>
+  <h2>Steps to delete your data</h2>
+  <ol class="steps">
+    <li><b>Delete an individual event</b>
+      Open the app, choose the event, and delete it. That removes the photographs held on the phone for that event, along with its queue entries and log.</li>
+    <li><b>Remove everything on the phone</b>
+      Uninstall Ezy Photo Uploader. Android deletes the private storage of the app with it — every photograph still on the device, the queue database, your settings and the diagnostic log. Nothing is left behind.</li>
+    <li><b>Delete the photographs already in your Drive</b>
+      Open <a href="https://drive.google.com/" rel="noopener">Google&nbsp;Drive</a>, find the folder <strong>Ezy Photo Uploader</strong>, and delete it or any event folder inside it. Then empty the Drive bin to remove them permanently.</li>
+    <li><b>Withdraw the app's access to your Drive</b>
+      Go to <a href="https://myaccount.google.com/permissions" rel="noopener">myaccount.google.com/permissions</a>, select Ezy Photo Uploader, and remove access. The app can then no longer read or write anything in your Drive.</li>
+    <li><b>Turn off any link you shared</b>
+      If you generated a QR code for an event, open that event in the app and switch sharing off — or change the folder back to private in Google&nbsp;Drive. Anyone holding the old link loses access immediately.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>What is deleted, and what is kept</h2>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Data</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td>Photographs on the phone</td><td>Deleted immediately when you delete the event or uninstall the app. Not recoverable.</td></tr>
+        <tr><td>Upload queue<br>(filenames, sizes, checksums, status)</td><td>Deleted with the app. Held only on the device.</td></tr>
+        <tr><td>Event names and settings</td><td>Deleted with the app.</td></tr>
+        <tr><td>Diagnostic log</td><td>Deleted with the app. Never leaves the device.</td></tr>
+        <tr><td>Photographs uploaded to your Drive</td><td><strong>Kept</strong> — they are your files in your own Drive, and uninstalling does not touch them. Delete them in Drive if you want them gone.</td></tr>
+        <tr><td>Your Google account details</td><td>Nothing to delete. The app stores no password and no long-lived token; sign-in is handled by Google Play services.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>No retention period applies to anything held by the developer, because the developer holds nothing. There is no server, no database and no backup outside your own devices and your own Drive.</p>
+</section>
+
+<section>
+  <h2>If you would rather ask</h2>
+  <p>If you have followed the steps above and something still seems to be there, write to <a href="mailto:roshanshetty010100@gmail.com">roshanshetty010100@gmail.com</a> with the name of the app and what you are seeing, and you will get a reply explaining exactly where that data lives and how to remove it.</p>
+</section>
+
+<footer>
+  <p>See also the <a href="../privacy/">Privacy Policy</a> · <a href="https://roshanvijay.com/">roshanvijay.com</a></p>
+</footer>
+
+</div>
+</body>
+</html>
