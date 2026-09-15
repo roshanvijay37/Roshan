@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Awwwards Sites of the Year — 2011 to 2025</title>
-<meta name="description" content="Every site in the Awwwards Sites of the Year collection, 2011 to 2025. Searchable by name, agency and year." />
+<title>Awwwards Sites of the Year &amp; Month</title>
+<meta name="description" content="Every Awwwards Site of the Year (2011–2025) and Site of the Month (2009–2026), searchable by name, agency and year." />
 <meta name="robots" content="noindex" />
 <link rel="icon" href="/icon-192.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,7 +19,6 @@
     --muted:#6c6350;
     --muted-2:#83795f;
     --accent:#8a6a14;
-    --accent-deep:#7a5c2a;
     --border:#5a5140;
     --hairline:rgba(48,36,10,.14);
     --hairline-strong:rgba(48,36,10,.32);
@@ -28,13 +27,9 @@
   *{box-sizing:border-box;}
   html{-webkit-text-size-adjust:100%;}
   body{
-    margin:0;
-    background:var(--bg);
-    color:var(--text);
+    margin:0;background:var(--bg);color:var(--text);
     font-family:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
-    font-size:15px;
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
+    font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;
   }
   a{color:inherit;}
   .wrap{max-width:var(--max);margin:0 auto;padding-inline:20px;}
@@ -55,9 +50,9 @@
   .nav-back:hover{color:var(--text);border-color:var(--hairline-strong);transform:translateY(-2px);}
 
   /* ---------- hero ---------- */
-  header.hero{padding-block:56px 32px;}
+  header.hero{padding-block:56px 28px;}
   h1{
-    font-size:clamp(40px,6.4vw,78px);font-weight:800;line-height:1.05;
+    font-size:clamp(38px,6vw,74px);font-weight:800;line-height:1.05;
     letter-spacing:-.03em;margin:0 0 16px;
   }
   h1 em{font-style:normal;color:var(--accent);}
@@ -70,6 +65,22 @@
   }
   .stat b{font-size:16px;font-weight:800;letter-spacing:-.01em;}
   .stat span{font-size:12px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.06em;}
+
+  /* ---------- category tabs ---------- */
+  .tabs{
+    display:flex;gap:4px;flex-wrap:wrap;
+    border-bottom:1px solid var(--hairline);padding-bottom:0;margin-top:28px;
+  }
+  .tab{
+    font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:-.01em;
+    background:transparent;border:0;border-bottom:2px solid transparent;
+    color:var(--muted);padding:12px 16px;margin-bottom:-1px;
+    transition:color .2s,border-color .2s;
+  }
+  .tab:hover{color:var(--text);}
+  .tab[aria-selected="true"]{color:var(--text);border-bottom-color:var(--accent);}
+  .tab:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;}
+  .tab i{font-style:normal;color:var(--muted-2);font-weight:500;font-size:12px;margin-left:6px;}
 
   /* ---------- controls ---------- */
   .controls{
@@ -117,9 +128,7 @@
   .card:hover{border-color:var(--hairline-strong);transform:translateY(-4px);}
   .card:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
   .card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
-  .idx{
-    font-family:"DM Mono",ui-monospace,monospace;font-size:12px;color:var(--muted-2);
-  }
+  .idx{font-family:"DM Mono",ui-monospace,monospace;font-size:12px;color:var(--muted-2);}
   .go{
     font-size:12px;font-weight:600;color:var(--muted);display:inline-flex;align-items:center;gap:4px;
     transition:color .2s;
@@ -131,6 +140,13 @@
     font-family:"DM Mono",ui-monospace,monospace;font-size:12px;color:var(--muted-2);
     margin:0;word-break:break-all;
   }
+  .tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:2px;}
+  .tag{
+    font-family:"DM Mono",ui-monospace,monospace;font-size:10px;letter-spacing:.08em;
+    text-transform:uppercase;border:1px solid var(--hairline);border-radius:999px;
+    padding:2px 8px;color:var(--muted);
+  }
+  .tag.is-soty{border-color:var(--accent);color:var(--accent);}
 
   .empty{padding:48px 0;text-align:center;color:var(--muted);}
   .empty b{display:block;font-size:18px;color:var(--text);margin-bottom:8px;}
@@ -162,18 +178,29 @@
 
 <div class="wrap">
   <header class="hero">
-    <h1>Awwwards<br /><em>Sites of the Year</em></h1>
+    <h1>Awwwards<br /><em>Year &amp; Month</em></h1>
     <p class="lede">
-      The complete Awwwards <a href="https://www.awwwards.com/websites/sites_of_the_year/" target="_blank" rel="noreferrer">Sites of the Year</a>
-      collection — every entry from 2011 to 2025, in one place. Several sites are filed per year, so this is
-      the year&rsquo;s standouts rather than a single winner per year.
+      Both Awwwards headline collections in one place —
+      <a href="https://www.awwwards.com/websites/sites_of_the_year/" target="_blank" rel="noreferrer">Sites of the Year</a>
+      and
+      <a href="https://www.awwwards.com/websites/sites_of_the_month/" target="_blank" rel="noreferrer">Sites of the Month</a>.
+      Search across either by site, agency or domain.
     </p>
     <div class="meta-row">
-      <span class="stat"><b>53</b><span>sites</span></span>
-      <span class="stat"><b>15</b><span>years</span></span>
-      <span class="stat"><b>2011&ndash;2025</b><span>range</span></span>
+      <span class="stat"><b id="statTotal">257</b><span>sites</span></span>
+      <span class="stat"><b>2009&ndash;2026</b><span>range</span></span>
+      <span class="stat"><b id="statAgencies">—</b><span>agencies</span></span>
     </div>
   </header>
+
+  <div class="tabs" role="tablist" aria-label="Award collection">
+    <button class="tab" id="tab-year" role="tab" aria-selected="true" aria-controls="list">
+      Sites of the Year<i id="cnt-year"></i>
+    </button>
+    <button class="tab" id="tab-month" role="tab" aria-selected="false" aria-controls="list">
+      Sites of the Month<i id="cnt-month"></i>
+    </button>
+  </div>
 </div>
 
 <div class="controls">
@@ -187,166 +214,148 @@
 </div>
 
 <main class="wrap">
-  <div id="list"></div>
+  <div id="list" role="tabpanel"></div>
   <div class="note">
-    <b>A caution on the links.</b> These run back to 2011 and many are campaign or launch microsites.
-    A fair number are now dead, redirected or replaced by a plain storefront — that is the nature of the
-    format, not a mistake in the list. Treat the older entries as a record of what was built, not a
-    guarantee that it still loads.
+    <b>On the links.</b> These run back to 2009 and many are campaign or launch
+    microsites. A fair number are now dead, redirected or replaced by a plain
+    storefront — that is the nature of the format, not a mistake in the list.
+    <br /><br />
+    <b>On the months.</b> Awwwards files a handful of monthly winners under a year
+    badge instead of a month, because those sites went on to win Site of the Year.
+    Those rows are marked <span class="tag is-soty" style="display:inline-block">Site of the Year</span>
+    and their month is inferred from position in the strictly reverse-chronological
+    listing — everything else is as published.
   </div>
   <footer>
     <span>Compiled from Awwwards, September 2026.</span>
-    <a href="https://www.awwwards.com/websites/sites_of_the_year/" target="_blank" rel="noreferrer">Source collection &rarr;</a>
+    <a href="https://www.awwwards.com/websites/sites_of_the_month/" target="_blank" rel="noreferrer">Source collections &rarr;</a>
   </footer>
 </main>
 
+<script src="data.js"></script>
 <script>
-const SITES = [
-  {y:2025,n:"Lando Norris",a:"OFF+BRAND",u:"https://landonorris.com"},
-  {y:2025,n:"Messenger",a:"abeto",u:"https://messenger.abeto.co"},
+(function () {
+  var MONTHS = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var COLS = {
+    year:  { rows: window.SOTY, label: "Sites of the Year" },
+    month: { rows: window.SOTM, label: "Sites of the Month" }
+  };
 
-  {y:2024,n:"Igloo Inc",a:"abeto",u:"https://igloo.inc"},
-  {y:2024,n:"Don't Board Me",a:"The First The Last",u:"https://dontboardme.com"},
-  {y:2024,n:"Opal Tadpole",a:"Claudio Guglieri",u:"https://opalcamera.com/opal-tadpole"},
+  var $ = function (id) { return document.getElementById(id); };
+  var listEl = $("list"), countEl = $("count"), qEl = $("q"), yearsEl = $("years");
 
-  {y:2023,n:"Lusion v3",a:"Lusion",u:"https://lusion.co"},
-  {y:2023,n:"Noomo Agency",a:"Noomo Agency",u:"https://noomoagency.com"},
-  {y:2023,n:"Mana Yerba Mate",a:"Louis Paquet",u:"https://manayerbamate.com"},
+  var active = "year", activeYear = null, query = "";
 
-  {y:2022,n:"KPR",a:"Resn",u:"https://kprverse.com"},
-  {y:2022,n:"The Other Side of Truth",a:"The First The Last",u:"https://theothersideoftruth.com"},
-  {y:2022,n:"Persepolis Reimagined",a:"Monks",u:"https://www.getty.edu/persepolis"},
-
-  {y:2021,n:"Pangram Pangram Foundry",a:"Locomotive",u:"https://pangrampangram.com"},
-  {y:2021,n:"Star Atlas",a:"Hello Monday",u:"https://staratlas.com"},
-  {y:2021,n:"Prometheus Fuels",a:"Active Theory",u:"https://prometheusfuels.com"},
-  {y:2021,n:"Umami Land",a:"Monks",u:"https://umamiland.withgoogle.com"},
-  {y:2021,n:"Chungi Folio",a:"Synchronized Studio",u:"https://chungiyoo.com"},
-
-  {y:2020,n:"Mammut Expedition Baikal",a:"Build in Amsterdam",u:"https://eiger-extreme.mammut.com"},
-  {y:2020,n:"Kode Sports Club",a:"Merci Michel",u:"https://kodeclubs.com"},
-  {y:2020,n:"Dark: Official Netflix Guide",a:"Monks",u:"https://darknetflix.io"},
-  {y:2020,n:"Synchronized Studio",a:"Zhenya Rynzhuk",u:"https://synchronized.studio"},
-  {y:2020,n:"Pioneer — Corn Revolutionized",a:"Resn",u:"https://cornrevolution.resn.global"},
-
-  {y:2019,n:"Bruno Simon Portfolio",a:"Bruno Simon",u:"https://bruno-simon.com"},
-  {y:2019,n:"MA",a:"Retail 710",u:"https://matruecannabis.com"},
-  {y:2019,n:"The Cool Club x FWA",a:"WONDERLAND",u:"https://fwa.thecoolclub.co"},
-  {y:2019,n:"Nomadic Tribe",a:"makemepulse",u:"https://2019.makemepulse.com"},
-
-  {y:2018,n:"Orano",a:"Immersive Garden",u:"https://www.orano.group/experience/innovation"},
-  {y:2018,n:"koox",a:"Blue Cheese",u:"https://koox.co.uk"},
-  {y:2018,n:"Frans Hals Museum",a:"Build in Amsterdam",u:"https://franshalsmuseum.nl"},
-  {y:2018,n:"Active Theory v4",a:"Active Theory",u:"https://activetheory.net"},
-
-  {y:2017,n:"The New Mobile Workforce",a:"Immersive Garden",u:"https://thenewmobileworkforce.imm-g-prod.com"},
-  {y:2017,n:"Simply Chocolate",a:"Spring/Summer",u:"https://simplychocolate.dk"},
-  {y:2017,n:"Inside The Head",a:"Sara Svensson",u:"https://insidethehead.co"},
-  {y:2017,n:"Dunkirk WebVR",a:"Jam3",u:"https://webvrgame.dunkirkmovie.com"},
-  {y:2017,n:"OUIGO — Let's Play",a:"Merci Michel",u:"https://letsplay.ouigo.com"},
-  {y:2017,n:"Mendo",a:"Build in Amsterdam",u:"https://mendo.nl"},
-
-  {y:2016,n:"Protest Sportswear",a:"Build in Amsterdam",u:"https://protest.eu"},
-  {y:2016,n:"Paper Planes",a:"Active Theory",u:"https://paperplanes.world"},
-  {y:2016,n:"KIKK Festival 2016",a:"dogstudio",u:"https://www.kikk.be/2016"},
-  {y:2016,n:"Cavalier: Conqueror of Excellence",a:"Your Majesty Co.",u:"https://cavalierchallenge.com"},
-  {y:2016,n:"Falter Inferno",a:"WILD",u:"https://falter.madebywild.com"},
-
-  {y:2015,n:"Because Recollection",a:"84.Paris",u:"https://because-recollection.com"},
-  {y:2015,n:"Weber — BBQ Cultures",a:"UncleGrey",u:"https://bbqcultures.com"},
-  {y:2015,n:"Beagle — Better Proposals",a:"Spring/Summer",u:"https://curvy.dk/beagle/site"},
-  {y:2015,n:"In Pieces",a:"BryBry",u:"https://species-in-pieces.com"},
-  {y:2015,n:"Nixon eCommerce Platform",a:"BASIC/DEPT®",u:"https://nixon.com"},
-
-  {y:2014,n:"AQuest",a:"AQuest",u:"https://aquest.it"},
-  {y:2014,n:"Dragone",a:"dogstudio",u:"https://dragone.com"},
-  {y:2014,n:"A Journey Through Middle-earth",a:"North Kingdom",u:"https://middle-earth.thehobbit.com"},
-
-  {y:2013,n:"Pharrell Williams — 24 Hours of Happy",a:"Anonymous",u:"https://24hoursofhappy.com"},
-  {y:2013,n:"Into the Arctic — Greenpeace",a:"Hello Monday",u:"https://hellomonday.net/archive/greenpeace"},
-
-  {y:2012,n:"Blacknegative",a:"Immersive Garden",u:"https://blacknegative.com"},
-
-  {y:2011,n:"Made in a Free World: Slavery Footprint",a:"UNIT9",u:"https://slaveryfootprint.org"},
-  {y:2011,n:"360° Langstrasse Zürich",a:"Dept Switzerland",u:"https://360langstrasse.sf.tv"}
-];
-
-const YEARS = [...new Set(SITES.map(s => s.y))].sort((a, b) => b - a);
-const listEl = document.getElementById("list");
-const countEl = document.getElementById("count");
-const qEl = document.getElementById("q");
-const yearsEl = document.getElementById("years");
-
-let activeYear = null;
-let query = "";
-
-const domainOf = (u) => u.replace(/^https?:\/\//, "").replace(/\/$/, "");
-const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-
-function buildChips() {
-  const all = document.createElement("button");
-  all.className = "chip";
-  all.textContent = "All years";
-  all.setAttribute("aria-pressed", "true");
-  all.onclick = () => { activeYear = null; render(); };
-  yearsEl.appendChild(all);
-  YEARS.forEach((y) => {
-    const b = document.createElement("button");
-    b.className = "chip";
-    b.textContent = y;
-    b.setAttribute("aria-pressed", "false");
-    b.onclick = () => { activeYear = activeYear === y ? null : y; render(); };
-    yearsEl.appendChild(b);
-  });
-}
-
-function render() {
-  const q = query.trim().toLowerCase();
-  const rows = SITES.filter((s) => {
-    if (activeYear && s.y !== activeYear) return false;
-    if (!q) return true;
-    return (s.n + " " + s.a + " " + domainOf(s.u) + " " + s.y).toLowerCase().includes(q);
-  });
-
-  [...yearsEl.children].forEach((c, i) => {
-    const on = i === 0 ? activeYear === null : YEARS[i - 1] === activeYear;
-    c.setAttribute("aria-pressed", String(on));
-  });
-
-  countEl.textContent = rows.length === SITES.length
-    ? SITES.length + " sites"
-    : rows.length + " of " + SITES.length;
-
-  if (!rows.length) {
-    listEl.innerHTML = '<div class="empty"><b>Nothing matches that.</b>Try an agency name like Resn, Monks or Active Theory.</div>';
-    return;
+  function domainOf(u) { return u.replace(/^https?:\/\//, "").replace(/\/$/, ""); }
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+  function rowObj(r) {
+    return { y: r[0], m: r[1], n: r[2], u: r[3], a: r[4] || "", soty: !!r[5] };
   }
 
-  let html = "";
-  let n = 0;
-  YEARS.forEach((y) => {
-    const group = rows.filter((s) => s.y === y);
-    if (!group.length) return;
-    html += '<section class="year-block"><div class="year-head"><h2>' + y + '</h2><span class="n">' +
-      group.length + (group.length === 1 ? " site" : " sites") + '</span></div><div class="grid">';
-    group.forEach((s) => {
-      n++;
-      html += '<a class="card" href="' + esc(s.u) + '" target="_blank" rel="noreferrer noopener" aria-label="' +
-        esc(s.n) + ' by ' + esc(s.a) + ', opens in a new tab">' +
-        '<div class="card-top"><span class="idx">' + String(n).padStart(2, "0") + '</span>' +
-        '<span class="go">Visit &#8599;</span></div>' +
-        '<h3>' + esc(s.n) + '</h3>' +
-        '<p class="agency">' + esc(s.a) + '</p>' +
-        '<p class="domain">' + esc(domainOf(s.u)) + '</p></a>';
-    });
-    html += "</div></section>";
+  /* header counts */
+  $("cnt-year").textContent = COLS.year.rows.length;
+  $("cnt-month").textContent = COLS.month.rows.length;
+  $("statTotal").textContent = COLS.year.rows.length + COLS.month.rows.length;
+  var agencies = {};
+  [].concat(COLS.year.rows, COLS.month.rows).forEach(function (r) {
+    if (r[4]) agencies[r[4].toLowerCase()] = 1;
   });
-  listEl.innerHTML = html;
-}
+  $("statAgencies").textContent = Object.keys(agencies).length;
 
-qEl.addEventListener("input", (e) => { query = e.target.value; render(); });
-buildChips();
-render();
+  function years() {
+    var seen = {};
+    COLS[active].rows.forEach(function (r) { seen[r[0]] = 1; });
+    return Object.keys(seen).map(Number).sort(function (a, b) { return b - a; });
+  }
+
+  function buildChips() {
+    yearsEl.innerHTML = "";
+    var all = document.createElement("button");
+    all.className = "chip";
+    all.textContent = "All years";
+    all.setAttribute("aria-pressed", String(activeYear === null));
+    all.onclick = function () { activeYear = null; render(); };
+    yearsEl.appendChild(all);
+    years().forEach(function (y) {
+      var b = document.createElement("button");
+      b.className = "chip";
+      b.textContent = y;
+      b.setAttribute("aria-pressed", String(activeYear === y));
+      b.onclick = function () { activeYear = activeYear === y ? null : y; render(); };
+      yearsEl.appendChild(b);
+    });
+  }
+
+  function render() {
+    var q = query.trim().toLowerCase();
+    var src = COLS[active].rows.map(rowObj);
+    var rows = src.filter(function (s) {
+      if (activeYear && s.y !== activeYear) return false;
+      if (!q) return true;
+      return (s.n + " " + s.a + " " + domainOf(s.u) + " " + s.y + " " + MONTHS[s.m]).toLowerCase().indexOf(q) > -1;
+    });
+
+    [].forEach.call(yearsEl.children, function (c, i) {
+      var ys = years();
+      c.setAttribute("aria-pressed", String(i === 0 ? activeYear === null : ys[i - 1] === activeYear));
+    });
+
+    countEl.textContent = rows.length === src.length
+      ? src.length + " sites"
+      : rows.length + " of " + src.length;
+
+    if (!rows.length) {
+      listEl.innerHTML = '<div class="empty"><b>Nothing matches that.</b>Try an agency name like Resn, Monks or Immersive Garden.</div>';
+      return;
+    }
+
+    var html = "", n = 0;
+    var ys = [];
+    rows.forEach(function (s) { if (ys.indexOf(s.y) === -1) ys.push(s.y); });
+    ys.forEach(function (y) {
+      var group = rows.filter(function (s) { return s.y === y; });
+      html += '<section class="year-block"><div class="year-head"><h2>' + y + '</h2><span class="n">' +
+        group.length + (group.length === 1 ? " site" : " sites") + '</span></div><div class="grid">';
+      group.forEach(function (s) {
+        n++;
+        var tags = "";
+        if (s.m) tags += '<span class="tag">' + MONTHS[s.m] + " " + s.y + "</span>";
+        if (s.soty) tags += '<span class="tag is-soty">Site of the Year</span>';
+        html += '<a class="card" href="' + esc(s.u) + '" target="_blank" rel="noreferrer noopener" aria-label="' +
+          esc(s.n) + (s.a ? " by " + esc(s.a) : "") + ', opens in a new tab">' +
+          '<div class="card-top"><span class="idx">' + (n < 100 ? ("0" + n).slice(-2) : n) + "</span>" +
+          '<span class="go">Visit &#8599;</span></div>' +
+          "<h3>" + esc(s.n) + "</h3>" +
+          (s.a ? '<p class="agency">' + esc(s.a) + "</p>" : "") +
+          '<p class="domain">' + esc(domainOf(s.u)) + "</p>" +
+          (tags ? '<div class="tags">' + tags + "</div>" : "") +
+          "</a>";
+      });
+      html += "</div></section>";
+    });
+    listEl.innerHTML = html;
+  }
+
+  function setTab(name) {
+    active = name;
+    activeYear = null;
+    $("tab-year").setAttribute("aria-selected", String(name === "year"));
+    $("tab-month").setAttribute("aria-selected", String(name === "month"));
+    buildChips();
+    render();
+  }
+
+  $("tab-year").onclick = function () { setTab("year"); };
+  $("tab-month").onclick = function () { setTab("month"); };
+  qEl.addEventListener("input", function (e) { query = e.target.value; render(); });
+
+  buildChips();
+  render();
+})();
 </script>
 </body>
 </html>
