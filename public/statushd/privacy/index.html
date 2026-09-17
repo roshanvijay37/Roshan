@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>StatusHD — Privacy Policy</title>
+<style>
+  :root{--bg:#07080f;--card:#12152a;--line:#2a3050;--text:#e8eaf6;--muted:#9aa1c2;--teal:#46e0c8;--violet:#8b6bff}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+    padding:40px 18px 72px}
+  .wrap{max-width:720px;margin:0 auto}
+  h1{font-size:30px;margin:0 0 6px;letter-spacing:-.5px}
+  .sub{color:var(--muted);margin:0 0 6px}
+  .date{color:var(--muted);font-size:13px;margin:0 0 30px}
+  h2{font-size:18px;margin:32px 0 10px}
+  p,li{color:#cfd4ea}
+  ul{padding-left:20px}
+  li{margin-bottom:7px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:22px 0}
+  .card strong{color:var(--teal)}
+  code{background:#0a0c18;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:13px;color:var(--teal)}
+  a{color:var(--violet)}
+  footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Privacy Policy</h1>
+  <p class="sub">StatusHD — <code>com.statushd.app</code></p>
+  <p class="date">Last updated: 17 September 2026</p>
+
+  <div class="card">
+    <p style="margin:0"><strong>StatusHD collects no data at all.</strong> It has no server, no
+    account and no analytics. Your videos are read, processed and written entirely on your own
+    device and are never transmitted anywhere.</p>
+  </div>
+
+  <h2>This is verifiable, not just a promise</h2>
+  <p>
+    StatusHD does not request the Android <code>INTERNET</code> permission. Without it, Android
+    itself prevents the app from opening any network connection — so it could not upload your
+    videos, or anything else, even if it were asked to. You can confirm this yourself: the
+    permission list on the Google Play listing shows no network access.
+  </p>
+
+  <h2>What the app does with your videos</h2>
+  <ul>
+    <li>Reads the video you pick, using your phone's own media APIs.</li>
+    <li>Analyses it and re-encodes it with your phone's hardware video encoder.</li>
+    <li>Writes the result to your device, in <code>Movies/StatusHD</code>, only when you tap Save.</li>
+    <li>Hands the file to another app — WhatsApp, Instagram or anything else — only when you
+        tap Share, using Android's standard share sheet. What that app then does with it is
+        governed by its own privacy policy, not this one.</li>
+  </ul>
+
+  <h2>What is stored on your device</h2>
+  <ul>
+    <li><strong>Optimised videos</strong> you chose to save, in your normal gallery storage.</li>
+    <li><strong>A small list of those videos</strong> (file name, date, size, resolution) kept in
+        the app's private storage so the "My Optimized Videos" screen can show them. Deleting the
+        app removes it.</li>
+    <li><strong>Temporary working files</strong> in the app's cache during processing, cleared
+        automatically.</li>
+  </ul>
+  <p>None of this leaves the device. None of it is readable by other apps.</p>
+
+  <h2>Permissions, and why each one exists</h2>
+  <ul>
+    <li><strong>Notifications</strong> — to show encoding progress if you leave the app. Optional.</li>
+    <li><strong>Foreground service</strong> — so encoding is not killed when the app is
+        backgrounded.</li>
+    <li><strong>Read video</strong> — optional, and requested only if you open the in-app video
+        library that lists your videos sorted by size. Decline it and the app still works
+        normally through the system picker or file browser.</li>
+    <li><strong>Storage write</strong> — on Android 9 and older only, to save into your gallery.
+        Android 10 and newer do not need it.</li>
+  </ul>
+
+  <h2>Children</h2>
+  <p>StatusHD is a general-purpose video utility. It collects no personal information from
+     anyone, including children.</p>
+
+  <h2>Third parties</h2>
+  <p>There are no advertising SDKs, no analytics SDKs and no crash-reporting SDKs in StatusHD.
+     No third party receives any information from this app.</p>
+
+  <h2>Changes</h2>
+  <p>If this policy ever changes, the updated version will be posted at this address with a new
+     date above.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about this policy: <a href="mailto:vijayroshan63@gmail.com">vijayroshan63@gmail.com</a></p>
+
+  <footer>
+    StatusHD · <a href="../">Download</a> · Published by Roshan Vijay
+  </footer>
+
+</div>
+</body>
+</html>
