@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Roshan Vijay — Senior .NET Full Stack Developer</title>
+<style>
+  :root{
+    --accent:#0f4761;
+    --ink:#14181f;
+    --muted:#4b5563;
+    --line:#d7dee6;
+    --bg:#f6f8fb;
+    --paper:820px;
+  }
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{display:flex;justify-content:center;padding:32px;}
+  .page{width:var(--paper);background:#fff;box-shadow:0 10px 30px rgba(16,24,40,.08);
+    border-radius:8px;padding:40px 48px;box-sizing:border-box;}
+  .controls{display:flex;justify-content:flex-end;margin-bottom:14px;}
+  .btn{background:var(--accent);color:#fff;padding:8px 14px;border:0;border-radius:6px;
+    font-weight:600;cursor:pointer;font-size:13px;}
+
+  header{border-bottom:2px solid var(--accent);padding-bottom:14px;margin-bottom:16px;}
+  h1{font-size:26px;margin:0;color:var(--accent);letter-spacing:.2px;}
+  .role{font-size:14px;font-weight:600;color:var(--ink);margin-top:3px;}
+  .contact{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.6;}
+  .contact a{color:var(--muted);text-decoration:none;}
+
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:1.1px;color:var(--accent);
+    border-bottom:1px solid var(--line);padding-bottom:5px;margin:20px 0 10px;}
+  p.summary{font-size:12.8px;line-height:1.55;margin:0;color:#1f2733;text-align:justify;}
+
+  .skill-row{font-size:12.6px;line-height:1.5;margin:5px 0;}
+  .skill-row b{color:var(--ink);}
+
+  .job{margin-bottom:14px;}
+  .job-head{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px;}
+  .job-title{font-weight:700;font-size:13.5px;color:var(--ink);}
+  .job-sub{font-size:12.4px;color:var(--muted);}
+  .job-dates{font-size:12.2px;color:var(--muted);white-space:nowrap;}
+  ul{margin:7px 0 0 18px;padding:0;}
+  li{font-size:12.5px;line-height:1.5;margin:5px 0;color:#222a33;}
+
+  .edu-line{font-size:12.8px;margin:2px 0;}
+  .edu-line b{color:var(--ink);}
+  .note{font-size:12.4px;color:var(--muted);}
+
+  @page{size:A4;margin:14mm;}
+  @media print{
+    body{background:#fff;}
+    .wrap{padding:0;}
+    .page{width:100%;box-shadow:none;border-radius:0;padding:0;}
+    .controls{display:none;}
+    h1{font-size:22px;}
+    * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
+  @media (max-width:880px){ :root{--paper:100%;} .page{padding:24px;} }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="page">
+      <div class="controls">
+        <button class="btn" id="printBtn">Download PDF</button>
+      </div>
+
+      <header>
+        <h1>Roshan Vijay</h1>
+        <div class="role">Senior Software Engineer &nbsp;|&nbsp; .NET Full Stack Developer</div>
+        <div class="contact">
+          📞 7349495469 &nbsp;•&nbsp; ✉️ roshanshetty010100@gmail.com &nbsp;•&nbsp; 📍 Moodabidri, India (open to relocating to Hyderabad)
+        </div>
+      </header>
+
+      <section>
+        <h2>Professional Summary</h2>
+        <p class="summary">
+          Senior .NET Full Stack Developer with 4+ years of experience designing, developing, and deploying data-driven,
+          web-based applications using Microsoft technologies — .NET / .NET Core, ASP.NET MVC, C#, and Entity Framework.
+          Skilled in building responsive Single Page Applications (SPA) with Angular / AngularJS, jQuery, and JavaScript, and in
+          developing cloud-native solutions on Microsoft Azure (Azure Functions, Service Bus, Azure SQL). Strong command of
+          OOPs, design patterns, architectural patterns, automated / unit testing, and CI/CD. Experienced across the full SDLC —
+          requirement analysis, solution architecture and design, development, unit testing, and deployment. Recent experience
+          spans the capital-markets / financial-services domain — delivering trading dashboards and reporting platforms — backed
+          by excellent written and verbal communication skills and a track record of delivering moderate-to-complex projects.
+        </p>
+      </section>
+
+      <section>
+        <h2>Technical Skills</h2>
+        <div class="skill-row"><b>Languages &amp; Frameworks:</b> C#, .NET / .NET Core (.NET 6+), ASP.NET MVC, ASP.NET Web API, OOPs, LINQ</div>
+        <div class="skill-row"><b>Front-End / SPA:</b> Angular / AngularJS, SPA Development, JavaScript, TypeScript, jQuery, HTML5, CSS3, React JS</div>
+        <div class="skill-row"><b>Microsoft Azure:</b> Azure Functions, Azure Service Bus, Azure SQL, Azure App Service, AKS, Azure API Management (APIM), Azure DevOps</div>
+        <div class="skill-row"><b>ORM &amp; Data Access:</b> Entity Framework / Entity Framework Core</div>
+        <div class="skill-row"><b>Databases:</b> SQL Server, Azure SQL, Cosmos DB — Database Design, Stored Procedures, Views, Joins, Query Optimization, Performance Tuning</div>
+        <div class="skill-row"><b>Design &amp; Architecture:</b> Design Patterns, Architectural Patterns, Microservices, RESTful APIs, Event-Driven Architecture</div>
+        <div class="skill-row"><b>DevOps &amp; Tools:</b> Visual Studio 2017+, Source Control (TFS / Git / VSTS), Build Automation, CI/CD Pipelines, Automated / Unit Testing (xUnit, NUnit, MSTest), Docker, Kubernetes, Terraform</div>
+        <div class="skill-row"><b>Practices:</b> Agile / Scrum, SOLID Principles, Continuous Integration &amp; Development, Code Reviews, Secure Coding (OAuth2 / JWT)</div>
+      </section>
+
+      <section>
+        <h2>Professional Experience</h2>
+
+        <div class="job">
+          <div class="job-head">
+            <div>
+              <div class="job-title">Senior Software Engineer — GeakMinds Technologies</div>
+              <div class="job-sub">Client: Capula Investments Pvt. Ltd. (Capital Markets / Hedge Fund) &nbsp;•&nbsp; Chennai (Work From Home)</div>
+            </div>
+            <div class="job-dates">Apr 2026 – Present</div>
+          </div>
+          <ul>
+            <li>Working as a consultant for <b>Capula Investments</b>, a global capital-markets / hedge-fund firm, building financial trading and reporting applications with <b>C# / .NET Core</b> at the core.</li>
+            <li>Developed <b>Trader Dashboard</b> — a responsive <b>Single Page Application (SPA)</b> built with <b>Angular, JavaScript, jQuery, HTML5, and CSS3</b>, backed by <b>C# / .NET Core RESTful APIs</b> — giving traders real-time visibility into positions and portfolio data.</li>
+            <li>Built <b>One API</b>, a centralized <b>reporting tool / service</b> in <b>C# / .NET Core</b> that aggregates data from multiple sources and exposes secure REST endpoints for financial and operational reporting.</li>
+            <li>Designed and optimized <b>SQL Server / Azure SQL</b> data models for reporting — authoring <b>stored procedures, views, and complex joins</b> with a focus on query optimization and performance tuning.</li>
+            <li>Applied <b>design patterns and architectural patterns</b>, wrote <b>unit tests (xUnit / NUnit)</b>, and delivered changes through <b>CI/CD pipelines</b> with source control on <b>Git / Azure DevOps</b>.</li>
+            <li>Partnered directly with client stakeholders in an <b>Agile</b> setting to gather requirements, design solutions, and deliver features for a fast-paced trading environment.</li>
+          </ul>
+        </div>
+
+        <div class="job">
+          <div class="job-head">
+            <div>
+              <div class="job-title">Software Engineer — Cornerstone OnDemand</div>
+              <div class="job-sub">Pune, India</div>
+            </div>
+            <div class="job-dates">Jun 2022 – Apr 2026</div>
+          </div>
+          <ul>
+            <li>Designed, developed, and deployed data-driven web applications using <b>.NET Core, C#, ASP.NET MVC</b>, and <b>Entity Framework Core</b> for the enterprise-scale Performance Goals module, owning the full SDLC from requirement analysis to deployment.</li>
+            <li>Built responsive <b>Single Page Application (SPA)</b> interfaces using <b>Angular / AngularJS, JavaScript, jQuery, HTML5, and CSS3</b>, ensuring cross-browser compatibility and a high-quality user experience.</li>
+            <li>Developed <b>Azure</b> cloud applications leveraging <b>Azure Functions</b> and <b>Azure Service Bus</b> for event-driven, asynchronous processing, with data persisted in <b>Azure SQL</b>, SQL Server, and Cosmos DB.</li>
+            <li>Designed and optimized <b>SQL Server / Azure SQL</b> databases — authoring <b>stored procedures, views, and complex joins</b>, and performing query optimization and <b>performance tuning</b>.</li>
+            <li>Applied <b>design patterns and architectural patterns</b> to build maintainable, scalable solutions; led migration of a monolithic .NET Framework application to a <b>microservices architecture</b> on Azure Kubernetes Service (AKS).</li>
+            <li>Created <b>unit test plans and scenarios</b> and implemented automated / unit tests using <b>xUnit / NUnit</b>, following software development leading practices to maximize predictability and project success.</li>
+            <li>Built and maintained <b>CI/CD pipelines and build automation</b> using <b>Azure DevOps</b>, with source control on <b>Git / TFS / VSTS</b>; provisioned infrastructure using Terraform and ARM templates.</li>
+            <li>Analyzed client needs and technical requirements to create solution <b>architecture and design</b>; documented new development, procedures, and test plans.</li>
+            <li>Implemented <b>OAuth2 / JWT</b> authentication and secure coding practices; identified and remediated security vulnerabilities (IDOR) through comprehensive code reviews.</li>
+            <li>Conducted code reviews and mentored developers on modern practices and AI coding tools (GitHub Copilot, Amazon Q, Cody) in an <b>Agile / Scrum</b> environment.</li>
+          </ul>
+        </div>
+
+        <div class="job">
+          <div class="job-head">
+            <div>
+              <div class="job-title">Associate Software Engineer — Allstate</div>
+              <div class="job-sub">Bangalore, India</div>
+            </div>
+            <div class="job-dates">Sep 2021 – Jun 2022</div>
+          </div>
+          <ul>
+            <li>Developed backend services and <b>RESTful APIs</b> using <b>C# and .NET</b> for the Agent Portal of Allstate — an enterprise application in the financial services / insurance domain.</li>
+            <li>Implemented business logic and data-access layers with <b>SQL Server</b>, including stored procedures, joins, and query optimization.</li>
+            <li>Supported end-to-end implementation of <b>Adobe Analytics</b>, translating user interactions into actionable business insights.</li>
+            <li>Collaborated with cross-functional teams (QA, architects, product owners) in an <b>Agile</b> environment and maintained high code quality following <b>SOLID principles</b> and code reviews.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <h2>Key Projects</h2>
+        <ul>
+          <li><b>Monolith-to-Microservices Migration (.NET / Azure):</b> Led end-to-end migration of a monolithic .NET Framework application to cloud-native microservices on Azure AKS, applying design patterns to improve scalability and deployment independence.</li>
+          <li><b>Edge Import Framework (Azure Service Bus):</b> Architected a high-volume, event-driven data ingestion framework using .NET Core, Azure Service Bus, and RabbitMQ with validation, security checks, and performance optimization; adopted across multiple teams.</li>
+          <li><b>Azure DevOps CI/CD &amp; Automation:</b> Built automated build, test, and release pipelines with Azure DevOps, including containerized deployments to AKS and infrastructure-as-code with Terraform / ARM templates.</li>
+          <li><b>AI-Powered .NET Services:</b> Delivered AI-powered features (goal description generation, comment rephrasing) integrating LLM APIs into production .NET Core services on Azure.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Education</h2>
+        <div class="edu-line"><b>Bachelor of Engineering (B.E.), Information Science and Engineering</b> — 8.3 CGPA</div>
+        <div class="edu-line note">Mangalore Institute of Technology &amp; Engineering, Moodabidri &nbsp;•&nbsp; 2017 – 2021</div>
+      </section>
+
+    </div>
+  </div>
+<script>
+  document.getElementById('printBtn').addEventListener('click',function(){window.print();});
+</script>
+</body>
+</html>

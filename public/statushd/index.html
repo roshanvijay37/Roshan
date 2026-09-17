@@ -74,19 +74,19 @@
   <h1>StatusHD</h1>
   <p class="tag">Sharper Status. Better Memories.</p>
 
-  <a class="btn" href="StatusHD-1.4.0.apk" download>
+  <a class="btn" href="StatusHD-1.5.0.apk" download>
     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
       <path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z"/>
     </svg>
     DOWNLOAD APK
   </a>
-  <p class="size">Version 1.4.0 · 3.7 MB · Android 8.0+</p>
+  <p class="size">Version 1.5.0 · 3.6 MB · Android 8.0+</p>
 
   <div class="card">
     <h2>For Google Play</h2>
     <p>Play needs the App Bundle, not the APK. The first upload must be done by hand in Play
        Console; the API takes over after that.</p>
-    <p style="margin-top:10px"><a href="StatusHD-1.4.0.aab" download>Download the .aab (7.1 MB) — package com.statushd</a></p>
+    <p style="margin-top:10px"><a href="StatusHD-1.5.0.aab" download>Download the .aab (7.2 MB) — package com.statushd</a></p>
   </div>
 
   <div class="card">
@@ -100,22 +100,33 @@
   </div>
 
   <div class="card">
-    <h2>What's new in 1.4.0</h2>
+    <h2>What's new in 1.5.0</h2>
+    <p style="margin:0 0 10px">This release is about how the video gets <em>into</em> WhatsApp.
+    A clip that looked sharp in the preview could still come out soft once posted &mdash; not
+    because of the encode, but because the old <strong>Share to WhatsApp</strong> button took
+    the worse of the two available routes.</p>
     <ol>
-      <li><strong>Crystal Clear</strong> mode &mdash; maximum practical quality for WhatsApp.</li>
-      <li>Bitrate now adapts to what is <em>in</em> the video, not just its size &mdash; detail and motion are measured from real frames.</li>
-      <li>Resolution is checked against your phone's actual encoder, so it cannot fail late.</li>
-      <li><strong>WhatsApp Chat</strong> profile, alongside Status and Reels.</li>
-      <li>Every finished file is checked against the plan before you share it.</li>
+      <li><strong>Save &amp; open WhatsApp</strong> is now the main button. The file goes to
+      Movies/StatusHD and WhatsApp opens with nothing attached, so you pick the video from
+      WhatsApp's own gallery &mdash; the screen where its quality controls actually live.</li>
+      <li>Sharing now saves to the gallery first. A file living only in the app's cache could
+      not be picked from inside WhatsApp at all.</li>
+      <li>A four-step guide on the result screen, including the send-to-yourself-then-forward
+      method for Status. That one is widely reported to work but is not documented by
+      WhatsApp, and the app says so rather than pretending otherwise.</li>
+      <li>Direct sharing is still there, one row further down.</li>
     </ol>
+    <p style="margin:10px 0 0;font-size:13px;opacity:.75">Why it matters: WhatsApp's HD toggle
+    is a chat feature. Status has no HD control of its own, so a Status post is re-encoded at
+    standard quality no matter what it was handed.</p>
   </div>
 
   <div class="card">
     <h2>Verify the file</h2>
-    <div class="row"><span>Size</span><span>3768664 bytes</span></div>
+    <div class="row"><span>Size</span><span>3785044 bytes</span></div>
     <div class="row"><span>Signing SHA-1</span><span style="font-size:11px">E9:2F:6B:1F:07:91:F9:4A</span></div>
     <p style="margin-top:10px">SHA-256 of the APK:</p>
-    <p style="margin-top:6px"><code>dcd3460217dea72533838a3c87be448b00893164fd5f8dc3832121a1187b0459</code></p>
+    <p style="margin-top:6px"><code>6287255a4565ef4e498f6391ca6636b6e412a66d57ebe700f00cc46599117442</code></p>
   </div>
 
   <p class="note">Private build for testing. Not on Google Play.</p>
