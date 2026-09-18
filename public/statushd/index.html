@@ -74,19 +74,19 @@
   <h1>StatusHD</h1>
   <p class="tag">Sharper Status. Better Memories.</p>
 
-  <a class="btn" href="StatusHD-1.6.0.apk" download>
+  <a class="btn" href="StatusHD-1.7.0.apk" download>
     <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
       <path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z"/>
     </svg>
     DOWNLOAD APK
   </a>
-  <p class="size">Version 1.6.0 · 3.6 MB · Android 8.0+</p>
+  <p class="size">Version 1.7.0 · 3.6 MB · Android 8.0+</p>
 
   <div class="card">
     <h2>For Google Play</h2>
     <p>Play needs the App Bundle, not the APK. The first upload must be done by hand in Play
        Console; the API takes over after that.</p>
-    <p style="margin-top:10px"><a href="StatusHD-1.6.0.aab" download>Download the .aab (7.2 MB) — package com.statushd</a></p>
+    <p style="margin-top:10px"><a href="StatusHD-1.7.0.aab" download>Download the .aab (7.2 MB) — package com.statushd</a></p>
   </div>
 
   <div class="card">
@@ -100,38 +100,35 @@
   </div>
 
   <div class="card">
-    <h2>What's new in 1.6.0</h2>
-    <p style="margin:0 0 10px"><strong>Most videos are now left completely
-    untouched &mdash; and that is the upgrade.</strong></p>
-    <p style="margin:0 0 10px">WhatsApp re-encodes every video it receives, on your own
-    phone. So anything StatusHD encoded first was a <em>second</em> round of compression
-    stacked in front of theirs. Measured against real WhatsApp output with ffmpeg and
-    libvmaf, that was costing about <strong>5.8 VMAF points and saving nothing at all</strong>
-    on what actually gets uploaded.</p>
+    <h2>What's new in 1.7.0</h2>
+    <p style="margin:0 0 10px"><strong>Targets 720p now &mdash; because that is what your
+    phone actually sends.</strong></p>
+    <p style="margin:0 0 10px">Measured across three round trips on a Galaxy S24 Ultra:
+    WhatsApp's Android app will not send video above 1280&times;720, HD enabled or not.
+    A 144&nbsp;MB HEVC original, a 71&nbsp;MB H.264 re-encode and a 98&nbsp;MB 720p file all
+    came back 720&times;1280 at ~3.2&nbsp;Mbps &mdash; within 2.6&nbsp;KB of each other.</p>
     <ol>
-      <li>A clip is now <strong>copied byte-for-byte</strong> unless something genuinely
-      cannot be handed over: it needs resizing, a slower frame rate, HDR tone-mapping, a
-      trim, or it is in a container we cannot pass on.</li>
-      <li><strong>A high bitrate is no longer a reason to re-encode.</strong> Neither is
-      HEVC. Those are good sources, not problems &mdash; every bit thrown away first is
-      detail WhatsApp's encoder would otherwise have had.</li>
-      <li>When a re-encode really is needed, the keyframe interval moved from 1.0s to 2.5s,
-      which lifts the <em>worst</em> frames by about 5 VMAF. Notably, copying WhatsApp's own
-      10-second setting was measured and would have made those frames 8.4 VMAF
-      <em>worse</em>.</li>
-      <li><strong>Instagram is unchanged.</strong> It transcodes on its servers, so there
-      your file really is the upload and its size still costs you data and time.</li>
+      <li>Keeping 1080p preserved a resolution the phone always discarded, and handed
+      WhatsApp's own scaler the job of removing it. StatusHD does that reduction now, with a
+      <strong>real bicubic filter</strong> instead of the GPU's bilinear sampler &mdash;
+      worth <strong>+3.65 VMAF</strong> end to end.</li>
+      <li><strong>The filter is the feature.</strong> Dropping to 720p using the default
+      bilinear sampler scores 55.85 against 54.96 for doing nothing &mdash; under a point.
+      A proper bicubic scores 61.10.</li>
+      <li>Instagram is unchanged and still targets 1080p. It transcodes on its servers, and
+      nothing about it has been measured.</li>
     </ol>
-    <p style="margin:10px 0 0;font-size:13px;opacity:.75">Known gap, stated plainly: 4K and
-    HDR clips keep their previous behaviour. Nothing has been measured for those yet.</p>
+    <p style="margin:10px 0 0;font-size:13px;opacity:.75"><strong>Not verified on hardware.</strong>
+    The new downscale shader has never run on a GPU. If it is wrong you will see obvious
+    corruption rather than slight softness &mdash; check one video first.</p>
   </div>
 
   <div class="card">
     <h2>Verify the file</h2>
-    <div class="row"><span>Size</span><span>3785044 bytes</span></div>
+    <div class="row"><span>Size</span><span>3787582 bytes</span></div>
     <div class="row"><span>Signing SHA-1</span><span style="font-size:11px">E9:2F:6B:1F:07:91:F9:4A</span></div>
     <p style="margin-top:10px">SHA-256 of the APK:</p>
-    <p style="margin-top:6px"><code>b117eb3e21b5a46833a0b47925629d2648e58ba0409817530a29aee08b6dd4b4</code></p>
+    <p style="margin-top:6px"><code>f3373f364d4b76815ecc49b722ba4a8e32dc933e8873551e8c00e8d5cf0a7185</code></p>
   </div>
 
   <p class="note">Also on Google Play internal testing as versionCode 10.</p>
