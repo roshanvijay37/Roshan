@@ -30,20 +30,58 @@
 
   <h1>Privacy Policy</h1>
   <p class="sub">StatusHD — <code>com.statushd</code></p>
-  <p class="date">Last updated: 17 September 2026</p>
+  <p class="date">Last updated: 18 September 2026</p>
 
   <div class="card">
-    <p style="margin:0"><strong>StatusHD collects no data at all.</strong> It has no server, no
-    account and no analytics. Your videos are read, processed and written entirely on your own
-    device and are never transmitted anywhere.</p>
+    <p style="margin:0"><strong>There are two builds of StatusHD, and they differ on exactly
+    this point.</strong> The version on Google Play never sends your video anywhere. A separate
+    build, shared directly with a few people, does — that is its entire purpose. Check which
+    one you have before reading further: the version is at the bottom of the app's settings
+    screen.</p>
   </div>
 
-  <h2>This is verifiable, not just a promise</h2>
+  <h2>The Google Play version (1.7.x) — nothing leaves your phone</h2>
   <p>
-    StatusHD does not request the Android <code>INTERNET</code> permission. Without it, Android
-    itself prevents the app from opening any network connection — so it could not upload your
-    videos, or anything else, even if it were asked to. You can confirm this yourself: the
-    permission list on the Google Play listing shows no network access.
+    This version collects no data at all. It has no server, no account and no analytics. Your
+    videos are read, processed and written entirely on your own device and are never transmitted
+    anywhere.
+  </p>
+  <p>
+    That is verifiable rather than a promise: it does not request the Android
+    <code>INTERNET</code> permission. Without it, Android itself prevents the app from opening
+    any network connection — so it could not upload your videos, or anything else, even if it
+    were asked to. You can confirm this yourself; the permission list on the Google Play listing
+    shows no network access.
+  </p>
+
+  <h2>The shared build (1.9.x, &ldquo;drop&rdquo;) — your video is sent to someone's computer</h2>
+  <div class="card">
+    <p style="margin:0">This build <strong>does</strong> request <code>INTERNET</code>, and when
+    you tap <strong>Send to laptop</strong> it uploads the video you picked to a personal
+    computer operated by Roshan Vijay in Mangalore, India. If that is not what you want, use the
+    Google Play version instead.</p>
+  </div>
+  <p>Being specific about what that means, because &ldquo;uploads to a laptop&rdquo; is easy to
+  wave past:</p>
+  <ul>
+    <li>The video is sent over an encrypted connection (HTTPS) to
+        <code>drop.roshanvijay.com</code>, which points at that computer.</li>
+    <li><strong>It is saved on that computer as an ordinary file</strong>, converted to 1080p,
+        and then sent into Roshan's own WhatsApp account so he can forward it on.</li>
+    <li><strong>Roshan can watch it</strong>, as can anyone with access to that computer. It is
+        not encrypted at rest and there is no mechanism preventing him from seeing it.</li>
+    <li><strong>Uploaded files are not deleted automatically.</strong> They stay on that computer
+        until someone removes them by hand.</li>
+    <li>The endpoint is deliberately open: no account, no password. Anyone who knows the address
+        can send a video to it. Nothing identifies who sent what, beyond the filename you sent
+        and the ordinary network logs any web server keeps.</li>
+    <li>Nothing is sold, published, or given to any third party or analytics service. It goes to
+        that one computer and into that one WhatsApp account.</li>
+  </ul>
+  <p>
+    <strong>The practical advice:</strong> only send videos you are content for Roshan to have a
+    copy of. For anything private, use the Google Play version, which cannot send anything
+    anywhere.
   </p>
 
   <h2>What the app does with your videos</h2>
@@ -65,9 +103,10 @@
     <li><strong>Temporary working files</strong> in the app's cache during processing, cleared
         automatically.</li>
   </ul>
-  <p>None of this leaves the device. None of it is readable by other apps.</p>
+  <p>None of this list leaves the device. The video itself leaves only in the shared build, and only when you tap Send to laptop, as described above. None of it is readable by other apps.</p>
 
-  <h2>Permissions, and why each one exists</h2>
+  
+    <li><strong>Internet</strong> — shared build only, and only to upload a video you explicitly chose to send. The Google Play version does not request it at all.</li>
   <ul>
     <li><strong>Notifications</strong> — to show encoding progress if you leave the app. Optional.</li>
     <li><strong>Foreground service</strong> — so encoding is not killed when the app is
@@ -80,8 +119,7 @@
   </ul>
 
   <h2>Children</h2>
-  <p>StatusHD is a general-purpose video utility. It collects no personal information from
-     anyone, including children.</p>
+  <p>StatusHD is a general-purpose video utility. The Google Play version collects no personal information from anyone, including children. The shared build receives whatever video the sender chose to send, which is why it is given only to people who have been told plainly where their video goes.</p>
 
   <h2>Third parties</h2>
   <p>There are no advertising SDKs, no analytics SDKs and no crash-reporting SDKs in StatusHD.
