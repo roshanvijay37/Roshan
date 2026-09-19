@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>StatusHD — Privacy Policy</title>
 <style>
-  :root{--bg:#07080f;--card:#12152a;--line:#2a3050;--text:#e8eaf6;--muted:#9aa1c2;--teal:#46e0c8;--violet:#8b6bff}
+  :root{--bg:#07080f;--card:#12152a;--line:#2a3050;--text:#e8eaf6;--muted:#9aa1c2;--teal:#46e0c8;--violet:#8b6bff;--amber:#e9a063}
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--text);
     font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
@@ -20,8 +20,13 @@
   li{margin-bottom:7px}
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:22px 0}
   .card strong{color:var(--teal)}
+  .warn{border-color:#5a4020}
+  .warn strong{color:var(--amber)}
   code{background:#0a0c18;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:13px;color:var(--teal)}
   a{color:var(--violet)}
+  table{width:100%;border-collapse:collapse;margin:14px 0}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:13px}
   footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
 </style>
 </head>
@@ -30,110 +35,84 @@
 
   <h1>Privacy Policy</h1>
   <p class="sub">StatusHD — <code>com.statushd</code></p>
-  <p class="date">Last updated: 18 September 2026</p>
+  <p class="date">Last updated: 19 September 2026</p>
 
   <div class="card">
-    <p style="margin:0"><strong>There are two builds of StatusHD, and they differ on exactly
-    this point.</strong> The version on Google Play never sends your video anywhere. A separate
-    build, shared directly with a few people, does — that is its entire purpose. Check which
-    one you have before reading further: the version is at the bottom of the app's settings
-    screen.</p>
+    <p style="margin:0"><strong>StatusHD can upload your video, and you decide when.</strong>
+    Optimising a video on your phone sends nothing. Tapping <em>Send to server</em> uploads
+    that video, and the phone number you type, to a computer operated by Roshan Vijay in
+    Mangalore, India. Nothing is uploaded unless you tap that button.</p>
   </div>
 
-  <h2>The Google Play version (1.7.x) — nothing leaves your phone</h2>
-  <p>
-    This version collects no data at all. It has no server, no account and no analytics. Your
-    videos are read, processed and written entirely on your own device and are never transmitted
-    anywhere.
-  </p>
-  <p>
-    That is verifiable rather than a promise: it does not request the Android
-    <code>INTERNET</code> permission. Without it, Android itself prevents the app from opening
-    any network connection — so it could not upload your videos, or anything else, even if it
-    were asked to. You can confirm this yourself; the permission list on the Google Play listing
-    shows no network access.
-  </p>
+  <h2>What is collected, and only when you tap Send to server</h2>
+  <table>
+    <tr><th>What</th><th>Why</th></tr>
+    <tr><td>The video file you chose</td><td>It is prepared for WhatsApp, which cannot be done without it</td></tr>
+    <tr><td>The phone number you type</td><td>It decides which WhatsApp conversation the finished video is delivered to</td></tr>
+    <tr><td>The original file name and size</td><td>Sent with the upload so it can be resumed if the connection drops</td></tr>
+  </table>
+  <p>There is no account, no sign-in, no password and no e-mail address. No analytics or
+  crash-reporting service is used. No advertising identifier is read. Nothing is sold or
+  shared for advertising, and nothing is used to build a profile of you.</p>
 
-  <h2>The shared build (1.9.x, &ldquo;drop&rdquo;) — your video is sent to someone's computer</h2>
-  <div class="card">
-    <p style="margin:0">This build <strong>does</strong> request <code>INTERNET</code>, and when
-    you tap <strong>Send to laptop</strong> it uploads the video you picked to a personal
-    computer operated by Roshan Vijay in Mangalore, India. If that is not what you want, use the
-    Google Play version instead.</p>
+  <h2>Optimising on the phone sends nothing</h2>
+  <p>The <em>Optimize video</em> route reads, processes and writes the video entirely on your
+  own device. No network connection is made. The app also reads the videos already on your
+  phone so you can pick one; that list never leaves the device.</p>
+
+  <h2>What happens to a video you do upload</h2>
+  <ul>
+    <li>It travels over an encrypted HTTPS connection, through Cloudflare, which carries the
+        traffic to the computer described above.</li>
+    <li>It is written to that computer's disk as an ordinary file, named after the phone
+        number you gave.</li>
+    <li>It is re-encoded so WhatsApp will accept it without ruining the quality.</li>
+    <li>It is placed into WhatsApp and sent to the number you gave.</li>
+  </ul>
+
+  <div class="card warn">
+    <p style="margin:0"><strong>Be aware of two things.</strong> That computer is a personal
+    machine, not a data centre, and the person who operates it can open and watch any file on
+    it. And uploaded videos are <strong>not deleted automatically</strong> — they remain on
+    that disk until they are removed by hand. If either of those is not acceptable to you,
+    use the on-device route, which uploads nothing.</p>
   </div>
-  <p>Being specific about what that means, because &ldquo;uploads to a laptop&rdquo; is easy to
-  wave past:</p>
-  <ul>
-    <li>The video is sent over an encrypted connection (HTTPS) to
-        <code>drop.roshanvijay.com</code>, which points at that computer.</li>
-    <li><strong>It is saved on that computer as an ordinary file</strong>, converted to 1080p,
-        and then sent into Roshan's own WhatsApp account so he can forward it on.</li>
-    <li><strong>Roshan can watch it</strong>, as can anyone with access to that computer. It is
-        not encrypted at rest and there is no mechanism preventing him from seeing it.</li>
-    <li><strong>Uploaded files are not deleted automatically.</strong> They stay on that computer
-        until someone removes them by hand.</li>
-    <li>The endpoint is deliberately open: no account, no password. Anyone who knows the address
-        can send a video to it. Nothing identifies who sent what, beyond the filename you sent
-        and the ordinary network logs any web server keeps.</li>
-    <li>Nothing is sold, published, or given to any third party or analytics service. It goes to
-        that one computer and into that one WhatsApp account.</li>
-  </ul>
-  <p>
-    <strong>The practical advice:</strong> only send videos you are content for Roshan to have a
-    copy of. For anything private, use the Google Play version, which cannot send anything
-    anywhere.
-  </p>
 
-  <h2>What the app does with your videos</h2>
+  <h2>Who else sees it</h2>
   <ul>
-    <li>Reads the video you pick, using your phone's own media APIs.</li>
-    <li>Analyses it and re-encodes it with your phone's hardware video encoder.</li>
-    <li>Writes the result to your device, in <code>Movies/StatusHD</code>, only when you tap Save.</li>
-    <li>Hands the file to another app — WhatsApp, Instagram or anything else — only when you
-        tap Share, using Android's standard share sheet. What that app then does with it is
-        governed by its own privacy policy, not this one.</li>
+    <li><strong>Cloudflare</strong> carries the upload in transit.</li>
+    <li><strong>WhatsApp (Meta)</strong> receives the finished video, because delivering it to
+        you through WhatsApp is the point. Their handling is governed by their own policy.</li>
   </ul>
+  <p>Nobody else. There is no other third party, no data broker and no advertising network.</p>
 
-  <h2>What is stored on your device</h2>
-  <ul>
-    <li><strong>Optimised videos</strong> you chose to save, in your normal gallery storage.</li>
-    <li><strong>A small list of those videos</strong> (file name, date, size, resolution) kept in
-        the app's private storage so the "My Optimized Videos" screen can show them. Deleting the
-        app removes it.</li>
-    <li><strong>Temporary working files</strong> in the app's cache during processing, cleared
-        automatically.</li>
-  </ul>
-  <p>None of this list leaves the device. The video itself leaves only in the shared build, and only when you tap Send to laptop, as described above. None of it is readable by other apps.</p>
-
-  
-    <li><strong>Internet</strong> — shared build only, and only to upload a video you explicitly chose to send. The Google Play version does not request it at all.</li>
-  <ul>
-    <li><strong>Notifications</strong> — to show encoding progress if you leave the app. Optional.</li>
-    <li><strong>Foreground service</strong> — so encoding is not killed when the app is
-        backgrounded.</li>
-    <li><strong>Read video</strong> — optional, and requested only if you open the in-app video
-        library that lists your videos sorted by size. Decline it and the app still works
-        normally through the system picker or file browser.</li>
-    <li><strong>Storage write</strong> — on Android 9 and older only, to save into your gallery.
-        Android 10 and newer do not need it.</li>
-  </ul>
+  <h2>Permissions, and what each is for</h2>
+  <table>
+    <tr><th>Permission</th><th>Used for</th></tr>
+    <tr><td><code>INTERNET</code></td><td>Only by <em>Send to server</em>: to upload the video you
+        chose, and to ask beforehand whether that computer is ready to receive it</td></tr>
+    <tr><td><code>READ_MEDIA_VIDEO</code></td><td>Optional. Only to list the videos on your phone
+        so you can choose one. Declining it costs you nothing but the sorted list</td></tr>
+    <tr><td><code>POST_NOTIFICATIONS</code></td><td>To show progress while a video is being
+        optimised or uploaded</td></tr>
+    <tr><td><code>FOREGROUND_SERVICE</code></td><td>So an optimisation or upload keeps running when
+        you leave the app</td></tr>
+  </table>
 
   <h2>Children</h2>
-  <p>StatusHD is a general-purpose video utility. The Google Play version collects no personal information from anyone, including children. The shared build receives whatever video the sender chose to send, which is why it is given only to people who have been told plainly where their video goes.</p>
+  <p>StatusHD is not directed at children and does not knowingly collect anything from them.</p>
 
-  <h2>Third parties</h2>
-  <p>There are no advertising SDKs, no analytics SDKs and no crash-reporting SDKs in StatusHD.
-     No third party receives any information from this app.</p>
+  <h2>Removing your video</h2>
+  <p>Ask, and any video you uploaded will be deleted from that computer. Use the address below
+  and say roughly when you sent it and which number you gave.</p>
 
   <h2>Changes</h2>
-  <p>If this policy ever changes, the updated version will be posted at this address with a new
-     date above.</p>
-
-  <h2>Contact</h2>
-  <p>Questions about this policy: <a href="mailto:vijayroshan63@gmail.com">vijayroshan63@gmail.com</a></p>
+  <p>If what the app does changes, this page changes with it. The date at the top is the date
+  it last did.</p>
 
   <footer>
-    StatusHD · <a href="../">Download</a> · Published by Roshan Vijay
+    Questions, or a deletion request: <a href="mailto:roshanshetty010100@gmail.com">roshanshetty010100@gmail.com</a><br>
+    Roshan Vijay, Mangalore, India.
   </footer>
 
 </div>
