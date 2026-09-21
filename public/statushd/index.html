@@ -68,70 +68,78 @@
 <div class="wrap">
 
   <div class="mark">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
+    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
   </div>
 
   <h1>StatusHD</h1>
-  <p class="tag">Sharper Status. Better Memories.</p>
+  <p class="tag">Full-quality video into WhatsApp Status</p>
 
-  <a class="btn" href="StatusHD-1.7.0.apk" download>
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-      <path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z"/>
-    </svg>
-    DOWNLOAD APK
-  </a>
-  <p class="size">Version 1.7.0 · 3.6 MB · Android 8.0+</p>
+  <a class="btn" href="StatusHD-3.0.3.apk">Download StatusHD 3.0.3</a>
+  <p class="size">Android 8.0 or newer &middot; 4.1&nbsp;MB</p>
 
   <div class="card">
-    <h2>For Google Play</h2>
-    <p>Play needs the App Bundle, not the APK. The first upload must be done by hand in Play
-       Console; the API takes over after that.</p>
-    <p style="margin-top:10px"><a href="StatusHD-1.7.0.aab" download>Download the .aab (7.2 MB) — package com.statushd</a></p>
+    <h2>How it works</h2>
+    <p>Posting a video to Status compresses it hard. StatusHD gets around that by never
+    letting WhatsApp's media path touch it:</p>
+    <ol>
+      <li>Pick a video in the app &mdash; it lists yours biggest first, since those are the
+          ones that suffer most.</li>
+      <li>Tap <strong>Send to WhatsApp</strong>. It goes to the service number as a
+          <strong>document</strong>, so it is transferred byte for byte instead of being
+          re-compressed.</li>
+      <li>An optimised version comes back into the same chat, as a video.</li>
+      <li>Forward that message to My Status. Forwarding does not re-upload it, so what your
+          viewers see is what came back.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>The app sends nothing by itself</h2>
+    <p>StatusHD does not request the <code>INTERNET</code> permission, so it cannot open a
+    network connection at all. It hands your video to WhatsApp, and you send it. See the
+    <a href="privacy/">privacy policy</a>.</p>
+  </div>
+
+  <div class="card">
+    <h2>What's new in 3.0.3</h2>
+    <ul>
+      <li><strong>The send button works on Android 16 and on phones with Dual Messenger.</strong>
+          It could previously do nothing at all, with no error: the share was routed to a
+          disambiguation screen that Android 16 blocks. It now targets one activity
+          directly.</li>
+      <li><strong>Videos reliably arrive as documents</strong>, so they are not re-compressed
+          on the way.</li>
+      <li>Clearer wording about which number to choose when WhatsApp asks.</li>
+    </ul>
   </div>
 
   <div class="card">
     <h2>Installing</h2>
-    <ol>
-      <li>Tap <strong>Download APK</strong> above.</li>
+    <ul>
       <li>Open it from your notification shade or Downloads.</li>
-      <li>Android will ask to allow installs from your browser — allow it once.</li>
-      <li>If you already have StatusHD, this installs straight over it. Your saved videos stay.</li>
-    </ol>
-  </div>
-
-  <div class="card">
-    <h2>What's new in 1.7.0</h2>
-    <p style="margin:0 0 10px"><strong>Targets 720p now &mdash; because that is what your
-    phone actually sends.</strong></p>
-    <p style="margin:0 0 10px">Measured across three round trips on a Galaxy S24 Ultra:
-    WhatsApp's Android app will not send video above 1280&times;720, HD enabled or not.
-    A 144&nbsp;MB HEVC original, a 71&nbsp;MB H.264 re-encode and a 98&nbsp;MB 720p file all
-    came back 720&times;1280 at ~3.2&nbsp;Mbps &mdash; within 2.6&nbsp;KB of each other.</p>
-    <ol>
-      <li>Keeping 1080p preserved a resolution the phone always discarded, and handed
-      WhatsApp's own scaler the job of removing it. StatusHD does that reduction now, with a
-      <strong>real bicubic filter</strong> instead of the GPU's bilinear sampler &mdash;
-      worth <strong>+3.65 VMAF</strong> end to end.</li>
-      <li><strong>The filter is the feature.</strong> Dropping to 720p using the default
-      bilinear sampler scores 55.85 against 54.96 for doing nothing &mdash; under a point.
-      A proper bicubic scores 61.10.</li>
-      <li>Instagram is unchanged and still targets 1080p. It transcodes on its servers, and
-      nothing about it has been measured.</li>
-    </ol>
-    <p style="margin:10px 0 0;font-size:13px;opacity:.75"><strong>Not verified on hardware.</strong>
-    The new downscale shader has never run on a GPU. If it is wrong you will see obvious
-    corruption rather than slight softness &mdash; check one video first.</p>
+      <li>Android will ask to allow installs from your browser &mdash; allow it once.</li>
+      <li>If you already have StatusHD from this page, this installs straight over it.</li>
+      <li>If you installed it from <strong>Google Play</strong>, uninstall that copy first.
+          Play signs apps with its own key, so this one will refuse to install over it.</li>
+    </ul>
   </div>
 
   <div class="card">
     <h2>Verify the file</h2>
-    <div class="row"><span>Size</span><span>3787582 bytes</span></div>
-    <div class="row"><span>Signing SHA-1</span><span style="font-size:11px">E9:2F:6B:1F:07:91:F9:4A</span></div>
-    <p style="margin-top:10px">SHA-256 of the APK:</p>
-    <p style="margin-top:6px"><code>f3373f364d4b76815ecc49b722ba4a8e32dc933e8873551e8c00e8d5cf0a7185</code></p>
+    <table>
+      <tr><td>Size</td><td>4073340 bytes</td></tr>
+      <tr><td>Signing SHA-1</td><td>E9:2F:6B:1F:07:91:F9:4A</td></tr>
+    </table>
+    <p class="size">SHA-256 of the APK:<br /><code>67f6e18b9e90862571b61aea863f8cac7a0588b79536cbcc3f1675509d67400d</code></p>
   </div>
 
-  <p class="note">Also on Google Play internal testing as versionCode 10.</p>
+  <p class="size">Also on Google Play internal testing as versionCode 46.</p>
+
+  <footer>
+    <a href="privacy/">Privacy policy</a> &middot;
+    <a href="delete-data/">Delete your data</a><br />
+    Roshan Vijay, Mangalore, India.
+  </footer>
 
 </div>
 </body>

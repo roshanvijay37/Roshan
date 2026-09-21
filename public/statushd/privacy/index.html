@@ -34,84 +34,127 @@
 <div class="wrap">
 
   <h1>Privacy Policy</h1>
-  <p class="sub">StatusHD — <code>com.statushd</code></p>
-  <p class="date">Last updated: 19 September 2026</p>
+  <p class="sub">StatusHD &mdash; <code>com.statushd</code></p>
+  <p class="date">Last updated: 21 September 2026</p>
 
   <div class="card">
-    <p style="margin:0"><strong>StatusHD can upload your video, and you decide when.</strong>
-    Optimising a video on your phone sends nothing. Tapping <em>Send to server</em> uploads
-    that video, and the phone number you type, to a computer operated by Roshan Vijay in
-    Mangalore, India. Nothing is uploaded unless you tap that button.</p>
+    <strong>The app cannot send anything anywhere.</strong>
+    <p>StatusHD does not request the <code>INTERNET</code> permission. That is not a policy it
+    promises to follow &mdash; it is something the app is incapable of doing. It has no way to
+    open a network connection, upload a file, or contact any server, including ours.</p>
+    <p>What it does is hand your chosen video to <strong>WhatsApp</strong>, and WhatsApp sends
+    it, under its own permissions, when you choose to send it.</p>
   </div>
 
-  <h2>What is collected, and only when you tap Send to server</h2>
-  <table>
-    <tr><th>What</th><th>Why</th></tr>
-    <tr><td>The video file you chose</td><td>It is prepared for WhatsApp, which cannot be done without it</td></tr>
-    <tr><td>The phone number you type</td><td>It decides which WhatsApp conversation the finished video is delivered to</td></tr>
-    <tr><td>The original file name and size</td><td>Sent with the upload so it can be resumed if the connection drops</td></tr>
-  </table>
-  <p>There is no account, no sign-in, no password and no e-mail address. No analytics or
-  crash-reporting service is used. No advertising identifier is read. Nothing is sold or
-  shared for advertising, and nothing is used to build a profile of you.</p>
+  <h2>What the app collects</h2>
+  <p><strong>Nothing.</strong> There is no account, no sign-in, no password, no e-mail
+  address and no phone number. No analytics or crash-reporting service is used. No advertising
+  identifier is read. Nothing is sold, shared for advertising, or used to build a profile of
+  you.</p>
 
-  <h2>Optimising on the phone sends nothing</h2>
-  <p>The <em>Optimize video</em> route reads, processes and writes the video entirely on your
-  own device. No network connection is made. The app also reads the videos already on your
-  phone so you can pick one; that list never leaves the device.</p>
-
-  <h2>What happens to a video you do upload</h2>
+  <h2>What the app does on your phone</h2>
   <ul>
-    <li>It travels over an encrypted HTTPS connection, through Cloudflare, which carries the
-        traffic to the computer described above.</li>
-    <li>It is written to that computer's disk as an ordinary file, named after the phone
-        number you gave.</li>
-    <li>It is re-encoded so WhatsApp will accept it without ruining the quality.</li>
-    <li>It is placed into WhatsApp and sent to the number you gave.</li>
+    <li>Lists the videos already on your phone so you can pick one. That list never leaves
+        the device.</li>
+    <li>Copies the video you pick into the app's own private cache, so it can be handed over
+        under a name the service recognises. That copy is deleted the next time you send
+        something, and when you uninstall the app.</li>
+    <li>Opens WhatsApp with that copy attached, as a <em>document</em>. Sending it is your
+        action, in WhatsApp, and you choose who to send it to.</li>
+  </ul>
+
+  <h2>What happens after you send it</h2>
+  <p>If you send it to the StatusHD service number, it arrives as a WhatsApp message on a
+  personal computer operated by Roshan Vijay in Mangalore, India, which is signed in to
+  WhatsApp like any other device. There, the video is:</p>
+  <ul>
+    <li>downloaded from the conversation;</li>
+    <li>re-encoded so WhatsApp will accept it without ruining the quality;</li>
+    <li>sent back into the same conversation as a video;</li>
+    <li><strong>deleted from that computer once it has been delivered.</strong> A prepared
+        copy that could not be delivered is deleted automatically after 48 hours.</li>
   </ul>
 
   <div class="card warn">
-    <p style="margin:0"><strong>Be aware of two things.</strong> That computer is a personal
-    machine, not a data centre, and the person who operates it can open and watch any file on
-    it. And uploaded videos are <strong>not deleted automatically</strong> — they remain on
-    that disk until they are removed by hand. If either of those is not acceptable to you,
-    use the on-device route, which uploads nothing.</p>
+    <strong>Two things to be aware of.</strong>
+    <p>That computer is a personal machine, not a data centre, and the person who operates it
+    can open and watch any file on it while it is there.</p>
+    <p>And once a video has been sent through WhatsApp, a copy exists in that WhatsApp
+    conversation and on Meta's servers. Removing it there is done inside WhatsApp, by deleting
+    the message. Nothing on this page can do that for you.</p>
   </div>
+
+  <h2>What is kept afterwards</h2>
+  <table>
+    <tr><th>What</th><th>Why</th><th>How long</th></tr>
+    <tr>
+      <td>The WhatsApp message identifier of each video handled</td>
+      <td>So the same video is never answered twice</td>
+      <td>Indefinitely. It is an identifier, not the video, and it cannot be turned back into
+          one</td>
+    </tr>
+    <tr>
+      <td>The name the conversation appears under, and how many videos were returned to it</td>
+      <td>Only if free-use limits are switched on, to count them</td>
+      <td>Until deleted on request</td>
+    </tr>
+    <tr>
+      <td>The video itself, and the optimised copy</td>
+      <td>To do the work</td>
+      <td>Deleted after delivery; after 48 hours if delivery failed</td>
+    </tr>
+  </table>
 
   <h2>Who else sees it</h2>
   <ul>
-    <li><strong>Cloudflare</strong> carries the upload in transit.</li>
-    <li><strong>WhatsApp (Meta)</strong> receives the finished video, because delivering it to
-        you through WhatsApp is the point. Their handling is governed by their own policy.</li>
+    <li><strong>WhatsApp (Meta)</strong> carries the video in both directions, because
+        delivering it through WhatsApp is the entire point. Their handling is governed by
+        <a href="https://www.whatsapp.com/legal/privacy-policy">their own policy</a>.</li>
   </ul>
-  <p>Nobody else. There is no other third party, no data broker and no advertising network.</p>
+  <p>Nobody else. There is no other third party, no data broker and no advertising network.
+  Earlier versions of this page mentioned Cloudflare; that route no longer exists and no
+  traffic passes through it.</p>
 
   <h2>Permissions, and what each is for</h2>
   <table>
     <tr><th>Permission</th><th>Used for</th></tr>
-    <tr><td><code>INTERNET</code></td><td>Only by <em>Send to server</em>: to upload the video you
-        chose, and to ask beforehand whether that computer is ready to receive it</td></tr>
-    <tr><td><code>READ_MEDIA_VIDEO</code></td><td>Optional. Only to list the videos on your phone
-        so you can choose one. Declining it costs you nothing but the sorted list</td></tr>
-    <tr><td><code>POST_NOTIFICATIONS</code></td><td>To show progress while a video is being
-        optimised or uploaded</td></tr>
-    <tr><td><code>FOREGROUND_SERVICE</code></td><td>So an optimisation or upload keeps running when
-        you leave the app</td></tr>
+    <tr>
+      <td><code>READ_MEDIA_VIDEO</code></td>
+      <td>Optional. Only to list the videos on your phone so you can choose one. Declining it
+          costs you nothing but the sorted list &mdash; the system photo picker works
+          without it</td>
+    </tr>
+    <tr>
+      <td><code>READ_MEDIA_VISUAL_USER_SELECTED</code></td>
+      <td>So you can grant access to individual videos instead of all of them</td>
+    </tr>
+    <tr>
+      <td><code>READ_EXTERNAL_STORAGE</code></td>
+      <td>The same thing, on Android 12 and older</td>
+    </tr>
   </table>
+  <p>There is <strong>no <code>INTERNET</code> permission</strong>, and no notification,
+  location, contacts, camera or microphone permission. Earlier versions of this page listed
+  <code>INTERNET</code>, <code>POST_NOTIFICATIONS</code> and <code>FOREGROUND_SERVICE</code>;
+  none of them is declared any more.</p>
 
   <h2>Children</h2>
-  <p>StatusHD is not directed at children and does not knowingly collect anything from them.</p>
+  <p>StatusHD is not directed at children and does not knowingly collect anything from
+  them.</p>
 
   <h2>Removing your video</h2>
-  <p>Ask, and any video you uploaded will be deleted from that computer. Use the address below
-  and say roughly when you sent it and which number you gave.</p>
+  <p>Videos are deleted from that computer automatically once delivered, so in normal use
+  there is nothing left to remove. If you want anything held for your conversation deleted
+  anyway &mdash; including the record that it was handled &mdash; ask at the address below.
+  See <a href="../delete-data/">data deletion</a>.</p>
 
   <h2>Changes</h2>
   <p>If what the app does changes, this page changes with it. The date at the top is the date
   it last did.</p>
 
   <footer>
-    Questions, or a deletion request: <a href="mailto:roshanshetty010100@gmail.com">roshanshetty010100@gmail.com</a><br>
+    Questions, or a deletion request: <a href="mailto:roshanshetty010100@gmail.com">
+    roshanshetty010100@gmail.com</a><br />
     Roshan Vijay, Mangalore, India.
   </footer>
 

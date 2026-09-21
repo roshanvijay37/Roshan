@@ -34,62 +34,74 @@
 <body>
 <div class="wrap">
 
-  <h1>Delete your data</h1>
-  <p class="sub">StatusHD — <code>com.statushd</code></p>
-  <p class="date">Last updated: 19 September 2026</p>
+  <h1>Deleting your data</h1>
+  <p class="sub">StatusHD &mdash; <code>com.statushd</code></p>
+  <p class="date">Last updated: 21 September 2026</p>
 
   <div class="card">
-    <p style="margin:0"><strong>There is no account to delete.</strong> StatusHD has no sign-up,
-    no password and no profile. What can exist is a video you chose to upload, and the phone
-    number you typed so it could be delivered. Both can be removed, and this page is how.</p>
+    <strong>In normal use there is nothing to delete.</strong>
+    <p>A video sent to the StatusHD service is deleted from that computer as soon as the
+    optimised copy has been delivered back to you. One that could not be delivered is deleted
+    automatically after 48 hours. Neither needs a request.</p>
   </div>
 
-  <h2>What is held, and where</h2>
+  <h2>What exists, and where</h2>
   <table>
-    <tr><th>What</th><th>Where it is</th></tr>
-    <tr><td>A video you uploaded with <em>Send to server</em></td>
-        <td>On a personal computer operated by Roshan Vijay in Mangalore, India</td></tr>
-    <tr><td>The phone number you typed for that upload</td>
-        <td>The same computer — the prepared file is named after it</td></tr>
-    <tr><td>The video the app prepared on your phone, and its gallery entry</td>
-        <td>Only on your own phone</td></tr>
+    <tr><th>What</th><th>Where it is</th><th>How long</th></tr>
+    <tr>
+      <td>The video you sent, and the optimised copy made from it</td>
+      <td>The service computer</td>
+      <td>Deleted on delivery; after 48 hours if delivery failed</td>
+    </tr>
+    <tr>
+      <td>The WhatsApp message identifier of each video handled</td>
+      <td>The service computer</td>
+      <td>Kept, so the same video is never answered twice. It is an identifier, not the video,
+          and cannot be turned back into one</td>
+    </tr>
+    <tr>
+      <td>The name your conversation appears under, and a count of videos returned to it</td>
+      <td>The service computer</td>
+      <td>Only if free-use limits are switched on. Kept until you ask for it to go</td>
+    </tr>
+    <tr>
+      <td>The copy the app staged before handing it to WhatsApp</td>
+      <td>Only on your own phone, in the app's private cache</td>
+      <td>Replaced the next time you send something; gone when you uninstall</td>
+    </tr>
+    <tr>
+      <td>The messages themselves</td>
+      <td>Your WhatsApp conversation, and Meta's servers</td>
+      <td>Until you delete them in WhatsApp</td>
+    </tr>
   </table>
 
-  <h2>Videos you never uploaded</h2>
-  <p>If you only used <em>Optimize video</em>, nothing was ever sent anywhere and there is
-  nothing here to delete. Removing the app, or deleting the videos from your gallery, removes
-  all of it.</p>
-
-  <h2>Videos you did upload — how to have them deleted</h2>
-  <p>Send an e-mail asking for deletion. Include the phone number you typed and roughly when
-  you sent it, because that is how the file is found.</p>
-  <p class="mail"><a href="mailto:roshanshetty010100@gmail.com?subject=StatusHD%20deletion%20request&amp;body=Please%20delete%20the%20video(s)%20I%20uploaded.%0A%0APhone%20number%20I%20entered%3A%20%0AApproximate%20date%20and%20time%20I%20sent%20it%3A%20%0A">roshanshetty010100@gmail.com</a></p>
+  <h2>Asking for deletion</h2>
+  <p>Send an e-mail from, or naming, the WhatsApp number you sent from &mdash; that is how the
+  conversation is found. There is no account and no other identifier to quote.</p>
+  <p><a href="mailto:roshanshetty010100@gmail.com">roshanshetty010100@gmail.com</a></p>
   <ul>
     <li>Requests are actioned by hand, normally within a few days.</li>
-    <li>Everything held for that number is deleted: the file you uploaded and the prepared
-        copy made from it.</li>
+    <li>Everything held for that conversation is deleted: any file still present, the record
+        that the videos were handled, and any count kept against it.</li>
     <li>You will get a reply confirming it is done.</li>
     <li>You do not have to explain why.</li>
   </ul>
 
   <div class="card warn">
-    <p style="margin:0"><strong>One thing this cannot reach.</strong> If the video was already
-    delivered to WhatsApp, a copy is in that WhatsApp conversation and on Meta's servers.
-    Deleting it there is done inside WhatsApp, by deleting the message — it is not something
-    this request can do for you.</p>
+    <strong>One thing this cannot reach.</strong>
+    <p>The video and the reply are both messages in your WhatsApp conversation, so copies
+    exist there and on Meta's servers. Deleting those is done inside WhatsApp, by deleting the
+    messages. It is not something this request can do for you.</p>
   </div>
 
-  <h2>How long things are kept otherwise</h2>
-  <p>Uploaded videos are <strong>not deleted automatically</strong>. They stay on that computer
-  until they are removed by hand or you ask for them to go. Half-finished uploads, where the
-  connection dropped and was never resumed, are swept after 24 hours.</p>
-
   <h2>Removing the app</h2>
-  <p>Uninstalling removes everything StatusHD keeps on your phone. It has no effect on a video
-  you already uploaded — use the e-mail above for that.</p>
+  <p>Uninstalling removes everything StatusHD keeps on your phone, which is only the staged
+  copy of the last video you sent. It has no effect on anything already sent through
+  WhatsApp &mdash; use the e-mail above, and WhatsApp itself, for that.</p>
 
   <footer>
-    <a href="/statushd/privacy/">Privacy policy</a><br>
+    <a href="../privacy/">Privacy policy</a><br />
     Roshan Vijay, Mangalore, India.
   </footer>
 
