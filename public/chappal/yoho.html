@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Yoho Chappal — 3D Scroll Prototype</title>
+<meta name="description" content="A scroll-driven product prototype built from a single product photograph." />
+<meta name="robots" content="noindex" />
+<link rel="icon" href="/icon-192.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#f5f5f7;
+    --surface:#f6f1e5;
+    --text:#1b170f;
+    --text-2:#423a2b;
+    --muted:#6c6350;
+    --muted-2:#83795f;
+    --accent:#8a6a14;
+    --border:#5a5140;
+    --hairline:rgba(48,36,10,.14);
+    --hairline-strong:rgba(48,36,10,.32);
+    --ink:#0b0906;
+    --on-ink:#f6f1e5;
+    --on-ink-muted:#83795f;
+    --max:1240px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);color:var(--text);
+    font-family:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+    font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:var(--max);margin:0 auto;padding-inline:20px;}
+  .mono{font-family:"DM Mono",ui-monospace,monospace;}
+  .kicker{
+    font-family:"DM Mono",ui-monospace,monospace;font-size:12px;
+    text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin:0 0 12px;
+  }
+
+  /* ---------------- nav ---------------- */
+  .nav-shell{
+    position:fixed;top:0;left:0;right:0;z-index:300;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:16px 20px;max-width:var(--max);margin:0 auto;
+    mix-blend-mode:difference;color:#f6f1e5;
+  }
+  .brand{font-weight:800;text-decoration:none;font-size:16px;letter-spacing:-.01em;}
+  .nav-back{
+    text-decoration:none;font-size:12px;font-weight:600;letter-spacing:.04em;
+    border:1px solid currentColor;border-radius:999px;padding:8px 16px;
+  }
+
+  /* ---------------- hero ---------------- */
+  .hero{
+    min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+    padding-block:96px 48px;position:relative;
+  }
+  .hero-grid{display:grid;grid-template-columns:1fr;gap:24px;align-items:center;}
+  @media(min-width:980px){.hero-grid{grid-template-columns:1fr 1fr;gap:48px;}}
+  h1{
+    font-size:clamp(48px,9vw,112px);font-weight:800;line-height:.94;
+    letter-spacing:-.04em;margin:0 0 16px;
+  }
+  h1 em{font-style:normal;color:var(--accent);}
+  .hero p{max-width:46ch;color:var(--text-2);font-size:16px;margin:0 0 24px;}
+  .hero-stats{display:flex;flex-wrap:wrap;gap:8px;}
+  .pill{
+    display:inline-flex;align-items:baseline;gap:8px;background:var(--surface);
+    border:1px solid var(--hairline);border-radius:999px;padding:8px 16px;
+  }
+  .pill b{font-size:15px;font-weight:800;}
+  .pill span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600;}
+
+  .hero-shot{position:relative;display:flex;justify-content:center;align-items:center;}
+  .hero-shot .prod{
+    height:min(56svh,520px);width:auto;max-width:100%;
+    position:relative;z-index:2;
+  }
+  /* soft contact shadow, drawn rather than shipped as a bitmap */
+  .ground{
+    position:absolute;left:50%;bottom:2%;z-index:1;pointer-events:none;
+    width:70%;height:12%;transform:translateX(-50%);
+    background:radial-gradient(closest-side ellipse,
+      rgba(16,12,6,.26) 0%, rgba(16,12,6,.14) 46%, rgba(16,12,6,0) 78%);
+  }
+  .scroll-cue{
+    position:absolute;bottom:24px;left:50%;transform:translateX(-50%);
+    font-family:"DM Mono",monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);
+  }
+
+  /* ---------------- shared stage ---------------- */
+  .stage-inner{
+    height:100svh;display:flex;align-items:center;justify-content:center;
+    position:relative;overflow:hidden;
+    padding:20svh 0 8svh;
+  }
+  .prod-wrap{
+    position:relative;perspective:1400px;will-change:transform;
+    display:inline-block;line-height:0;
+  }
+  .prod-wrap img.prod{
+    height:min(46svh,430px);width:auto;max-width:82vw;
+    position:relative;z-index:2;
+  }
+  /* Specular sheen. Two mask layers intersected: the product silhouette
+     keeps the highlight inside the sandal, a soft gradient band gives it
+     feathered edges. The band's mask-position is what travels on scroll. */
+  .sheen{
+    position:absolute;inset:0;z-index:3;pointer-events:none;
+    background:#ffffff;mix-blend-mode:screen;opacity:.36;
+    -webkit-mask-image:url(sheen.png),
+      linear-gradient(100deg, rgba(0,0,0,0) 36%, #000 50%, rgba(0,0,0,0) 64%);
+    mask-image:url(sheen.png),
+      linear-gradient(100deg, rgba(0,0,0,0) 36%, #000 50%, rgba(0,0,0,0) 64%);
+    -webkit-mask-size:100% 100%, 250% 100%;
+    mask-size:100% 100%, 250% 100%;
+    -webkit-mask-repeat:no-repeat, no-repeat;
+    mask-repeat:no-repeat, no-repeat;
+    -webkit-mask-position:0 0, 0% 0;
+    mask-position:0 0, 0% 0;
+    -webkit-mask-composite:source-in;
+    mask-composite:intersect;
+  }
+
+  /* ---------------- rotate stage (dark) ---------------- */
+  #rotate{height:300svh;position:relative;}
+  #rotate .stage-inner{background:var(--surface);}
+  .stage-copy{
+    position:absolute;left:0;right:0;top:12%;text-align:center;padding-inline:20px;z-index:4;
+    pointer-events:none;
+  }
+  .stage-copy h2{
+    font-size:clamp(28px,5vw,56px);font-weight:800;letter-spacing:-.03em;margin:0;line-height:1.05;
+  }
+  .stage-copy .kicker{margin-bottom:8px;}
+  .rot-readout{
+    position:absolute;bottom:10%;left:0;right:0;text-align:center;z-index:4;
+    font-family:"DM Mono",monospace;font-size:12px;letter-spacing:.12em;
+  }
+
+  /* ---------------- construction / explode ---------------- */
+  #build{height:340svh;position:relative;}
+  #build .stage-inner{background:var(--ink);color:var(--on-ink);}
+  .build-row{
+    display:flex;flex-direction:column;align-items:center;gap:24px;
+    padding-inline:20px;width:100%;
+  }
+  @media(min-width:900px){
+    .build-row{flex-direction:row;justify-content:center;gap:56px;align-items:center;}
+  }
+  .build-stack{position:relative;display:inline-block;line-height:0;flex:0 0 auto;}
+  .build-stack .slab,
+  .build-stack .real{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:fill;
+  }
+  .build-stack .spacer{height:min(36svh,340px);width:auto;max-width:70vw;visibility:hidden;}
+  @media(max-width:899px){
+    .build-stack .spacer{height:min(24svh,230px);max-width:56vw;}
+    .build-row{gap:12px;}
+  }
+
+  .build-legend{list-style:none;margin:0;padding:0;max-width:320px;width:100%;}
+  .build-legend li{
+    padding:12px 0;border-top:1px solid rgba(246,241,229,.14);
+    opacity:.26;transition:opacity .3s ease;
+  }
+  .build-legend li:last-child{border-bottom:1px solid rgba(246,241,229,.14);}
+  .build-legend .swatch{
+    display:inline-block;width:10px;height:10px;border-radius:999px;margin-right:8px;
+    vertical-align:middle;
+  }
+  .build-legend b{
+    font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--on-ink);
+    display:inline-block;vertical-align:middle;
+  }
+  .build-legend i{
+    display:block;font-style:normal;font-family:"DM Mono",monospace;font-size:11px;
+    letter-spacing:.06em;color:var(--on-ink-muted);margin-top:4px;line-height:1.5;
+  }
+
+  /* ---------------- detail zoom ---------------- */
+  #detail{height:340svh;position:relative;}
+  #detail .stage-inner{background:var(--bg);}
+  .detail-mask{
+    overflow:hidden;border-radius:24px;line-height:0;
+    position:relative;background:var(--surface);
+    border:1px solid var(--hairline);
+  }
+  .detail-mask img{height:min(46svh,430px);width:auto;max-width:86vw;will-change:transform;}
+  .detail-copy{
+    position:absolute;left:0;right:0;bottom:7%;height:0;text-align:center;padding-inline:20px;z-index:4;
+  }
+  .detail-item{position:absolute;left:0;right:0;bottom:0;opacity:0;padding-inline:20px;}
+  .detail-item h3{font-size:clamp(22px,3.4vw,34px);font-weight:800;letter-spacing:-.02em;margin:0 0 4px;}
+  .detail-item p{margin:0;color:var(--muted);font-size:14px;}
+
+  /* ---------------- colourway ---------------- */
+  #colour{padding-block:96px;background:var(--surface);}
+  .colour-grid{display:grid;grid-template-columns:1fr;gap:32px;align-items:center;}
+  @media(min-width:980px){.colour-grid{grid-template-columns:1fr 1fr;gap:48px;}}
+  .colour-shot{display:flex;justify-content:center;position:relative;}
+  .colour-shot img.prod{width:min(70%,360px);transition:filter .5s ease;}
+  .swatches{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px;}
+  .sw{
+    width:44px;height:44px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--hairline);padding:0;
+    transition:transform .25s,border-color .25s;
+  }
+  .sw:hover{transform:translateY(-4px);}
+  .sw[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 3px rgba(138,106,20,.28);}
+  .sw:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .colour-name{margin-top:12px;font-family:"DM Mono",monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+
+  /* ---------------- spec ---------------- */
+  #spec{padding-block:96px;}
+  .spec-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:32px;}
+  @media(min-width:720px){.spec-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(min-width:980px){.spec-grid{grid-template-columns:repeat(4,1fr);}}
+  .spec-card{
+    background:var(--surface);border:1px solid var(--hairline);border-radius:20px;padding:16px;
+  }
+  .spec-card .n{font-family:"DM Mono",monospace;font-size:11px;color:var(--muted-2);}
+  .spec-card h3{font-size:16px;font-weight:700;margin:8px 0 4px;letter-spacing:-.01em;}
+  .spec-card p{margin:0;font-size:13px;color:var(--muted);}
+
+  h2.section-title{font-size:clamp(28px,4.4vw,48px);font-weight:800;letter-spacing:-.03em;margin:0 0 12px;line-height:1.05;}
+  .section-lede{max-width:56ch;color:var(--text-2);margin:0;}
+
+  .note{
+    background:var(--surface);border:1px solid var(--hairline);border-radius:20px;
+    padding:16px;margin-block:32px;font-size:13px;color:var(--text-2);
+  }
+  .note b{color:var(--text);}
+  footer{
+    border-top:1px solid var(--hairline);padding-block:24px;
+    display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;
+    font-size:13px;color:var(--muted);
+  }
+  footer a{color:var(--accent);}
+
+  .reveal{opacity:0;transform:translateY(32px);}
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation-duration:.01ms !important;transition-duration:.01ms !important;}
+    .reveal{opacity:1 !important;transform:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav-shell">
+  <a class="brand" href="https://roshanvijay.com">roshanvijay.com</a>
+  <a class="nav-back" href="https://roshanvijay.com">Back</a>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero wrap">
+  <div class="hero-grid">
+    <div>
+      <p class="kicker">Scroll prototype &middot; single-photograph build</p>
+      <h1>The<br /><em>Chappal</em><br />Study</h1>
+      <p>
+        A scroll-driven product page built entirely from one flat product shot — no 3D model,
+        no render farm. Cut out, relit, layered and put on a scroll timeline to show what the
+        real thing would feel like.
+      </p>
+      <div class="hero-stats">
+        <span class="pill"><b>1</b><span>source photo</span></span>
+        <span class="pill"><b>65 KB</b><span>product asset</span></span>
+        <span class="pill"><b>0</b><span>3D models</span></span>
+      </div>
+    </div>
+    <div class="hero-shot">
+      <div class="ground" aria-hidden="true"></div>
+      <picture>
+        <source srcset="chappal.webp" type="image/webp" />
+        <img class="prod" src="chappal.png" alt="Navy Yoho flip-flop, three-quarter view" />
+      </picture>
+    </div>
+  </div>
+  <div class="scroll-cue">Scroll &darr;</div>
+</section>
+
+<!-- ============ ROTATE ============ -->
+<section id="rotate">
+  <div class="stage-inner">
+    <div class="stage-copy">
+      <p class="kicker" id="rot-kicker">Examine</p>
+      <h2 id="rot-title">Turn it over</h2>
+    </div>
+    <div class="prod-wrap" id="rotWrap">
+      <div class="ground" aria-hidden="true"></div>
+      <picture>
+        <source srcset="chappal.webp" type="image/webp" />
+        <img class="prod" src="chappal.png" alt="" />
+      </picture>
+      <div class="sheen" id="sheen" aria-hidden="true"></div>
+    </div>
+    <div class="rot-readout"><span id="rotVal">0.0&deg;</span></div>
+  </div>
+</section>
+
+<!-- ============ BUILD / EXPLODE ============ -->
+<section id="build">
+  <div class="stage-inner">
+    <div class="stage-copy">
+      <p class="kicker" style="color:var(--on-ink-muted)">Construction</p>
+      <h2 style="color:var(--on-ink)">Four layers, one sandal</h2>
+    </div>
+    <div class="build-row">
+      <div class="build-stack" id="buildStack">
+        <img class="spacer" src="chappal.webp" alt="" aria-hidden="true" />
+        <img class="slab" id="slabOut" src="slab-out.png" alt="" aria-hidden="true" />
+        <img class="slab" id="slabMid" src="slab-mid.png" alt="" aria-hidden="true" />
+        <img class="slab" id="slabBed" src="slab-bed.png" alt="" aria-hidden="true" />
+        <picture>
+          <source srcset="chappal.webp" type="image/webp" />
+          <img class="real" id="buildReal" src="chappal.png" alt="" />
+        </picture>
+      </div>
+      <ul class="build-legend">
+        <li id="labBed"><span class="swatch" style="background:#2c3f63"></span><b>Footbed</b><i>Perforated EVA, anatomic arch</i></li>
+        <li id="labMid"><span class="swatch" style="background:#1d2a44"></span><b>Midsole</b><i>18 mm compression-moulded EVA</i></li>
+        <li id="labOut"><span class="swatch" style="background:#0f1116"></span><b>Outsole</b><i>Siped rubber, wet-grip pattern</i></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DETAIL ZOOM ============ -->
+<section id="detail">
+  <div class="stage-inner">
+    <div class="detail-mask" id="detailMask">
+      <picture>
+        <source srcset="chappal.webp" type="image/webp" />
+        <img id="detailImg" src="chappal.png" alt="" />
+      </picture>
+    </div>
+    <div class="detail-copy">
+      <div class="detail-item" id="d1">
+        <h3>Ventilated footbed</h3>
+        <p>Micro-perforations run the length of the bed to move air and shed water.</p>
+      </div>
+      <div class="detail-item" id="d2">
+        <h3>Padded toe post</h3>
+        <p>Soft-webbing strap with a moulded post — the part that decides whether you keep wearing it.</p>
+      </div>
+      <div class="detail-item" id="d3">
+        <h3>Stacked sole edge</h3>
+        <p>The full stack reads on the sidewall: bed, midsole, outsole, contrast-stitched.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COLOURWAY ============ -->
+<section id="colour">
+  <div class="wrap colour-grid">
+    <div>
+      <p class="kicker">Configurator</p>
+      <h2 class="section-title">Five colourways, one asset</h2>
+      <p class="section-lede">
+        Each swatch re-tints the same cutout in the browser. On a production build these would be
+        real material maps on a 3D model — here they demonstrate the interaction and the layout
+        without needing one.
+      </p>
+      <div class="swatches" id="swatches" role="group" aria-label="Choose a colourway"></div>
+      <p class="colour-name" id="colourName">Midnight Navy</p>
+    </div>
+    <div class="colour-shot">
+      <picture>
+        <source srcset="chappal.webp" type="image/webp" />
+        <img class="prod" id="colourProd" src="chappal.png" alt="Chappal shown in the selected colourway" />
+      </picture>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SPEC ============ -->
+<section id="spec" class="wrap">
+  <p class="kicker reveal">Specification</p>
+  <h2 class="section-title reveal">Built for the monsoon</h2>
+  <p class="section-lede reveal">Placeholder copy — swap for the real product data when you have it.</p>
+  <div class="spec-grid">
+    <div class="spec-card reveal"><span class="n">01</span><h3>18 mm midsole</h3><p>Compression-moulded EVA that keeps rebound after a season.</p></div>
+    <div class="spec-card reveal"><span class="n">02</span><h3>Siped outsole</h3><p>Cut channels clear water instead of riding on it.</p></div>
+    <div class="spec-card reveal"><span class="n">03</span><h3>Soft webbing</h3><p>Lined strap and moulded post to stop the first-week blister.</p></div>
+    <div class="spec-card reveal"><span class="n">04</span><h3>240 g</h3><p>Per sandal, UK 8. Light enough to forget you have them on.</p></div>
+  </div>
+
+  <div class="note">
+    <b>What this is.</b> A working prototype made from the single photo you sent — the product was
+    cut out of its white studio background programmatically, a contact shadow was generated from its
+    own silhouette, and a specular sheen is masked to that same silhouette so the light reacts as it
+    turns. Everything moves on one scroll timeline.
+    <br /><br />
+    <b>What it is not.</b> There is no 3D model here, so the sandal cannot be turned past roughly
+    &plusmn;15&deg; or viewed from the sole. The construction layers are tinted silhouettes of the
+    same outline, not real geometry, and the specs are placeholder copy. For a true 3D build the next
+    step is a modelled or photogrammetry-scanned <span class="mono">.glb</span>.
+  </div>
+
+  <footer>
+    <span>Prototype &middot; September 2026</span>
+    <a href="https://roshanvijay.com/awwwards/">See the reference sites &rarr;</a>
+  </footer>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function () {
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!window.gsap) return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------- hero entrance ---------- */
+  if (!reduced) {
+    gsap.from(".hero-shot .prod", { opacity: 0, y: 48, scale: .94, duration: .9, ease: "power3.out" });
+    gsap.from(".hero-shot .ground", { opacity: 0, duration: .9, ease: "power2.out" });
+    gsap.from(".hero h1, .hero p, .hero-stats", { opacity: 0, y: 24, duration: .7, stagger: .08, ease: "power3.out" });
+  }
+
+  /* ---------- 1. rotate stage ---------- */
+  var rotWrap = $("rotWrap"), sheen = $("sheen"), rotVal = $("rotVal");
+  var sheenPos = { p: 0 };
+  var rotTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: "#rotate", start: "top top", end: "bottom bottom",
+      pin: ".stage-inner", pinnedContainer: "#rotate", scrub: .6,
+      onUpdate: function (self) {
+        var deg = (-15 + self.progress * 30).toFixed(1);
+        if (rotVal) rotVal.textContent = deg + "°";
+      }
+    }
+  });
+  rotTl.fromTo(rotWrap,
+      { rotateY: -15, rotateZ: -7, scale: .9, y: 20 },
+      { rotateY: 15, rotateZ: 7, scale: 1.04, y: -20, ease: "none" }, 0)
+    .to(sheenPos, {
+      p: 1, ease: "none",
+      onUpdate: function () {
+        if (!sheen) return;
+        var v = "0 0, " + (sheenPos.p * 100).toFixed(2) + "% 0";
+        sheen.style.maskPosition = v;
+        sheen.style.webkitMaskPosition = v;
+      }
+    }, 0)
+    .fromTo("#rotate .stage-inner", { backgroundColor: "#f6f1e5" }, { backgroundColor: "#efe7d4", ease: "none" }, 0);
+
+  /* swap the headline midway through */
+  ScrollTrigger.create({
+    trigger: "#rotate", start: "top top", end: "bottom bottom",
+    onUpdate: function (self) {
+      var t = $("rot-title"), k = $("rot-kicker");
+      if (!t) return;
+      if (self.progress > .55) { t.textContent = "Light moves across it"; k.textContent = "Surface"; }
+      else { t.textContent = "Turn it over"; k.textContent = "Examine"; }
+    }
+  });
+
+  /* ---------- 2. construction / explode ---------- */
+  var stack = $("buildStack");
+  var offs = function (mult) { return stack ? stack.offsetHeight * mult : 0; };
+
+  var buildTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: "#build", start: "top top", end: "bottom bottom",
+      pin: "#build .stage-inner", pinnedContainer: "#build", scrub: .6,
+      invalidateOnRefresh: true
+    }
+  });
+  buildTl
+    .to("#buildReal", { opacity: 0, duration: .18 }, 0)
+    .fromTo("#slabBed", { y: 0, opacity: 1 }, { y: function () { return -offs(.22); }, duration: .5 }, 0)
+    .fromTo("#slabMid", { y: 0 }, { y: 0, duration: .5 }, 0)
+    .fromTo("#slabOut", { y: 0 }, { y: function () { return offs(.24); }, duration: .5 }, 0)
+    .to("#labBed", { opacity: 1, duration: .16 }, .22)
+    .to("#labMid", { opacity: 1, duration: .16 }, .28)
+    .to("#labOut", { opacity: 1, duration: .16 }, .34)
+    /* hold, then reassemble */
+    .to(["#labBed", "#labMid", "#labOut"], { opacity: .26, duration: .14 }, .66)
+    .to("#slabBed", { y: 0, duration: .34 }, .68)
+    .to("#slabOut", { y: 0, duration: .34 }, .68)
+    .to("#buildReal", { opacity: 1, duration: .2 }, .86);
+
+  /* ---------- 3. detail zoom ---------- */
+  var dImg = $("detailImg");
+  var zones = [
+    { el: "#d1", origin: "36% 34%", scale: 2.5 },  /* perforated footbed */
+    { el: "#d2", origin: "24% 60%", scale: 2.8 },  /* toe post + strap  */
+    { el: "#d3", origin: "46% 84%", scale: 2.6 }   /* stacked sole edge */
+  ];
+  var dTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: "#detail", start: "top top", end: "bottom bottom",
+      pin: "#detail .stage-inner", pinnedContainer: "#detail", scrub: .6
+    }
+  });
+  zones.forEach(function (z, i) {
+    var at = i * .3;
+    dTl.to(dImg, { transformOrigin: z.origin, scale: z.scale, duration: .18, ease: "power2.inOut" }, at)
+       .to(z.el, { opacity: 1, duration: .1 }, at + .06)
+       .to(z.el, { opacity: 0, duration: .1 }, at + .24);
+  });
+  dTl.to(dImg, { scale: 1, transformOrigin: "50% 50%", duration: .2, ease: "power2.inOut" }, .9);
+
+  /* ---------- 4. colourway ---------- */
+  var COLOURS = [
+    { name: "Midnight Navy", dot: "#2c3f63", filter: "none" },
+    { name: "Deep Forest",   dot: "#26402f", filter: "hue-rotate(-64deg) saturate(1.05)" },
+    { name: "Clay Maroon",   dot: "#5a2732", filter: "hue-rotate(118deg) saturate(1.15)" },
+    { name: "Storm Slate",   dot: "#4a4a50", filter: "saturate(.22) brightness(1.08)" },
+    { name: "Carbon",        dot: "#16171b", filter: "saturate(.5) brightness(.6)" }
+  ];
+  var swWrap = $("swatches"), cProd = $("colourProd"), cName = $("colourName");
+  COLOURS.forEach(function (c, i) {
+    var b = document.createElement("button");
+    b.className = "sw";
+    b.style.background = c.dot;
+    b.type = "button";
+    b.title = c.name;
+    b.setAttribute("aria-label", c.name);
+    b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+    b.addEventListener("click", function () {
+      if (cProd) cProd.style.filter = c.filter;
+      if (cName) cName.textContent = c.name;
+      [].forEach.call(swWrap.children, function (n, j) {
+        n.setAttribute("aria-pressed", String(j === i));
+      });
+    });
+    swWrap.appendChild(b);
+  });
+
+  /* ---------- 5. spec reveals ---------- */
+  gsap.utils.toArray(".reveal").forEach(function (el) {
+    gsap.to(el, {
+      opacity: 1, y: 0, duration: .6, ease: "power3.out",
+      scrollTrigger: { trigger: el, start: "top 88%" }
+    });
+  });
+
+  window.addEventListener("load", function () { ScrollTrigger.refresh(); });
+})();
+</script>
+</body>
+</html>
