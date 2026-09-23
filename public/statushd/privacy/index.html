@@ -35,7 +35,7 @@
 
   <h1>Privacy Policy</h1>
   <p class="sub">StatusHD &mdash; <code>com.statushd</code></p>
-  <p class="date">Last updated: 21 September 2026</p>
+  <p class="date">Last updated: 23 September 2026 &mdash; app version 3.0.7</p>
 
   <div class="card">
     <strong>The app cannot send anything anywhere.</strong>
@@ -61,6 +61,23 @@
         something, and when you uninstall the app.</li>
     <li>Opens WhatsApp with that copy attached, as a <em>document</em>. Sending it is your
         action, in WhatsApp, and you choose who to send it to.</li>
+  </ul>
+
+  <h2>The one-time setup message</h2>
+  <p>The first time you open StatusHD it asks you to send one WhatsApp message
+  &mdash; <em>&ldquo;Hi, setting up StatusHD&rdquo;</em> &mdash; to the service number, and does
+  not let you past that screen until you say you have.</p>
+  <p>This is not a sign-up and it creates no account. It exists because <strong>WhatsApp will
+  not deliver to a number you have never written to</strong>: without it, sending a video lands
+  on a list of your own contacts, and the service number is not in it.</p>
+  <ul>
+    <li>The message is <strong>sent by you, from your own WhatsApp</strong>. The app cannot send
+        it for you &mdash; it opens a link with the text already written, and the send is
+        yours.</li>
+    <li>Once you send it, the person who operates the service can see that WhatsApp account's
+        number and display name, exactly as any WhatsApp recipient can see any sender's.</li>
+    <li>The app itself still learns nothing and still sends nothing. It has no network.</li>
+    <li>You are asked once. Updating the app does not ask again.</li>
   </ul>
 
   <h2>What happens after you send it</h2>
@@ -131,6 +148,12 @@
     <tr>
       <td><code>READ_EXTERNAL_STORAGE</code></td>
       <td>The same thing, on Android 12 and older</td>
+    </tr>
+    <tr>
+      <td><code>WRITE_EXTERNAL_STORAGE</code></td>
+      <td>Android 9 and older only. <strong>Declared but not currently used</strong> &mdash; it
+          covered saving an optimised copy into your <code>Movies</code> folder, which the app
+          did when it still encoded on the phone. Nothing calls that code any more</td>
     </tr>
   </table>
   <p>There is <strong>no <code>INTERNET</code> permission</strong>, and no notification,
