@@ -111,6 +111,22 @@ h2 em,h1 em{font-style:italic;color:var(--accent)}
 .tag s{width:2.6rem;height:1px;background:rgba(233,235,242,.4);text-decoration:none}
 .tag.l{flex-direction:row-reverse}
 
+/* on foot: photos flying toward the viewer in depth */
+.walk{min-height:calc(140vh + var(--n,2) * 90vh);padding:0}
+.walk .stage{position:sticky;top:0;height:100vh;overflow:hidden;perspective:1100px;perspective-origin:50% 45%}
+.walk .track{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
+.shot{position:absolute;left:50%;top:50%;margin:0;border-radius:1rem;overflow:hidden;background:#11131b;
+  box-shadow:0 60px 120px -30px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.06);will-change:transform,opacity;backface-visibility:hidden}
+.shot img{display:block;width:100%;height:100%;object-fit:cover}
+.shot.p{height:72vh;aspect-ratio:832/1232}
+.shot.w{width:min(62vw,64rem);aspect-ratio:1392/784}
+.walk .cap{position:absolute;left:var(--gut);bottom:clamp(2rem,8vh,5rem);z-index:5;max-width:30rem;pointer-events:none}
+.walk .cap h2{margin-bottom:.8rem}
+.walk .count{display:flex;align-items:baseline;gap:1rem;font:500 .72rem/1 var(--sans);letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+.walk .count b{font:400 1.6rem/1 var(--serif);letter-spacing:0;color:var(--ink);font-variant-numeric:tabular-nums}
+.walk .ai{position:absolute;right:var(--gut);bottom:clamp(2rem,8vh,5rem);z-index:5;font-size:.72rem;color:var(--faint);max-width:14rem;text-align:right}
+.walk .veil{position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(transparent 55%,rgba(7,8,12,.85))}
+
 /* photo */
 .photo{min-height:200vh}
 .photo .stick{position:sticky;top:0;height:100vh;display:grid;grid-template-columns:1.1fr 1fr;align-items:center;gap:4vw}
@@ -147,9 +163,12 @@ body.flat #scene{display:none}
   h2{font-size:2.5rem}
   .hero{min-height:100vh;padding-bottom:2.6rem}
   .layers li small,.anat-lead{display:none}
-  .sec:not(.hero):not(.photo){display:flex;flex-direction:column;justify-content:flex-end}
+  .sec:not(.hero):not(.photo):not(.walk){display:flex;flex-direction:column;justify-content:flex-end}
   .layers li{padding:.6rem 0}
   .hero h1{font-size:4.9rem}
+  .shot.p{height:auto;width:72vw}
+  .shot.w{width:88vw}
+  .walk .ai{left:var(--gut);right:auto;bottom:auto;top:5.5rem;text-align:left}
   .photo .stick{grid-template-columns:1fr;grid-template-rows:58vh auto;align-content:center;gap:1rem}
   .photo figure{height:56vh}
   .photo .copy{margin:0;padding:0;background:none}
@@ -167,7 +186,7 @@ body.flat #scene{display:none}
   <nav aria-label="Main">
     <a href="#anatomy">Anatomy</a>
     <a href="#detail">Detail</a>
-    <a href="#photo">The pair</a>
+    <a href="#walk">On foot</a>
     <a class="cta" href="#buy">Size</a>
   </nav>
 </header>
@@ -221,11 +240,27 @@ body.flat #scene{display:none}
     </div>
   </section>
 
+  <section class="sec walk" id="walk">
+    <div class="stage">
+      <div class="track" id="track">
+        <figure class="shot p" data-x="-14" data-y="0"><img src="walk-stride.webp" alt="Close-up of feet mid-stride in the navy flip-flops on wet stone at night" decoding="async"></figure>
+        <figure class="shot p" data-x="14" data-y="-1"><img src="walk-dusk.webp" alt="Walking on wet stone pavement at dusk in the navy flip-flops" decoding="async"></figure>
+      </div>
+      <div class="veil"></div>
+      <div class="cap">
+        <p class="kick">04 — On foot</p>
+        <h2>A whole day,<br><em>on foot.</em></h2>
+        <div class="count"><b id="walkN">01</b><span id="walkT">Mid-stride</span></div>
+      </div>
+      <p class="ai">Photographs generated with AI from the product photo.</p>
+    </div>
+  </section>
+
   <section class="sec photo" id="photo">
     <div class="stick">
       <figure><img src="chappal.webp" alt="The Yoho navy flip-flop, photographed from above at an angle" width="947" height="1386"><figcaption>As photographed</figcaption></figure>
       <div class="copy">
-        <p class="kick rv">04 — The pair</p>
+        <p class="kick rv">05 — The pair</p>
         <h2 class="rv d1">The real<br><em>thing.</em></h2>
         <p class="rv d2">Everything above is drawn live in your browser. This is the flip-flop it was modelled on.</p>
       </div>
@@ -286,6 +321,25 @@ body.flat #scene{display:none}
   const ph=document.getElementById("photo"),fig=ph.querySelector("figure");
   function pp(){const r=ph.getBoundingClientRect(),p=Math.min(1,Math.max(0,-r.top/(r.height-innerHeight)));fig.style.setProperty("--pp",p.toFixed(3));}
   addEventListener("scroll",pp,{passive:true});pp();
+
+  /* on-foot fly-through */
+  const walk=document.getElementById("walk"),shots=[...walk.querySelectorAll(".shot")],GAP=1500;
+  const LABELS=["Mid-stride","After the rain"];
+  const wN=document.getElementById("walkN"),wT=document.getElementById("walkT");let lastI=-1;
+  function fly(){
+    const r=walk.getBoundingClientRect(),p=Math.min(1,Math.max(0,-r.top/(r.height-innerHeight)));
+    const cam=-1100+p*((shots.length-1)*GAP+1350);
+    let best=0,bd=1e9;
+    shots.forEach((el,i)=>{
+      const z=-i*GAP+cam, x=+el.dataset.x*(innerWidth<720?.35:1), y=+el.dataset.y;
+      const o=z<-2800?0:z<-1600?(z+2800)/1200:z<120?1:z<420?1-(z-120)/300:0;
+      el.style.transform=`translate(-50%,-50%) translate3d(${x}vw,${y}vh,${z}px) rotateY(${(-x*.35).toFixed(2)}deg)`;
+      el.style.opacity=o.toFixed(3);el.style.visibility=o<.01?"hidden":"visible";
+      const d=Math.abs(z);if(d<bd){bd=d;best=i;}
+    });
+    if(best!==lastI){lastI=best;wN.textContent=String(best+1).padStart(2,"0");wT.textContent=LABELS[best];}
+  }
+  addEventListener("scroll",fly,{passive:true});addEventListener("resize",fly);fly();
 
   window.__hideLoader=()=>document.getElementById("loader").classList.add("done");
   setTimeout(window.__hideLoader,6000);
@@ -453,6 +507,7 @@ const KEYS=[
   {el:"anatomy",P:V(7,4.6,6.6),L:V(0,1.05,0),ex:1,r:[.12,-.35,0],spin:0,sx:-1.45,gi:.38,gx:30,hide:0},
   {el:"detail", P:V(4,1.5,7.8),L:V(0,.5,0),ex:0,r:[.08,-1.25,0],spin:0,sx:1.2,gi:.5,gx:70,hide:0},
   {el:"round",  P:V(0,3.4,7.4),L:V(0,.75,0),ex:0,r:[.62,.9,-.1],spin:1,sx:-1.5,gi:.6,gx:32,hide:0},
+  {el:"walk",   P:V(0,3.4,7.4),L:V(0,.75,0),ex:0,r:[.62,2.4,-.1],spin:0,sx:-1.5,gi:.18,gx:50,hide:1},
   {el:"photo",  P:V(0,3.4,7.4),L:V(0,.75,0),ex:0,r:[.62,2.4,-.1],spin:0,sx:-1.5,gi:.25,gx:32,hide:1},
   {el:"buy",...HERO,sx:1.6,gx:70}
 ];
@@ -532,7 +587,7 @@ function frame(){
   stage.pivot.position.y=.5+(reduce?0:Math.sin(t*1.1)*.035)+S.ex*.1;
   product.bed.position.y=S.ex*.62;product.mid.position.y=S.ex*.26;product.strap.position.y=S.ex*1.05;
   stage.shadow.material.opacity=.8*(1-S.ex*.5);
-  const sc=BASE*(1-S.hide*.9);stage.root.scale.setScalar(sc);stage.root.visible=S.hide<.97;
+  const sc=BASE*(1-S.hide*.9);stage.root.scale.setScalar(sc);stage.root.visible=S.hide<.6;
 
   glowEl.style.setProperty("--gi",S.gi.toFixed(3));glowEl.style.setProperty("--gx",S.gx.toFixed(1)+"%");
 
