@@ -74,42 +74,45 @@
   <h1>StatusHD</h1>
   <p class="tag">Full-quality video into WhatsApp Status</p>
 
-  <a class="btn" href="../StatusHD-3.0.3.apk">Download StatusHD 3.0.3</a>
-  <p class="size">Android 8.0 or newer &middot; 4.1&nbsp;MB</p>
+  <a class="btn" href="../StatusHD-3.0.9.apk">Download StatusHD 3.0.9</a>
+  <p class="size">Android 8.0 or newer &middot; 4.0&nbsp;MB</p>
 
   <div class="card">
     <h2>How it works</h2>
     <p>Posting a video to Status compresses it hard. StatusHD gets around that by never
     letting WhatsApp's media path touch it:</p>
     <ol>
+      <li>Once, the first time: save StatusHD as a contact. The app opens your Contacts with
+          the name and number filled in; you press Save.</li>
       <li>Pick a video in the app &mdash; it lists yours biggest first, since those are the
           ones that suffer most.</li>
-      <li>Tap <strong>Send to WhatsApp</strong>. It goes to the service number as a
-          <strong>document</strong>, so it is transferred byte for byte instead of being
-          re-compressed.</li>
-      <li>An optimised version comes back into the same chat, as a video.</li>
-      <li>Forward that message to My Status. Forwarding does not re-upload it, so what your
-          viewers see is what came back.</li>
+      <li>Tap <strong>Send to WhatsApp</strong>. WhatsApp opens the StatusHD chat with your
+          video attached as a <strong>document</strong>, so it is transferred byte for byte
+          instead of being re-compressed. You press send.</li>
+      <li>An HD version comes back into the same chat, as a video.</li>
+      <li>Forward that message to My Status. Forward it rather than saving it and posting it
+          again from your gallery, which would compress it once more.</li>
     </ol>
   </div>
 
   <div class="card">
     <h2>The app sends nothing by itself</h2>
     <p>StatusHD does not request the <code>INTERNET</code> permission, so it cannot open a
-    network connection at all. It hands your video to WhatsApp, and you send it. See the
+    network connection at all. It does not ask for your contacts either &mdash; your phone's
+    own Contacts app saves the number. It hands your video to WhatsApp, and you send it. See the
     <a href="../privacy/">privacy policy</a>.</p>
   </div>
 
   <div class="card">
-    <h2>What's new in 3.0.3</h2>
+    <h2>What's new since 3.0.3</h2>
     <ul>
-      <li><strong>The send button works on Android 16 and on phones with Dual Messenger.</strong>
-          It could previously do nothing at all, with no error: the share was routed to a
-          disambiguation screen that Android 16 blocks. It now targets one activity
-          directly.</li>
-      <li><strong>Videos reliably arrive as documents</strong>, so they are not re-compressed
-          on the way.</li>
-      <li>Clearer wording about which number to choose when WhatsApp asks.</li>
+      <li><strong>One-time setup: save StatusHD as a contact.</strong> After that,
+          Send to WhatsApp opens the StatusHD chat directly &mdash; no searching for the number.
+          WhatsApp can take a few minutes to notice a new contact, so the very first send may
+          still show a list: search StatusHD there.</li>
+      <li><strong>New logo.</strong></li>
+      <li><strong>Every screen describes how the app works today</strong>: your video goes to
+          StatusHD as a document and the HD version comes back in that chat.</li>
     </ul>
   </div>
 
@@ -127,13 +130,13 @@
   <div class="card">
     <h2>Verify the file</h2>
     <table>
-      <tr><td>Size</td><td>4073340 bytes</td></tr>
+      <tr><td>Size</td><td>4197496 bytes</td></tr>
       <tr><td>Signing SHA-1</td><td>E9:2F:6B:1F:07:91:F9:4A</td></tr>
     </table>
-    <p class="size">SHA-256 of the APK:<br /><code>67f6e18b9e90862571b61aea863f8cac7a0588b79536cbcc3f1675509d67400d</code></p>
+    <p class="size">SHA-256 of the APK:<br /><code>d67ee24c8f89d2dc003c0cbaf969a3e494f52ba011fa20e8c01b97a6a81cf9fa</code></p>
   </div>
 
-  <p class="size">Also on Google Play internal testing as versionCode 46.</p>
+  <p class="size">Also on Google Play internal and closed testing as versionCode 55.</p>
 
   <footer>
     <a href="../privacy/">Privacy policy</a> &middot;
