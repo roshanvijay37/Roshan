@@ -36,7 +36,7 @@
 
   <h1>Deleting your data</h1>
   <p class="sub">StatusHD &mdash; <code>com.statushd</code></p>
-  <p class="date">Last updated: 24 September 2026</p>
+  <p class="date">Last updated: 26 September 2026</p>
 
   <div class="card">
     <strong>In normal use there is nothing to delete.</strong>
@@ -56,13 +56,57 @@
     <tr>
       <td>The WhatsApp message identifier of each video handled</td>
       <td>The service computer</td>
-      <td>Kept, so the same video is never answered twice. It is an identifier, not the video,
-          and cannot be turned back into one</td>
+      <td>Kept, so the same video is never answered twice, capped at the most recent 50,000.
+          It is an identifier, not the video, and cannot be turned back into one</td>
     </tr>
     <tr>
       <td>The name your conversation appears under, and a count of videos returned to it</td>
       <td>The service computer</td>
       <td>Only if free-use limits are switched on. Kept until you ask for it to go</td>
+    </tr>
+    <tr>
+      <td>The name your conversation appears under, and how many videos it sent today (the
+          daily limit of 10)</td>
+      <td>The service computer</td>
+      <td>Today only. Each day replaces the one before</td>
+    </tr>
+    <tr>
+      <td>Your phone number on the whitelist, a name the owner gives it, and your plan (free
+          trial or 30-day subscription) with start and end dates</td>
+      <td>The service computer</td>
+      <td>Until the owner removes it</td>
+    </tr>
+    <tr>
+      <td>Your phone number, if you have had a free trial</td>
+      <td>The service computer</td>
+      <td>Kept after you are removed from the whitelist, so a trial is given only once; removed
+          on request</td>
+    </tr>
+    <tr>
+      <td>The phone number of your conversation, read from WhatsApp's contact-info panel</td>
+      <td>The service computer</td>
+      <td>Until the owner deletes it; removed on request</td>
+    </tr>
+    <tr>
+      <td>If your video was ignored because you were not on the whitelist: the conversation
+          name, how many were ignored, when, and the last file name</td>
+      <td>The service computer</td>
+      <td>The most recent 500 people; removed on request</td>
+    </tr>
+    <tr>
+      <td>The conversation name, file name and time of recent deliveries</td>
+      <td>The service computer</td>
+      <td>The most recent 50 deliveries</td>
+    </tr>
+    <tr>
+      <td>The service's log, which names conversations and files as they are handled</td>
+      <td>The service computer</td>
+      <td>Not deleted automatically</td>
+    </tr>
+    <tr>
+      <td>A nightly copy of the whitelist, plans, phone numbers and ignored-senders list</td>
+      <td>The service computer</td>
+      <td>14 days, then deleted automatically</td>
     </tr>
     <tr>
       <td>The copy the app staged before handing it to WhatsApp</td>
@@ -84,6 +128,8 @@
     <li>Requests are actioned by hand, normally within a few days.</li>
     <li>Everything held for that conversation is deleted: any file still present, the record
         that the videos were handled, and any count kept against it.</li>
+    <li>A deletion made on request stays in the nightly copies until they age out, after 14
+        days.</li>
     <li>You will get a reply confirming it is done.</li>
     <li>You do not have to explain why.</li>
   </ul>

@@ -35,7 +35,7 @@
 
   <h1>Privacy Policy</h1>
   <p class="sub">StatusHD &mdash; <code>com.statushd</code></p>
-  <p class="date">Last updated: 24 September 2026 (operator name) &mdash; app version 3.0.7</p>
+  <p class="date">Last updated: 26 September 2026 (contact setup, service records) &mdash; app version 3.0.8 (versionCode 54)</p>
 
   <div class="card">
     <strong>The app cannot send anything anywhere.</strong>
@@ -59,41 +59,50 @@
     <li>Copies the video you pick into the app's own private cache, so it can be handed over
         under a name the service recognises. That copy is deleted the next time you send
         something, and when you uninstall the app.</li>
-    <li>Opens WhatsApp with that copy attached, as a <em>document</em>. Sending it is your
-        action, in WhatsApp, and you choose who to send it to.</li>
+    <li>Opens WhatsApp with that copy attached, as a <em>document</em>, addressed to the
+        StatusHD service number. Sending it is your action, in WhatsApp.</li>
   </ul>
 
-  <h2>The one-time setup message</h2>
-  <p>The first time you open StatusHD it asks you to send one WhatsApp message
-  &mdash; <em>&ldquo;Hi, setting up StatusHD&rdquo;</em> &mdash; to the service number, and does
-  not let you past that screen until you say you have.</p>
-  <p>This is not a sign-up and it creates no account. It exists because <strong>WhatsApp will
-  not deliver to a number you have never written to</strong>: without it, sending a video lands
-  on a list of your own contacts, and the service number is not in it.</p>
+  <h2>The one-time setup: saving the service number</h2>
+  <p>This belongs in this policy because it involves your phone's contacts and your phone
+  number.</p>
+  <p>The first time you open StatusHD it asks you to save the service number
+  (+91 90195 53799, as &ldquo;StatusHD&rdquo;) as a contact, and does not let you past that
+  screen until you say you have.</p>
+  <p>This is not a sign-up and it creates no account. It exists because <strong>WhatsApp opens
+  a chat directly only with a number it already knows</strong>: without it, sending a video
+  lands on a list of your own contacts, and the service number is not in it.</p>
   <ul>
-    <li>The message is <strong>sent by you, from your own WhatsApp</strong>. The app cannot send
-        it for you &mdash; it opens a link with the text already written, and the send is
-        yours.</li>
-    <li>Once you send it, the person who operates the service can see that WhatsApp account's
-        number and display name, exactly as any WhatsApp recipient can see any sender's.</li>
+    <li>The app <strong>opens your phone's own Contacts app</strong> with the name and number
+        filled in; you press Save there. The app has <strong>no contacts permission</strong>
+        and never reads your address book.</li>
+    <li>Saving the contact sends nothing to anyone. The service learns nothing from it.</li>
+    <li>If your phone has no Contacts app, the app offers instead to open WhatsApp with one
+        message &mdash; <em>&ldquo;Hi, setting up StatusHD&rdquo;</em> &mdash; already written to
+        the service number, through a <code>wa.me</code> link. That message is <strong>sent by
+        you, from your own WhatsApp</strong>; the app cannot send it.</li>
+    <li>Once you send anything to the service number &mdash; a video, or that message &mdash;
+        <strong>the person who operates the service can see that WhatsApp account's number and
+        display name</strong>, exactly as any WhatsApp recipient can see any sender's.</li>
     <li>The app itself still learns nothing and still sends nothing. It has no network.</li>
-    <li>You are asked once. Updating the app does not ask again.</li>
+    <li>You are asked once. Updating over an existing install does not ask again.</li>
   </ul>
 
   <h2>What happens after you send it</h2>
   <p>If you send it to the StatusHD service number, it arrives as a WhatsApp message on a
-  personal computer operated by Sumathi Enterprises in Mangalore, India, which is signed in to
-  WhatsApp like any other device. There, the video is:</p>
+  <strong>personal computer operated by Sumathi Enterprises in Mangalore, India</strong>, which is
+  signed in to WhatsApp like any other linked device. There, the video is:</p>
   <ul>
     <li>downloaded from the conversation;</li>
-    <li>re-encoded so WhatsApp will accept it without ruining the quality;</li>
+    <li>re-encoded so WhatsApp will accept it without ruining the quality &mdash; or copied
+        byte for byte if it is already within limits;</li>
     <li>sent back into the same conversation as a video;</li>
     <li><strong>deleted from that computer once it has been delivered.</strong> A prepared
         copy that could not be delivered is deleted automatically after 48 hours.</li>
   </ul>
 
   <div class="card warn">
-    <strong>Two things to be aware of.</strong>
+    <strong>Two things to be aware of, and neither is softened.</strong>
     <p>That computer is a personal machine, not a data centre, and the person who operates it
     can open and watch any file on it while it is there.</p>
     <p>And once a video has been sent through WhatsApp, a copy exists in that WhatsApp
@@ -107,18 +116,18 @@
     <tr>
       <td>The WhatsApp message identifier of each video handled</td>
       <td>So the same video is never answered twice</td>
-      <td>Indefinitely. It is an identifier, not the video, and it cannot be turned back into
-          one</td>
+      <td>Indefinitely, capped at the most recent 50,000. It is an identifier, not the video,
+          and it cannot be turned back into one</td>
     </tr>
     <tr>
       <td>The name the conversation appears under, and how many videos were returned to it</td>
-      <td>Only if free-use limits are switched on, to count them</td>
+      <td>To count free-use limits, if they are switched on</td>
       <td>Until deleted on request</td>
     </tr>
     <tr>
       <td>The name the conversation appears under, and how many videos it sent <strong>today</strong></td>
-      <td>The daily limit, which is on: one person may have 5 videos handled a day, so one machine
-          stays fair to everybody</td>
+      <td>The daily limit, which is on: one person may have 10 videos handled a day (subscribers
+          are not limited), so one machine stays fair to everybody</td>
       <td><strong>Today only.</strong> Each day replaces the one before</td>
     </tr>
     <tr>
@@ -136,22 +145,56 @@
           them</td>
     </tr>
     <tr>
-      <td>The <strong>phone number</strong> of a person put on the <strong>whitelist</strong></td>
-      <td>When whitelist-only is switched on, only whitelisted numbers are served</td>
-      <td>Until it is removed from the whitelist</td>
+      <td>The <strong>phone number</strong> of a person the owner puts on the
+          <strong>whitelist</strong>, a name the owner gives it, and its plan (free trial or
+          30-day subscription) with start and end dates</td>
+      <td>Only whitelisted numbers are served when whitelist-only is switched on, which it is.
+          A number that sends a video for the first time is put on a free 1-day trial
+          automatically</td>
+      <td>Until the owner removes it</td>
     </tr>
     <tr>
-      <td>The phone number of each conversation, read from WhatsApp's own contact-info panel on the service's account</td>
+      <td>The <strong>phone number of each person who has had a free trial</strong></td>
+      <td>So a trial is given only once</td>
+      <td>Kept after the person is removed from the whitelist; removed on request</td>
+    </tr>
+    <tr>
+      <td>The <strong>phone number of each conversation</strong>, read from WhatsApp's own contact-info panel on the service's account</td>
       <td>The whitelist is checked by number, so saving or renaming a contact changes nothing</td>
-      <td>Until the service owner deletes it; removed on request</td>
+      <td>Until the owner deletes it; removed on request</td>
     </tr>
     <tr>
       <td>For a video <strong>ignored</strong> because its sender was not on the whitelist: the conversation name, how many were ignored, when, and the last file name</td>
-      <td>So the service owner can see who asked and allow them. <strong>The video itself is never downloaded</strong></td>
+      <td>So the owner can see who asked and allow them. <strong>The video itself is never downloaded</strong></td>
       <td>The most recent 500 people; removed on request</td>
     </tr>
     <tr>
-      <td>The video itself, and the optimised copy</td>
+      <td>The <strong>conversation name, file name and time</strong> of each recent delivery,
+          and of the job in hand and the queue</td>
+      <td>The owner's panel shows what the service is doing</td>
+      <td>The most recent 50 deliveries; the job in hand and the queue until they change</td>
+    </tr>
+    <tr>
+      <td>The service's <strong>log</strong>, which names conversations and files as they are
+          handled</td>
+      <td>To find out what went wrong when something does</td>
+      <td>On that computer; not deleted automatically</td>
+    </tr>
+    <tr>
+      <td>A <strong>nightly copy</strong> of the whitelist, plans, phone numbers and the
+          ignored-senders list above</td>
+      <td>So the owner's settings survive a damaged file</td>
+      <td>14 days, then deleted automatically. A deletion made on request stays in these copies
+          until they age out</td>
+    </tr>
+    <tr>
+      <td>For a video sent through <strong>Telegram</strong> (only people the owner has named):
+          their name, WhatsApp number and the file name</td>
+      <td>To deliver it to their own WhatsApp and tell them on Telegram how it went</td>
+      <td>The video is deleted once delivered or failed; the record is kept</td>
+    </tr>
+    <tr>
+      <td>The <strong>video itself</strong>, and the optimised copy</td>
       <td>To do the work</td>
       <td>Deleted after delivery; after 48 hours if delivery failed</td>
     </tr>
@@ -163,9 +206,15 @@
         delivering it through WhatsApp is the entire point. Their handling is governed by
         <a href="https://www.whatsapp.com/legal/privacy-policy">their own policy</a>.</li>
   </ul>
-  <p>Nobody else. There is no other third party, no data broker and no advertising network.
-  Earlier versions of this page mentioned Cloudflare; that route no longer exists and no
-  traffic passes through it.</p>
+  <p><strong>Telegram</strong> carries two things. Alerts to the service operator, which can
+  include a conversation's name or phone number (for example, when a new number starts a free
+  trial). And, for the few people the operator has named, videos they choose to send through
+  Telegram instead of WhatsApp.</p>
+  <p><strong>Cloudflare</strong> carries the operator's own control panel to the operator,
+  behind a login. The panel shows the records above (names, numbers, file names). Videos do not
+  pass through it. One address, <code>/health</code>, is public and says only whether the
+  service is working &mdash; no names, numbers or file names.</p>
+  <p><strong>Nobody else.</strong> No data broker, no advertising network.</p>
 
   <h2>Permissions, and what each is for</h2>
   <table>
@@ -181,18 +230,20 @@
       <td>So you can grant access to individual videos instead of all of them</td>
     </tr>
     <tr>
-      <td><code>READ_EXTERNAL_STORAGE</code></td>
-      <td>The same thing, on Android 12 and older</td>
+      <td><code>READ_EXTERNAL_STORAGE</code> (Android 12L and older)</td>
+      <td>The same thing, on older Android</td>
     </tr>
     <tr>
-      <td><code>WRITE_EXTERNAL_STORAGE</code></td>
-      <td>Android 9 and older only. <strong>Declared but not currently used</strong> &mdash; it
-          covered saving an optimised copy into your <code>Movies</code> folder, which the app
-          did when it still encoded on the phone. Nothing calls that code any more</td>
+      <td><code>WRITE_EXTERNAL_STORAGE</code> (Android 9 and older)</td>
+      <td><strong>Declared but not currently used</strong> &mdash; it covered saving an
+          optimised copy into <code>Movies/StatusHD</code>, which the app did when it encoded
+          on the phone. Nothing calls that code any more, since the encoder was removed</td>
     </tr>
   </table>
   <p>There is <strong>no <code>INTERNET</code> permission</strong>, and no notification,
-  location, contacts, camera or microphone permission. Earlier versions of this page listed
+  location, contacts, camera or microphone permission. Saving the service number is done by
+  your phone's Contacts app, which needs no permission from StatusHD.</p>
+  <p>Earlier versions of this page listed
   <code>INTERNET</code>, <code>POST_NOTIFICATIONS</code> and <code>FOREGROUND_SERVICE</code>;
   none of them is declared any more.</p>
 
