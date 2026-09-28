@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>ezylinkindia colour options</title>
+<style>
+  :root { --bg:#eef1f7; --ink:#0d1526; --muted:#5b6577; --line:#dfe3ec; --card:#fff; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0b1020; --ink:#eef1f8; --muted:#9aa3b8; --line:#26304a; --card:#141a2e; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  header { padding:18px 16px 6px; max-width:1900px; margin:0 auto; }
+  h1 { font-size:20px; margin:0; }
+  header p { margin:4px 0 0; color:var(--muted); font-size:13px; }
+  .tabs { display:flex; gap:8px; overflow-x:auto; padding:12px 16px; max-width:1900px; margin:0 auto; scrollbar-width:none; }
+  .tab { flex:0 0 auto; display:flex; align-items:center; gap:8px; border:1px solid var(--line); background:var(--card); color:var(--ink);
+         border-radius:999px; padding:8px 14px; font-weight:600; font-size:14px; cursor:pointer; }
+  .tab i { width:16px; height:16px; border-radius:5px; display:inline-block; }
+  .tab[aria-pressed="true"] { border-color:#0060fc; box-shadow:0 0 0 2px #0060fc inset; }
+  .stage { display:flex; justify-content:center; gap:24px; padding:8px 16px 32px; flex-wrap:wrap; }
+  figure { margin:0; }
+  figcaption { text-align:center; font-weight:700; margin-bottom:6px; }
+  figcaption small { display:block; font-weight:500; color:var(--muted); font-size:12px; }
+  .phone { width:390px; max-width:calc(100vw - 32px); height:844px; border:10px solid #111; border-radius:40px; overflow:hidden; background:#fff;
+           box-shadow:0 20px 40px rgba(13,21,38,.25); }
+  .phone iframe { width:390px; height:100%; border:0; display:block; }
+  @media (max-width: 430px) { .phone { border-width:0; border-radius:16px; height:78vh; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>ezylinkindia — header colour options</h1>
+  <p>Mockup only (not the live app). Scroll inside the phone to see the new “Register your business” banner below Top picks. Tap an option, or “Compare all” on a wide screen.</p>
+</header>
+<nav class="tabs" id="tabs"></nav>
+<main class="stage" id="stage"></main>
+<script>
+  const OPTIONS = [
+    { k: "current",  name: "Current — Burnt Saffron", hex: "#D4570A → #A53F06", sw: "#c24f08" },
+    { k: "marigold", name: "A · Marigold Orange",     hex: "#FFA31A → #F26B00", sw: "#ff8a00" },
+    { k: "royal",    name: "B · Royal Blue + Gold ⭐", hex: "#06134A → #0B3FC0 · gold #FFC53D", sw: "#0a2a8f" },
+    { k: "teal",     name: "C · Deep Teal + Gold",    hex: "#0B5D5B → #0E8C80 · gold #F5B301", sw: "#0f766e" },
+    { k: "indigo",   name: "D · Indigo + Gold",       hex: "#1E1B4B → #4338CA · gold #FBBF24", sw: "#312e81" },
+  ];
+  const tabs = document.getElementById("tabs"), stage = document.getElementById("stage");
+  function phone(o) {
+    return `<figure><figcaption>${o.name}<small>${o.hex}</small></figcaption>
+      <div class="phone"><iframe src="home.html?t=${o.k}" title="${o.name}" loading="lazy"></iframe></div></figure>`;
+  }
+  function show(k) {
+    stage.innerHTML = k === "all" ? OPTIONS.map(phone).join("") : phone(OPTIONS.find((o) => o.k === k));
+    for (const b of tabs.children) b.setAttribute("aria-pressed", String(b.dataset.k === k));
+    try { history.replaceState(null, "", "#" + k); } catch {}
+  }
+  tabs.innerHTML = OPTIONS.map((o) => `<button class="tab" data-k="${o.k}"><i style="background:${o.sw}"></i>${o.name.replace(" ⭐", "")}</button>`).join("")
+    + `<button class="tab" data-k="all">Compare all</button>`;
+  tabs.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) show(b.dataset.k); });
+  const start = location.hash.slice(1);
+  show(OPTIONS.some((o) => o.k === start) || start === "all" ? start : (innerWidth > 1200 ? "all" : "royal"));
+</script>
+</body>
+</html>
