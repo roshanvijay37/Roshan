@@ -4,60 +4,125 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>ezylinkindia colour options</title>
+<title>Pick a colour</title>
+<meta name="description" content="Five colour choices for the ezylinkindia app, shown as pictures.">
 <style>
-  :root { --bg:#eef1f7; --ink:#0d1526; --muted:#5b6577; --line:#dfe3ec; --card:#fff; }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0b1020; --ink:#eef1f8; --muted:#9aa3b8; --line:#26304a; --card:#141a2e; } }
+  :root { --bg:#f3f5fa; --card:#ffffff; --ink:#0d1526; --muted:#5b6577; --line:#e3e7ef; --pick:#0060fc; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0b1020; --card:#141a2e; --ink:#eef1f8; --muted:#a3acc0; --line:#26304a; } }
+  :root[data-theme="dark"] { --bg:#0b1020; --card:#141a2e; --ink:#eef1f8; --muted:#a3acc0; --line:#26304a; }
   * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
-  header { padding:18px 16px 6px; max-width:1900px; margin:0 auto; }
-  h1 { font-size:20px; margin:0; }
-  header p { margin:4px 0 0; color:var(--muted); font-size:13px; }
-  .tabs { display:flex; gap:8px; overflow-x:auto; padding:12px 16px; max-width:1900px; margin:0 auto; scrollbar-width:none; }
-  .tab { flex:0 0 auto; display:flex; align-items:center; gap:8px; border:1px solid var(--line); background:var(--card); color:var(--ink);
-         border-radius:999px; padding:8px 14px; font-weight:600; font-size:14px; cursor:pointer; }
-  .tab i { width:16px; height:16px; border-radius:5px; display:inline-block; }
-  .tab[aria-pressed="true"] { border-color:#0060fc; box-shadow:0 0 0 2px #0060fc inset; }
-  .stage { display:flex; justify-content:center; gap:24px; padding:8px 16px 32px; flex-wrap:wrap; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width:1080px; margin:0 auto; padding:24px 16px 48px; }
+  h1 { font-size:30px; line-height:1.2; margin:0 0 10px; letter-spacing:-.4px; }
+  .intro { font-size:18px; color:var(--ink); margin:0 0 6px; }
+  .intro b { color:var(--pick); }
+  .how { margin:14px 0 0; padding:14px 16px; border-radius:14px; background:var(--card); border:1px solid var(--line); font-size:16px; }
+  .how ol { margin:6px 0 0; padding-left:22px; }
+  .jump { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:22px 0 8px; }
+  .jump a { display:flex; align-items:center; gap:10px; padding:12px; border-radius:14px; background:var(--card); border:1px solid var(--line); color:var(--ink); text-decoration:none; font-weight:700; font-size:15px; }
+  .jump i { flex:0 0 34px; height:34px; border-radius:10px; }
+  section { margin-top:28px; background:var(--card); border:1px solid var(--line); border-radius:22px; padding:20px; scroll-margin-top:12px; }
+  section.rec { border:2px solid var(--pick); }
+  .head { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .letter { width:52px; height:52px; border-radius:16px; display:grid; place-items:center; color:#fff; font-size:26px; font-weight:800; flex:0 0 auto; }
+  h2 { margin:0; font-size:24px; line-height:1.2; }
+  .badge { display:inline-block; margin-left:6px; background:var(--pick); color:#fff; font-size:13px; font-weight:700; padding:3px 10px; border-radius:999px; vertical-align:middle; }
+  .desc { margin:10px 0 0; color:var(--muted); font-size:17px; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .chip { display:flex; align-items:center; gap:8px; padding:6px 10px 6px 6px; border-radius:10px; background:var(--bg); border:1px solid var(--line); font:600 14px/1 ui-monospace,Consolas,monospace; }
+  .chip i { width:22px; height:22px; border-radius:6px; }
+  .pics { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px; align-items:start; }
   figure { margin:0; }
-  figcaption { text-align:center; font-weight:700; margin-bottom:6px; }
-  figcaption small { display:block; font-weight:500; color:var(--muted); font-size:12px; }
-  .phone { width:390px; max-width:calc(100vw - 32px); height:844px; border:10px solid #111; border-radius:40px; overflow:hidden; background:#fff;
-           box-shadow:0 20px 40px rgba(13,21,38,.25); }
-  .phone iframe { width:390px; height:100%; border:0; display:block; }
-  @media (max-width: 430px) { .phone { border-width:0; border-radius:16px; height:78vh; } }
+  figcaption { font-weight:700; font-size:16px; margin-bottom:8px; }
+  figcaption span { font-weight:500; color:var(--muted); }
+  figure img { width:100%; height:auto; display:block; border-radius:18px; border:1px solid var(--line); background:#fff; }
+  .full { display:inline-block; margin-top:14px; font-weight:700; color:var(--pick); text-decoration:none; font-size:16px; }
+  .note { margin-top:34px; text-align:center; color:var(--muted); font-size:15px; }
+  @media (max-width: 720px) { .pics { grid-template-columns:1fr; } h1 { font-size:25px; } }
 </style>
 </head>
 <body>
-<header>
-  <h1>ezylinkindia — header colour options</h1>
-  <p>Mockup only (not the live app). Scroll inside the phone to see the new “Register your business” banner below Top picks. Tap an option, or “Compare all” on a wide screen.</p>
-</header>
-<nav class="tabs" id="tabs"></nav>
-<main class="stage" id="stage"></main>
-<script>
-  const OPTIONS = [
-    { k: "current",  name: "Current — Burnt Saffron", hex: "#D4570A → #A53F06", sw: "#c24f08" },
-    { k: "marigold", name: "A · Marigold Orange",     hex: "#FFA31A → #F26B00", sw: "#ff8a00" },
-    { k: "royal",    name: "B · Royal Blue + Gold ⭐", hex: "#06134A → #0B3FC0 · gold #FFC53D", sw: "#0a2a8f" },
-    { k: "teal",     name: "C · Deep Teal + Gold",    hex: "#0B5D5B → #0E8C80 · gold #F5B301", sw: "#0f766e" },
-    { k: "indigo",   name: "D · Indigo + Gold",       hex: "#1E1B4B → #4338CA · gold #FBBF24", sw: "#312e81" },
-  ];
-  const tabs = document.getElementById("tabs"), stage = document.getElementById("stage");
-  function phone(o) {
-    return `<figure><figcaption>${o.name}<small>${o.hex}</small></figcaption>
-      <div class="phone"><iframe src="home.html?t=${o.k}" title="${o.name}" loading="lazy"></iframe></div></figure>`;
-  }
-  function show(k) {
-    stage.innerHTML = k === "all" ? OPTIONS.map(phone).join("") : phone(OPTIONS.find((o) => o.k === k));
-    for (const b of tabs.children) b.setAttribute("aria-pressed", String(b.dataset.k === k));
-    try { history.replaceState(null, "", "#" + k); } catch {}
-  }
-  tabs.innerHTML = OPTIONS.map((o) => `<button class="tab" data-k="${o.k}"><i style="background:${o.sw}"></i>${o.name.replace(" ⭐", "")}</button>`).join("")
-    + `<button class="tab" data-k="all">Compare all</button>`;
-  tabs.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) show(b.dataset.k); });
-  const start = location.hash.slice(1);
-  show(OPTIONS.some((o) => o.k === start) || start === "all" ? start : (innerWidth > 1200 ? "all" : "royal"));
-</script>
+<div class="wrap">
+  <h1>ezylinkindia — pick a colour</h1>
+  <p class="intro">We want to change the <b>orange colour at the top of the app</b>. Below are 5 choices. The first one is what the app looks like today.</p>
+  <div class="how">
+    <b>How to look at this page</b>
+    <ol>
+      <li>Scroll down. Each choice has a big letter (A, B, C, D).</li>
+      <li>For each choice there are two pictures: the <b>top of the home screen</b> and the <b>new “Register your business” banner</b>.</li>
+      <li>Tell Roshan the <b>letter</b> you like best.</li>
+    </ol>
+  </div>
+
+  <nav class="jump" aria-label="Choices">
+    <a href="#current"><i style="background:linear-gradient(120deg,#d4570a,#a53f06)"></i>Today</a>
+    <a href="#marigold"><i style="background:linear-gradient(120deg,#ffa31a,#f26b00)"></i>A · Marigold</a>
+    <a href="#royal"><i style="background:linear-gradient(120deg,#06134a,#0b3fc0)"></i>B · Royal Blue</a>
+    <a href="#teal"><i style="background:linear-gradient(120deg,#0b5d5b,#0e8c80)"></i>C · Teal</a>
+    <a href="#indigo"><i style="background:linear-gradient(120deg,#1e1b4b,#4338ca)"></i>D · Indigo</a>
+  </nav>
+
+  <section id="current">
+    <div class="head"><div class="letter" style="background:linear-gradient(120deg,#d4570a,#a53f06);font-size:15px">Today</div>
+      <h2>What the app looks like now — Burnt Saffron</h2></div>
+    <p class="desc">A dark, slightly brown orange. This is the colour we want to replace.</p>
+    <div class="chips"><span class="chip"><i style="background:#d4570a"></i>#D4570A</span><span class="chip"><i style="background:#a53f06"></i>#A53F06</span></div>
+    <div class="pics">
+      <figure><figcaption>Top of the home screen</figcaption><img src="img/current-top.jpg" width="780" height="1110" alt="Home screen top with the current dark orange header" loading="lazy"></figure>
+      <figure><figcaption>New banner <span>(below the “Top picks” slider)</span></figcaption><img src="img/current-banner.jpg" width="780" height="460" alt="Register your business banner in dark orange" loading="lazy"></figure>
+    </div>
+    <a class="full" href="img/current-full.jpg">See the whole home screen →</a>
+  </section>
+
+  <section id="marigold">
+    <div class="head"><div class="letter" style="background:linear-gradient(120deg,#ffa31a,#f26b00)">A</div>
+      <h2>Marigold Orange</h2></div>
+    <p class="desc">Still orange, but brighter and fresher — like marigold flowers. Warm and festive.</p>
+    <div class="chips"><span class="chip"><i style="background:#ffa31a"></i>#FFA31A</span><span class="chip"><i style="background:#ff8a00"></i>#FF8A00</span><span class="chip"><i style="background:#f26b00"></i>#F26B00</span></div>
+    <div class="pics">
+      <figure><figcaption>Top of the home screen</figcaption><img src="img/marigold-top.jpg" width="780" height="1110" alt="Home screen top with a bright marigold orange header" loading="lazy"></figure>
+      <figure><figcaption>New banner <span>(below the “Top picks” slider)</span></figcaption><img src="img/marigold-banner.jpg" width="780" height="460" alt="Register your business banner in marigold orange" loading="lazy"></figure>
+    </div>
+    <a class="full" href="img/marigold-full.jpg">See the whole home screen →</a>
+  </section>
+
+  <section id="royal" class="rec">
+    <div class="head"><div class="letter" style="background:linear-gradient(120deg,#06134a,#0b3fc0)">B</div>
+      <h2>Royal Blue + Gold <span class="badge">Recommended</span></h2></div>
+    <p class="desc">Dark blue at the top, gold buttons. It matches the blue already used in the rest of the app, so everything looks like one brand. Feels trustworthy and premium.</p>
+    <div class="chips"><span class="chip"><i style="background:#06134a"></i>#06134A</span><span class="chip"><i style="background:#0a2a8f"></i>#0A2A8F</span><span class="chip"><i style="background:#0b3fc0"></i>#0B3FC0</span><span class="chip"><i style="background:#ffc53d"></i>Gold #FFC53D</span></div>
+    <div class="pics">
+      <figure><figcaption>Top of the home screen</figcaption><img src="img/royal-top.jpg" width="780" height="1110" alt="Home screen top with a royal blue header" loading="lazy"></figure>
+      <figure><figcaption>New banner <span>(below the “Top picks” slider)</span></figcaption><img src="img/royal-banner.jpg" width="780" height="460" alt="Register your business banner in royal blue with a gold button" loading="lazy"></figure>
+    </div>
+    <a class="full" href="img/royal-full.jpg">See the whole home screen →</a>
+  </section>
+
+  <section id="teal">
+    <div class="head"><div class="letter" style="background:linear-gradient(120deg,#0b5d5b,#0e8c80)">C</div>
+      <h2>Deep Teal + Gold</h2></div>
+    <p class="desc">A calm blue-green with gold buttons. Different from most apps, but a little less matched to the blue in the middle of the screen.</p>
+    <div class="chips"><span class="chip"><i style="background:#0b5d5b"></i>#0B5D5B</span><span class="chip"><i style="background:#0f766e"></i>#0F766E</span><span class="chip"><i style="background:#0e8c80"></i>#0E8C80</span><span class="chip"><i style="background:#f5b301"></i>Gold #F5B301</span></div>
+    <div class="pics">
+      <figure><figcaption>Top of the home screen</figcaption><img src="img/teal-top.jpg" width="780" height="1110" alt="Home screen top with a deep teal header" loading="lazy"></figure>
+      <figure><figcaption>New banner <span>(below the “Top picks” slider)</span></figcaption><img src="img/teal-banner.jpg" width="780" height="460" alt="Register your business banner in deep teal with a gold button" loading="lazy"></figure>
+    </div>
+    <a class="full" href="img/teal-full.jpg">See the whole home screen →</a>
+  </section>
+
+  <section id="indigo">
+    <div class="head"><div class="letter" style="background:linear-gradient(120deg,#1e1b4b,#4338ca)">D</div>
+      <h2>Indigo + Gold</h2></div>
+    <p class="desc">A deep purple-blue with gold buttons. Looks luxurious; purple is less usual for a local business directory.</p>
+    <div class="chips"><span class="chip"><i style="background:#1e1b4b"></i>#1E1B4B</span><span class="chip"><i style="background:#312e81"></i>#312E81</span><span class="chip"><i style="background:#4338ca"></i>#4338CA</span><span class="chip"><i style="background:#fbbf24"></i>Gold #FBBF24</span></div>
+    <div class="pics">
+      <figure><figcaption>Top of the home screen</figcaption><img src="img/indigo-top.jpg" width="780" height="1110" alt="Home screen top with an indigo header" loading="lazy"></figure>
+      <figure><figcaption>New banner <span>(below the “Top picks” slider)</span></figcaption><img src="img/indigo-banner.jpg" width="780" height="460" alt="Register your business banner in indigo with a gold button" loading="lazy"></figure>
+    </div>
+    <a class="full" href="img/indigo-full.jpg">See the whole home screen →</a>
+  </section>
+
+  <p class="note">These are pictures only — nothing in the real app has changed yet.<br>Icons: Microsoft Fluent Emoji (MIT licence).</p>
+</div>
 </body>
 </html>
