@@ -37,6 +37,10 @@
   figcaption span { font-weight:500; color:var(--muted); }
   figure img { width:100%; height:auto; display:block; border-radius:18px; border:1px solid var(--line); background:#fff; }
   .full { display:inline-block; margin-top:14px; font-weight:700; color:var(--pick); text-decoration:none; font-size:16px; }
+  .dls { display:grid; gap:10px; margin-top:14px; }
+  .dls a { display:flex; align-items:center; gap:12px; min-height:56px; padding:10px 14px; border-radius:14px; background:#16a34a; color:#fff; font-weight:800; font-size:17px; text-decoration:none; }
+  .dls a i { flex:0 0 30px; height:30px; border-radius:9px; border:2px solid rgba(255,255,255,.7); }
+  .dls a::after { content:"⬇"; margin-left:auto; font-size:20px; }
   .note { margin-top:34px; text-align:center; color:var(--muted); font-size:15px; }
   @media (max-width: 720px) { .pics { grid-template-columns:1fr; } h1 { font-size:25px; } }
 </style>
@@ -61,6 +65,19 @@
     <a href="#teal"><i style="background:linear-gradient(120deg,#0b5d5b,#0e8c80)"></i>C · Teal</a>
     <a href="#indigo"><i style="background:linear-gradient(120deg,#1e1b4b,#4338ca)"></i>D · Indigo</a>
   </nav>
+
+
+  <section id="downloads" style="border:2px solid #16a34a">
+    <h2 style="margin:0">⬇ Download the designs</h2>
+    <p class="desc" style="margin-top:6px">Each button saves one picture to your phone. Send them to anyone on WhatsApp.</p>
+    <div class="dls">
+      <a href="download/ezylinkindia-colour-today.jpg" download><i style="background:linear-gradient(120deg,#d4570a,#a53f06)"></i>Today — Burnt Saffron</a>
+      <a href="download/ezylinkindia-colour-A-marigold.jpg" download><i style="background:linear-gradient(120deg,#ffa31a,#f26b00)"></i>A — Marigold Orange</a>
+      <a href="download/ezylinkindia-colour-B-royal-blue.jpg" download><i style="background:linear-gradient(120deg,#06134a,#0b3fc0)"></i>B — Royal Blue + Gold ⭐</a>
+      <a href="download/ezylinkindia-colour-C-teal.jpg" download><i style="background:linear-gradient(120deg,#0b5d5b,#0e8c80)"></i>C — Deep Teal + Gold</a>
+      <a href="download/ezylinkindia-colour-D-indigo.jpg" download><i style="background:linear-gradient(120deg,#1e1b4b,#4338ca)"></i>D — Indigo + Gold</a>
+    </div>
+  </section>
 
   <section id="current">
     <div class="head"><div class="letter" style="background:linear-gradient(120deg,#d4570a,#a53f06);font-size:15px">Today</div>
