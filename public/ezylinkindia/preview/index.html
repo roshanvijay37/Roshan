@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Home screen preview</title>
+<meta name="description" content="ezylinkindia home screen without the blue welcome section, next to today's version.">
+<style>
+  :root { --bg:#f3f5fa; --card:#fff; --ink:#0d1526; --muted:#5b6577; --line:#e3e7ef; --pick:#0060fc; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0b1020; --card:#141a2e; --ink:#eef1f8; --muted:#a3acc0; --line:#26304a; } }
+  :root[data-theme="dark"] { --bg:#0b1020; --card:#141a2e; --ink:#eef1f8; --muted:#a3acc0; --line:#26304a; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width:980px; margin:0 auto; padding:22px 16px 44px; }
+  h1 { font-size:28px; line-height:1.2; margin:0 0 8px; }
+  .intro { margin:0; font-size:18px; }
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:22px; align-items:start; }
+  section { background:var(--card); border:1px solid var(--line); border-radius:22px; padding:18px; }
+  section.new { border:2px solid #f26b00; }
+  .tag { display:inline-block; font-size:13px; font-weight:800; letter-spacing:.5px; padding:3px 10px; border-radius:999px; color:#fff; }
+  h2 { margin:8px 0 4px; font-size:22px; }
+  .sub { margin:0 0 12px; color:var(--muted); font-size:16px; }
+  img { width:100%; height:auto; display:block; border-radius:16px; border:1px solid var(--line); background:#fff; }
+  .dl { display:flex; align-items:center; justify-content:center; gap:8px; margin-top:12px; min-height:54px; border-radius:14px; background:#16a34a; color:#fff; font-weight:800; font-size:17px; text-decoration:none; }
+  .dl.alt { background:var(--bg); color:var(--ink); border:1px solid var(--line); }
+  h3 { margin:20px 0 8px; font-size:17px; }
+  .note { margin-top:26px; text-align:center; color:var(--muted); font-size:14px; }
+  @media (max-width: 760px) { .cols { grid-template-columns:1fr; } h1 { font-size:24px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>ezylinkindia — home screen without the blue section</h1>
+  <p class="intro">The blue “Find trusted local businesses near you” part is removed, so the search box sits right under the orange top bar. Today’s version is shown next to it for comparison.</p>
+
+  <div class="cols">
+    <section class="new">
+      <span class="tag" style="background:#f26b00">PROPOSED</span>
+      <h2>Without the blue section</h2>
+      <p class="sub">Search, location and categories are visible straight away.</p>
+      <img src="ezylinkindia-home-no-blue-section-screen.jpg" width="824" height="1830" alt="Home screen without the blue welcome section">
+      <a class="dl" href="ezylinkindia-home-no-blue-section-screen.jpg" download>⬇ Download this picture</a>
+      <h3>Whole home screen</h3>
+      <img src="ezylinkindia-home-no-blue-section-full.jpg" width="824" height="2564" alt="Whole home screen without the blue welcome section" loading="lazy">
+      <a class="dl" href="ezylinkindia-home-no-blue-section-full.jpg" download>⬇ Download whole screen</a>
+    </section>
+
+    <section>
+      <span class="tag" style="background:#5b6577">TODAY</span>
+      <h2>With the blue section</h2>
+      <p class="sub">What the app and website look like right now.</p>
+      <img src="ezylinkindia-home-today-screen.jpg" width="824" height="1830" alt="Home screen today, with the blue welcome section">
+      <a class="dl alt" href="ezylinkindia-home-today-screen.jpg" download>⬇ Download this picture</a>
+      <h3>Whole home screen</h3>
+      <img src="ezylinkindia-home-today-full.jpg" width="824" height="2984" alt="Whole home screen today" loading="lazy">
+      <a class="dl alt" href="ezylinkindia-home-today-full.jpg" download>⬇ Download whole screen</a>
+    </section>
+  </div>
+
+  <p class="note">Pictures of the live ezylinkindia.com home screen (28 Sept 2026). The “proposed” one is a preview — nothing in the real app has changed yet.</p>
+</div>
+</body>
+</html>
