@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>ezylinkindia — helping people find themes</title>
+<meta name="description" content="Mockups: four ways to let first-time users know the app has colour themes.">
+<style>
+:root{--bg:#f4f1ec;--card:#fff;--ink:#16181d;--muted:#5f5b55;--line:#e6dfd3;--pick:#b8470a;--accent:#ff7a21;--no:#9a948b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0d12;--card:#161a23;--ink:#f1eee8;--muted:#a8a298;--line:#2a303d;--pick:#ff9a4d;--no:#6f6a62}}
+:root[data-theme="dark"]{--bg:#0b0d12;--card:#161a23;--ink:#f1eee8;--muted:#a8a298;--line:#2a303d;--pick:#ff9a4d;--no:#6f6a62}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--pick)}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 16px 56px}
+h1{font-size:32px;line-height:1.15;margin:0 0 10px;letter-spacing:-.02em}
+h2{font-size:24px;margin:0;letter-spacing:-.01em;line-height:1.25}
+.intro{font-size:18px;margin:0;max-width:760px}
+.box{margin:18px 0 0;padding:14px 18px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-size:16px;max-width:760px}
+.opt{margin-top:28px;padding:18px 18px 20px;border-radius:24px;background:var(--card);border:1px solid var(--line)}
+.opt.rec{border:2px solid var(--pick)}
+.head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.pill{font-size:12px;font-weight:800;letter-spacing:.04em;color:#fff;background:var(--pick);padding:3px 10px;border-radius:999px;text-transform:uppercase}
+.pill.no{background:var(--no)}
+.pill.now{background:#5f5b55}
+.opt p,.opt ul{margin:8px 0 0;max-width:780px;font-size:16px}
+.opt ul{padding-left:22px}
+.opt li{margin:3px 0}
+.phones{display:flex;gap:16px;overflow-x:auto;padding:16px 2px 6px;scroll-snap-type:x mandatory}
+figure{margin:0;flex:0 0 250px;scroll-snap-align:start}
+figure a{display:block}
+figure img{width:250px;height:auto;display:block;border-radius:26px;border:1px solid var(--line);box-shadow:0 6px 20px rgba(0,0,0,.08)}
+figcaption{font-size:14px;color:var(--muted);margin-top:8px;line-height:1.4}
+figcaption b{color:var(--ink)}
+.good{color:#15803d;font-weight:700}.bad{color:#b91c1c;font-weight:700}
+@media (prefers-color-scheme:dark){.good{color:#4ade80}.bad{color:#f87171}}
+.note{margin-top:34px;color:var(--muted);font-size:14px;max-width:780px}
+</style></head>
+<body><div class="wrap">
+<h1>Helping people find the colour themes</h1>
+<p class="intro">Today "Appearance" only lives inside the menu, so a first-time user won't know the app has 8 themes. Below are four ways to tell them, shown on the real app. Nothing has been changed in the app yet; these are mockups.</p>
+<div class="box"><b>My pick: Option 1 + Option 2 together.</b> The dot catches people who open the menu, and the card reaches everyone else, once, without getting in the way.</div>
+
+<section class="opt">
+  <div class="head"><h2>Today</h2><span class="pill now">Current</span></div>
+  <p>Appearance is a plain row in the menu (plus a footer link and a card on the You page). Nothing on the home screen hints at it.</p>
+  <div class="phones">
+    <figure><a href="0-today-home.jpg"><img src="0-today-home.jpg" alt="Home screen today" loading="lazy"></a><figcaption><b>Home.</b> No hint anywhere.</figcaption></figure>
+    <figure><a href="0-today-drawer.jpg"><img src="0-today-drawer.jpg" alt="Menu today" loading="lazy"></a><figcaption><b>Menu.</b> Appearance looks like every other row.</figcaption></figure>
+  </div>
+</section>
+
+<section class="opt rec">
+  <div class="head"><h2>Option 1 · "New" dot on the menu</h2><span class="pill">Recommended</span></div>
+  <ul>
+    <li>A small saffron dot on the menu button, and a <b>NEW</b> tag on the Appearance row.</li>
+    <li>Both disappear for good once the person opens Appearance (remembered on the device).</li>
+    <li><span class="good">Quiet, costs no space,</span> and people already know what a dot means.</li>
+  </ul>
+  <div class="phones">
+    <figure><a href="1-dot-home.jpg"><img src="1-dot-home.jpg" alt="Menu button with a saffron dot" loading="lazy"></a><figcaption><b>Home.</b> Saffron dot on the menu button, top right.</figcaption></figure>
+    <figure><a href="1-dot-drawer.jpg"><img src="1-dot-drawer.jpg" alt="Menu with NEW tag on Appearance" loading="lazy"></a><figcaption><b>Menu opened.</b> NEW tag on Appearance.</figcaption></figure>
+  </div>
+</section>
+
+<section class="opt rec">
+  <div class="head"><h2>Option 2 · One-time card on home</h2><span class="pill">Recommended</span></div>
+  <ul>
+    <li>A card with all 8 theme colours, placed <b>under Top picks</b>, so the paid Premium slider stays first.</li>
+    <li>Shown from the <b>second or third visit</b>, not the first, so it never competes with a first search.</li>
+    <li>"Choose a theme" opens the picker. The ✕ or "Not now" hides it forever, and it also goes away once a theme is picked.</li>
+  </ul>
+  <div class="phones">
+    <figure><a href="2-card-home.jpg"><img src="2-card-home.jpg" alt="Make ezylinkindia yours card under Top picks" loading="lazy"></a><figcaption><b>1. The card</b> under Top picks.</figcaption></figure>
+    <figure><a href="2-card-sheet.jpg"><img src="2-card-sheet.jpg" alt="Appearance picker sheet" loading="lazy"></a><figcaption><b>2. Tap "Choose a theme"</b> → the picker you already have.</figcaption></figure>
+    <figure><a href="2-after-royal.jpg"><img src="2-after-royal.jpg" alt="Home in Royal Blue theme" loading="lazy"></a><figcaption><b>3. Picked Royal Blue.</b> The whole app changes at once, and the card is gone.</figcaption></figure>
+    <figure><a href="2-after-midnight.jpg"><img src="2-after-midnight.jpg" alt="Home in Midnight theme" loading="lazy"></a><figcaption><b>Or Midnight</b>, the dark look.</figcaption></figure>
+  </div>
+</section>
+
+<section class="opt">
+  <div class="head"><h2>Option 3 · Palette icon in the header</h2><span class="pill no">Not recommended</span></div>
+  <ul>
+    <li><span class="good">Always visible.</span></li>
+    <li><span class="bad">The phone header gets crowded:</span> the location pill shrinks to "Man…", and a palette icon is used once but takes space forever.</li>
+  </ul>
+  <div class="phones">
+    <figure><a href="3-header-icon.jpg"><img src="3-header-icon.jpg" alt="Header with an extra palette icon" loading="lazy"></a><figcaption><b>Header.</b> The palette icon pushes the location to "Man…".</figcaption></figure>
+  </div>
+</section>
+
+<section class="opt">
+  <div class="head"><h2>Option 4 · Picker on first launch</h2><span class="pill no">Not recommended</span></div>
+  <ul>
+    <li><span class="good">Everyone sees the themes.</span></li>
+    <li><span class="bad">It's one more step before the person has seen a single business.</span> Most people just tap Skip, and some leave.</li>
+  </ul>
+  <div class="phones">
+    <figure><a href="4-first-launch.jpg"><img src="4-first-launch.jpg" alt="Welcome, pick your look sheet" loading="lazy"></a><figcaption><b>First open.</b> "Welcome! Pick your look", with Skip for now.</figcaption></figure>
+  </div>
+</section>
+
+<p class="note">Screens were taken from the live ezylinkindia.com at phone size, with the new pieces added in the browser for the mockup only. The Android app would get the same dot, NEW tag and card in its own screens. Tap any screen to see it full size.</p>
+</div></body></html>
