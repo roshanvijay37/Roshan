@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>ezylinkindia — palette icon in the header</title>
+<meta name="description" content="Mockups: a palette icon in the header, with the location moved below it.">
+<style>
+:root{--bg:#f4f1ec;--card:#fff;--ink:#16181d;--muted:#5f5b55;--line:#e6dfd3;--pick:#b8470a;--no:#9a948b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0d12;--card:#161a23;--ink:#f1eee8;--muted:#a8a298;--line:#2a303d;--pick:#ff9a4d;--no:#6f6a62}}
+:root[data-theme="dark"]{--bg:#0b0d12;--card:#161a23;--ink:#f1eee8;--muted:#a8a298;--line:#2a303d;--pick:#ff9a4d;--no:#6f6a62}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--pick)}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 16px 56px}
+h1{font-size:32px;line-height:1.15;margin:0 0 10px;letter-spacing:-.02em}
+h2{font-size:24px;margin:0;letter-spacing:-.01em;line-height:1.25}
+.intro{font-size:18px;margin:0;max-width:780px}
+.box{margin:18px 0 0;padding:14px 18px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-size:16px;max-width:780px}
+.box p{margin:0}.box p+p{margin-top:8px}
+.opt{margin-top:28px;padding:18px 18px 20px;border-radius:24px;background:var(--card);border:1px solid var(--line)}
+.opt.rec{border:2px solid var(--pick)}
+.head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.pill{font-size:12px;font-weight:800;letter-spacing:.04em;color:#fff;background:var(--pick);padding:3px 10px;border-radius:999px;text-transform:uppercase}
+.pill.alt{background:var(--no)}.pill.now{background:#5f5b55}
+.opt p,.opt ul{margin:8px 0 0;max-width:800px;font-size:16px}
+.opt ul{padding-left:22px}.opt li{margin:3px 0}
+.phones{display:flex;gap:16px;overflow-x:auto;padding:16px 2px 6px;scroll-snap-type:x mandatory}
+figure{margin:0;flex:0 0 250px;scroll-snap-align:start}
+figure.wide{flex:0 0 min(760px,88vw)}
+figure a{display:block}
+figure img{width:100%;height:auto;display:block;border-radius:26px;border:1px solid var(--line);box-shadow:0 6px 20px rgba(0,0,0,.08)}
+figure.wide img{border-radius:14px}
+figcaption{font-size:14px;color:var(--muted);margin-top:8px;line-height:1.4}
+figcaption b{color:var(--ink)}
+.good{color:#15803d;font-weight:700}.bad{color:#b91c1c;font-weight:700}
+@media (prefers-color-scheme:dark){.good{color:#4ade80}.bad{color:#f87171}}
+.note{margin-top:34px;color:var(--muted);font-size:14px;max-width:800px}
+</style></head>
+<body><div class="wrap">
+<h1>Palette icon in the header, location moved down</h1>
+<p class="intro">A palette icon sits next to the bell on every page, and one tap opens the theme picker. To make room on phones, the location chip leaves the header. Below are two ways to handle the location, shown on the real app.</p>
+<div class="box">
+  <p><b>My pick: Way B.</b> Home already shows "Places within 15 km of Mangaluru · Change" right under the headline, so the header chip was a duplicate there. Categories gets the same line. The location then appears once per screen, always in the same place, and nothing new is added.</p>
+  <p>On phones, today's header chip only shows on Home, Categories and List your business. Search, Offers and business pages already keep the location elsewhere, so they only gain the palette icon.</p>
+</div>
+
+<section class="opt">
+  <div class="head"><h2>Today</h2><span class="pill now">Current</span></div>
+  <div class="phones">
+    <figure><a href="../0-today-home.jpg"><img src="../0-today-home.jpg" alt="Home header today" loading="lazy"></a><figcaption><b>Home today.</b> Location chip in the header, and the same location again under the headline.</figcaption></figure>
+  </div>
+</section>
+
+<section class="opt rec">
+  <div class="head"><h2>Way B · Location lives under the page title</h2><span class="pill">Recommended</span></div>
+  <ul>
+    <li>Header: logo, <b>palette</b>, bell, menu. Clean, with nothing squeezed.</li>
+    <li>Home keeps its existing "Places within 15 km of Mangaluru · Change" line. Categories gets the same line under its title.</li>
+    <li><span class="good">Location appears once per screen,</span> and no new bar takes space.</li>
+  </ul>
+  <div class="phones">
+    <figure><a href="b-home.jpg"><img src="b-home.jpg" alt="Home with palette icon, location under headline" loading="lazy"></a><figcaption><b>Home.</b> Palette icon next to the bell, location under the headline.</figcaption></figure>
+    <figure><a href="b-categories.jpg"><img src="b-categories.jpg" alt="Categories with location line under title" loading="lazy"></a><figcaption><b>Categories.</b> The same location line under the title.</figcaption></figure>
+    <figure><a href="b-sheet.jpg"><img src="b-sheet.jpg" alt="Theme picker opened from the palette icon" loading="lazy"></a><figcaption><b>Tap the palette</b> → the theme picker opens.</figcaption></figure>
+    <figure><a href="b-home-dot.jpg"><img src="b-home-dot.jpg" alt="Palette icon with a new dot" loading="lazy"></a><figcaption><b>Optional:</b> a saffron dot on the palette until it's tapped once.</figcaption></figure>
+    <figure><a href="b-home-royal.jpg"><img src="b-home-royal.jpg" alt="Royal Blue theme with palette icon" loading="lazy"></a><figcaption><b>Royal Blue.</b> The icon follows the theme.</figcaption></figure>
+    <figure><a href="b-home-midnight.jpg"><img src="b-home-midnight.jpg" alt="Midnight theme with palette icon" loading="lazy"></a><figcaption><b>Midnight.</b></figcaption></figure>
+  </div>
+</section>
+
+<section class="opt">
+  <div class="head"><h2>Way A · A slim location bar under the header</h2><span class="pill alt">Alternative</span></div>
+  <ul>
+    <li>A thin bar reading "📍 Mangaluru · within 15 km · Change" sits directly under the header, on the pages that had the chip.</li>
+    <li><span class="good">Location is always in the same spot, right at the top.</span></li>
+    <li><span class="bad">On Home the location then shows twice</span> (bar plus the line under the headline), and the bar pushes the page down by about 44px, so Top picks sits lower.</li>
+  </ul>
+  <div class="phones">
+    <figure><a href="a-home.jpg"><img src="a-home.jpg" alt="Home with a location bar under the header" loading="lazy"></a><figcaption><b>Home.</b> Location bar under the header.</figcaption></figure>
+    <figure><a href="a-categories.jpg"><img src="a-categories.jpg" alt="Categories with location bar" loading="lazy"></a><figcaption><b>Categories.</b></figcaption></figure>
+    <figure><a href="a-home-dot.jpg"><img src="a-home-dot.jpg" alt="Location bar with palette dot" loading="lazy"></a><figcaption><b>With the one-time dot.</b></figcaption></figure>
+    <figure><a href="a-home-royal.jpg"><img src="a-home-royal.jpg" alt="Location bar in Royal Blue" loading="lazy"></a><figcaption><b>Royal Blue.</b></figcaption></figure>
+    <figure><a href="a-home-midnight.jpg"><img src="a-home-midnight.jpg" alt="Location bar in Midnight" loading="lazy"></a><figcaption><b>Midnight.</b></figcaption></figure>
+  </div>
+</section>
+
+<section class="opt">
+  <div class="head"><h2>Search page and desktop</h2><span class="pill now">Same in both ways</span></div>
+  <p>Search already has its own location pin next to the search box, so it only gains the palette icon. On desktop there's room for everything, so the location chip stays in the header and the palette sits beside the bell.</p>
+  <div class="phones">
+    <figure><a href="search.jpg"><img src="search.jpg" alt="Search page with palette icon" loading="lazy"></a><figcaption><b>Search.</b> Palette in the header, location pin in the search bar.</figcaption></figure>
+    <figure class="wide"><a href="desktop.jpg"><img src="desktop.jpg" alt="Desktop header with palette icon" loading="lazy"></a><figcaption><b>Desktop.</b> Location chip kept, palette next to the bell.</figcaption></figure>
+  </div>
+</section>
+
+<p class="note">Screens were taken from the live ezylinkindia.com, with the palette icon and location changes added in the browser for the mockup only. Nothing in the app has changed yet. The Android app would get the same header. Tap any screen to see it full size. <a href="../">Back to all four options</a>.</p>
+</div></body></html>
