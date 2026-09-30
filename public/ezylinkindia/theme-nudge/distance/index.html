@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>ezylinkindia — search distance slider</title>
+<meta name="description" content="Mockups: a search distance slider, with the location moved below it.">
+<style>
+:root{--bg:#f4f1ec;--card:#fff;--ink:#16181d;--muted:#5f5b55;--line:#e6dfd3;--pick:#b8470a;--no:#9a948b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0d12;--card:#161a23;--ink:#f1eee8;--muted:#a8a298;--line:#2a303d;--pick:#ff9a4d;--no:#6f6a62}}
+:root[data-theme="dark"]{--bg:#0b0d12;--card:#161a23;--ink:#f1eee8;--muted:#a8a298;--line:#2a303d;--pick:#ff9a4d;--no:#6f6a62}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--pick)}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 16px 56px}
+h1{font-size:32px;line-height:1.15;margin:0 0 10px;letter-spacing:-.02em}
+h2{font-size:24px;margin:0;letter-spacing:-.01em;line-height:1.25}
+.intro{font-size:18px;margin:0;max-width:780px}
+.box{margin:18px 0 0;padding:14px 18px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-size:16px;max-width:780px}
+.box p{margin:0}.box p+p{margin-top:8px}
+.opt{margin-top:28px;padding:18px 18px 20px;border-radius:24px;background:var(--card);border:1px solid var(--line)}
+.opt.rec{border:2px solid var(--pick)}
+.head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.pill{font-size:12px;font-weight:800;letter-spacing:.04em;color:#fff;background:var(--pick);padding:3px 10px;border-radius:999px;text-transform:uppercase}
+.pill.alt{background:var(--no)}.pill.now{background:#5f5b55}
+.opt p,.opt ul{margin:8px 0 0;max-width:800px;font-size:16px}
+.opt ul{padding-left:22px}.opt li{margin:3px 0}
+.phones{display:flex;gap:16px;overflow-x:auto;padding:16px 2px 6px;scroll-snap-type:x mandatory}
+figure{margin:0;flex:0 0 250px;scroll-snap-align:start}
+figure.wide{flex:0 0 min(760px,88vw)}
+figure a{display:block}
+figure img{width:100%;height:auto;display:block;border-radius:26px;border:1px solid var(--line);box-shadow:0 6px 20px rgba(0,0,0,.08)}
+figure.wide img{border-radius:14px}
+figcaption{font-size:14px;color:var(--muted);margin-top:8px;line-height:1.4}
+figcaption b{color:var(--ink)}
+.good{color:#15803d;font-weight:700}.bad{color:#b91c1c;font-weight:700}
+@media (prefers-color-scheme:dark){.good{color:#4ade80}.bad{color:#f87171}}
+.note{margin-top:34px;color:var(--muted);font-size:14px;max-width:800px}
+</style></head>
+<body><div class="wrap">
+<h1>Choose your own search distance</h1>
+<p class="intro">Today the distance stops at 100 km because the app only offers six fixed buttons (2, 5, 10, 25, 50, 100 km). Here's a slider that lets people pick any distance from 1 to 500 km. The quick-pick buttons stay underneath.</p>
+<div class="box">
+  <p><b>Good news: the server already accepts up to 500 km.</b> The 100 km stop is only in the screen, so this is a design change with no backend work, on both the website and Android.</p>
+  <p>The last two screens below are the real live site with a real 35 km and 250 km setting, not mockups: at 35 km, Top picks in Mangaluru goes from 1 to 26 Premium businesses.</p>
+</div>
+
+<section class="opt">
+  <div class="head"><h2>Today</h2><span class="pill now">Current</span></div>
+  <div class="phones">
+    <figure><a href="0-today-sheet.jpg"><img src="0-today-sheet.jpg" alt="Location sheet today with distance buttons" loading="lazy"></a><figcaption><b>Location sheet.</b> Six fixed distances; 100 km is the most.</figcaption></figure>
+  </div>
+</section>
+
+<section class="opt rec">
+  <div class="head"><h2>New · distance slider</h2><span class="pill">Proposed</span></div>
+  <ul>
+    <li><b>Big number</b> shows the chosen distance, with a "default" tag when it's the standard 15 km.</li>
+    <li><b>Slider from 1 to 500 km.</b> Short distances get more room on the track (1–25 km is the left half), so picking 7 km or 12 km is easy with a thumb.</li>
+    <li><b>− and + buttons</b> for small steps: 1 km at a time up to 20, then 5 km, then 25 km.</li>
+    <li>A little bubble shows the number while dragging. The search updates when the finger lifts, not on every move.</li>
+    <li><b>Quick picks stay</b>, now with 250 and 500 km added. Tapping one moves the slider.</li>
+  </ul>
+  <div class="phones">
+    <figure><a href="1-slider-default.jpg"><img src="1-slider-default.jpg" alt="Slider at the default 15 km" loading="lazy"></a><figcaption><b>1. Opens at 15 km</b>, the default.</figcaption></figure>
+    <figure><a href="2-slider-drag.jpg"><img src="2-slider-drag.jpg" alt="Dragging the slider to 35 km" loading="lazy"></a><figcaption><b>2. Dragging</b> to 35 km. The bubble and the summary line update as you go.</figcaption></figure>
+    <figure><a href="3-slider-250.jpg"><img src="3-slider-250.jpg" alt="Slider at 250 km" loading="lazy"></a><figcaption><b>3. Far away:</b> 250 km. The matching quick pick lights up.</figcaption></figure>
+  </div>
+</section>
+
+<section class="opt">
+  <div class="head"><h2>After tapping Done (real site)</h2><span class="pill now">Live data</span></div>
+  <p>These two use the real saved distance on the live website, shown with the Way B header (palette icon).</p>
+  <div class="phones">
+    <figure><a href="4-home-35.jpg"><img src="4-home-35.jpg" alt="Home at 35 km" loading="lazy"></a><figcaption><b>Home at 35 km.</b> "Places within 35 km", and Top picks now shows 26 Premium businesses instead of 1.</figcaption></figure>
+    <figure><a href="5-search-250.jpg"><img src="5-search-250.jpg" alt="Search at 250 km" loading="lazy"></a><figcaption><b>Search at 250 km.</b> Electrician finds 6 places instead of 4.</figcaption></figure>
+  </div>
+</section>
+
+<p class="note">The slider screens were made on the live ezylinkindia.com, with the slider added in the browser for the mockup only. Nothing in the app has changed yet. Android would get the same slider in its location sheet. Tap any screen to see it full size. <a href="../palette/">Palette icon header (Way B)</a> · <a href="../">All theme options</a>.</p>
+</div></body></html>
