@@ -104,7 +104,7 @@ footer a{font-weight:500}
   <h1>Privacy Policy</h1>
   <p class="sub">Ezy Photo Uploader moves photographs from your camera to your own Google&nbsp;Drive. Everything below describes an app that has no server behind it.</p>
   <div class="stamp">
-    <span>Effective <b>24 September 2026</b></span>
+    <span>Effective <b>3 October 2026</b></span>
     <span>Package <b>com.roshanvijay.ezyphotouploader</b></span>
     <span>Developer <b>Sumathi Enterprises</b></span>
   </div>
@@ -133,13 +133,13 @@ footer a{font-weight:500}
 
 <section id="on-device">
   <h2><span class="n">03</span> What the app stores on your phone</h2>
-  <p>All of the following lives in the private storage area of the app, readable only by this app, and is removed entirely when you uninstall it:</p>
+  <p>All of the following lives in the app's own storage area on the phone, and is removed entirely when you uninstall it:</p>
   <ul>
-    <li><strong>Photographs received from your camera</strong>, held until they have uploaded and you delete the event.</li>
+    <li><strong>Photographs received from your camera</strong>, kept on the phone after they upload unless you turn on <strong>Delete the phone's copy after upload</strong> in Settings, which removes each one as soon as Google&nbsp;Drive confirms it.</li>
     <li><strong>An upload queue</strong> — filenames, file sizes, a content checksum used to detect duplicates, upload status and error messages. This is a database on disk so that a queue survives the app being closed or the phone restarting.</li>
     <li><strong>Event names</strong> that you type, and the Drive folder id the app created for each one.</li>
     <li><strong>Settings</strong> — the FTP port and password, and your upload preferences.</li>
-    <li><strong>A diagnostic log</strong> of connection and upload events, kept on the device to help you troubleshoot. Passwords are masked before they reach it. It is never uploaded anywhere.</li>
+    <li><strong>A diagnostic log</strong> of connection and upload events, held in memory while the app is running to help you troubleshoot, and gone when it closes. Passwords are masked before they reach it. It is never saved or uploaded anywhere.</li>
   </ul>
 </section>
 
@@ -201,7 +201,7 @@ footer a{font-weight:500}
 
 <section id="retention">
   <h2><span class="n">09</span> Keeping and deleting your data</h2>
-  <p>Photographs stay on the phone until you delete the event or uninstall the app. Uninstalling removes every file, the queue database, the settings and the log — Android deletes the private storage of the app along with it.</p>
+  <p>Photographs stay on the phone until you uninstall the app, or are removed one by one after upload if you turn on <strong>Delete the phone's copy after upload</strong>. Uninstalling removes every file, the queue database, the settings and the log — Android deletes the private storage of the app along with it.</p>
   <p>Photographs already uploaded to Google Drive belong to your Drive and are unaffected by uninstalling; delete them there if you want them gone.</p>
   <p>You can withdraw access to your Drive at any time at <a href="https://myaccount.google.com/permissions" rel="noopener">myaccount.google.com/permissions</a>.</p>
   <p>Because the developer holds no data about you, there is no data for the developer to delete, export or correct on request.</p>

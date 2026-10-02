@@ -109,8 +109,8 @@ footer{border-top:1px solid var(--rule);padding-top:20px;margin-top:44px;color:v
 <section>
   <h2>Steps to delete your data</h2>
   <ol class="steps">
-    <li><b>Delete an individual event</b>
-      Open the app, choose the event, and delete it. That removes the photographs held on the phone for that event, along with its queue entries and log.</li>
+    <li><b>Remove photographs from the phone as they upload</b>
+      In the app's Settings, turn on <strong>Delete the phone's copy after upload</strong>. Each photograph is then deleted from the phone as soon as Google&nbsp;Drive confirms it has arrived. It is off by default.</li>
     <li><b>Remove everything on the phone</b>
       Uninstall Ezy Photo Uploader. Android deletes the private storage of the app with it — every photograph still on the device, the queue database, your settings and the diagnostic log. Nothing is left behind.</li>
     <li><b>Delete the photographs already in your Drive</b>
@@ -128,10 +128,10 @@ footer{border-top:1px solid var(--rule);padding-top:20px;margin-top:44px;color:v
     <table>
       <thead><tr><th>Data</th><th>What happens</th></tr></thead>
       <tbody>
-        <tr><td>Photographs on the phone</td><td>Deleted immediately when you delete the event or uninstall the app. Not recoverable.</td></tr>
+        <tr><td>Photographs on the phone</td><td>Deleted when you uninstall the app, or one by one after upload if <strong>Delete the phone's copy after upload</strong> is on. Not recoverable.</td></tr>
         <tr><td>Upload queue<br>(filenames, sizes, checksums, status)</td><td>Deleted with the app. Held only on the device.</td></tr>
         <tr><td>Event names and settings</td><td>Deleted with the app.</td></tr>
-        <tr><td>Diagnostic log</td><td>Deleted with the app. Never leaves the device.</td></tr>
+        <tr><td>Diagnostic log</td><td>Held in memory only while the app runs; gone when it closes. Never saved or uploaded.</td></tr>
         <tr><td>Photographs uploaded to your Drive</td><td><strong>Kept</strong> — they are your files in your own Drive, and uninstalling does not touch them. Delete them in Drive if you want them gone.</td></tr>
         <tr><td>Your Google account details</td><td>Nothing to delete. The app stores no password and no long-lived token; sign-in is handled by Google Play services.</td></tr>
       </tbody>
