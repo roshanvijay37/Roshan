@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Privacy policy — Chukta</title>
+<meta name="description" content="What the Chukta loan and EMI tracker collects, where it is kept, and how to delete it." />
+<link rel="icon" href="../icon-512.png" />
+<style>
+  :root{--bg:#f4f5f8;--card:#fff;--line:#dfe2ea;--ink:#1f2a5c;--text:#161b2e;--muted:#59607a;--turmeric:#e0a526;--soft:#eef0f8}
+  @media (prefers-color-scheme: dark){:root{--bg:#0e1222;--card:#161b30;--line:#2a3150;--ink:#c7d0ff;--text:#e9ecf6;--muted:#a0a7c2;--soft:#1c2340}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;padding:36px 16px 72px}
+  .wrap{max-width:720px;margin:0 auto}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+  header img{width:44px;height:44px;border-radius:11px}
+  h1{font-size:30px;line-height:1.2;margin:0 0 6px;letter-spacing:-.4px}
+  .meta{color:var(--muted);font-size:14px;margin:0 0 26px}
+  h2{font-size:18px;margin:34px 0 8px;color:var(--ink)}
+  p,li{color:var(--text)}
+  ul{padding-left:20px} li{margin-bottom:6px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 18px 8px;margin:20px 0}
+  .card strong{color:var(--ink)}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:13px}
+  code{background:var(--soft);border-radius:5px;padding:1px 6px;font-size:14px}
+  a{color:var(--ink);font-weight:600}
+  footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><img src="../icon-512.png" alt="" /><strong style="font-size:20px">Chukta</strong></header>
+  <h1>Privacy policy</h1>
+  <p class="meta">Effective 4 October 2026 · Android app <code>com.roshanvijay.chukta</code> and the website chukta.roshanvijay.com · Developer: Sumathi Enterprises</p>
+
+  <div class="card">
+    <p><strong>In short.</strong> Chukta keeps the loans, EMIs and payments you enter, under your own account,
+    so it can show what you owe and post each EMI on its due date. It has no ads, no analytics and no
+    tracking. Nothing is sold or shared for marketing. You can have everything deleted.</p>
+  </div>
+
+  <h2>1. Who this policy is from</h2>
+  <p>Chukta is published by Sumathi Enterprises, Belvai, Dakshina Kannada, Karnataka, India — the developer
+  that publishes the app on Google Play. This policy covers the Chukta Android app and the Chukta website,
+  which use the same account and the same data.</p>
+
+  <h2>2. What Chukta collects</h2>
+  <table>
+    <tr><th>What</th><th>Why</th></tr>
+    <tr><td>Your email address and a password</td><td>To create your account and sign you in. The password is stored only as a secure hash by the sign-in service; nobody can read it.</td></tr>
+    <tr><td>Your name, as you type it at sign-up</td><td>To greet you in the app.</td></tr>
+    <tr><td>Loans you add: name, lender, amount outstanding, EMI, interest rate, due day, term, start date, original amount, and a note</td><td>To show your debt, post each EMI automatically and work out when each loan finishes.</td></tr>
+    <tr><td>Bank accounts you name as the account an EMI is paid from (a name only — no account number, no balance)</td><td>To show which account each EMI leaves from.</td></tr>
+    <tr><td>Entries: EMIs posted by the app, and prepayments, top-ups and corrections you record (amount, date, accounts, an optional note)</td><td>To keep each loan's balance and your reports correct.</td></tr>
+    <tr><td>Scheduled payments you add (name, amount, due date, repeat, pay-from account)</td><td>To deduct them on their due date and show what is due this month.</td></tr>
+  </table>
+  <p>Chukta does <strong>not</strong> collect your location, contacts, photos, files, phone number, device
+  identifiers or advertising ID, and it does not read your SMS or bank statements. It does not connect to
+  your bank. The only Android permission it uses is Internet access.</p>
+
+  <h2>3. What stays on your phone</h2>
+  <ul>
+    <li>Your sign-in session, in Android's encrypted storage, so you stay signed in. Signing out removes it.</li>
+    <li>Your light / dark theme choice.</li>
+    <li>When you use <em>Downloads</em> in Reports, the CSV or backup file is written to the app's private
+      cache and handed to the app you choose in the share sheet. Where it goes from there is your choice.</li>
+  </ul>
+  <p>Android's app backup is switched off for Chukta, so none of this is copied to a cloud backup.</p>
+
+  <h2>4. Where your data is kept</h2>
+  <p>Your account and everything you enter are stored in a database run by
+  <strong>Supabase</strong> (supabase.com), in its Mumbai, India region (AWS <code>ap-south-1</code>). Supabase also
+  sends the account emails (confirming your address and resetting your password). The website is served from
+  a server in Mumbai (Amazon Lightsail); the Android app talks to the database directly.</p>
+  <p>All traffic is encrypted in transit (HTTPS). Every row is tied to your account and the database itself
+  refuses to return one account's data to another (row-level security).</p>
+
+  <h2>5. Sharing</h2>
+  <p>Your data is not sold, rented or shared with anyone for advertising or marketing. It is processed only by
+  the service providers named above, to run Chukta. It would be disclosed to an authority only where the law
+  requires it.</p>
+
+  <h2>6. How long it is kept</h2>
+  <p>For as long as you have an account. An entry you remove in the app is hidden from every screen and total
+  straight away, and is kept in the database (marked as removed) until your account is deleted. Loans can be
+  archived. Deleting your account deletes all of it — see below.</p>
+
+  <h2>7. Deleting your account and data</h2>
+  <p>In the app: open the menu on your initials → <em>Delete account</em>. Or follow the steps on
+  <a href="../delete-data/">roshanvijay.com/chukta/delete-data</a>. Your account and every loan, entry and
+  scheduled payment in it are deleted within 7 days of the request.</p>
+
+  <h2>8. Children</h2>
+  <p>Chukta is a personal finance tool meant for adults. It is not directed at children under 18.</p>
+
+  <h2>9. Financial information</h2>
+  <p>Chukta is a record-keeping tool. It does not lend money, offer credit, move money or give financial
+  advice. The figures it shows are worked out from what you enter.</p>
+
+  <h2>10. Changes</h2>
+  <p>If this policy changes, the new version is posted on this page with a new effective date.</p>
+
+  <h2>11. Contact</h2>
+  <p>Questions about this policy or about your data: <a href="mailto:roshanshetty010100@gmail.com">roshanshetty010100@gmail.com</a>.</p>
+
+  <footer><a href="../">Chukta</a> · <a href="../delete-data/">Delete your data</a> · <a href="https://chukta.roshanvijay.com">chukta.roshanvijay.com</a></footer>
+</div>
+</body>
+</html>

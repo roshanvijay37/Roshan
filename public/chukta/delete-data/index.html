@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Delete your account — Chukta</title>
+<meta name="description" content="How to delete your Chukta account and every loan, entry and scheduled payment in it." />
+<link rel="icon" href="../icon-512.png" />
+<style>
+  :root{--bg:#f4f5f8;--card:#fff;--line:#dfe2ea;--ink:#1f2a5c;--text:#161b2e;--muted:#59607a;--soft:#eef0f8;--btn:#1f2a5c;--btnfg:#fff}
+  @media (prefers-color-scheme: dark){:root{--bg:#0e1222;--card:#161b30;--line:#2a3150;--ink:#c7d0ff;--text:#e9ecf6;--muted:#a0a7c2;--soft:#1c2340;--btn:#c7d0ff;--btnfg:#0e1222}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;padding:36px 16px 72px}
+  .wrap{max-width:720px;margin:0 auto}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+  header img{width:44px;height:44px;border-radius:11px}
+  h1{font-size:30px;line-height:1.2;margin:0 0 6px;letter-spacing:-.4px}
+  .meta{color:var(--muted);font-size:14px;margin:0 0 26px}
+  h2{font-size:18px;margin:32px 0 8px;color:var(--ink)}
+  ol,ul{padding-left:20px} li{margin-bottom:8px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:20px 0}
+  .btn{display:inline-block;background:var(--btn);color:var(--btnfg);text-decoration:none;font-weight:600;padding:12px 18px;border-radius:10px;margin-top:6px}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:13px}
+  code{background:var(--soft);border-radius:5px;padding:1px 6px;font-size:14px}
+  a{color:var(--ink);font-weight:600}
+  footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><img src="../icon-512.png" alt="" /><strong style="font-size:20px">Chukta</strong></header>
+  <h1>Delete your Chukta account</h1>
+  <p class="meta">Chukta by Sumathi Enterprises · Android app <code>com.roshanvijay.chukta</code> · Updated 4 October 2026</p>
+
+  <div class="card">
+    <h2 style="margin-top:0">How to ask</h2>
+    <ol>
+      <li>From the email address you signed up with, write to
+        <a href="mailto:roshanshetty010100@gmail.com?subject=Delete%20my%20Chukta%20account">roshanshetty010100@gmail.com</a>
+        with the subject <strong>Delete my Chukta account</strong>.</li>
+      <li>Nothing else is needed. If the request comes from a different address, we reply to the account's
+        address to confirm it is you before deleting anything.</li>
+      <li>Your account and all of its data are deleted <strong>within 7 days</strong>, and you get a reply when it is done.</li>
+    </ol>
+    <a class="btn" href="mailto:roshanshetty010100@gmail.com?subject=Delete%20my%20Chukta%20account">Email a deletion request</a>
+    <p style="margin-bottom:0">In the app the same page opens from the menu on your initials → <em>Delete account</em>.</p>
+  </div>
+
+  <h2>What is deleted</h2>
+  <table>
+    <tr><th>Data</th><th>What happens</th></tr>
+    <tr><td>Your sign-in account: email address, password hash and name</td><td>Deleted</td></tr>
+    <tr><td>Every loan and bank account name you added</td><td>Deleted</td></tr>
+    <tr><td>Every entry — posted EMIs, prepayments, top-ups, corrections, including ones you had removed</td><td>Deleted</td></tr>
+    <tr><td>Every scheduled payment</td><td>Deleted</td></tr>
+  </table>
+  <p>Nothing is kept afterwards. Chukta has no other copy of your data: no analytics, no ads, no marketing
+  lists. The database provider (Supabase) may hold its own short-lived operational backups, which age out on
+  their own schedule.</p>
+
+  <h2>Deleting some data without closing the account</h2>
+  <ul>
+    <li><strong>An entry</strong> — on the loan's page, the ⋮ next to it → Delete. It disappears from every
+      screen and total at once; it stays in the database, marked removed, until the account is deleted.</li>
+    <li><strong>A scheduled payment</strong> — on the dashboard, its ⋮ → Delete. It is deleted outright.</li>
+    <li><strong>A loan</strong> — on its page, Archive. It stops counting; to remove a loan entirely, email
+      the address above with its name.</li>
+  </ul>
+
+  <h2>On your phone</h2>
+  <p>Signing out removes the session the app keeps. Uninstalling Chukta removes everything it stored on the phone.</p>
+
+  <footer><a href="../">Chukta</a> · <a href="../privacy/">Privacy policy</a> · <a href="https://chukta.roshanvijay.com">chukta.roshanvijay.com</a></footer>
+</div>
+</body>
+</html>
