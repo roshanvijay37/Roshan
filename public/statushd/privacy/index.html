@@ -35,22 +35,30 @@
 
   <h1>Privacy Policy</h1>
   <p class="sub">StatusHD &mdash; <code>com.statushd</code></p>
-  <p class="date">Last updated: 30 September 2026 (contact is now WhatsApp; app 3.0.9 wording, contact setup, service records) &mdash; app version 3.0.9 (versionCode 55)</p>
+  <p class="date">Last updated: 7 October 2026 (the app reads our current WhatsApp number from statushd.in, and notes which link or ad it was installed from) &mdash; app version 3.1.0 (versionCode 56)</p>
 
   <div class="card">
-    <strong>The app cannot send anything anywhere.</strong>
-    <p>StatusHD does not request the <code>INTERNET</code> permission. That is not a policy it
-    promises to follow &mdash; it is something the app is incapable of doing. It has no way to
-    open a network connection, upload a file, or contact any server, including ours.</p>
+    <strong>The app sends nothing about you anywhere.</strong>
+    <p>Since version 3.1.0 the app holds the <code>INTERNET</code> permission for one thing only:
+    reading our current WhatsApp number from <code>https://statushd.in/app.json</code>, a small
+    public file that is the same for everyone, at most every few hours. That request carries
+    nothing about you, your phone or your videos. The app never uploads a file and never contacts
+    any other server. (Versions up to 3.0.9 had no <code>INTERNET</code> permission at all.)</p>
     <p>What it does is hand your chosen video to <strong>WhatsApp</strong>, and WhatsApp sends
     it, under its own permissions, when you choose to send it.</p>
   </div>
 
   <h2>What the app collects</h2>
-  <p><strong>Nothing.</strong> There is no account, no sign-in, no password, no e-mail
+  <p><strong>Nothing about you.</strong> There is no account, no sign-in, no password, no e-mail
   address and no phone number. No analytics or crash-reporting service is used. No advertising
   identifier is read. Nothing is sold, shared for advertising, or used to build a profile of
   you.</p>
+  <p><strong>Which link or ad brought the install.</strong> Once, on first launch, the app asks
+  the Google Play app on your phone where it was installed from &mdash; for example a short code
+  such as <code>G1</code> from one of our links, or <code>GADS</code> for a Google ad. It keeps
+  only that code, and adds it to the names of the videos you send us (for example
+  <code>StatusHD_c-G1_IMG_4702.MOV</code>), so we can tell which of our ads work. It says nothing
+  about who you are, and it reaches us only when you yourself send a video.</p>
 
   <h2>What the app does on your phone</h2>
   <ul>
@@ -84,7 +92,7 @@
     <li>Once you send anything to the service number &mdash; a video, or that message &mdash;
         <strong>the person who operates the service can see that WhatsApp account's number and
         display name</strong>, exactly as any WhatsApp recipient can see any sender's.</li>
-    <li>The app itself still learns nothing and still sends nothing. It has no network.</li>
+    <li>The app itself still learns nothing about you and sends nothing about you.</li>
     <li>You are asked once. Updating over an existing install does not ask again.</li>
   </ul>
 
@@ -240,12 +248,14 @@
           on the phone. Nothing calls that code any more, since the encoder was removed</td>
     </tr>
   </table>
-  <p>There is <strong>no <code>INTERNET</code> permission</strong>, and no notification,
-  location, contacts, camera or microphone permission. Saving the service number is done by
-  your phone's Contacts app, which needs no permission from StatusHD.</p>
-  <p>Earlier versions of this page listed
-  <code>INTERNET</code>, <code>POST_NOTIFICATIONS</code> and <code>FOREGROUND_SERVICE</code>;
-  none of them is declared any more.</p>
+  <p><strong><code>INTERNET</code></strong> is declared only to read our current WhatsApp number
+  from <code>statushd.in/app.json</code>, as described above. Google Play's install-referrer
+  permission (<code>BIND_GET_INSTALL_REFERRER_SERVICE</code>) lets the app ask the Play app on
+  your phone which link or ad it was installed from. There is no notification, location,
+  contacts, camera or microphone permission. Saving the service number is done by your phone's
+  Contacts app, which needs no permission from StatusHD.</p>
+  <p>Earlier versions of this page listed <code>POST_NOTIFICATIONS</code> and
+  <code>FOREGROUND_SERVICE</code>; neither is declared any more.</p>
 
   <h2>Children</h2>
   <p>StatusHD is not directed at children and does not knowingly collect anything from
