@@ -264,7 +264,7 @@ function Footer() {
   return (
     <footer>
       <a className="brand" href="#top"><span>R</span><i /></a>
-      <p>Designed & engineered with curiosity.</p>
+      <p>Designed & engineered with curiosity. <a href="/company/">Sumathi Enterprises</a></p>
       <a href="#top">Back to orbit <ArrowUpRight size={15} /></a>
     </footer>
   );
