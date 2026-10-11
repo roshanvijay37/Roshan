@@ -84,6 +84,7 @@
     note: '<svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
     share: '<svg viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M20 14v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-5"/></svg>',
     tick: '<svg viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg>',
+    play: '<svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg>',
     youtube: '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z" fill="currentColor"/></svg>',
     instagram: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg>',
     link: '<svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>'
@@ -91,31 +92,42 @@
   const mb = (n) => (n / 1048576).toFixed(n >= 10485760 ? 0 : 1) + " MB";
   const clock = (s) => { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
   let current = null;                                   // the AbortController of a running download
+  // Inside the Android app (Workk/saver-android) the page hands downloads to the app, which
+  // saves straight to the gallery. The Play build of the app is Instagram only.
+  const APP = window.SaverApp || null;
+  const SITES = APP ? APP.sites().split(",") : ["youtube", "instagram"];
+  const progText = (got, total, secs) => {
+    const rate = got / Math.max(secs, .001);
+    return total ? mb(got) + " / " + mb(total) + (secs > 1 ? " · " + mb(rate) + "/s · " + clock((total - got) / rate) : "")
+                 : mb(got) + (secs > 1 ? " · " + mb(rate) + "/s" : "");
+  };
 
   // Which site a link is from - decided here as you type, and again by the server.
   const YT = /^(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/|live\/|embed\/)|youtu\.be\/)[\w-]{11}/i;
   const IG = /^(?:https?:\/\/)?(?:www\.)?instagram\.com\/(?:[\w.]+\/)?(?:reel|reels|p|tv)\/[\w-]{5,}/i;
   const siteOf = (u) => YT.test(u) ? "youtube" : IG.test(u) ? "instagram" : "";
+  const allowed = (u) => SITES.includes(siteOf(u));
   // A pasted share text ("Check this out https://youtu.be/...") - take the link out of it.
   const linkIn = (t) => { const m = t.match(/https?:\/\/\S+/); return m && !siteOf(t) ? m[0] : t; };
 
   function hint() {
-    const v = $("u").value.trim(), s = siteOf(linkIn(v));
+    const v = $("u").value.trim(), l = linkIn(v), s = allowed(l) ? siteOf(l) : "";
     $("s").className = s; $("s").innerHTML = I[s] || I.link;
     $("f").classList.toggle("has", !!v);
   }
   $("u").addEventListener("input", hint);
-  $("u").addEventListener("paste", () => setTimeout(() => { hint(); if (siteOf(linkIn($("u").value.trim()))) $("f").requestSubmit(); }));
+  $("u").addEventListener("paste", () => setTimeout(() => { hint(); if (allowed(linkIn($("u").value.trim()))) $("f").requestSubmit(); }));
   hint();
 
   $("p").addEventListener("click", async () => {
-    try { $("u").value = (await navigator.clipboard.readText()).trim(); hint(); if ($("u").value) $("f").requestSubmit(); }
+    try { $("u").value = (APP ? APP.clipboard() : await navigator.clipboard.readText()).trim(); hint(); if ($("u").value) $("f").requestSubmit(); }
     catch (e) { $("u").focus(); }
   });
-  $("x").addEventListener("click", () => {
+  function clearAll() {
     if (current) current.abort();
-    $("u").value = ""; $("items").innerHTML = ""; msg(""); hint(); $("u").focus();
-  });
+    $("u").value = ""; $("items").innerHTML = ""; msg(""); hint();
+  }
+  $("x").addEventListener("click", () => { clearAll(); $("u").focus(); });
 
   function filenameFrom(r, fallback) {
     const m = /filename="?([^";]+)"?/i.exec(r.headers.get("Content-Disposition") || "");
@@ -125,6 +137,7 @@
   // Fetch the file ourselves: that gives a real progress bar, and a same-origin blob is SAVED by
   // phones instead of opened and played in a new tab (what a plain cross-site link does).
   async function download(row, job) {
+    if (APP) return nativeDownload(row, job);
     if (current) current.abort();
     const ctl = current = new AbortController();
     const a = row.querySelector(".a");
@@ -152,13 +165,8 @@
         const { done, value } = await reader.read();
         if (done) break;
         parts.push(value); got += value.length;
-        const secs = (performance.now() - t0) / 1000, rate = got / Math.max(secs, .001);
-        if (total) {
-          fill.style.width = Math.min(100, got / total * 100).toFixed(1) + "%";
-          st.textContent = mb(got) + " / " + mb(total) + (secs > 1 ? " · " + mb(rate) + "/s · " + clock((total - got) / rate) : "");
-        } else {
-          st.textContent = mb(got) + (secs > 1 ? " · " + mb(rate) + "/s" : "");
-        }
+        if (total) fill.style.width = Math.min(100, got / total * 100).toFixed(1) + "%";
+        st.textContent = progText(got, total, (performance.now() - t0) / 1000);
       }
       const file = new File(parts, name, { type });
       save(file);
@@ -168,6 +176,51 @@
       if (err.name !== "AbortError") msg(err.message && err.message !== "Failed to fetch" ? err.message : "Server offline");
     } finally { if (current === ctl) current = null; }
   }
+
+  // --- Android app: the app downloads and saves; the page only shows progress ---
+  const nat = {};                                       // id -> { row, job, pg, t0 } while the app downloads
+  let seq = 0;
+  function nativeDownload(row, job) {
+    const id = "d" + (++seq) + "_" + Date.now();
+    const a = row.querySelector(".a"); a.hidden = true;
+    const pg = document.createElement("div"); pg.className = "pg";
+    pg.innerHTML = '<div class="bar ind"><i></i></div><div class="st"><span></span><button type="button">cancel</button></div>';
+    row.querySelector(".info").append(pg);
+    pg.querySelector("span").textContent = job.audio ? "MP3…" : "MP4…";
+    pg.querySelector("button").onclick = () => APP.cancel(id);
+    nat[id] = { row, job, pg, t0: 0 };
+    msg("");
+    APP.download(id, job.href, job.name, job.audio);
+  }
+  window.saverEvent = (id, type, a, b, text) => {
+    const d = nat[id]; if (!d) return;
+    if (type === "progress") {
+      if (!d.t0) d.t0 = performance.now();
+      const bar = d.pg.querySelector(".bar");
+      if (b) { bar.classList.remove("ind"); bar.querySelector("i").style.width = Math.min(100, a / b * 100).toFixed(1) + "%"; }
+      d.pg.querySelector("span").textContent = progText(a, b, (performance.now() - d.t0) / 1000);
+      return;
+    }
+    delete nat[id]; d.pg.remove();
+    if (type === "done") finishNative(d.row, d.job, id, a);
+    else { restore(d.row); if (type === "error") msg(text); }
+  };
+  function finishNative(row, job, id, size) {
+    const a = row.querySelector(".a"); a.innerHTML = ""; a.hidden = false;
+    const ok = document.createElement("span"); ok.className = "ok"; ok.innerHTML = I.tick + mb(size); a.append(ok);
+    a.append(btn(I.play, "b p", () => APP.open(id), "Open"));
+    a.append(btn(I.share, "b", () => APP.share(id), "Share"));
+    const other = row.jobs.find((j) => j !== job);
+    if (other) a.append(btn(other.audio ? I.note + "MP3" : I.down + "MP4", "b", () => download(row, other)));
+  }
+  // Back button: clear the result first; let the app leave when there is nothing to clear.
+  window.saverBack = () => {
+    if (Object.keys(nat).length) return false;
+    if ($("items").children.length || $("u").value || $("m").textContent) { clearAll(); $("u").blur(); return true; }
+    return false;
+  };
+  // A link shared into the app while it is open.
+  window.saverOpen = (link) => { $("u").value = link; hint(); $("f").requestSubmit(); };
 
   function save(file) {
     const a = document.createElement("a");
@@ -250,7 +303,11 @@
     let url = linkIn($("u").value.trim());
     if (!url) return;
     if (!/^https?:\/\//i.test(url)) url = "https://" + url;
-    if (!siteOf(url)) { $("items").innerHTML = ""; msg("Not a YouTube / Instagram link"); return; }
+    if (!allowed(url)) {
+      $("items").innerHTML = "";
+      msg(SITES.includes("youtube") ? "Not a YouTube / Instagram link" : "Instagram links only");
+      return;
+    }
     $("u").value = url; hint(); $("u").blur();
     lookup(url);
   });
