@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Instagram Video Downloader</title>
-<meta name="description" content="Download public Instagram reels and videos in full quality, or just the audio as MP3. Free, no ads, no tracking, no sign-up.">
+<title>Video & Audio Downloader</title>
+<meta name="description" content="Download Instagram reels and YouTube videos, or just their audio as MP3. Paste any link. Free, no ads, no tracking, no sign-up.">
 <meta name="theme-color" content="#0b0b10">
 <link rel="icon" href="/icon-192.png">
 <style>
@@ -56,6 +56,12 @@
   @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
   .thumb { position: relative; width: 92px; aspect-ratio: 9 / 16; border-radius: 12px; overflow: hidden; background: var(--bg2); flex: none; }
   .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .item.wide { flex-direction: column; }
+  .item.wide .thumb { width: 100%; aspect-ratio: 16 / 9; }
+  .site { position: absolute; left: 6px; top: 6px; font-size: 11px; font-weight: 700; color: #fff; border-radius: 6px; padding: 1px 7px; }
+  .site.instagram { background: linear-gradient(90deg, var(--a1), var(--a2), var(--a3)); }
+  .site.youtube { background: #e62117; }
+  .hint { display: inline-block; font-size: 12px; font-weight: 700; margin-top: 8px; color: var(--muted); min-height: 18px; }
   .badge { position: absolute; left: 6px; bottom: 6px; font-size: 11px; font-weight: 700; color: #fff; background: rgba(0,0,0,.6);
            border-radius: 6px; padding: 1px 6px; backdrop-filter: blur(4px); }
   .meta { flex: 1; min-width: 0; display: flex; flex-direction: column; }
@@ -111,30 +117,32 @@
     <div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg></div>
     <span class="pill">Free · No ads · No sign-up</span>
   </div>
-  <h1>Instagram <span>reel</span> downloader</h1>
-  <p class="sub">Paste a link to a public reel or video. Save the video in full quality, or just its audio as MP3.</p>
+  <h1>Video &amp; <span>audio</span> downloader</h1>
+  <p class="sub">Paste any Instagram or YouTube link. Save the video, or just its audio as MP3.</p>
 
   <form id="f" autocomplete="off">
-    <input id="u" type="url" inputmode="url" placeholder="https://www.instagram.com/reel/…" aria-label="Instagram link" required>
+    <input id="u" type="text" inputmode="url" autocapitalize="off" spellcheck="false" placeholder="Paste an Instagram or YouTube link" aria-label="Instagram or YouTube link" required>
     <button type="button" class="paste" id="p" aria-label="Paste from clipboard">Paste</button>
-    <button class="go" id="go">Get video</button>
+    <button class="go" id="go">Get it</button>
   </form>
+  <span class="hint" id="h"></span>
   <p class="msg" id="m" role="status" aria-live="polite"></p>
   <div class="items" id="items"></div>
   <button class="again" id="again" type="button">Download another video</button>
 
   <div class="feats">
-    <div class="feat"><b>Full quality</b>The original file Instagram serves, not re-compressed.</div>
+    <div class="feat"><b>Instagram + YouTube</b>Reels, posts, videos and Shorts. It knows which from the link.</div>
     <div class="feat"><b>Audio too</b>Grab just the sound or song as an MP3.</div>
     <div class="feat"><b>Phone friendly</b>Save straight to your gallery.</div>
   </div>
   <ul class="notes">
-    <li>Works for <b>public</b> reels and video posts. Private accounts, stories and photos aren't supported.</li>
+    <li>Instagram: <b>public</b> reels and video posts. Private accounts, stories and photos aren't supported.</li>
+    <li>YouTube: videos and Shorts up to 15 minutes, up to 1080p. Live streams, private and age-restricted videos aren't supported.</li>
     <li>Please respect creators: ask before you repost someone's video, and credit them.</li>
-    <li>This runs on a small personal server, so it can be busy or briefly offline. If Instagram limits us, try again later.</li>
+    <li>This runs on a small personal server, so it can be busy or briefly offline. If Instagram or YouTube limits us, try again later.</li>
   </ul>
 </main>
-<footer>Made by <a href="/">Roshan Vijay</a> · not affiliated with Instagram or Meta</footer>
+<footer>Made by <a href="/">Roshan Vijay</a> · not affiliated with Instagram, Meta, YouTube or Google</footer>
 
 <script>
   const API = "https://ig.roshanvijay.com";
@@ -177,7 +185,8 @@
     card.classList.remove("ok"); card.classList.add("busy");
     actions.innerHTML = ""; const cancel = document.createElement("button"); cancel.className = "link"; cancel.textContent = "Cancel";
     cancel.onclick = () => ctl.abort(); actions.append(cancel);
-    stats.children[0].textContent = job.audio ? "Preparing the audio…" : "Starting…"; stats.children[1].textContent = "";
+    stats.children[0].textContent = job.audio ? "Preparing the audio…" : job.yt ? "Getting it from YouTube…" : "Starting…";
+    stats.children[1].textContent = job.yt && !job.audio ? "big videos take a minute" : "";
     fill.style.width = "0"; bar.classList.add("indet");
     try {
       const r = await fetch(href, { signal: ctl.signal });
@@ -263,20 +272,37 @@
     }
   }
 
+  // Which site a link is from - decided here as you type, and again by the server.
+  const YT = /^(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/|live\/|embed\/)|youtu\.be\/)[\w-]{11}/i;
+  const IG = /^(?:https?:\/\/)?(?:www\.)?instagram\.com\/(?:[\w.]+\/)?(?:reel|reels|p|tv)\/[\w-]{5,}/i;
+  const siteOf = (u) => YT.test(u) ? "youtube" : IG.test(u) ? "instagram" : "";
+  const NAMES = { youtube: "YouTube", instagram: "Instagram" };
+  const linkIn = (t) => { const m = t.match(/https?:\/\/\S+/); return m && !siteOf(t) ? m[0] : t; };
+  function hint() {
+    const u = linkIn($("u").value.trim()), s = siteOf(u);
+    $("h").textContent = s ? "✓ " + NAMES[s] + " link" : (u ? "Not an Instagram or YouTube link yet" : "");
+    $("h").style.color = s ? "var(--ok)" : "";
+  }
+  $("u").addEventListener("input", hint);
+
   function card(d, it, url, many) {
-    const el = document.createElement("div"); el.className = "item";
+    const yt = d.site === "youtube";
+    const el = document.createElement("div"); el.className = "item" + (yt ? " wide" : "");
     const th = document.createElement("div"); th.className = "thumb";
     const img = document.createElement("img"); img.alt = ""; img.referrerPolicy = "no-referrer"; img.loading = "lazy";
     img.onerror = () => img.remove();
     if (it.thumb) img.src = it.thumb;
     th.append(img);
+    const sb = document.createElement("span"); sb.className = "site " + (d.site || "instagram"); sb.textContent = NAMES[d.site] || "Instagram"; th.append(sb);
     if (it.duration) { const b = document.createElement("span"); b.className = "badge"; b.textContent = clock(it.duration); th.append(b); }
     const meta = document.createElement("div"); meta.className = "meta";
-    const who = document.createElement("div"); who.className = "who"; who.textContent = d.uploader ? "@" + d.uploader.replace(/^@/, "") : "Instagram video";
-    const cap = document.createElement("div"); cap.className = "cap"; cap.textContent = d.caption || "";
+    const who = document.createElement("div"); who.className = "who";
+    who.textContent = yt ? (d.caption || "YouTube video") : (d.uploader ? "@" + d.uploader.replace(/^@/, "") : "Instagram video");
+    const cap = document.createElement("div"); cap.className = "cap"; cap.textContent = yt ? (d.uploader || "") : (d.caption || "");
     const spec = document.createElement("div"); spec.className = "spec";
     const h = Math.min(it.width || 0, it.height || 0);
     if (h) { const q = document.createElement("b"); q.textContent = h >= 1080 ? "HD 1080p" : h >= 720 ? "HD 720p" : h + "p"; spec.append(q); }
+    if (it.size) { const s = document.createElement("b"); s.textContent = "≈ " + mb(it.size); spec.append(s); }
     if (many) { const n = document.createElement("b"); n.textContent = "Video " + (it.i + 1); spec.append(n); }
     const prog = document.createElement("div"); prog.className = "prog";
     prog.innerHTML = '<div class="bar"><i></i></div><div class="stats"><span></span><span></span></div>';
@@ -284,9 +310,9 @@
     const actions = document.createElement("div"); actions.className = "actions";
     meta.append(who, cap, spec, prog, done, actions);
     el.append(th, meta);
-    const q = "?url=" + encodeURIComponent(url) + "&i=" + it.i, stem = "instagram_" + (d.code || "video") + (many ? "_" + (it.i + 1) : "");
-    el.jobs = [{ href: API + "/api/dl" + q, name: stem + ".mp4", audio: false }];
-    if (it.has_audio) el.jobs.push({ href: API + "/api/audio" + q, name: stem + ".mp3", audio: true });
+    const q = "?url=" + encodeURIComponent(url) + "&i=" + it.i, stem = (d.site || "instagram") + "_" + (d.code || "video") + (many ? "_" + (it.i + 1) : "");
+    el.jobs = [{ href: API + "/api/dl" + q, name: stem + ".mp4", audio: false, yt }];
+    if (it.has_audio) el.jobs.push({ href: API + "/api/audio" + q, name: stem + ".mp3", audio: true, yt });
     restore(el);
     return el;
   }
@@ -300,18 +326,21 @@
       $("items").innerHTML = "";
       if (!r.ok) { msg(d.error || "Something went wrong. Try again.", "err"); return; }
       if (!d.items || !d.items.length) { msg("No video found in that post.", "err"); return; }
-      msg(d.items.length > 1 ? d.items.length + " videos in this post." : "Ready to download.", "ok");
+      msg((d.items.length > 1 ? d.items.length + " videos in this post." : "Ready to download.") + " · " + (NAMES[d.site] || "Instagram"), "ok");
       for (const it of d.items) $("items").append(card(d, it, url, d.items.length > 1));
     } catch (err) {
       $("items").innerHTML = "";
       msg("Couldn't reach the server. It may be offline for a bit; try again later.", "err");
-    } finally { $("go").disabled = false; $("go").textContent = "Get video"; }
+    } finally { $("go").disabled = false; $("go").textContent = "Get it"; }
   }
 
   $("f").addEventListener("submit", (e) => {
     e.preventDefault();
-    const url = $("u").value.trim();
-    if (!/instagram\.com\/(?:[\w.]+\/)?(reel|reels|p|tv)\//i.test(url)) { $("items").innerHTML = ""; msg("That doesn't look like an Instagram reel or post link.", "err"); return; }
+    // A pasted share text ("Check this out https://youtu.be/...") - take the link out of it.
+    let url = linkIn($("u").value.trim());
+    if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+    if (!siteOf(url)) { $("items").innerHTML = ""; msg("Paste an Instagram reel/post link or a YouTube video link.", "err"); return; }
+    $("u").value = url; hint();
     lookup(url);
   });
 
