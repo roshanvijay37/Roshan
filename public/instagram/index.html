@@ -15,11 +15,16 @@
   * { box-sizing: border-box; margin: 0; }
   html, body { background: var(--bg); color: var(--fg); }
   body { font: 15px/1.4 -apple-system, system-ui, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
-  main { max-width: 520px; margin: 0 auto; padding: max(28px, env(safe-area-inset-top)) 16px 40px; }
+  main { max-width: 520px; margin: 0 auto; padding: max(28px, env(safe-area-inset-top)) 16px 40px; transition: padding-top .25s ease; }
+  /* Nothing looked up yet: the box sits in the middle of the screen; results move it to the top. */
+  main:has(#items:empty) { padding-top: calc(50vh - 60px); padding-top: calc(50dvh - 60px); }
   button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
   svg { width: 18px; height: 18px; display: block; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-  form { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); height: 48px; padding: 0 4px 0 12px; }
+  form { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); height: 60px; padding: 0 6px 0 16px; font-size: 17px; }
+  form svg { width: 21px; height: 21px; }
+  form #s { width: 21px; }
+  form .ib { width: 46px; height: 46px; border-radius: 10px; }
   form:focus-within { border-color: var(--dim); }
   #s { width: 18px; flex: none; color: var(--dim); }
   #s.youtube { color: #f00; } #s.instagram { color: #d62976; }
