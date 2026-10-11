@@ -3,227 +3,169 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Video & Audio Downloader</title>
-<meta name="description" content="Download Instagram reels and YouTube videos, or just their audio as MP3. Paste any link. Free, no ads, no tracking, no sign-up.">
-<meta name="theme-color" content="#0b0b10">
+<title>dl</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#111111">
 <link rel="icon" href="/icon-192.png">
 <style>
-  :root {
-    --bg: #f5f4f1; --bg2: #ecebe6; --card: #ffffff; --ink: #141417; --muted: #6a6a73; --line: #e2e0da;
-    --a1: #f9a03f; --a2: #e1306c; --a3: #833ab4;
-    --ok: #15803d; --err: #b42318; --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(20,20,30,.06);
-  }
+  :root { --bg: #fafafa; --fg: #111; --dim: #888; --line: #e4e4e4; --soft: #f0f0f0; --err: #c0392b; }
   @media (prefers-color-scheme: dark) {
-    :root { --bg: #0b0b10; --bg2: #111118; --card: #16161d; --ink: #f3f3f6; --muted: #9b9ba6; --line: #26262f;
-            --ok: #4ade80; --err: #f87171; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 32px rgba(0,0,0,.35); }
+    :root { --bg: #111; --fg: #eee; --dim: #777; --line: #262626; --soft: #1c1c1c; --err: #ff6b5b; }
   }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; background: var(--bg); color: var(--ink); }
-  body { font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; min-height: 100vh; min-height: 100dvh;
-         display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
-  body::before { content: ""; position: fixed; inset: -20% -10% auto; height: 420px; z-index: -1; pointer-events: none;
-         background: radial-gradient(40% 60% at 25% 40%, color-mix(in srgb, var(--a1) 22%, transparent), transparent 70%),
-                     radial-gradient(40% 60% at 75% 30%, color-mix(in srgb, var(--a3) 20%, transparent), transparent 70%);
-         filter: blur(20px); }
-  main { width: 100%; max-width: 560px; margin: 0 auto; padding: max(40px, env(safe-area-inset-top)) 16px 24px; flex: 1; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: var(--bg); color: var(--fg); }
+  body { font: 15px/1.4 -apple-system, system-ui, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+  main { max-width: 520px; margin: 0 auto; padding: max(28px, env(safe-area-inset-top)) 16px 40px; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  svg { width: 18px; height: 18px; display: block; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-  .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
-  .logo { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; flex: none;
-          background: linear-gradient(135deg, var(--a1), var(--a2) 55%, var(--a3)); box-shadow: 0 6px 18px color-mix(in srgb, var(--a2) 35%, transparent); }
-  .logo svg { width: 22px; height: 22px; }
-  .pill { font-size: 12px; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; background: var(--card); }
-  h1 { font-size: clamp(28px, 7vw, 36px); line-height: 1.1; margin: 0 0 10px; letter-spacing: -0.03em; }
-  h1 span { background: linear-gradient(90deg, var(--a1), var(--a2) 50%, var(--a3)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .sub { color: var(--muted); margin: 0 0 24px; }
+  form { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); height: 48px; padding: 0 4px 0 12px; }
+  form:focus-within { border-color: var(--dim); }
+  #s { width: 18px; flex: none; color: var(--dim); }
+  #s.youtube { color: #f00; } #s.instagram { color: #d62976; }
+  input { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: none; color: var(--fg); font: inherit; padding: 0 10px; }
+  input::placeholder { color: var(--dim); }
+  .ib { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 8px; color: var(--dim); flex: none; }
+  .ib:active { background: var(--soft); }
+  #go { color: var(--fg); }
+  #go:disabled { opacity: .4; }
+  #x { display: none; } form.has #x { display: grid; } form.has #p { display: none; }
 
-  form { display: flex; gap: 6px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 6px; box-shadow: var(--shadow);
-         transition: border-color .2s, box-shadow .2s; }
-  form:focus-within { border-color: color-mix(in srgb, var(--a2) 55%, var(--line)); box-shadow: var(--shadow), 0 0 0 4px color-mix(in srgb, var(--a2) 14%, transparent); }
-  input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ink); font: inherit; padding: 12px 10px; outline: none; }
-  input::placeholder { color: var(--muted); opacity: .8; }
-  button { border: 0; border-radius: 12px; font: inherit; font-weight: 650; cursor: pointer; padding: 11px 16px; -webkit-tap-highlight-color: transparent; }
-  button:active { transform: scale(.98); }
-  .go { background: linear-gradient(90deg, var(--a1), var(--a2)); color: #fff; min-width: 104px; }
-  .go:disabled { opacity: .65; cursor: wait; }
-  .paste { background: var(--bg2); color: var(--ink); padding: 11px 12px; }
+  #m { min-height: 20px; margin: 10px 2px 0; font-size: 13px; color: var(--err); }
 
-  .msg { margin: 14px 4px 0; font-size: 15px; min-height: 22px; color: var(--muted); }
-  .msg.err { color: var(--err); } .msg.ok { color: var(--ok); }
+  .row { display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+  .row:first-child { border-top: 0; }
+  .th { flex: none; width: 128px; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; background: var(--soft); position: relative; }
+  .th.tall { width: 72px; aspect-ratio: 9/16; }
+  .th img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .th span { position: absolute; right: 4px; bottom: 4px; font-size: 11px; background: rgba(0,0,0,.7); color: #fff; padding: 0 4px; border-radius: 3px; font-variant-numeric: tabular-nums; }
+  .info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .t { font-weight: 600; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .d { color: var(--dim); font-size: 13px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
+  .a { display: flex; gap: 6px; margin-top: auto; padding-top: 10px; align-items: center; }
+  .b { height: 34px; padding: 0 14px; border-radius: 8px; border: 1px solid var(--line); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+  .b.p { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .b svg { width: 15px; height: 15px; }
+  .b:active { opacity: .7; }
+  .ok { font-size: 13px; color: var(--dim); display: inline-flex; align-items: center; gap: 4px; margin-right: auto; font-variant-numeric: tabular-nums; }
+  .ok svg { width: 15px; height: 15px; color: #2a9d55; stroke-width: 3; }
 
-  .items { display: grid; gap: 14px; margin-top: 14px; }
-  .item { display: flex; gap: 14px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 12px; box-shadow: var(--shadow);
-          animation: rise .35s cubic-bezier(.2,.8,.2,1) both; overflow: hidden; }
-  @keyframes rise { from { opacity: 0; transform: translateY(8px); } }
-  .thumb { position: relative; width: 92px; aspect-ratio: 9 / 16; border-radius: 12px; overflow: hidden; background: var(--bg2); flex: none; }
-  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .item.wide { flex-direction: column; }
-  .item.wide .thumb { width: 100%; aspect-ratio: 16 / 9; }
-  .site { position: absolute; left: 6px; top: 6px; font-size: 11px; font-weight: 700; color: #fff; border-radius: 6px; padding: 1px 7px; }
-  .site.instagram { background: linear-gradient(90deg, var(--a1), var(--a2), var(--a3)); }
-  .site.youtube { background: #e62117; }
-  .hint { display: inline-block; font-size: 12px; font-weight: 700; margin-top: 8px; color: var(--muted); min-height: 18px; }
-  .badge { position: absolute; left: 6px; bottom: 6px; font-size: 11px; font-weight: 700; color: #fff; background: rgba(0,0,0,.6);
-           border-radius: 6px; padding: 1px 6px; backdrop-filter: blur(4px); }
-  .meta { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-  .who { font-weight: 650; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .cap { color: var(--muted); font-size: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 2px; }
-  .spec { color: var(--muted); font-size: 12px; margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap; }
-  .spec b { font-weight: 600; border: 1px solid var(--line); border-radius: 6px; padding: 0 6px; }
-  .actions { margin-top: auto; padding-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-  .btn { background: linear-gradient(90deg, var(--a1), var(--a2)); color: #fff; padding: 10px 16px; font-size: 15px; display: inline-flex; align-items: center; gap: 6px;
-         box-shadow: 0 4px 14px color-mix(in srgb, var(--a2) 28%, transparent); }
-  .btn.alt { background: var(--bg2); color: var(--ink); box-shadow: none; }
-  .btn.share { background: linear-gradient(90deg, var(--a2), var(--a3)); }
-  .btn svg { width: 16px; height: 16px; }
-  .btn small { font-size: 11px; font-weight: 700; opacity: .6; letter-spacing: .02em; }
-  .link { background: none; color: var(--muted); padding: 9px 4px; font-weight: 600; font-size: 14px; }
+  .pg { margin-top: auto; padding-top: 10px; }
+  .bar { height: 3px; background: var(--soft); border-radius: 2px; overflow: hidden; position: relative; }
+  .bar i { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--fg); transition: width .2s linear; }
+  .bar.ind i { width: 30%; animation: ind 1s ease-in-out infinite; }
+  @keyframes ind { from { left: -30%; } to { left: 100%; } }
+  .st { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--dim); margin-top: 6px; font-variant-numeric: tabular-nums; }
+  .st button { font-size: 12px; color: var(--dim); text-decoration: underline; }
 
-  .prog { margin-top: 10px; display: none; }
-  .item.busy .prog { display: block; }
-  .bar { height: 8px; border-radius: 99px; background: var(--bg2); overflow: hidden; position: relative; }
-  .bar i { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--a1), var(--a2), var(--a3));
-           transition: width .25s linear; }
-  .bar.indet i { width: 35%; animation: slide 1.1s ease-in-out infinite; }
-  @keyframes slide { from { left: -35%; } to { left: 100%; } }
-  .stats { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 6px; font-variant-numeric: tabular-nums; }
-
-  .done { display: none; align-items: center; gap: 8px; color: var(--ok); font-weight: 650; font-size: 15px; }
-  .item.ok .done { display: flex; }
-  .tick { width: 22px; height: 22px; border-radius: 50%; background: var(--ok); display: grid; place-items: center; animation: pop .35s cubic-bezier(.2,1.6,.4,1) both; }
-  .tick svg { width: 13px; height: 13px; }
-  @keyframes pop { from { transform: scale(.3); opacity: 0; } }
-
-  .skel { height: 172px; border-radius: 18px; background: linear-gradient(90deg, var(--card), var(--bg2), var(--card)); background-size: 200% 100%;
-          animation: shimmer 1.2s linear infinite; border: 1px solid var(--line); }
-  @keyframes shimmer { to { background-position: -200% 0; } }
-
-  .again { display: none; width: 100%; margin-top: 14px; background: var(--card); color: var(--ink); border: 1px solid var(--line); padding: 13px; box-shadow: var(--shadow); }
-  .again.show { display: block; animation: rise .35s both; }
-
-  .feats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 30px; }
-  .feat { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px; font-size: 13px; color: var(--muted); }
-  .feat b { display: block; color: var(--ink); font-size: 14px; margin-bottom: 2px; }
-  .notes { margin-top: 24px; color: var(--muted); font-size: 13px; padding-left: 18px; }
-  .notes li { margin: 4px 0; }
-  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 16px 16px max(16px, env(safe-area-inset-bottom)); }
-  footer a { color: inherit; }
-  @media (max-width: 420px) { .feats { grid-template-columns: 1fr; } .thumb { width: 84px; } }
-  @media (prefers-reduced-motion: reduce) { *, *::before { animation: none !important; transition: none !important; } }
+  .sk { height: 96px; border-radius: 6px; background: var(--soft); animation: pulse 1s ease-in-out infinite alternate; }
+  @keyframes pulse { to { opacity: .4; } }
 </style>
 </head>
 <body>
 <main>
-  <div class="brand">
-    <div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg></div>
-    <span class="pill">Free · No ads · No sign-up</span>
-  </div>
-  <h1>Video &amp; <span>audio</span> downloader</h1>
-  <p class="sub">Paste any Instagram or YouTube link. Save the video, or just its audio as MP3.</p>
-
   <form id="f" autocomplete="off">
-    <input id="u" type="text" inputmode="url" autocapitalize="off" spellcheck="false" placeholder="Paste an Instagram or YouTube link" aria-label="Instagram or YouTube link" required>
-    <button type="button" class="paste" id="p" aria-label="Paste from clipboard">Paste</button>
-    <button class="go" id="go">Get it</button>
+    <span id="s"></span>
+    <input id="u" type="text" inputmode="url" autocapitalize="off" spellcheck="false" placeholder="Link" aria-label="Link">
+    <button type="button" class="ib" id="p" aria-label="Paste"><svg viewBox="0 0 24 24"><rect x="8" y="3" width="8" height="4" rx="1"/><path d="M16 5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/></svg></button>
+    <button type="button" class="ib" id="x" aria-label="Clear"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <button class="ib" id="go" aria-label="Go"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
   </form>
-  <span class="hint" id="h"></span>
-  <p class="msg" id="m" role="status" aria-live="polite"></p>
-  <div class="items" id="items"></div>
-  <button class="again" id="again" type="button">Download another video</button>
-
-  <div class="feats">
-    <div class="feat"><b>Instagram + YouTube</b>Reels, posts, videos and Shorts. It knows which from the link.</div>
-    <div class="feat"><b>Audio too</b>Grab just the sound or song as an MP3.</div>
-    <div class="feat"><b>Phone friendly</b>Save straight to your gallery.</div>
-  </div>
-  <ul class="notes">
-    <li>Instagram: <b>public</b> reels and video posts. Private accounts, stories and photos aren't supported.</li>
-    <li>YouTube: videos and Shorts up to 15 minutes, up to 1080p. Live streams, private and age-restricted videos aren't supported.</li>
-    <li>Please respect creators: ask before you repost someone's video, and credit them.</li>
-    <li>This runs on a small personal server, so it can be busy or briefly offline. If Instagram or YouTube limits us, try again later.</li>
-  </ul>
+  <p id="m" role="status"></p>
+  <div id="items"></div>
 </main>
-<footer>Made by <a href="/">Roshan Vijay</a> · not affiliated with Instagram, Meta, YouTube or Google</footer>
 
 <script>
   const API = "https://ig.roshanvijay.com";
   const $ = (id) => document.getElementById(id);
-  const msg = (t, cls = "") => { const m = $("m"); m.textContent = t; m.className = "msg " + cls; };
-  const ICON = {
-    down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>',
-    share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M20 14v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-5"/></svg>',
-    note: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
-    tick: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>'
+  const msg = (t) => { $("m").textContent = t || ""; };
+  const I = {
+    down: '<svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>',
+    note: '<svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+    share: '<svg viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M20 14v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-5"/></svg>',
+    tick: '<svg viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg>',
+    youtube: '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z" fill="currentColor"/></svg>',
+    instagram: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg>',
+    link: '<svg viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>'
   };
   const mb = (n) => (n / 1048576).toFixed(n >= 10485760 ? 0 : 1) + " MB";
-  const clock = (s) => { s = Math.max(0, Math.round(s)); return s >= 60 ? Math.floor(s / 60) + "m " + (s % 60) + "s" : s + "s"; };
+  const clock = (s) => { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
   let current = null;                                   // the AbortController of a running download
 
-  $("p").addEventListener("click", async () => {
-    try { $("u").value = (await navigator.clipboard.readText()).trim(); $("u").focus(); if ($("u").value) $("f").requestSubmit(); }
-    catch (e) { $("u").focus(); msg("Long-press the box and choose Paste."); }
-  });
+  // Which site a link is from - decided here as you type, and again by the server.
+  const YT = /^(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/|live\/|embed\/)|youtu\.be\/)[\w-]{11}/i;
+  const IG = /^(?:https?:\/\/)?(?:www\.)?instagram\.com\/(?:[\w.]+\/)?(?:reel|reels|p|tv)\/[\w-]{5,}/i;
+  const siteOf = (u) => YT.test(u) ? "youtube" : IG.test(u) ? "instagram" : "";
+  // A pasted share text ("Check this out https://youtu.be/...") - take the link out of it.
+  const linkIn = (t) => { const m = t.match(/https?:\/\/\S+/); return m && !siteOf(t) ? m[0] : t; };
 
-  $("again").addEventListener("click", () => {
-    $("items").innerHTML = ""; $("again").classList.remove("show"); $("u").value = ""; msg(""); $("u").focus();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  function hint() {
+    const v = $("u").value.trim(), s = siteOf(linkIn(v));
+    $("s").className = s; $("s").innerHTML = I[s] || I.link;
+    $("f").classList.toggle("has", !!v);
+  }
+  $("u").addEventListener("input", hint);
+  $("u").addEventListener("paste", () => setTimeout(() => { hint(); if (siteOf(linkIn($("u").value.trim()))) $("f").requestSubmit(); }));
+  hint();
+
+  $("p").addEventListener("click", async () => {
+    try { $("u").value = (await navigator.clipboard.readText()).trim(); hint(); if ($("u").value) $("f").requestSubmit(); }
+    catch (e) { $("u").focus(); }
+  });
+  $("x").addEventListener("click", () => {
+    if (current) current.abort();
+    $("u").value = ""; $("items").innerHTML = ""; msg(""); hint(); $("u").focus();
   });
 
   function filenameFrom(r, fallback) {
-    const cd = r.headers.get("Content-Disposition") || "";
-    const m = /filename="?([^";]+)"?/i.exec(cd);
+    const m = /filename="?([^";]+)"?/i.exec(r.headers.get("Content-Disposition") || "");
     return (m && m[1]) || fallback;
   }
 
   // Fetch the file ourselves: that gives a real progress bar, and a same-origin blob is SAVED by
   // phones instead of opened and played in a new tab (what a plain cross-site link does).
-  async function download(card, job) {
+  async function download(row, job) {
     if (current) current.abort();
     const ctl = current = new AbortController();
-    const href = job.href, fallbackName = job.name;
-    const bar = card.querySelector(".bar"), fill = bar.querySelector("i"), stats = card.querySelector(".stats");
-    const actions = card.querySelector(".actions");
-    card.classList.remove("ok"); card.classList.add("busy");
-    actions.innerHTML = ""; const cancel = document.createElement("button"); cancel.className = "link"; cancel.textContent = "Cancel";
-    cancel.onclick = () => ctl.abort(); actions.append(cancel);
-    stats.children[0].textContent = job.audio ? "Preparing the audio…" : job.yt ? "Getting it from YouTube…" : "Starting…";
-    stats.children[1].textContent = job.yt && !job.audio ? "big videos take a minute" : "";
-    fill.style.width = "0"; bar.classList.add("indet");
+    const a = row.querySelector(".a");
+    a.hidden = true;
+    const pg = document.createElement("div"); pg.className = "pg";
+    pg.innerHTML = '<div class="bar ind"><i></i></div><div class="st"><span></span><button type="button">cancel</button></div>';
+    row.querySelector(".info").append(pg);
+    const bar = pg.querySelector(".bar"), fill = bar.querySelector("i"), st = pg.querySelector("span");
+    pg.querySelector("button").onclick = () => ctl.abort();
+    st.textContent = job.audio ? "MP3…" : "MP4…";
+    msg("");
     try {
-      const r = await fetch(href, { signal: ctl.signal });
+      const r = await fetch(job.href, { signal: ctl.signal });
       if (!r.ok) {
-        let e = "Download failed - try again.";
+        let e = "Failed";
         try { e = (await r.json()).error || e; } catch (x) {}
         throw new Error(e);
       }
       const total = +r.headers.get("Content-Length") || 0;
-      const name = filenameFrom(r, fallbackName);
-      const type = r.headers.get("Content-Type") || "video/mp4";
+      const name = filenameFrom(r, job.name), type = r.headers.get("Content-Type") || "video/mp4";
       const reader = r.body.getReader(), parts = [], t0 = performance.now();
       let got = 0;
-      if (total) bar.classList.remove("indet");
+      if (total) bar.classList.remove("ind");
       for (;;) {
         const { done, value } = await reader.read();
         if (done) break;
         parts.push(value); got += value.length;
         const secs = (performance.now() - t0) / 1000, rate = got / Math.max(secs, .001);
         if (total) {
-          const pct = Math.min(100, got / total * 100);
-          fill.style.width = pct.toFixed(1) + "%";
-          stats.children[0].textContent = Math.floor(pct) + "% · " + mb(got) + " of " + mb(total);
-          stats.children[1].textContent = secs > 1 ? mb(rate) + "/s · " + clock((total - got) / rate) + " left" : "";
+          fill.style.width = Math.min(100, got / total * 100).toFixed(1) + "%";
+          st.textContent = mb(got) + " / " + mb(total) + (secs > 1 ? " · " + mb(rate) + "/s · " + clock((total - got) / rate) : "");
         } else {
-          stats.children[0].textContent = mb(got) + " downloaded";
-          stats.children[1].textContent = secs > 1 ? mb(rate) + "/s" : "";
+          st.textContent = mb(got) + (secs > 1 ? " · " + mb(rate) + "/s" : "");
         }
       }
       const file = new File(parts, name, { type });
       save(file);
-      finish(card, file, job);
+      pg.remove(); finish(row, file, job);
     } catch (err) {
-      card.classList.remove("busy");
-      if (err.name === "AbortError") { msg("Download cancelled."); }
-      else { msg(err.message && err.message !== "Failed to fetch" ? err.message : "Couldn't reach the server. Try again in a minute.", "err"); }
-      restore(card);
+      pg.remove(); restore(row);
+      if (err.name !== "AbortError") msg(err.message && err.message !== "Failed to fetch" ? err.message : "Server offline");
     } finally { if (current === ctl) current = null; }
   }
 
@@ -234,118 +176,87 @@
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 60000);
   }
 
-  function finish(card, file, job) {
-    card.classList.remove("busy"); card.classList.add("ok");
-    const actions = card.querySelector(".actions");
-    actions.innerHTML = "";
-    const done = card.querySelector(".done");
-    done.innerHTML = '<span class="tick">' + ICON.tick + '</span>' + (job.audio ? "Audio saved · " : "Video saved · ") + mb(file.size);
-    // Phones: the share sheet has "Save video" (iPhone Photos) / gallery apps. Needs a fresh tap.
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      const s = document.createElement("button"); s.className = "btn share"; s.innerHTML = ICON.share + "Save to gallery";
-      s.onclick = () => navigator.share({ files: [file] }).catch(() => {});
-      actions.append(s);
-    }
-    const again = document.createElement("button"); again.className = "btn alt"; again.textContent = "Save again";
-    again.onclick = () => save(file);
-    actions.append(again);
-    // The other one, without looking the link up again.
-    const other = card.jobs.find((j) => j !== job);
-    if (other) {
-      const o = document.createElement("button"); o.className = "btn alt";
-      o.innerHTML = (other.audio ? ICON.note + "Get audio" : ICON.down + "Get video");
-      o.onclick = () => download(card, other);
-      actions.append(o);
-    }
-    msg("Done - check your Downloads" + (navigator.canShare ? " or tap Save to gallery." : "."), "ok");
-    $("again").classList.add("show");
+  const btn = (html, cls, fn, label) => {
+    const b = document.createElement("button"); b.type = "button"; b.className = cls; b.innerHTML = html; b.onclick = fn;
+    if (label) b.setAttribute("aria-label", label);
+    return b;
+  };
+
+  function finish(row, file, job) {
+    const a = row.querySelector(".a"); a.innerHTML = ""; a.hidden = false;
+    const ok = document.createElement("span"); ok.className = "ok"; ok.innerHTML = I.tick + mb(file.size); a.append(ok);
+    // Phones: the share sheet has "Save video" / gallery apps. Needs a fresh tap.
+    if (navigator.canShare && navigator.canShare({ files: [file] }))
+      a.append(btn(I.share, "b p", () => navigator.share({ files: [file] }).catch(() => {}), "Save to gallery"));
+    a.append(btn(I.down, "b", () => save(file), "Save again"));
+    const other = row.jobs.find((j) => j !== job);
+    if (other) a.append(btn(other.audio ? I.note + "MP3" : I.down + "MP4", "b", () => download(row, other)));
   }
 
-  function restore(card) {
-    const actions = card.querySelector(".actions");
-    actions.innerHTML = "";
-    for (const job of card.jobs) {
-      const b = document.createElement("button"); b.className = job.audio ? "btn alt" : "btn";
-      b.innerHTML = job.audio ? ICON.note + "Audio <small>MP3</small>" : ICON.down + "Video";
-      b.onclick = () => download(card, job);
-      actions.append(b);
-    }
+  function restore(row) {
+    const a = row.querySelector(".a"); a.innerHTML = ""; a.hidden = false;
+    for (const job of row.jobs)
+      a.append(btn(job.audio ? I.note + "MP3" : I.down + "MP4", job.audio ? "b" : "b p", () => download(row, job)));
   }
 
-  // Which site a link is from - decided here as you type, and again by the server.
-  const YT = /^(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/|live\/|embed\/)|youtu\.be\/)[\w-]{11}/i;
-  const IG = /^(?:https?:\/\/)?(?:www\.)?instagram\.com\/(?:[\w.]+\/)?(?:reel|reels|p|tv)\/[\w-]{5,}/i;
-  const siteOf = (u) => YT.test(u) ? "youtube" : IG.test(u) ? "instagram" : "";
-  const NAMES = { youtube: "YouTube", instagram: "Instagram" };
-  const linkIn = (t) => { const m = t.match(/https?:\/\/\S+/); return m && !siteOf(t) ? m[0] : t; };
-  function hint() {
-    const u = linkIn($("u").value.trim()), s = siteOf(u);
-    $("h").textContent = s ? "✓ " + NAMES[s] + " link" : (u ? "Not an Instagram or YouTube link yet" : "");
-    $("h").style.color = s ? "var(--ok)" : "";
-  }
-  $("u").addEventListener("input", hint);
-
-  function card(d, it, url, many) {
+  function row(d, it, url, many) {
     const yt = d.site === "youtube";
-    const el = document.createElement("div"); el.className = "item" + (yt ? " wide" : "");
-    const th = document.createElement("div"); th.className = "thumb";
-    const img = document.createElement("img"); img.alt = ""; img.referrerPolicy = "no-referrer"; img.loading = "lazy";
-    img.onerror = () => img.remove();
-    if (it.thumb) img.src = it.thumb;
-    th.append(img);
-    const sb = document.createElement("span"); sb.className = "site " + (d.site || "instagram"); sb.textContent = NAMES[d.site] || "Instagram"; th.append(sb);
-    if (it.duration) { const b = document.createElement("span"); b.className = "badge"; b.textContent = clock(it.duration); th.append(b); }
-    const meta = document.createElement("div"); meta.className = "meta";
-    const who = document.createElement("div"); who.className = "who";
-    who.textContent = yt ? (d.caption || "YouTube video") : (d.uploader ? "@" + d.uploader.replace(/^@/, "") : "Instagram video");
-    const cap = document.createElement("div"); cap.className = "cap"; cap.textContent = yt ? (d.uploader || "") : (d.caption || "");
-    const spec = document.createElement("div"); spec.className = "spec";
+    const el = document.createElement("div"); el.className = "row";
+    const th = document.createElement("div"); th.className = "th" + (yt ? "" : " tall");
+    if (it.thumb) {
+      const img = document.createElement("img"); img.alt = ""; img.referrerPolicy = "no-referrer"; img.src = it.thumb;
+      img.onerror = () => img.remove(); th.append(img);
+    }
+    if (it.duration) { const s = document.createElement("span"); s.textContent = clock(it.duration); th.append(s); }
+    const info = document.createElement("div"); info.className = "info";
+    const t = document.createElement("div"); t.className = "t";
+    t.textContent = (yt ? d.caption : d.uploader ? "@" + d.uploader.replace(/^@/, "") : "") || (yt ? "YouTube" : "Instagram");
+    const bits = [];
+    if (yt && d.uploader) bits.push(d.uploader);
     const h = Math.min(it.width || 0, it.height || 0);
-    if (h) { const q = document.createElement("b"); q.textContent = h >= 1080 ? "HD 1080p" : h >= 720 ? "HD 720p" : h + "p"; spec.append(q); }
-    if (it.size) { const s = document.createElement("b"); s.textContent = "≈ " + mb(it.size); spec.append(s); }
-    if (many) { const n = document.createElement("b"); n.textContent = "Video " + (it.i + 1); spec.append(n); }
-    const prog = document.createElement("div"); prog.className = "prog";
-    prog.innerHTML = '<div class="bar"><i></i></div><div class="stats"><span></span><span></span></div>';
-    const done = document.createElement("div"); done.className = "done";
-    const actions = document.createElement("div"); actions.className = "actions";
-    meta.append(who, cap, spec, prog, done, actions);
-    el.append(th, meta);
+    if (h) bits.push(h + "p");
+    if (it.size) bits.push(mb(it.size));
+    if (many) bits.push((it.i + 1) + "/" + many);
+    const dd = document.createElement("div"); dd.className = "d"; dd.textContent = bits.join(" · ");
+    const a = document.createElement("div"); a.className = "a";
+    info.append(t, dd, a);
+    el.append(th, info);
     const q = "?url=" + encodeURIComponent(url) + "&i=" + it.i, stem = (d.site || "instagram") + "_" + (d.code || "video") + (many ? "_" + (it.i + 1) : "");
-    el.jobs = [{ href: API + "/api/dl" + q, name: stem + ".mp4", audio: false, yt }];
-    if (it.has_audio) el.jobs.push({ href: API + "/api/audio" + q, name: stem + ".mp3", audio: true, yt });
+    el.jobs = [{ href: API + "/api/dl" + q, name: stem + ".mp4", audio: false }];
+    if (it.has_audio) el.jobs.push({ href: API + "/api/audio" + q, name: stem + ".mp3", audio: true });
     restore(el);
     return el;
   }
 
   async function lookup(url) {
-    $("items").innerHTML = '<div class="skel"></div>'; $("again").classList.remove("show");
-    $("go").disabled = true; $("go").textContent = "Looking…"; msg("");
+    if (current) current.abort();
+    $("items").innerHTML = '<div class="sk"></div>'; msg("");
+    $("go").disabled = true;
     try {
       const r = await fetch(API + "/api/info?url=" + encodeURIComponent(url));
       const d = await r.json();
       $("items").innerHTML = "";
-      if (!r.ok) { msg(d.error || "Something went wrong. Try again.", "err"); return; }
-      if (!d.items || !d.items.length) { msg("No video found in that post.", "err"); return; }
-      msg((d.items.length > 1 ? d.items.length + " videos in this post." : "Ready to download.") + " · " + (NAMES[d.site] || "Instagram"), "ok");
-      for (const it of d.items) $("items").append(card(d, it, url, d.items.length > 1));
+      if (!r.ok) { msg(d.error || "Failed"); return; }
+      if (!d.items || !d.items.length) { msg("No video"); return; }
+      const many = d.items.length > 1 ? d.items.length : 0;
+      for (const it of d.items) $("items").append(row(d, it, url, many));
     } catch (err) {
-      $("items").innerHTML = "";
-      msg("Couldn't reach the server. It may be offline for a bit; try again later.", "err");
-    } finally { $("go").disabled = false; $("go").textContent = "Get it"; }
+      $("items").innerHTML = ""; msg("Server offline");
+    } finally { $("go").disabled = false; }
   }
 
   $("f").addEventListener("submit", (e) => {
     e.preventDefault();
-    // A pasted share text ("Check this out https://youtu.be/...") - take the link out of it.
     let url = linkIn($("u").value.trim());
+    if (!url) return;
     if (!/^https?:\/\//i.test(url)) url = "https://" + url;
-    if (!siteOf(url)) { $("items").innerHTML = ""; msg("Paste an Instagram reel/post link or a YouTube video link.", "err"); return; }
-    $("u").value = url; hint();
+    if (!siteOf(url)) { $("items").innerHTML = ""; msg("Not a YouTube / Instagram link"); return; }
+    $("u").value = url; hint(); $("u").blur();
     lookup(url);
   });
 
   // ?url= links (e.g. from a share sheet) look the video up straight away
-  try { const q = new URLSearchParams(location.search).get("url"); if (q) { $("u").value = q; $("f").requestSubmit(); } } catch (e) {}
+  try { const q = new URLSearchParams(location.search).get("url"); if (q) { $("u").value = q; hint(); $("f").requestSubmit(); } } catch (e) {}
 </script>
 </body>
 </html>
