@@ -36,6 +36,20 @@
   #go:disabled { opacity: .4; }
   #x { display: none; } form.has #x { display: grid; } form.has #p { display: none; }
 
+  .top { display: flex; gap: 8px; align-items: center; }
+  .top form { flex: 1; min-width: 0; }
+  #wa { flex: none; width: 60px; height: 60px; border-radius: 14px; border: 1px solid var(--line); display: grid; place-items: center; color: #25d366; }
+  #wa[hidden] { display: none; }
+  #wa svg { width: 26px; height: 26px; stroke-width: 2.2; }
+  #wa:active { background: var(--soft); }
+  #clip { display: flex; align-items: center; gap: 8px; max-width: 100%; margin: 12px auto 0; height: 36px; padding: 0 14px;
+          border: 1px solid var(--line); border-radius: 18px; font-size: 13px; color: var(--dim); }
+  #clip[hidden] { display: none; }
+  #clip .ct { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #clip svg { width: 16px; height: 16px; flex: none; }
+  .ci.youtube { color: #f00; } .ci.instagram { color: #d62976; }
+  #s.facebook, .ci.facebook { color: #1877f2; } #s.pinterest, .ci.pinterest { color: #e60023; } #s.reddit, .ci.reddit { color: #ff4500; }
+  #s.linkedin, .ci.linkedin { color: #0a66c2; } #s.snapchat, .ci.snapchat { color: #e6b800; } #s.x, .ci.x { color: var(--fg); }
   #m { min-height: 20px; margin: 10px 2px 0; font-size: 13px; color: var(--err); }
 
   .row { display: flex; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
@@ -69,6 +83,7 @@
 </head>
 <body>
 <main>
+  <div class="top">
   <form id="f" autocomplete="off">
     <span id="s"></span>
     <input id="u" type="text" inputmode="url" autocapitalize="off" spellcheck="false" placeholder="Link" aria-label="Link">
@@ -76,6 +91,10 @@
     <button type="button" class="ib" id="x" aria-label="Clear"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     <button class="ib" id="go" aria-label="Go"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
   </form>
+  <!-- Android app only: the WhatsApp status saver (native screen). -->
+  <button type="button" id="wa" aria-label="Statuses" hidden><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-dasharray="4.2 2.4"/><circle cx="12" cy="12" r="4.2" fill="currentColor" stroke="none"/></svg></button>
+  </div>
+  <button type="button" id="clip" hidden></button>
   <p id="m" role="status"></p>
   <div id="items"></div>
 </main>
@@ -100,7 +119,9 @@
   // Inside the Android app (Workk/saver-android) the page hands downloads to the app, which
   // saves straight to the gallery. The Play build of the app is Instagram only.
   const APP = window.SaverApp || null;
-  const SITES = APP ? APP.sites().split(",") : ["youtube", "instagram"];
+  const SITES = APP ? APP.sites().split(",") : ["youtube", "instagram", "facebook", "x", "pinterest", "reddit", "snapchat", "linkedin"];
+  const NAMES = { youtube: "YouTube", instagram: "Instagram", facebook: "Facebook", x: "X", pinterest: "Pinterest",
+                  reddit: "Reddit", snapchat: "Snapchat", linkedin: "LinkedIn" };
   const progText = (got, total, secs) => {
     const rate = got / Math.max(secs, .001);
     return total ? mb(got) + " / " + mb(total) + (secs > 1 ? " · " + mb(rate) + "/s · " + clock((total - got) / rate) : "")
@@ -108,9 +129,18 @@
   };
 
   // Which site a link is from - decided here as you type, and again by the server.
-  const YT = /^(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/|live\/|embed\/)|youtu\.be\/)[\w-]{11}/i;
-  const IG = /^(?:https?:\/\/)?(?:www\.)?instagram\.com\/(?:[\w.]+\/)?(?:reel|reels|p|tv)\/[\w-]{5,}/i;
-  const siteOf = (u) => YT.test(u) ? "youtube" : IG.test(u) ? "instagram" : "";
+  // Same sites as the server's OTHER list (Workk/igdl/server.py); order matters - YouTube and Instagram first.
+  const SITE_RE = {
+    youtube: /^(?:https?:\/\/)?(?:www\.|m\.|music\.)?(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/|live\/|embed\/)|youtu\.be\/)[\w-]{11}/i,
+    instagram: /^(?:https?:\/\/)?(?:www\.)?instagram\.com\/(?:[\w.]+\/)?(?:reel|reels|p|tv)\/[\w-]{5,}/i,
+    facebook: /^(?:https?:\/\/)?(?:[\w-]+\.)?(?:facebook\.com|fb\.watch|fb\.com)\/\S+/i,
+    x: /^(?:https?:\/\/)?(?:www\.|mobile\.)?(?:x\.com|twitter\.com)\/\S+/i,
+    pinterest: /^(?:https?:\/\/)?(?:[\w-]+\.)?(?:pinterest\.[a-z.]+|pin\.it)\/\S+/i,
+    reddit: /^(?:https?:\/\/)?(?:[\w-]+\.)?(?:reddit\.com|redd\.it)\/\S+/i,
+    snapchat: /^(?:https?:\/\/)?(?:www\.)?snapchat\.com\/\S+/i,
+    linkedin: /^(?:https?:\/\/)?(?:[\w-]+\.)?linkedin\.com\/\S+/i,
+  };
+  const siteOf = (u) => Object.keys(SITE_RE).find((k) => SITE_RE[k].test(u)) || "";
   const allowed = (u) => SITES.includes(siteOf(u));
   // A pasted share text ("Check this out https://youtu.be/...") - take the link out of it.
   const linkIn = (t) => { const m = t.match(/https?:\/\/\S+/); return m && !siteOf(t) ? m[0] : t; };
@@ -120,7 +150,19 @@
     $("s").className = s; $("s").innerHTML = I[s] || I.link;
     $("f").classList.toggle("has", !!v);
   }
-  $("u").addEventListener("input", hint);
+  $("u").addEventListener("input", () => { hint(); $("clip").hidden = true; });
+
+  // The app noticed a link on the clipboard: offer it under the box, one tap to look it up.
+  let clipLink = "";
+  window.saverClip = (link) => {
+    if (!allowed(link) || link === $("u").value.trim()) return;
+    clipLink = link;
+    const s = siteOf(link), c = $("clip");
+    c.innerHTML = '<span class="ci ' + s + '">' + (I[s] || I.link) + '</span><span class="ct"></span>';
+    c.querySelector(".ct").textContent = link.replace(/^https?:\/\/(www\.)?/i, "");
+    c.hidden = false;
+  };
+  $("clip").addEventListener("click", () => { $("clip").hidden = true; $("u").value = clipLink; hint(); $("f").requestSubmit(); });
   $("u").addEventListener("paste", () => setTimeout(() => { hint(); if (allowed(linkIn($("u").value.trim()))) $("f").requestSubmit(); }));
   hint();
 
@@ -199,6 +241,7 @@
   }
   window.saverEvent = (id, type, a, b, text) => {
     const d = nat[id]; if (!d) return;
+    if (type !== "progress" && type !== "done" && type !== "error" && type !== "cancelled") return;   // queued, begin, idle
     if (type === "progress") {
       if (!d.t0) d.t0 = performance.now();
       const bar = d.pg.querySelector(".bar");
@@ -224,6 +267,10 @@
     if ($("items").children.length || $("u").value || $("m").textContent) { clearAll(); $("u").blur(); return true; }
     return false;
   };
+  if (APP && typeof APP.statuses === "function") {
+    $("wa").hidden = false;
+    $("wa").addEventListener("click", () => APP.statuses());
+  }
   // A link shared into the app while it is open.
   window.saverOpen = (link) => { $("u").value = link; hint(); $("f").requestSubmit(); };
 
@@ -258,9 +305,10 @@
   }
 
   function row(d, it, url, many) {
-    const yt = d.site === "youtube";
+    const ig = (d.site || "instagram") === "instagram";
+    const tall = it.width && it.height ? it.height > it.width : ig;
     const el = document.createElement("div"); el.className = "row";
-    const th = document.createElement("div"); th.className = "th" + (yt ? "" : " tall");
+    const th = document.createElement("div"); th.className = "th" + (tall ? " tall" : "");
     if (it.thumb) {
       const img = document.createElement("img"); img.alt = ""; img.referrerPolicy = "no-referrer"; img.src = it.thumb;
       img.onerror = () => img.remove(); th.append(img);
@@ -268,9 +316,9 @@
     if (it.duration) { const s = document.createElement("span"); s.textContent = clock(it.duration); th.append(s); }
     const info = document.createElement("div"); info.className = "info";
     const t = document.createElement("div"); t.className = "t";
-    t.textContent = (yt ? d.caption : d.uploader ? "@" + d.uploader.replace(/^@/, "") : "") || (yt ? "YouTube" : "Instagram");
+    t.textContent = (ig ? (d.uploader ? "@" + d.uploader.replace(/^@/, "") : "") : d.caption) || NAMES[d.site] || "Video";
     const bits = [];
-    if (yt && d.uploader) bits.push(d.uploader);
+    if (!ig && d.uploader) bits.push(d.uploader);
     const h = Math.min(it.width || 0, it.height || 0);
     if (h) bits.push(h + "p");
     if (it.size) bits.push(mb(it.size));
@@ -308,9 +356,10 @@
     let url = linkIn($("u").value.trim());
     if (!url) return;
     if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+    $("clip").hidden = true;
     if (!allowed(url)) {
       $("items").innerHTML = "";
-      msg(SITES.includes("youtube") ? "Not a YouTube / Instagram link" : "Instagram links only");
+      msg(SITES.length > 1 ? "Not a supported link" : "Instagram links only");
       return;
     }
     $("u").value = url; hint(); $("u").blur();
