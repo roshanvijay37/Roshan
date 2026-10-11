@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Instagram Video Downloader</title>
-<meta name="description" content="Download public Instagram reels and videos in full quality. Free, no ads, no tracking, no sign-up.">
+<meta name="description" content="Download public Instagram reels and videos in full quality, or just the audio as MP3. Free, no ads, no tracking, no sign-up.">
 <meta name="theme-color" content="#0b0b10">
 <link rel="icon" href="/icon-192.png">
 <style>
@@ -69,6 +69,7 @@
   .btn.alt { background: var(--bg2); color: var(--ink); box-shadow: none; }
   .btn.share { background: linear-gradient(90deg, var(--a2), var(--a3)); }
   .btn svg { width: 16px; height: 16px; }
+  .btn small { font-size: 11px; font-weight: 700; opacity: .6; letter-spacing: .02em; }
   .link { background: none; color: var(--muted); padding: 9px 4px; font-weight: 600; font-size: 14px; }
 
   .prog { margin-top: 10px; display: none; }
@@ -111,7 +112,7 @@
     <span class="pill">Free · No ads · No sign-up</span>
   </div>
   <h1>Instagram <span>reel</span> downloader</h1>
-  <p class="sub">Paste a link to a public reel or video and save it in full quality.</p>
+  <p class="sub">Paste a link to a public reel or video. Save the video in full quality, or just its audio as MP3.</p>
 
   <form id="f" autocomplete="off">
     <input id="u" type="url" inputmode="url" placeholder="https://www.instagram.com/reel/…" aria-label="Instagram link" required>
@@ -124,7 +125,7 @@
 
   <div class="feats">
     <div class="feat"><b>Full quality</b>The original file Instagram serves, not re-compressed.</div>
-    <div class="feat"><b>Private</b>No account, no tracking, nothing stored.</div>
+    <div class="feat"><b>Audio too</b>Grab just the sound or song as an MP3.</div>
     <div class="feat"><b>Phone friendly</b>Save straight to your gallery.</div>
   </div>
   <ul class="notes">
@@ -142,6 +143,7 @@
   const ICON = {
     down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>',
     share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="m7 8 5-5 5 5"/><path d="M20 14v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-5"/></svg>',
+    note: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
     tick: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>'
   };
   const mb = (n) => (n / 1048576).toFixed(n >= 10485760 ? 0 : 1) + " MB";
@@ -166,15 +168,16 @@
 
   // Fetch the file ourselves: that gives a real progress bar, and a same-origin blob is SAVED by
   // phones instead of opened and played in a new tab (what a plain cross-site link does).
-  async function download(card, href, fallbackName) {
+  async function download(card, job) {
     if (current) current.abort();
     const ctl = current = new AbortController();
+    const href = job.href, fallbackName = job.name;
     const bar = card.querySelector(".bar"), fill = bar.querySelector("i"), stats = card.querySelector(".stats");
     const actions = card.querySelector(".actions");
     card.classList.remove("ok"); card.classList.add("busy");
     actions.innerHTML = ""; const cancel = document.createElement("button"); cancel.className = "link"; cancel.textContent = "Cancel";
     cancel.onclick = () => ctl.abort(); actions.append(cancel);
-    stats.children[0].textContent = "Starting…"; stats.children[1].textContent = "";
+    stats.children[0].textContent = job.audio ? "Preparing the audio…" : "Starting…"; stats.children[1].textContent = "";
     fill.style.width = "0"; bar.classList.add("indet");
     try {
       const r = await fetch(href, { signal: ctl.signal });
@@ -206,12 +209,12 @@
       }
       const file = new File(parts, name, { type });
       save(file);
-      finish(card, file);
+      finish(card, file, job);
     } catch (err) {
       card.classList.remove("busy");
       if (err.name === "AbortError") { msg("Download cancelled."); }
       else { msg(err.message && err.message !== "Failed to fetch" ? err.message : "Couldn't reach the server. Try again in a minute.", "err"); }
-      restore(card, href, fallbackName);
+      restore(card);
     } finally { if (current === ctl) current = null; }
   }
 
@@ -222,12 +225,12 @@
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 60000);
   }
 
-  function finish(card, file) {
+  function finish(card, file, job) {
     card.classList.remove("busy"); card.classList.add("ok");
     const actions = card.querySelector(".actions");
     actions.innerHTML = "";
     const done = card.querySelector(".done");
-    done.innerHTML = '<span class="tick">' + ICON.tick + '</span>Saved · ' + mb(file.size);
+    done.innerHTML = '<span class="tick">' + ICON.tick + '</span>' + (job.audio ? "Audio saved · " : "Video saved · ") + mb(file.size);
     // Phones: the share sheet has "Save video" (iPhone Photos) / gallery apps. Needs a fresh tap.
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       const s = document.createElement("button"); s.className = "btn share"; s.innerHTML = ICON.share + "Save to gallery";
@@ -237,16 +240,27 @@
     const again = document.createElement("button"); again.className = "btn alt"; again.textContent = "Save again";
     again.onclick = () => save(file);
     actions.append(again);
+    // The other one, without looking the link up again.
+    const other = card.jobs.find((j) => j !== job);
+    if (other) {
+      const o = document.createElement("button"); o.className = "btn alt";
+      o.innerHTML = (other.audio ? ICON.note + "Get audio" : ICON.down + "Get video");
+      o.onclick = () => download(card, other);
+      actions.append(o);
+    }
     msg("Done - check your Downloads" + (navigator.canShare ? " or tap Save to gallery." : "."), "ok");
     $("again").classList.add("show");
   }
 
-  function restore(card, href, name) {
+  function restore(card) {
     const actions = card.querySelector(".actions");
     actions.innerHTML = "";
-    const b = document.createElement("button"); b.className = "btn"; b.innerHTML = ICON.down + "Download";
-    b.onclick = () => download(card, href, name);
-    actions.append(b);
+    for (const job of card.jobs) {
+      const b = document.createElement("button"); b.className = job.audio ? "btn alt" : "btn";
+      b.innerHTML = job.audio ? ICON.note + "Audio <small>MP3</small>" : ICON.down + "Video";
+      b.onclick = () => download(card, job);
+      actions.append(b);
+    }
   }
 
   function card(d, it, url, many) {
@@ -270,8 +284,10 @@
     const actions = document.createElement("div"); actions.className = "actions";
     meta.append(who, cap, spec, prog, done, actions);
     el.append(th, meta);
-    const href = API + "/api/dl?url=" + encodeURIComponent(url) + "&i=" + it.i;
-    restore(el, href, "instagram_" + (d.code || "video") + (many ? "_" + (it.i + 1) : "") + ".mp4");
+    const q = "?url=" + encodeURIComponent(url) + "&i=" + it.i, stem = "instagram_" + (d.code || "video") + (many ? "_" + (it.i + 1) : "");
+    el.jobs = [{ href: API + "/api/dl" + q, name: stem + ".mp4", audio: false }];
+    if (it.has_audio) el.jobs.push({ href: API + "/api/audio" + q, name: stem + ".mp3", audio: true });
+    restore(el);
     return el;
   }
 
