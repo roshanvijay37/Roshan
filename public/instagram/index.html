@@ -66,6 +66,7 @@
   .b { height: 34px; padding: 0 14px; border-radius: 8px; border: 1px solid var(--line); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
   .b.p { background: var(--fg); color: var(--bg); border-color: var(--fg); }
   .b svg { width: 15px; height: 15px; }
+  .b.wa { color: #25d366; padding: 0 10px; }
   .b:active { opacity: .7; }
   .ok { font-size: 13px; color: var(--dim); display: inline-flex; align-items: center; gap: 4px; margin-right: auto; font-variant-numeric: tabular-nums; }
   .ok svg { width: 15px; height: 15px; color: #2a9d55; stroke-width: 3; }
@@ -134,6 +135,7 @@
   // saves straight to the gallery. The Play build of the app is Instagram only.
   const APP = window.SaverApp || null;
   const SITES = APP ? APP.sites().split(",") : ["youtube", "instagram", "facebook", "x", "pinterest", "reddit", "snapchat", "linkedin"];
+  const SERVICE = APP && typeof APP.service === "function" ? APP.service() : "";
   const NAMES = { youtube: "YouTube", instagram: "Instagram", facebook: "Facebook", x: "X", pinterest: "Pinterest",
                   reddit: "Reddit", snapchat: "Snapchat", linkedin: "LinkedIn" };
   const progText = (got, total, secs) => {
@@ -197,8 +199,8 @@
 
   // Fetch the file ourselves: that gives a real progress bar, and a same-origin blob is SAVED by
   // phones instead of opened and played in a new tab (what a plain cross-site link does).
-  async function download(row, job) {
-    if (APP) return nativeDownload(row, job);
+  async function download(row, job, send) {
+    if (APP) return nativeDownload(row, job, send);
     if (current) current.abort();
     const ctl = current = new AbortController();
     const a = row.querySelector(".a");
@@ -241,7 +243,7 @@
   // --- Android app: the app downloads and saves; the page only shows progress ---
   const nat = {};                                       // id -> { row, job, pg, t0 } while the app downloads
   let seq = 0;
-  function nativeDownload(row, job) {
+  function nativeDownload(row, job, send) {
     const id = "d" + (++seq) + "_" + Date.now();
     const a = row.querySelector(".a"); a.hidden = true;
     const pg = document.createElement("div"); pg.className = "pg";
@@ -249,7 +251,7 @@
     row.querySelector(".info").append(pg);
     pg.querySelector("span").textContent = label(job) + "…";
     pg.querySelector("button").onclick = () => APP.cancel(id);
-    nat[id] = { row, job, pg, t0: 0 };
+    nat[id] = { row, job, pg, t0: 0, send };
     msg("");
     APP.download(id, job.href, job.name, job.audio);
   }
@@ -264,7 +266,7 @@
       return;
     }
     delete nat[id]; d.pg.remove();
-    if (type === "done") finishNative(d.row, d.job, id, a);
+    if (type === "done") { finishNative(d.row, d.job, id, a); if (d.send) APP.sendService(id); }
     else { restore(d.row); if (type === "error") msg(text); }
   };
   function finishNative(row, job, id, size) {
@@ -272,6 +274,7 @@
     const ok = document.createElement("span"); ok.className = "ok"; ok.innerHTML = I.tick + mb(size); a.append(ok);
     a.append(btn(I.play, "b p", () => APP.open(id), "Open"));
     a.append(btn(I.share, "b", () => APP.share(id), "Share"));
+    if (SERVICE && !job.audio) a.append(btn(I.whatsapp, "b wa", () => APP.sendService(id), "Send to service"));
     const other = row.jobs.find((j) => j !== job);
     if (other) a.append(btn(icon(other) + label(other), "b", () => download(row, other)));
   }
@@ -321,6 +324,9 @@
     const a = row.querySelector(".a"); a.innerHTML = ""; a.hidden = false;
     for (const job of row.jobs)
       a.append(btn(icon(job) + label(job), job.audio ? "b" : "b p", () => download(row, job)));
+    // Saver+: download, then straight into the StatusHD service chat on WhatsApp.
+    const v = SERVICE && row.jobs.find((j) => !j.audio);
+    if (v) a.append(btn(I.whatsapp, "b wa", () => download(row, v, true), "Send to service"));
   }
 
   function row(d, it, url, many) {
