@@ -114,6 +114,51 @@ footer ul{padding-left:18px}
     <li><code>token.txt</code> created outside the project, with <code>VERCEL_TOKEN</code> and <code>GITHUB_TOKEN</code> filled in (steps in <a href="#tokens">Tokens</a>). The Supabase values are added on the day</li>
     <li>Phone charged, to test their own app on a real device</li>
   </ul>
+  <h3 style="margin:30px 0 6px">Shortcut: let Claude set up the machine</h3>
+  <p class="sub">Only two steps need a person: install Claude Code and log in. Then one prompt does the rest. Claude can't create accounts or tokens for you, because those need your own login, so it opens those pages for you instead.</p>
+  <ol class="steps">
+    <li><b>Install Claude Code.</b> Windows PowerShell: <code>irm https://claude.ai/install.ps1 | iex</code>. Mac or Linux: <code>curl -fsSL https://claude.ai/install.sh | bash</code>.</li>
+    <li><b>Open a new terminal, run <code>claude</code></b>, and log in with your Pro account. Type <code>/model haiku</code>; setup is a simple job, so use the cheapest model.</li>
+    <li><b>Paste the prompt below.</b> Approve each install when Claude asks.</li>
+  </ol>
+  <div class="card"><div class="hd">Setup prompt <button class="copy">Copy</button></div><pre>Set up this computer for a Claude Code workshop. Go step by step, say what
+each step does in one line, and ask me before anything needs admin rights.
+
+1. Detect my OS (Windows / macOS / Linux).
+2. Check what is installed: git, node (v20 or newer), npm, VS Code (`code`).
+   Show me a table: tool | installed? | version.
+3. Install ONLY what is missing:
+   - Windows: winget install -e --id Git.Git
+              winget install -e --id OpenJS.NodeJS.LTS
+              winget install -e --id Microsoft.VisualStudioCode
+   - macOS:   install Homebrew if missing, then
+              brew install git node && brew install --cask visual-studio-code
+   If a tool you just installed is "not found", it is the PATH: tell me to
+   close this terminal, open a new one, run `claude --continue`, and resume.
+4. Install the Claude Code extension: code --install-extension anthropic.claude-code
+5. Ask me for my name and email, then set git user.name and user.email.
+6. Create the folder ~/tokens and the file ~/tokens/token.txt with exactly
+   these lines and EMPTY values. Never ask me for a token, never print this
+   file, never read it back:
+   VERCEL_TOKEN=
+   GITHUB_USER=
+   GITHUB_TOKEN=
+   SUPABASE_ACCESS_TOKEN=
+   SUPABASE_PROJECT_REF=
+   NEXT_PUBLIC_SUPABASE_URL=
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+   Then open token.txt in VS Code (or Notepad) for me.
+7. Open these in my browser so I can sign up and make tokens myself:
+   https://github.com/signup
+   https://vercel.com/signup
+   https://supabase.com/dashboard
+   https://vercel.com/account/settings/tokens
+   https://github.com/settings/tokens/new
+   https://supabase.com/dashboard/account/tokens
+8. Create ~/claude-workshop, and check `npx --version` works there.
+9. Finish with a checklist table: item | done? | what I still do by hand.</pre></div>
+  <div class="note"><b>What stays manual:</b> buying Pro, creating the GitHub, Vercel and Supabase accounts, and pasting each token into <code>token.txt</code> (follow the <a href="#tokens">Tokens</a> steps). Claude never sees the token values; they go from the website straight into the file.</div>
+
   <div class="note"><b>On the day:</b> have a spare hotspot. Pair anyone whose setup failed with someone whose setup worked. They still learn by driving.</div>
 </section>
 
