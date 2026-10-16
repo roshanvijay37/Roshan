@@ -77,7 +77,7 @@ footer ul{padding-left:18px}
 
 <nav><div class="wrap">
   <a href="#agenda">Agenda</a><a href="#setup">Setup</a><a href="#habits">How I work</a><a href="#limits">Pro limits</a>
-  <a href="#build1">Build 1</a><a href="#build2">Build 2</a><a href="#rules">CLAUDE.md &amp; skills</a>
+  <a href="#build1">Build 1</a><a href="#build2">Build 2</a><a href="#tokens">Tokens</a><a href="#rules">CLAUDE.md &amp; skills</a>
   <a href="#safety">Safety</a><a href="#shipped">Shipped</a><a href="#prompts">Prompt cards</a>
 </div></nav>
 
@@ -111,6 +111,7 @@ footer ul{padding-left:18px}
     <li>Claude Code installed. Windows PowerShell: <code>irm https://claude.ai/install.ps1 | iex</code>. Mac or Linux: <code>curl -fsSL https://claude.ai/install.sh | bash</code>. Then open a new terminal and run <code>claude --version</code></li>
     <li>Ran <code>claude</code> once and logged in with the Pro account</li>
     <li>Free accounts created: <b>GitHub</b>, <b>Vercel</b> (sign in with GitHub), <b>Supabase</b></li>
+    <li><code>token.txt</code> created outside the project, with <code>VERCEL_TOKEN</code> and <code>GITHUB_TOKEN</code> filled in (steps in <a href="#tokens">Tokens</a>). The Supabase values are added on the day</li>
     <li>Phone charged, to test their own app on a real device</li>
   </ul>
   <div class="note"><b>On the day:</b> have a spare hotspot. Pair anyone whose setup failed with someone whose setup worked. They still learn by driving.</div>
@@ -159,7 +160,7 @@ Done = a live URL that works on a phone. Don't stop between phases 2-4.</pre></d
     <li><b>5–15 min · Brief and plan.</b> Write the brief using prompt card 1. Press Shift+Tab for plan mode, read the plan, and fix one thing in it on purpose.</li>
     <li><b>15–30 min · Build.</b> Paste a screenshot of a site you like and say "match this feel, not this content". Plain HTML + Tailwind is fastest here; you don't need a framework.</li>
     <li><b>30–38 min · Check.</b> Open it in the browser's phone view (F12, device toolbar). Send each problem back to Claude as one sentence: "the menu overlaps the logo at phone width".</li>
-    <li><b>38–45 min · Ship.</b> Ask Claude to commit with git and deploy with the Vercel CLI (<code>npx vercel --prod</code>; log in once in the browser). Then open the URL on your own phone.</li>
+    <li><b>38–45 min · Ship.</b> Ask Claude to commit with git and deploy with the Vercel CLI, using <code>VERCEL_TOKEN</code> from <code>token.txt</code> (see <a href="#tokens">Tokens</a>). Then open the URL on your own phone.</li>
   </ol>
   <div class="note"><b>Teaching point:</b> the students type almost no code. They write the brief, judge the result and report problems precisely. That is the job now.</div>
 </section>
@@ -170,14 +171,77 @@ Done = a live URL that works on a phone. Don't stop between phases 2-4.</pre></d
   <ol class="steps">
     <li><b>0–10 min · Brief.</b> "Users sign up with email, add / edit / delete their own X, and see only their own."</li>
     <li><b>10–20 min · Plan.</b> In plan mode, ask Claude for the table design <b>and its security rules</b> (Supabase Row Level Security). Read both.</li>
-    <li><b>20–25 min · Create the Supabase project</b> by hand (region: Mumbai). Copy the URL and the public anon key into <code>.env.local</code> yourself. Never paste them into the chat.</li>
+    <li><b>20–25 min · Create the Supabase project</b> by hand (region: Mumbai). Put its URL, publishable key and project ref into <code>token.txt</code> (see <a href="#tokens">Tokens</a>). Claude writes <code>.env.local</code> from that file. Never paste the values into the chat.</li>
     <li><b>25–55 min · Build.</b> Claude writes the pages and a SQL file, and you run that SQL in Supabase's SQL editor.</li>
     <li><b>55–65 min · Break it on purpose.</b> Sign up as two users. User A must not see User B's rows; if they can, the security rules are wrong. These are the most important 10 minutes of the day.</li>
     <li><b>65–75 min · Ship.</b> Claude deploys to Vercel and adds the same two environment variables there. Then open the app on your phone.</li>
   </ol>
   <div class="grid2" style="margin-top:14px">
-    <div class="note" style="margin:0"><b>Rule 1:</b> only the public anon key goes in the app. The service-role key never goes in frontend code, because it bypasses every security rule.</div>
+    <div class="note" style="margin:0"><b>Rule 1:</b> only the <b>publishable</b> key (<code>sb_publishable_…</code>, the old "anon" key) goes in the app. The <b>secret</b> key (<code>sb_secret_…</code>, the old "service_role" key) never goes in frontend code, because it bypasses every security rule.</div>
     <div class="note" style="margin:0"><b>Rule 2:</b> Supabase's free tier allows 2 active projects per account. Pause old ones before starting new ones.</div>
+  </div>
+</section>
+
+<section id="tokens">
+  <h2><small>06b</small>Tokens · one file, read safely</h2>
+  <p class="sub">A token lets Claude act on a service for you: deploy, create a repo, run SQL. Keep all of them in <b>one</b> file outside your project, <code>token.txt</code>. Tell Claude where it is, and Claude reads <b>one value at the moment it needs it</b>, without ever printing it.</p>
+
+  <div class="tbl"><table>
+    <tr><th>What you build</th><th>Tokens you need</th></tr>
+    <tr><td>Simple one-file demo app</td><td><code>VERCEL_TOKEN</code></td></tr>
+    <tr><td>Build 1 · website</td><td><code>VERCEL_TOKEN</code> (+ <code>GITHUB_TOKEN</code> to keep the code on GitHub)</td></tr>
+    <tr><td>Build 2 · app with login + database</td><td><code>VERCEL_TOKEN</code>, <code>GITHUB_TOKEN</code>, <code>SUPABASE_ACCESS_TOKEN</code>, <code>SUPABASE_PROJECT_REF</code>, <code>NEXT_PUBLIC_SUPABASE_URL</code>, <code>NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY</code></td></tr>
+  </table></div>
+
+  <p style="margin-top:22px"><b>Step 1 · Create the file, outside the project folder.</b> On Windows it goes at <code>C:\Users\&lt;you&gt;\tokens\token.txt</code>; on a Mac, <code>~/tokens/token.txt</code>. Outside the project means it can never be committed by accident.</p>
+  <div class="card"><div class="hd">~/tokens/token.txt <button class="copy">Copy</button></div><pre># My tokens. Never commit, never share, never paste into a chat.
+# Created: [date]   Expires: [date]
+
+VERCEL_TOKEN=
+GITHUB_USER=
+GITHUB_TOKEN=
+SUPABASE_ACCESS_TOKEN=
+SUPABASE_PROJECT_REF=
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=</pre></div>
+
+  <p style="margin-top:22px"><b>Step 2 · Get each token</b> and paste it after its <code>=</code>, with no quotes or spaces. Every one of these is shown <b>only once</b>, so copy it straight into the file.</p>
+  <ol class="steps">
+    <li><b>VERCEL_TOKEN.</b> Open vercel.com → avatar → <b>Account Settings → Tokens</b>. Click <b>Create</b>, name it <code>claude-session</code>, set scope to your account and expiry to <b>7 days</b>, and copy it. (<a href="https://vercel.com/docs/accounts/access-tokens" target="_blank" rel="noopener">Vercel docs</a>)</li>
+    <li><b>GITHUB_TOKEN.</b> Open github.com → avatar → <b>Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token (classic)</b>. Name it <code>claude-session</code>, set expiry to <b>7 days</b>, tick only the <b>repo</b> scope, generate and copy it. Put your GitHub username in <code>GITHUB_USER</code>.</li>
+    <li><b>SUPABASE_ACCESS_TOKEN.</b> Open <a href="https://supabase.com/dashboard/account/tokens" target="_blank" rel="noopener">supabase.com/dashboard/account/tokens</a> → <b>Generate new token</b>. Name it <code>claude-session</code>, set a short expiry and copy it. It lets Claude run your SQL for you, so there's no copy-paste into the SQL editor. (<a href="https://supabase.com/docs/guides/platform/personal-access-tokens" target="_blank" rel="noopener">Supabase docs</a>)</li>
+    <li><b>SUPABASE_PROJECT_REF + URL.</b> Open your project and click <b>Connect</b> at the top. Copy the <b>Project URL</b> (<code>https://&lt;ref&gt;.supabase.co</code>) into <code>NEXT_PUBLIC_SUPABASE_URL</code>. The <code>&lt;ref&gt;</code> part on its own goes into <code>SUPABASE_PROJECT_REF</code>.</li>
+    <li><b>NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY.</b> In the same <b>Connect</b> dialog (or <b>Project Settings → API Keys</b>), copy the <b>publishable</b> key, which starts <code>sb_publishable_</code>. <b>Not</b> the secret key. (<a href="https://supabase.com/docs/guides/getting-started/api-keys" target="_blank" rel="noopener">Supabase docs</a>)</li>
+  </ol>
+
+  <p style="margin-top:22px"><b>Step 3 · Tell Claude the rules.</b> Paste this into the project's <code>CLAUDE.md</code>. It's the same rule I use on all my projects.</p>
+  <div class="card"><div class="hd">CLAUDE.md · Tokens <button class="copy">Copy</button></div><pre>## Tokens
+All tokens are in ~/tokens/token.txt as NAME=value lines.
+- Read ONE value at the moment you need it, into a shell variable, e.g.
+  VT=$(grep -m1 '^VERCEL_TOKEN=' ~/tokens/token.txt | cut -d= -f2- | tr -d '\r')
+- NEVER cat/print/open the whole file. NEVER echo a value. NEVER copy a token
+  into the project, a commit, a log or a reply. Write the NAME, never the value.
+- .env.local may hold ONLY the NEXT_PUBLIC_* values. Check .gitignore has .env* first.
+- Redact any URL echoed back by git: pipe through  sed -E 's#https://[^@]*@#https://#g'</pre></div>
+
+  <p style="margin-top:22px"><b>Step 4 · How Claude uses them.</b> You don't type these commands; Claude does. Show them so students recognise what they're approving.</p>
+  <div class="card"><div class="hd">Deploy to Vercel <button class="copy">Copy</button></div><pre>VERCEL_TOKEN=$(grep -m1 '^VERCEL_TOKEN=' ~/tokens/token.txt | cut -d= -f2- | tr -d '\r') \
+  npx vercel --prod --yes</pre></div>
+  <div class="card"><div class="hd">Create a GitHub repo and push <button class="copy">Copy</button></div><pre>GH=$(grep -m1 '^GITHUB_TOKEN=' ~/tokens/token.txt | cut -d= -f2- | tr -d '\r')
+U=$(grep -m1 '^GITHUB_USER=' ~/tokens/token.txt | cut -d= -f2- | tr -d '\r')
+curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer $GH" \
+  https://api.github.com/user/repos -d '{"name":"my-app","private":true}'
+git push "https://x-access-token:$GH@github.com/$U/my-app.git" HEAD:main 2>&1 \
+  | sed -E 's#https://[^@]*@#https://#g'</pre></div>
+  <div class="card"><div class="hd">Run SQL on Supabase <button class="copy">Copy</button></div><pre>ST=$(grep -m1 '^SUPABASE_ACCESS_TOKEN=' ~/tokens/token.txt | cut -d= -f2- | tr -d '\r')
+REF=$(grep -m1 '^SUPABASE_PROJECT_REF=' ~/tokens/token.txt | cut -d= -f2- | tr -d '\r')
+curl -s -X POST "https://api.supabase.com/v1/projects/$REF/database/query" \
+  -H "Authorization: Bearer $ST" -H "Content-Type: application/json" \
+  -d '{"query":"select now()"}'</pre></div>
+
+  <div class="grid2" style="margin-top:14px">
+    <div class="note" style="margin:0"><b>Why "one value, never the file":</b> anything Claude prints becomes part of the conversation and is saved in its history. A token read into a variable is used and never shown.</div>
+    <div class="note" style="margin:0"><b>After the session:</b> the tokens expire in 7 days. To be safe, delete them on each site's token page the same evening. If one ever lands in a chat or a commit, delete it and make a new one.</div>
   </div>
 </section>
 
