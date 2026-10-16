@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Build with Claude · Session</title>
+<meta name="description" content="Half-day session: build and ship a website and an app with Claude on the Pro plan.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0a07;--panel:#14120d;--line:#2a261c;--text:#ece6d6;--mute:#a59d88;--gold:#e6c374;--gold2:#b8954a}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--gold)}
+code{font-family:"DM Mono",monospace;font-size:.88em;background:#1d1a13;border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px}
+header{padding:64px 0 36px;border-bottom:1px solid var(--line)}
+.kicker{font:500 12px "DM Mono",monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+h1{font-size:clamp(34px,6vw,58px);line-height:1.05;margin:12px 0 16px;font-weight:800;letter-spacing:-.02em}
+h1 span{color:var(--gold)}
+.lead{font-size:clamp(17px,2.2vw,20px);color:var(--mute);max-width:720px;margin:0}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:28px}
+.meta div{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--panel)}
+.meta b{display:block;font:500 11px "DM Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-bottom:4px}
+nav{position:sticky;top:0;z-index:5;background:rgba(11,10,7,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:6px;overflow-x:auto;padding-top:10px;padding-bottom:10px;scrollbar-width:none}
+nav a{flex:none;font:500 12px "DM Mono",monospace;color:var(--mute);text-decoration:none;padding:6px 10px;border:1px solid var(--line);border-radius:99px}
+nav a:hover{color:var(--gold);border-color:var(--gold2)}
+section{padding:48px 0 8px}
+h2{font-size:clamp(24px,3.4vw,32px);margin:0 0 6px;letter-spacing:-.01em}
+h2 small{display:block;font:500 12px "DM Mono",monospace;color:var(--gold);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.sub{color:var(--mute);margin:0 0 20px;max-width:760px}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:15px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 11px "DM Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);background:#110f0b}
+tr:last-child td{border-bottom:0}
+td.t{font-family:"DM Mono",monospace;color:var(--gold);white-space:nowrap}
+ol.steps{list-style:none;counter-reset:s;padding:0;margin:0;display:grid;gap:10px}
+ol.steps li{counter-increment:s;position:relative;padding:14px 16px 14px 58px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+ol.steps li::before{content:counter(s);position:absolute;left:16px;top:13px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:600 13px "DM Mono",monospace;color:var(--bg);background:var(--gold)}
+ul.check{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+ul.check li{padding:10px 14px 10px 44px;position:relative;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+ul.check li::before{content:"";position:absolute;left:15px;top:14px;width:15px;height:15px;border:2px solid var(--gold2);border-radius:4px}
+.note{margin-top:16px;padding:14px 16px;border-left:3px solid var(--gold);background:#17140d;border-radius:0 10px 10px 0}
+.big{font-size:clamp(18px,2.4vw,22px);font-weight:600;margin:0 0 18px}
+.big em{color:var(--gold);font-style:normal}
+.card{border:1px solid var(--line);border-radius:12px;background:var(--panel);margin-top:14px;overflow:hidden}
+.card .hd{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);font-weight:600}
+.card pre{margin:0;padding:14px;overflow-x:auto;font:14px/1.6 "DM Mono",monospace;color:#e9dfc4;white-space:pre-wrap}
+button.copy{font:500 12px "DM Mono",monospace;color:var(--gold);background:none;border:1px solid var(--gold2);border-radius:7px;padding:5px 10px;cursor:pointer}
+button.copy:hover{background:var(--gold);color:var(--bg)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+footer{margin-top:56px;padding:28px 0 48px;border-top:1px solid var(--line);color:var(--mute);font-size:14px}
+footer ul{padding-left:18px}
+@media print{nav,button.copy{display:none}body{background:#fff;color:#111}.tbl,.card,ol.steps li,ul.check li,.meta div{background:#fff}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">Half-day session · Roshan Vijay</div>
+    <h1>Build with <span>Claude</span></h1>
+    <p class="lead">In four hours every student builds two things and puts them live: a website and a small app with login and a database. Everyone uses the $20 Claude Pro plan, which includes Claude Code. What we teach is the way of working, not syntax.</p>
+    <div class="meta">
+      <div><b>Duration</b>4 hours</div>
+      <div><b>Plan</b>Claude Pro ($20)</div>
+      <div><b>Builds</b>Website + app</div>
+      <div><b>Stack</b>Next.js · Supabase · Vercel</div>
+    </div>
+  </div>
+</header>
+
+<nav><div class="wrap">
+  <a href="#agenda">Agenda</a><a href="#setup">Setup</a><a href="#habits">How I work</a><a href="#limits">Pro limits</a>
+  <a href="#build1">Build 1</a><a href="#build2">Build 2</a><a href="#rules">CLAUDE.md &amp; skills</a>
+  <a href="#safety">Safety</a><a href="#shipped">Shipped</a><a href="#prompts">Prompt cards</a>
+</div></nav>
+
+<main class="wrap">
+
+<section id="agenda">
+  <h2><small>01</small>Agenda</h2>
+  <p class="sub">Two hours of the four go to the two builds. Everything else is there to make the builds faster. Times assume a 9:00 start.</p>
+  <div class="tbl"><table>
+    <tr><th>Time</th><th>Block</th><th>What happens</th><th>Students leave with</th></tr>
+    <tr><td class="t">9:00–9:15</td><td>Opening demo</td><td>Build and publish a one-page site live from one prompt, in under 10 minutes</td><td>Belief that this is real</td></tr>
+    <tr><td class="t">9:15–9:35</td><td>How I work</td><td>The 6 habits and the Pro-plan usage rules</td><td>A way of working</td></tr>
+    <tr><td class="t">9:35–10:20</td><td>Build 1: website</td><td>Each student builds a personal or business site and puts it live</td><td>A live URL</td></tr>
+    <tr><td class="t">10:20–10:30</td><td>Break</td><td>Anyone who hit the limit moves to a partner's laptop</td><td>—</td></tr>
+    <tr><td class="t">10:30–11:45</td><td>Build 2: app</td><td>A small app with login and a database, deployed</td><td>A working app URL</td></tr>
+    <tr><td class="t">11:45–12:15</td><td>Teach Claude your rules</td><td>Each student writes a CLAUDE.md and one skill</td><td>Files they keep using</td></tr>
+    <tr><td class="t">12:15–12:35</td><td>Safety + show-and-tell</td><td>Secrets, backups and testing; real shipped projects as proof</td><td>Habits that prevent disasters</td></tr>
+    <tr><td class="t">12:35–13:00</td><td>Demos + Q&amp;A</td><td>4–5 students show their app on the projector</td><td>Confidence</td></tr>
+  </table></div>
+  <div class="note"><b>Running behind?</b> Cut the CLAUDE.md block to 15 minutes, but never cut a build. Shipping something live is what they will remember.</div>
+</section>
+
+<section id="setup">
+  <h2><small>02</small>Before the day</h2>
+  <p class="sub">Send this to every student 3 days ahead and ask for a screenshot of <code>claude --version</code> working. Without it, 20 minutes of the session goes on installs and Wi-Fi.</p>
+  <ul class="check">
+    <li>Claude Pro subscription active ($20/month; Claude Code is included)</li>
+    <li>VS Code installed, with the <b>Claude Code</b> extension</li>
+    <li>Git installed (on Windows, Git for Windows also gives Claude Code a Bash shell)</li>
+    <li>Node.js LTS installed (<code>node -v</code> works)</li>
+    <li>Claude Code installed. Windows PowerShell: <code>irm https://claude.ai/install.ps1 | iex</code>. Mac or Linux: <code>curl -fsSL https://claude.ai/install.sh | bash</code>. Then open a new terminal and run <code>claude --version</code></li>
+    <li>Ran <code>claude</code> once and logged in with the Pro account</li>
+    <li>Free accounts created: <b>GitHub</b>, <b>Vercel</b> (sign in with GitHub), <b>Supabase</b></li>
+    <li>Phone charged, to test their own app on a real device</li>
+  </ul>
+  <div class="note"><b>On the day:</b> have a spare hotspot. Pair anyone whose setup failed with someone whose setup worked. They still learn by driving.</div>
+</section>
+
+<section id="habits">
+  <h2><small>03</small>How I work with Claude</h2>
+  <p class="big">Treat Claude as <em>a capable engineer you hand a whole job to</em>. Don't treat it as an autocomplete you feed one line at a time.</p>
+  <ol class="steps">
+    <li><b>Hand over the outcome, not the steps.</b> A good brief has a goal, the rules, the phases, and what "done" means. It ends with "don't stop between phases to ask me". A vague ask gets a vague result.</li>
+    <li><b>Plan first for anything bigger than one page.</b> Press Shift+Tab into plan mode, read the plan, correct it, and only then let it build. Fixing a plan costs one message. Fixing finished code costs twenty.</li>
+    <li><b>Let it operate the tools, not only write code.</b> Claude can run git, push to GitHub, deploy, read build logs and fix the error itself. When a task ends with "and then upload it", ask Claude to do the upload too.</li>
+    <li><b>Make it prove things work.</b> Ask it to run the app, open it and check the page. Then ask: "What did you actually test, and what didn't you?" Claude can't touch your phone, so you test on the device yourself.</li>
+    <li><b>Keep what works.</b> In a redesign, say "keep every existing feature, restyle only". Prefer adding over rewriting, so nothing that works quietly disappears.</li>
+    <li><b>Write the lesson down.</b> When something costs you an hour, put the fix in CLAUDE.md so the next session knows it. Example: my Vercel deploys were silently blocked until commits used the Vercel account's email. That lesson is one line in my CLAUDE.md now.</li>
+  </ol>
+  <div class="card"><div class="hd">Example brief <button class="copy">Copy</button></div><pre>Build a booking website for my friend's salon in Moodbidri.
+Rules: mobile first, fast, no login for customers, Kannada + English.
+Phases: 1) plan the pages and show me, 2) build, 3) run it and check every
+page on a phone-sized screen, 4) push to GitHub and deploy to Vercel.
+Done = a live URL that works on a phone. Don't stop between phases 2-4.</pre></div>
+</section>
+
+<section id="limits">
+  <h2><small>04</small>Making the $20 Pro plan last</h2>
+  <p class="sub">Pro includes Claude Code and Opus. Claude Code and the Claude chat app share <b>one</b> allowance: a 5-hour window plus a weekly cap. Anthropic does not publish the exact numbers. A careless student can run out by 11:30; these rules prevent that.</p>
+  <div class="tbl"><table>
+    <tr><th>Rule</th><th>Why it saves usage</th></tr>
+    <tr><td>Use Sonnet for normal building (<code>/model sonnet</code>). Switch to Opus only for planning or a stubborn bug</td><td>On Pro, Claude Code defaults to Opus, which uses the allowance faster</td></tr>
+    <tr><td><code>/clear</code> when you start a new task</td><td>Every message re-sends the whole conversation, so old context is paid for again</td></tr>
+    <tr><td><code>/compact</code> when a long task is still going</td><td>Squeezes the history instead of carrying all of it</td></tr>
+    <tr><td>Plan once, then build</td><td>One good plan beats five rounds of "no, not like that"</td></tr>
+    <tr><td>Point at files; don't paste huge logs</td><td>"Read the error in build.log" is cheaper than pasting 2,000 lines</td></tr>
+    <tr><td>Keep CLAUDE.md short (under ~100 lines)</td><td>It is loaded into every conversation</td></tr>
+    <tr><td>Don't use the chat app on the same problem at the same time</td><td>Both draw on the same allowance</td></tr>
+    <tr><td>Skip multi-agent fan-outs and long autonomous runs</td><td>That's a Max-plan habit; on Pro it uses up the 5-hour window in minutes</td></tr>
+  </table></div>
+  <div class="note"><b>If a student hits the limit:</b> they pair with a neighbour until it resets. Turning on usage credits costs extra money, so that's their choice, never a default.</div>
+</section>
+
+<section id="build1">
+  <h2><small>05</small>Build 1 · A live website in 45 minutes</h2>
+  <p class="sub">The site goes live at a public URL and is about something real to the student: their portfolio, a family shop, a college club. A real subject gives a real brief, and a real brief gives a better site.</p>
+  <ol class="steps">
+    <li><b>0–5 min · Set up.</b> Make a new folder, open it in VS Code, and start Claude Code.</li>
+    <li><b>5–15 min · Brief and plan.</b> Write the brief using prompt card 1. Press Shift+Tab for plan mode, read the plan, and fix one thing in it on purpose.</li>
+    <li><b>15–30 min · Build.</b> Paste a screenshot of a site you like and say "match this feel, not this content". Plain HTML + Tailwind is fastest here; you don't need a framework.</li>
+    <li><b>30–38 min · Check.</b> Open it in the browser's phone view (F12, device toolbar). Send each problem back to Claude as one sentence: "the menu overlaps the logo at phone width".</li>
+    <li><b>38–45 min · Ship.</b> Ask Claude to commit with git and deploy with the Vercel CLI (<code>npx vercel --prod</code>; log in once in the browser). Then open the URL on your own phone.</li>
+  </ol>
+  <div class="note"><b>Teaching point:</b> the students type almost no code. They write the brief, judge the result and report problems precisely. That is the job now.</div>
+</section>
+
+<section id="build2">
+  <h2><small>06</small>Build 2 · A real app with login and a database</h2>
+  <p class="sub">The stack is the one real production apps use: <b>Next.js + Supabase + Vercel</b>, all on free tiers. Keep the app to <b>one table plus login</b>: an expense tracker, a club attendance list, shop orders or a reading log.</p>
+  <ol class="steps">
+    <li><b>0–10 min · Brief.</b> "Users sign up with email, add / edit / delete their own X, and see only their own."</li>
+    <li><b>10–20 min · Plan.</b> In plan mode, ask Claude for the table design <b>and its security rules</b> (Supabase Row Level Security). Read both.</li>
+    <li><b>20–25 min · Create the Supabase project</b> by hand (region: Mumbai). Copy the URL and the public anon key into <code>.env.local</code> yourself. Never paste them into the chat.</li>
+    <li><b>25–55 min · Build.</b> Claude writes the pages and a SQL file, and you run that SQL in Supabase's SQL editor.</li>
+    <li><b>55–65 min · Break it on purpose.</b> Sign up as two users. User A must not see User B's rows; if they can, the security rules are wrong. These are the most important 10 minutes of the day.</li>
+    <li><b>65–75 min · Ship.</b> Claude deploys to Vercel and adds the same two environment variables there. Then open the app on your phone.</li>
+  </ol>
+  <div class="grid2" style="margin-top:14px">
+    <div class="note" style="margin:0"><b>Rule 1:</b> only the public anon key goes in the app. The service-role key never goes in frontend code, because it bypasses every security rule.</div>
+    <div class="note" style="margin:0"><b>Rule 2:</b> Supabase's free tier allows 2 active projects per account. Pause old ones before starting new ones.</div>
+  </div>
+</section>
+
+<section id="rules">
+  <h2><small>07</small>Teach Claude your rules</h2>
+  <p class="sub">Writing things down is the difference between using Claude and <i>working</i> with it. Claude forgets everything between sessions unless you write it down, and three places hold what it should remember.</p>
+  <div class="tbl"><table>
+    <tr><th>Place</th><th>What goes in it</th><th>Real example</th></tr>
+    <tr><td><code>CLAUDE.md</code> in the project folder</td><td>Rules and facts, read at the start of every session</td><td>"Commits must use the Vercel account email, or deploys are blocked"</td></tr>
+    <tr><td>Memory</td><td>Facts Claude learns while working, one per file</td><td>Which app runs on which server; what not to touch until I say</td></tr>
+    <tr><td>Skills <code>.claude/skills/&lt;name&gt;/SKILL.md</code></td><td>A repeatable job with a trigger like <code>/ship</code></td><td><code>/play</code> publishes an app to Google Play, <code>/beat-cut</code> cuts a reel to a song, <code>/instagram</code> posts a Reel</td></tr>
+  </table></div>
+  <p style="margin-top:20px"><b>Exercise (30 min).</b> Each student writes two things:</p>
+  <ol class="steps">
+    <li>A 10-line <code>CLAUDE.md</code> for the app they just built: what it is, the stack, how to deploy it, and one rule ("never put the service-role key in frontend code").</li>
+    <li>One skill, <code>/ship</code>, below. Then type <code>/ship</code> and watch it run. That is the moment it clicks.</li>
+  </ol>
+  <div class="card"><div class="hd">.claude/skills/ship/SKILL.md <button class="copy">Copy</button></div><pre>---
+name: ship
+description: Check the app works, then commit and deploy it to Vercel. Use when I say "ship it".
+---
+1. Run the build. If it fails, fix it and run it again.
+2. Open the main pages at phone width; fix anything broken.
+3. Commit with a clear message, then deploy with `npx vercel --prod`.
+4. Reply with the live URL and a list of what was and wasn't tested.</pre></div>
+</section>
+
+<section id="safety">
+  <h2><small>08</small>Safety rules</h2>
+  <p class="sub">Claude makes you fast, and fast mistakes are expensive. Each of these rules comes from a real incident.</p>
+  <ol class="steps">
+    <li><b>Secrets live in <code>.env</code> files, never in code, chat or Git.</b> Check that <code>.gitignore</code> lists <code>.env*</code> before the first commit. If a key leaks, rotate it the same day.</li>
+    <li><b>Names travel, values never.</b> It's fine to write <code>SUPABASE_URL</code> in a doc or a prompt; the value itself never goes there.</li>
+    <li><b>Back up before touching real data.</b> Before any change to a live database: dump it, test, and keep the backup. Never let Claude experiment on real customers' data.</li>
+    <li><b>Ask "what did you actually test?"</b> "It builds and passes tests" is not the same as "it works on a phone". Know which one you have.</li>
+    <li><b>Read before you approve.</b> Claude asks before risky commands. Read the command first, especially anything that deletes, force-pushes or deploys to production.</li>
+  </ol>
+</section>
+
+<section id="shipped">
+  <h2><small>09</small>Shipped with Claude</h2>
+  <p class="sub">One person with Claude ships what used to need a team.</p>
+  <div class="tbl"><table>
+    <tr><th>Project</th><th>What it is</th><th>Lesson</th></tr>
+    <tr><td><a href="https://oureminder.com" target="_blank" rel="noopener">OurReminder</a></td><td>Reminder platform: website + Android app on Google Play</td><td>"Change X and release it" runs commit, deploy, Android build and Play upload end to end</td></tr>
+    <tr><td>Chukta</td><td>Personal finance app, live on Google Play</td><td>Android apps built in GitHub Actions, with no Android Studio on the machine</td></tr>
+    <tr><td>EzylinkIndia</td><td>Business app, web + Android, live in production</td><td>Uploads go straight from the phone to storage, which avoids server size limits</td></tr>
+    <tr><td>Ezybillpay</td><td>Billing and field-collection platform for cable operators</td><td>A real business moved off spreadsheets</td></tr>
+    <tr><td>LawyerDesk</td><td>Case and document app for advocates</td><td>Built in a day from a clear spec</td></tr>
+    <tr><td>StatusHD</td><td>WhatsApp Status video quality service</td><td>Claude runs the operations too: monitoring, fixes, delivery</td></tr>
+    <tr><td>Daily books for an LPG agency</td><td>Replaces a paper and spreadsheet routine</td><td>The best apps solve one person's daily pain</td></tr>
+  </table></div>
+</section>
+
+<section id="prompts">
+  <h2><small>10</small>Prompt cards</h2>
+  <p class="sub">Fill in the brackets.</p>
+  <div class="card"><div class="hd">1 · The brief <button class="copy">Copy</button></div><pre>Build [what] for [who]. They need to [main job].
+Rules: [mobile first / language / no login / colours].
+Phases: 1) plan and show me, 2) build, 3) run it and check every page
+at phone width, 4) commit and deploy. Done = [a live URL that ...].
+Don't stop between phases 2-4.</pre></div>
+  <div class="card"><div class="hd">2 · Report a problem precisely <button class="copy">Copy</button></div><pre>On [page], at [phone/desktop] width, when I [action], I see [what happens].
+I expected [what should happen]. Find the cause, fix it, and show me how you checked.</pre></div>
+  <div class="card"><div class="hd">3 · Redesign without losing anything <button class="copy">Copy</button></div><pre>Restyle [page] to feel like [screenshot]. Keep every existing button, field
+and feature; restyle only. List anything you merged and why.</pre></div>
+  <div class="card"><div class="hd">4 · Honest status <button class="copy">Copy</button></div><pre>What did you actually run and test? What is untested? What could break on a real phone?</pre></div>
+  <div class="card"><div class="hd">5 · Save the lesson <button class="copy">Copy</button></div><pre>Add what we just learned to CLAUDE.md in one or two lines, so the next session knows it.</pre></div>
+</section>
+
+</main>
+
+<footer><div class="wrap">
+  <b>Sources</b>
+  <ul>
+    <li><a href="https://claude.com/pricing" target="_blank" rel="noopener">Claude plans &amp; pricing</a>: Pro is $20/month and includes Claude Code and Opus</li>
+    <li><a href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener">Claude Code setup</a> · <a href="https://code.claude.com/docs/en/quickstart" target="_blank" rel="noopener">Quickstart</a> · <a href="https://code.claude.com/docs/en/model-config" target="_blank" rel="noopener">Model configuration</a></li>
+    <li>Usage limits (5-hour window + weekly cap, shared with chat): third-party summaries; Anthropic does not publish exact numbers</li>
+  </ul>
+  <p>Roshan Vijay · roshanvijay.com · October 2026</p>
+</div></footer>
+
+<script>
+document.querySelectorAll('button.copy').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=b.closest('.card').querySelector('pre').innerText;
+    var done=function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1400)};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){})}
+    else{var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');done()}catch(e){}a.remove()}
+  });
+});
+</script>
+</body>
+</html>
