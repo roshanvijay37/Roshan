@@ -76,7 +76,7 @@ footer ul{padding-left:18px}
 </header>
 
 <nav><div class="wrap">
-  <a href="#agenda">Agenda</a><a href="#setup">Setup</a><a href="#habits">How I work</a><a href="#limits">Pro limits</a>
+  <a href="#agenda">Agenda</a><a href="#setup">Setup</a><a href="#habits">How I work</a><a href="#limits">Pro limits</a><a href="#demo">Demo</a>
   <a href="#build1">Build 1</a><a href="#build2">Build 2</a><a href="#tokens">Tokens</a><a href="#rules">CLAUDE.md &amp; skills</a>
   <a href="#safety">Safety</a><a href="#shipped">Shipped</a><a href="#prompts">Prompt cards</a>
 </div></nav>
@@ -88,7 +88,7 @@ footer ul{padding-left:18px}
   <p class="sub">Two hours of the four go to the two builds. Everything else is there to make the builds faster. Times assume a 9:00 start.</p>
   <div class="tbl"><table>
     <tr><th>Time</th><th>Block</th><th>What happens</th><th>Students leave with</th></tr>
-    <tr><td class="t">9:00–9:15</td><td>Opening demo</td><td>Build and publish a one-page site live from one prompt, in under 10 minutes</td><td>Belief that this is real</td></tr>
+    <tr><td class="t">9:00–9:15</td><td>Opening demo</td><td>Build and publish the Attendance Buddy app live, with Haiku and one prompt, in about 10 minutes</td><td>Belief that this is real</td></tr>
     <tr><td class="t">9:15–9:35</td><td>How I work</td><td>The 6 habits and the Pro-plan usage rules</td><td>A way of working</td></tr>
     <tr><td class="t">9:35–10:20</td><td>Build 1: website</td><td>Each student builds a personal or business site and puts it live</td><td>A live URL</td></tr>
     <tr><td class="t">10:20–10:30</td><td>Break</td><td>Anyone who hit the limit moves to a partner's laptop</td><td>—</td></tr>
@@ -185,7 +185,7 @@ Done = a live URL that works on a phone. Don't stop between phases 2-4.</pre></d
   <p class="sub">Pro includes Claude Code and Opus. Claude Code and the Claude chat app share <b>one</b> allowance: a 5-hour window plus a weekly cap. Anthropic does not publish the exact numbers. A careless student can run out by 11:30; these rules prevent that.</p>
   <div class="tbl"><table>
     <tr><th>Rule</th><th>Why it saves usage</th></tr>
-    <tr><td>Use Sonnet for normal building (<code>/model sonnet</code>). Switch to Opus only for planning or a stubborn bug</td><td>On Pro, Claude Code defaults to Opus, which uses the allowance faster</td></tr>
+    <tr><td><b>Pick the smallest model that can do the job.</b> <code>/model haiku</code> for setup and simple one-file apps. <code>/model sonnet</code> for normal multi-file builds such as Build 2. Opus only for planning something big or a bug that two tries didn't fix, then switch back</td><td>On Pro, Claude Code defaults to Opus, which uses the allowance fastest. Haiku uses the least</td></tr>
     <tr><td><code>/clear</code> when you start a new task</td><td>Every message re-sends the whole conversation, so old context is paid for again</td></tr>
     <tr><td><code>/compact</code> when a long task is still going</td><td>Squeezes the history instead of carrying all of it</td></tr>
     <tr><td>Plan once, then build</td><td>One good plan beats five rounds of "no, not like that"</td></tr>
@@ -195,6 +195,28 @@ Done = a live URL that works on a phone. Don't stop between phases 2-4.</pre></d
     <tr><td>Skip multi-agent fan-outs and long autonomous runs</td><td>That's a Max-plan habit; on Pro it uses up the 5-hour window in minutes</td></tr>
   </table></div>
   <div class="note"><b>If a student hits the limit:</b> they pair with a neighbour until it resets. Turning on usage credits costs extra money, so that's their choice, never a default.</div>
+</section>
+
+<section id="demo">
+  <h2><small>04b</small>Live demo · Attendance Buddy with Haiku</h2>
+  <p class="sub">The cheapest way to build a real app is one file, no login, no database, and the smallest model. Data is saved in the browser. It takes a few messages, about 10 minutes, and very little of the allowance.</p>
+  <ol class="steps">
+    <li><b>Make an empty folder</b>, run <code>claude</code>, then type <code>/model haiku</code>.</li>
+    <li><b>Paste the prompt below as one message.</b> Don't use plan mode here; the app is too small to need it.</li>
+    <li><b>Open <code>index.html</code></b> in the browser, add 3 subjects, and tap Absent until one card turns red.</li>
+    <li><b>Ask for one change in one sentence</b>, for example "add an undo for the last tap", to show how small a fix is.</li>
+    <li><b>Ship it</b> with Vercel using <code>VERCEL_TOKEN</code> from <code>token.txt</code>, then open the link on your phone.</li>
+  </ol>
+  <div class="card"><div class="hd">Attendance Buddy prompt <button class="copy">Copy</button></div><pre>Build "Attendance Buddy" as ONE file: index.html (HTML + CSS + JS inside, no frameworks, no build step).
+- Add a subject (name only).
+- Each subject card has two buttons: Present / Absent.
+- Show attended/total and the percentage; turn the card red below 75%.
+- Show how many more classes I must attend to reach 75%.
+- Delete a subject (with a confirm).
+- Save everything in localStorage so it survives a refresh.
+- Mobile first, clean, dark theme, big tap targets.
+Keep the code short and simple. When done, tell me how to open it.</pre></div>
+  <div class="note"><b>If Haiku gets something wrong twice,</b> switch to <code>/model sonnet</code> for that one fix, then switch back. Lesson for students: <i>small job, small model; one clear message beats ten back-and-forth ones.</i></div>
 </section>
 
 <section id="build1">
