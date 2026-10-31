@@ -4,8 +4,8 @@ import {
 } from "lucide-react";
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Intro from "./Intro";
-import { MagneticLink, Marquee, ProjectRow, Reveal, Scroll3D, ThemeToggle } from "./components";
-import { projects, services, skillGroups } from "./data";
+import { MagneticLink, Marquee, Reveal, Scroll3D, ThemeToggle } from "./components";
+import { services, skillGroups } from "./data";
 import { dur, maskLine } from "./motion";
 
 // Reduced-motion stand-in for maskLine: same timing, no travel.
@@ -19,7 +19,6 @@ const Scene = lazy(() => import("./Scene"));
 const nav = [
   ["About", "#about"],
   ["Skills", "#skills"],
-  ["Work", "#work"],
   ["Contact", "#contact"],
 ];
 
@@ -119,8 +118,7 @@ function Hero({ revealed }) {
           I design and build web products for founders and small teams — from fast marketing sites to full applications with real users behind them.
         </motion.p>
         <motion.div className="hero-actions" variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
-          <MagneticLink className="button primary" href="#work">Explore my work <ArrowRight size={18} /></MagneticLink>
-          <MagneticLink className="button ghost" href="#contact">Start a conversation</MagneticLink>
+          <MagneticLink className="button primary" href="#contact">Start a conversation <ArrowRight size={18} /></MagneticLink>
         </motion.div>
       </motion.div>
       <motion.div className="hero-side-note" initial={{ opacity: 0 }} animate={{ opacity: revealed ? 1 : 0 }} transition={{ delay: 0.9 }}>
@@ -194,27 +192,6 @@ function Skills() {
   );
 }
 
-function Work() {
-  return (
-    <section className="section-pad work" id="work">
-      <Reveal className="section-heading horizontal">
-        <div><span className="section-number">03 / SELECTED WORK</span><h2>Some of my work.<br /><em>All of it live.</em></h2></div>
-        <p>A voice-first social product, a site-management platform for a construction firm, and sites for businesses across Dakshina Kannada. Every link goes to the running thing, not a case study.</p>
-      </Reveal>
-      <div className="project-list">
-        {projects.map((project, index) => (
-          <Reveal key={project.title}>
-            <Scroll3D intensity={0.55} lift={0.7}>
-              <ProjectRow project={project} />
-            </Scroll3D>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-
 // WhatsApp has no icon in lucide, and it is the one mark worth drawing exactly:
 // a generic chat bubble does not read as WhatsApp, and recognition is the whole
 // point of the button.
@@ -237,7 +214,7 @@ function Contact() {
         <div className="contact-glow" />
       </div>
       <Reveal className="contact-intro">
-        <span className="section-number">04 / CONTACT</span>
+        <span className="section-number">03 / CONTACT</span>
         <h2>Have an ambitious idea?<br /><em>Let&apos;s give it gravity.</em></h2>
         <p>I&apos;m always interested in thoughtful products, difficult engineering problems, and collaborations with a little spark to them.</p>
         <div className="contact-actions">
@@ -315,7 +292,6 @@ export default function App() {
         <Hero revealed={revealed} />
         <About />
         <Skills />
-        <Work />
         <Contact />
       </main>
       <Footer />
