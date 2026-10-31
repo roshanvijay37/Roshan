@@ -2,7 +2,7 @@ import {
   motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform,
 } from "framer-motion";
 import { ArrowUpRight, Moon, Sun } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { anticipate, dur, ease as easings, spring } from "./motion";
 
 const ease = easings.out;
@@ -281,5 +281,154 @@ export function ProjectRow({ project }) {
       </ul>
       <span className="project-bar" />
     </a>
+  );
+}
+
+// Splits a string into per-character spans for the 3D type effects, grouped by
+// word so a line can still only break between words. Screen readers get the
+// plain string; the pieces are hidden from them.
+export function Split({ text, className = "" }) {
+  const words = text.split(" ");
+  return (
+    <span className={["split", className].filter(Boolean).join(" ")}>
+      <span className="sr-only">{text}</span>
+      <span className="split-vis" aria-hidden="true">
+        {/* The space sits between the word boxes, not inside them: trailing
+            white space in an inline-block collapses and the words run together. */}
+        {words.map((word, w) => (
+          <Fragment key={`${word}-${w}`}>
+            <span className="word">
+              {[...word].map((ch, i) => <span className="char" key={i}>{ch}</span>)}
+            </span>
+            {w < words.length - 1 ? " " : null}
+          </Fragment>
+        ))}
+      </span>
+    </span>
+  );
+}
+
+// Scrubs every `.char` inside it with scroll position: each letter swings up
+// out of the page on its own hinge and settles as the heading crosses the
+// screen, then holds. Scrubbed rather than triggered, so scrolling back runs
+// it in reverse — the type is part of the camera move, not a one-off effect.
+//
+// One subscription writes straight to the nodes. A motion value per letter
+// would be a few hundred subscriptions for the page.
+export function ScrubReveal({ as: Tag = "div", className = "", children, start = "start 92%", end = "start 38%" }) {
+  const ref = useRef(null);
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: [start, end] });
+
+  useEffect(() => {
+    if (reduced || !ref.current) return undefined;
+    const chars = [...ref.current.querySelectorAll(".char")];
+    const n = Math.max(chars.length - 1, 1);
+    const spread = 0.55;
+    const paint = (p) => {
+      for (let i = 0; i < chars.length; i++) {
+        const t = Math.min(1, Math.max(0, (p * (1 + spread) - (i / n) * spread) / 1));
+        const e = 1 - Math.pow(1 - t, 3);
+        const inv = 1 - e;
+        chars[i].style.transform =
+          `translate3d(0, ${inv * 0.55}em, ${inv * -140}px) rotateX(${inv * -88}deg) rotateY(${inv * (i % 2 ? 14 : -14)}deg)`;
+        chars[i].style.opacity = String(Math.min(1, e * 1.35));
+      }
+    };
+    paint(scrollYProgress.get());
+    return scrollYProgress.on("change", paint);
+  }, [reduced, scrollYProgress]);
+
+  return <Tag className={["scrub", className].filter(Boolean).join(" ")} ref={ref}>{children}</Tag>;
+}
+
+// A panel that leans toward the pointer and carries a moving highlight, so it
+// reads as a physical sheet of glass rather than a flat box. Written to CSS
+// variables for the same reason as ProjectRow's glow.
+export function TiltCard({ children, className = "" }) {
+  const track = (event) => {
+    if (event.pointerType !== "mouse") return;
+    const el = event.currentTarget;
+    const rect = el.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width;
+    const y = (event.clientY - rect.top) / rect.height;
+    el.style.setProperty("--rx", `${(0.5 - y) * 12}deg`);
+    el.style.setProperty("--ry", `${(x - 0.5) * 14}deg`);
+    el.style.setProperty("--mx", `${x * 100}%`);
+    el.style.setProperty("--my", `${y * 100}%`);
+  };
+  const reset = (event) => {
+    event.currentTarget.style.setProperty("--rx", "0deg");
+    event.currentTarget.style.setProperty("--ry", "0deg");
+  };
+  return (
+    <div className={["tilt-card", className].filter(Boolean).join(" ")} onPointerMove={track} onPointerLeave={reset}>
+      {children}
+    </div>
+  );
+}
+
+// A ring that trails the pointer with a little inertia and swells over
+// anything clickable. Mouse only: on touch there is no pointer to follow.
+export function Cursor() {
+  const reduced = useReducedMotion();
+  const ring = useRef(null);
+  const dot = useRef(null);
+
+  useEffect(() => {
+    if (reduced || !window.matchMedia("(pointer: fine)").matches) return undefined;
+    const target = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    const pos = { ...target };
+    let raf = 0;
+    let shown = false;
+
+    const move = (event) => {
+      target.x = event.clientX;
+      target.y = event.clientY;
+      if (!shown) {
+        shown = true;
+        pos.x = target.x; pos.y = target.y;
+        document.documentElement.classList.add("has-cursor");
+      }
+      const hot = event.target.closest?.("a, button");
+      ring.current?.classList.toggle("hot", Boolean(hot));
+    };
+    const down = () => ring.current?.classList.add("press");
+    const up = () => ring.current?.classList.remove("press");
+    // `pointerleave` never fires on document; a mouseout with no destination
+    // is the pointer leaving the window.
+    const leave = (event) => {
+      if (event.relatedTarget) return;
+      shown = false;
+      document.documentElement.classList.remove("has-cursor");
+    };
+
+    const loop = () => {
+      pos.x += (target.x - pos.x) * 0.18;
+      pos.y += (target.y - pos.y) * 0.18;
+      if (ring.current) ring.current.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
+      if (dot.current) dot.current.style.transform = `translate3d(${target.x}px, ${target.y}px, 0)`;
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    window.addEventListener("pointermove", move, { passive: true });
+    window.addEventListener("pointerdown", down);
+    window.addEventListener("pointerup", up);
+    document.addEventListener("mouseout", leave);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerdown", down);
+      window.removeEventListener("pointerup", up);
+      document.removeEventListener("mouseout", leave);
+      document.documentElement.classList.remove("has-cursor");
+    };
+  }, [reduced]);
+
+  return (
+    <div className="cursor" aria-hidden="true">
+      <div className="cursor-ring" ref={ring}><i /></div>
+      <div className="cursor-dot" ref={dot} />
+    </div>
   );
 }

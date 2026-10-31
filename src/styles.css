@@ -391,11 +391,16 @@ button, a { -webkit-tap-highlight-color: transparent; }
 /* The mask clips the line's travel. Padding opens room for descenders and the
    gradient's overflow, and the negative margin takes that space back out of
    the layout so line-height is unchanged. */
-.hero h1 .line-mask { display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em; }
-.hero h1 .line { display: block; will-change: transform; }
+.hero h1 .line-3d { display: block; perspective: 900px; perspective-origin: 30% 50%; }
+.hero h1 .hword { display: inline-block; white-space: nowrap; transform-style: preserve-3d; }
+.hero h1 .hchar { display: inline-block; transform-origin: 50% 100% -0.2em; backface-visibility: hidden; }
 .hero h1 .accent {
+  display: inline-block;
+  transform-origin: 50% 100%;
   color: transparent;
-  background: linear-gradient(115deg, var(--grad-start) 0%, var(--grad-mid) 42%, var(--grad-end) 100%);
+  background: linear-gradient(115deg, var(--grad-start) 0%, var(--grad-mid) 30%, var(--grad-end) 46%, var(--grad-mid) 62%, var(--grad-start) 100%);
+  background-size: 250% 100%;
+  animation: sheen 7s cubic-bezier(.65, 0, .35, 1) infinite alternate;
   background-clip: text;
   -webkit-background-clip: text;
 }
@@ -756,7 +761,7 @@ footer > a:last-child:hover { color: var(--text-hi); }
   .hero { padding-top: 120px; align-items: flex-start; }
   .hero-copy { width: 100%; }
   .hero h1 { font-size: clamp(61px, 18vw, 92px); line-height: .9; }
-  .hero h1 span { display: block; }
+  .hero h1 .line-3d { display: block; }
   .hero-copy > p { max-width: 92%; margin-top: 26px; font-size: 15px; }
   .hero-actions { flex-direction: column; align-items: stretch; max-width: 320px; }
   .hero-side-note { display: none; }
@@ -992,4 +997,135 @@ footer > a:last-child:hover { color: var(--text-hi); }
 @media (max-width: 720px) {
   .kinetic-track span { font-size: clamp(28px, 11vw, 52px); padding: 0 12px; }
   .kinetic-label { width: calc(100% - 36px); }
+}
+
+/* ==== 3D scroll layer ===================================================
+   Everything below is motion staging — no new content. Each block names the
+   component that drives it. */
+
+/* Lenis owns wheel scrolling; native smooth scrolling on top of it would ease
+   every frame twice. */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes sheen {
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+
+/* Hero: the stage tips back into the page as you leave it (<Hero>). */
+.hero { perspective: 1300px; perspective-origin: 50% 20%; }
+.hero-stage { width: 100%; transform-style: preserve-3d; transform-origin: 50% 0%; will-change: transform; }
+.hero-tilt { transform-style: preserve-3d; }
+
+/* Headings: letters scrubbed in depth with scroll (<ScrubReveal>, <Split>). */
+.split-vis .word { display: inline-block; white-space: nowrap; perspective: 700px; }
+/* No will-change: ninety permanent layers cost more memory on a phone than
+   the transforms save. */
+.scrub .char { display: inline-block; transform-origin: 50% 100% -0.25em; }
+
+/* About: pinned stage the cards fly into (<About> deck mode). */
+.about.deck { height: 250vh; padding-top: 0; padding-bottom: 0; }
+.deck-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 70px;
+}
+.deck .section-heading { margin-bottom: 0; }
+.deck .service-grid { perspective: 1600px; perspective-origin: 50% 40%; transform-style: preserve-3d; }
+.deck-card { transform-style: preserve-3d; will-change: transform, opacity; }
+
+/* Service cards lean to the pointer with a highlight under it (<TiltCard>). */
+.tilt-card { height: 100%; perspective: 900px; }
+.tilt-card .service-card {
+  position: relative;
+  overflow: hidden;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform .6s cubic-bezier(.2, .8, .2, 1), border-color .4s, box-shadow .4s;
+}
+.tilt-card:hover .service-card {
+  transition: transform .18s ease-out, border-color .4s, box-shadow .4s;
+  border-color: var(--tint-6);
+  box-shadow: 0 40px 90px var(--shadow-lg), 0 0 0 1px var(--tint-2) inset;
+}
+.tilt-card .service-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(420px 260px at var(--mx, 50%) var(--my, 0%), var(--wash-violet), transparent 65%);
+  transition: opacity .5s;
+}
+.tilt-card:hover .service-card::after { opacity: 1; }
+.tilt-card .service-card > * { position: relative; z-index: 1; }
+/* A hairline of light that runs along the top edge on hover. */
+.tilt-card .service-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1px;
+  z-index: 2;
+  background: linear-gradient(90deg, transparent, var(--violet), transparent);
+  transform: scaleX(0);
+  transition: transform .7s cubic-bezier(.2, .8, .2, 1);
+}
+.tilt-card:hover .service-card::before { transform: scaleX(1); }
+
+/* Skills: the type wall pitched in perspective (<Skills>). */
+.kinetic-stage { perspective: 1100px; perspective-origin: 50% 30%; }
+.kinetic-wall { transform-origin: 50% 50%; will-change: transform; }
+
+/* Cursor ring (<Cursor>). Native cursor stays; the ring is a companion. */
+.cursor { display: none; }
+.has-cursor .cursor { display: block; }
+.cursor-ring, .cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 400;
+  pointer-events: none;
+}
+.cursor-ring i {
+  display: block;
+  width: 38px;
+  height: 38px;
+  margin: -19px 0 0 -19px;
+  border: 1px solid var(--tint-6);
+  border-radius: 50%;
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1), background .35s, border-color .35s;
+}
+.cursor-ring.hot i { transform: scale(1.75); background: var(--tint-2); border-color: var(--violet); }
+.cursor-ring.press i { transform: scale(.8); }
+.cursor-dot {
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 50%;
+  background: var(--violet);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero h1 .accent { animation: none; }
+  .tilt-card .service-card { transform: none; }
 }
