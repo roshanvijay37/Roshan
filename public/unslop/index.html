@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#f8f5ee" />
+<title>Roshan Vijay — Software Engineer</title>
+<meta name="description" content="Roshan Vijay designs, builds and runs websites and web apps for founders and businesses in Dakshina Kannada." />
+<!-- Redesign preview of roshanvijay.com, made with unslop by Damir Sokolovsky (@heydamir), CC BY 4.0 -->
+<script>
+  // Same key as the live homepage, so a visitor's theme choice carries over.
+  (function () {
+    try {
+      var saved = localStorage.getItem("theme");
+      if (saved === "dark" || saved === "light") document.documentElement.setAttribute("data-theme", saved);
+    } catch (e) {}
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* Warm ramp: cream paper and temple brass. The brass is the only accent. */
+  :root {
+    color-scheme: light;
+    --bg: #f8f5ee;
+    --card: #fdfbf7;
+    --raised: #efe9df;
+    --line: rgba(31, 27, 22, 0.09);
+    --line-strong: rgba(31, 27, 22, 0.16);
+    --text-1: #1f1b16;
+    --text-2: #5e554a;
+    --text-3: #756c60;
+    --accent: #8a6a14;
+    --live: #2f8a4c;
+    --btn-bg: #1f1b16;
+    --btn-text: #fbf8f1;
+    --shadow: 0 1px 2px rgba(40, 30, 10, 0.05), 0 12px 32px rgba(40, 30, 10, 0.08);
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #161513; --card: #1c1a18; --raised: #262421;
+      --line: rgba(239, 233, 222, 0.08); --line-strong: rgba(239, 233, 222, 0.16);
+      --text-1: #efe9de; --text-2: #aaa398; --text-3: #8f897f;
+      --accent: #e6c374; --live: #4cc38a;
+      --btn-bg: #efe9de; --btn-text: #161513;
+      --shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #161513; --card: #1c1a18; --raised: #262421;
+    --line: rgba(239, 233, 222, 0.08); --line-strong: rgba(239, 233, 222, 0.16);
+    --text-1: #efe9de; --text-2: #aaa398; --text-3: #8f897f;
+    --accent: #e6c374; --live: #4cc38a;
+    --btn-bg: #efe9de; --btn-text: #161513;
+    --shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 80px; background: var(--bg); }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-1);
+    font: 400 15px/1.6 "Instrument Sans", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; }
+  img { display: block; max-width: 100%; }
+  svg.i { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .mono { font-family: "DM Mono", ui-monospace, monospace; font-size: 12px; line-height: 16px; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  .wrap { width: min(100% - 48px, 1200px); margin-inline: auto; }
+
+  /* ---- Header ---- */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 160ms var(--ease);
+  }
+  header.scrolled { border-bottom-color: var(--line); }
+  .nav { height: 64px; display: flex; align-items: center; gap: 32px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 16px; }
+  .brand b {
+    width: 28px; height: 28px; display: grid; place-items: center;
+    border-radius: 8px; background: var(--text-1); color: var(--bg);
+    font-size: 14px; font-weight: 600;
+  }
+  .links { display: flex; gap: 28px; margin-left: auto; color: var(--text-2); font-size: 14px; }
+  .links a { transition: color 160ms var(--ease); }
+  .links a:hover { color: var(--text-1); }
+  .nav-end { display: flex; align-items: center; gap: 8px; }
+  .icon-btn {
+    width: 36px; height: 36px; display: grid; place-items: center; padding: 0;
+    border: 1px solid var(--line); border-radius: 8px; background: transparent;
+    color: var(--text-2); cursor: pointer;
+    transition: color 160ms var(--ease), background-color 160ms var(--ease);
+  }
+  .icon-btn:hover { color: var(--text-1); background: var(--raised); }
+  .theme-dark { display: none; }
+  :root[data-theme="dark"] .theme-dark { display: block; }
+  :root[data-theme="dark"] .theme-light { display: none; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .theme-dark { display: block; }
+    :root:not([data-theme="light"]) .theme-light { display: none; }
+  }
+  .menu-btn { display: none; }
+  .mobile-nav { display: none; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    height: 48px; padding: 0 20px; border-radius: 10px;
+    font-size: 15px; font-weight: 500; white-space: nowrap;
+    border: 1px solid transparent; cursor: pointer;
+    transition: background-color 160ms var(--ease), border-color 160ms var(--ease), transform 120ms var(--ease);
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn.primary { background: var(--btn-bg); color: var(--btn-text); }
+  .btn.primary:hover { background: color-mix(in srgb, var(--btn-bg) 86%, var(--bg)); }
+  .btn.secondary { background: var(--card); border-color: var(--line-strong); color: var(--text-1); }
+  .btn.secondary:hover { background: var(--raised); }
+  .btn.small { height: 36px; padding: 0 16px; font-size: 14px; border-radius: 8px; }
+
+  /* ---- Hero ---- */
+  .hero {
+    min-height: calc(100svh - 64px);
+    display: grid; grid-template-columns: 6fr 7fr; gap: 56px; align-items: center;
+    padding-block: 64px 80px;
+  }
+  .hero > *, .head > * { min-width: 0; }
+  .who { display: flex; align-items: center; gap: 8px; color: var(--text-2); margin-bottom: 24px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--live); flex: none; }
+  h1 {
+    margin: 0; font-size: clamp(40px, 4vw, 56px); line-height: 1.06;
+    font-weight: 500; letter-spacing: -0.03em; text-wrap: balance;
+  }
+  .lede { margin: 24px 0 0; max-width: 34rem; color: var(--text-2); font-size: 19px; line-height: 30px; }
+  .actions { display: flex; gap: 12px; margin-top: 40px; flex-wrap: wrap; }
+
+  /* The moment: his own sites, one window, one tab per real domain. */
+  .window {
+    border: 1px solid var(--line-strong); border-radius: 16px;
+    background: var(--card); box-shadow: var(--shadow); overflow: hidden;
+  }
+  .tabs {
+    display: flex; gap: 4px; padding: 8px 8px 0; background: var(--raised);
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px;
+    border: 0; border-radius: 8px 8px 0 0; background: transparent;
+    color: var(--text-3); cursor: pointer; white-space: nowrap;
+    transition: color 160ms var(--ease), background-color 160ms var(--ease);
+  }
+  .tab:hover { color: var(--text-1); }
+  .tab[aria-selected="true"] { background: var(--card); color: var(--text-1); }
+  .tab .dot { width: 5px; height: 5px; }
+  .addr {
+    display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px;
+    border-bottom: 1px solid var(--line); color: var(--text-2);
+  }
+  .addr a { margin-left: auto; display: flex; align-items: center; gap: 4px; color: var(--text-3); transition: color 160ms var(--ease); }
+  .addr a:hover { color: var(--text-1); }
+  .screen { position: relative; aspect-ratio: 16 / 10; background: var(--raised); }
+  .screen img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top;
+    opacity: 0; transition: opacity 300ms var(--ease);
+  }
+  .screen img.on { opacity: 1; }
+  .caption { margin-top: 12px; color: var(--text-3); }
+
+  /* ---- Sections ---- */
+  section.block { padding-block: 96px; border-top: 1px solid var(--line); }
+  .head { display: grid; grid-template-columns: 5fr 7fr; gap: 64px; align-items: end; margin-bottom: 48px; }
+  .label { display: block; color: var(--text-3); margin-bottom: 16px; }
+  .head:not(:has(p)) { grid-template-columns: 1fr; }
+  .head { grid-template-columns: 6fr 5fr; }
+  h2 { margin: 0; font-size: clamp(32px, 3.4vw, 44px); line-height: 1.1; font-weight: 500; letter-spacing: -0.02em; }
+  h2 span { color: var(--text-3); }
+  .head p { margin: 0; max-width: 34rem; color: var(--text-2); font-size: 16px; line-height: 26px; }
+
+  .services { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .service { padding: 24px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); }
+  .service h3 { margin: 0 0 8px; font-size: 18px; font-weight: 500; }
+  .service p { margin: 0; color: var(--text-2); font-size: 15px; line-height: 24px; }
+
+  .skills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .skill-group { padding-top: 16px; border-top: 1px solid var(--line-strong); }
+  .skill-group h3 { margin: 0 0 16px; font-size: 15px; font-weight: 500; color: var(--text-2); }
+  .skill-group ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  .skill-group li { font-size: clamp(20px, 2vw, 26px); line-height: 1.25; letter-spacing: -0.01em; }
+
+  .projects { display: grid; gap: 16px; }
+  .project {
+    display: grid; grid-template-columns: 1fr 360px; gap: 40px; align-items: center;
+    padding: 24px 24px 24px 32px; border: 1px solid var(--line); border-radius: 16px; background: var(--card);
+    transition: border-color 160ms var(--ease), background-color 160ms var(--ease);
+  }
+  .project:hover { border-color: var(--line-strong); }
+  .project-type { color: var(--text-3); }
+  .project h3 { margin: 8px 0 12px; font-size: clamp(24px, 2.4vw, 32px); line-height: 1.15; font-weight: 500; letter-spacing: -0.02em; }
+  .project p { margin: 0; max-width: 40rem; color: var(--text-2); font-size: 15px; line-height: 24px; }
+  .project-meta { display: flex; align-items: center; gap: 24px; margin-top: 24px; flex-wrap: wrap; }
+  .domain { display: inline-flex; align-items: center; gap: 8px; color: var(--text-1); }
+  .domain svg { color: var(--text-3); transition: color 160ms var(--ease), transform 160ms var(--ease); }
+  .project:hover .domain svg { color: var(--accent); transform: translate(2px, -2px); }
+  .stack { color: var(--text-3); }
+  .thumb { border-radius: 8px; overflow: hidden; border: 1px solid var(--line); aspect-ratio: 16 / 10; background: var(--raised); }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+
+  .contact { padding-block: 96px 128px; border-top: 1px solid var(--line); }
+  .contact h2 { font-size: clamp(36px, 4.2vw, 56px); max-width: 16ch; }
+  .contact p { margin: 24px 0 0; max-width: 34rem; color: var(--text-2); font-size: 17px; line-height: 28px; }
+  .contact .actions { align-items: center; }
+  .quiet { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 8px; color: var(--text-2); transition: color 160ms var(--ease); }
+  .quiet:hover { color: var(--text-1); }
+
+  footer { border-top: 1px solid var(--line); }
+  .foot { min-height: 80px; display: flex; align-items: center; gap: 24px; color: var(--text-3); font-size: 14px; }
+  .foot a:hover { color: var(--text-1); }
+  .foot .top { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; }
+
+  /* One entrance, on the hero only. */
+  @media (prefers-reduced-motion: no-preference) {
+    .rise { opacity: 0; transform: translateY(8px); animation: rise 420ms var(--ease) forwards; }
+    .rise:nth-child(2) { animation-delay: 50ms; }
+    .rise:nth-child(3) { animation-delay: 100ms; }
+    .rise:nth-child(4) { animation-delay: 150ms; }
+    .hero-visual.rise { animation-delay: 200ms; }
+    @keyframes rise { to { opacity: 1; transform: none; } }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  @media (max-width: 960px) {
+    .links, .nav-cta { display: none; }
+    .menu-btn { display: grid; }
+    .nav-end { margin-left: auto; }
+    .mobile-nav { display: grid; padding: 8px 0 16px; }
+    .mobile-nav[hidden] { display: none; }
+    .mobile-nav a { height: 44px; display: flex; align-items: center; border-bottom: 1px solid var(--line); font-size: 16px; }
+    .hero, .head { grid-template-columns: 1fr; gap: 40px; }
+    .hero { min-height: 0; padding-block: 48px 64px; }
+    .head { gap: 16px; }
+    .services, .skills { grid-template-columns: 1fr; }
+    .skills { gap: 32px; }
+    .project { grid-template-columns: 1fr; gap: 24px; padding: 20px; }
+    .thumb { order: -1; }
+  }
+  @media (max-width: 600px) {
+    .wrap { width: calc(100% - 32px); }
+    h1 { font-size: 40px; }
+    .lede { font-size: 17px; line-height: 28px; }
+    .actions .btn { flex: 1 1 100%; }
+    section.block, .contact { padding-block: 64px; }
+    .addr a span { display: none; }
+    .foot { flex-wrap: wrap; gap: 8px 24px; padding-block: 24px; }
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="arrow-up-right" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></symbol>
+  <symbol id="arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="arrow-up" viewBox="0 0 24 24"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></symbol>
+  <symbol id="mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+  <symbol id="github" viewBox="0 0 24 24"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></symbol>
+  <symbol id="moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+  <symbol id="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2m-7.07-14.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+  <symbol id="menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+</svg>
+
+<header id="header">
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="Roshan Vijay, home"><b>R</b>Roshan Vijay</a>
+    <nav class="links" aria-label="Primary">
+      <a href="#about">About</a><a href="#skills">Skills</a><a href="#work">Work</a><a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-end">
+      <button class="icon-btn" id="theme" aria-label="Switch theme" title="Switch theme">
+        <svg class="i theme-light"><use href="#moon"/></svg><svg class="i theme-dark"><use href="#sun"/></svg>
+      </button>
+      <a class="btn primary small nav-cta" href="mailto:roshanshetty010100@gmail.com">Let&rsquo;s talk</a>
+      <button class="icon-btn menu-btn" id="menu" aria-label="Open menu" aria-expanded="false" aria-controls="mnav">
+        <svg class="i"><use href="#menu"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="wrap mobile-nav" id="mnav" hidden aria-label="Mobile">
+    <a href="#about">About</a><a href="#skills">Skills</a><a href="#work">Work</a><a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="wrap hero">
+    <div>
+      <p class="who mono rise"><span class="dot" aria-hidden="true"></span>Software engineer, India · Taking new projects</p>
+      <h1 class="rise">I design, build and run web products for founders and small teams</h1>
+      <p class="lede rise">From fast marketing sites to full applications with real users behind them. Five are running right now, from a voice chat app to the site of an 830-year-old temple.</p>
+      <div class="actions rise">
+        <a class="btn primary" href="#work">See the work <svg class="i"><use href="#arrow-right"/></svg></a>
+        <a class="btn secondary" href="#contact">Start a conversation</a>
+      </div>
+    </div>
+
+    <div class="hero-visual rise">
+      <div class="window">
+        <div class="tabs" role="tablist" aria-label="Sites I built">
+          <button class="tab mono" role="tab" aria-selected="true" data-site="belvaitemple"><span class="dot" aria-hidden="true"></span>belvaitemple.in</button>
+          <button class="tab mono" role="tab" aria-selected="false" data-site="shobhadigitalstudio"><span class="dot" aria-hidden="true"></span>shobhadigitalstudio.in</button>
+          <button class="tab mono" role="tab" aria-selected="false" data-site="adhishtam"><span class="dot" aria-hidden="true"></span>adhishtam.com</button>
+          <button class="tab mono" role="tab" aria-selected="false" data-site="chatu"><span class="dot" aria-hidden="true"></span>chatu.in</button>
+        </div>
+        <div class="addr mono">
+          <span id="addr-text">https://belvaitemple.in</span>
+          <a id="addr-link" href="https://belvaitemple.in" target="_blank" rel="noreferrer"><span>Open</span><svg class="i"><use href="#arrow-up-right"/></svg></a>
+        </div>
+        <div class="screen">
+          <img class="on" data-site="belvaitemple" src="belvaitemple.webp" width="1280" height="800" fetchpriority="high" alt="Home page of belvaitemple.in, a Kannada heritage site for the Belvai Shiva temple">
+          <img data-site="shobhadigitalstudio" src="shobhadigitalstudio.webp" width="1280" height="800" loading="lazy" alt="Home page of shobhadigitalstudio.in, a photography studio in Belvai">
+          <img data-site="adhishtam" src="adhishtam.webp" width="1280" height="800" loading="lazy" alt="Home page of adhishtam.com, a creative agency in Moodbidri">
+          <img data-site="chatu" src="chatu.webp" width="1280" height="800" loading="lazy" alt="Home page of chatu.in, a voice-first app for talking to one person at a time">
+        </div>
+      </div>
+      <p class="caption mono">Screenshots of the sites as they run today</p>
+    </div>
+  </section>
+
+  <section class="block" id="about">
+    <div class="wrap">
+      <div class="head">
+        <div><span class="label mono">About</span><h2>What I build, <span>and how I work</span></h2></div>
+      </div>
+      <div class="services">
+        <div class="service"><h3>Product builds</h3><p>Full applications with auth, data and real users behind them. The kind of thing Chatu and Kateel are.</p></div>
+        <div class="service"><h3>Marketing sites</h3><p>Fast sites for businesses that need to look considered. Astro or Next, hosted cheaply, yours to keep.</p></div>
+        <div class="service"><h3>Systems and integrations</h3><p>APIs, realtime data, third-party integrations and the unglamorous plumbing that keeps a product honest.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="skills">
+    <div class="wrap">
+      <div class="head">
+        <div><span class="label mono">Capabilities</span><h2>What I build with</h2></div>
+        <p>Fifteen tools, each one used in a project below or in this site.</p>
+      </div>
+      <div class="skills">
+        <div class="skill-group"><h3>Frontend</h3><ul><li>TypeScript</li><li>React</li><li>Next.js</li><li>Astro</li><li>Tailwind CSS</li></ul></div>
+        <div class="skill-group"><h3>3D and motion</h3><ul><li>Three.js</li><li>React Three Fiber</li><li>Framer Motion</li><li>GLSL</li><li>Lenis</li></ul></div>
+        <div class="skill-group"><h3>Backend and delivery</h3><ul><li>Node.js</li><li>Supabase</li><li>PostgreSQL</li><li>.NET Core</li><li>Vercel</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="work">
+    <div class="wrap">
+      <div class="head">
+        <div><span class="label mono">Selected work</span><h2>Some of my work, <span>all of it live</span></h2></div>
+        <p>A voice-first social product, a site-management platform for a construction firm, and sites for businesses across Dakshina Kannada. Every link goes to the running thing, not a case study.</p>
+      </div>
+      <div class="projects">
+        <a class="project" href="https://chatu.in" target="_blank" rel="noreferrer">
+          <div>
+            <span class="project-type mono">Voice-first social</span>
+            <h3>Chatu</h3>
+            <p>Voice conversations with one stranger at a time, matched on shared interests, language and a trust score rather than a roulette of anonymous rooms.</p>
+            <div class="project-meta"><span class="domain mono"><span class="dot" aria-hidden="true"></span>chatu.in<svg class="i"><use href="#arrow-up-right"/></svg></span><span class="stack mono">Next.js · TypeScript · Supabase · Zustand · Realtime audio</span></div>
+          </div>
+          <div class="thumb"><img src="chatu.webp" width="1280" height="800" loading="lazy" alt="chatu.in home page"></div>
+        </a>
+        <a class="project" href="https://kateel.in" target="_blank" rel="noreferrer">
+          <div>
+            <span class="project-type mono">Site management platform</span>
+            <h3>Kateel Construction</h3>
+            <p>Mobile-first site management for a construction firm: drawings, progress photos and project records, in the hands of people standing on the site.</p>
+            <div class="project-meta"><span class="domain mono"><span class="dot" aria-hidden="true"></span>kateel.in<svg class="i"><use href="#arrow-up-right"/></svg></span><span class="stack mono">Next.js · TypeScript · Supabase · Tailwind · Vercel</span></div>
+          </div>
+          <div class="thumb"><img src="kateel.webp" width="1280" height="800" loading="lazy" alt="kateel.in sign-in page"></div>
+        </a>
+        <a class="project" href="https://adhishtam.com" target="_blank" rel="noreferrer">
+          <div>
+            <span class="project-type mono">Agency website</span>
+            <h3>Adhishtam Digital</h3>
+            <p>A dark, motion-led marketing site for a creative agency in Moodbidri, built around a full-screen preloader and scroll choreography.</p>
+            <div class="project-meta"><span class="domain mono"><span class="dot" aria-hidden="true"></span>adhishtam.com<svg class="i"><use href="#arrow-up-right"/></svg></span><span class="stack mono">HTML · CSS · JavaScript · GSAP-style motion</span></div>
+          </div>
+          <div class="thumb"><img src="adhishtam.webp" width="1280" height="800" loading="lazy" alt="adhishtam.com home page"></div>
+        </a>
+        <a class="project" href="https://shobhadigitalstudio.in" target="_blank" rel="noreferrer">
+          <div>
+            <span class="project-type mono">Photography studio</span>
+            <h3>Shobha Digital Studio</h3>
+            <p>A bilingual marketing site for a photography and cinematography studio in Belvai, serving weddings, temple festivals and Yakshagana.</p>
+            <div class="project-meta"><span class="domain mono"><span class="dot" aria-hidden="true"></span>shobhadigitalstudio.in<svg class="i"><use href="#arrow-up-right"/></svg></span><span class="stack mono">Astro · Tailwind · Lenis · OGL</span></div>
+          </div>
+          <div class="thumb"><img src="shobhadigitalstudio.webp" width="1280" height="800" loading="lazy" alt="shobhadigitalstudio.in home page"></div>
+        </a>
+        <a class="project" href="https://belvaitemple.in" target="_blank" rel="noreferrer">
+          <div>
+            <span class="project-type mono">Heritage site</span>
+            <h3>Belvai Temple</h3>
+            <p>A heritage site for an 830-year-old Shiva temple in Dakshina Kannada, written entirely in Kannada for the community that visits it.</p>
+            <div class="project-meta"><span class="domain mono"><span class="dot" aria-hidden="true"></span>belvaitemple.in<svg class="i"><use href="#arrow-up-right"/></svg></span><span class="stack mono">HTML · CSS · JavaScript</span></div>
+          </div>
+          <div class="thumb"><img src="belvaitemple.webp" width="1280" height="800" loading="lazy" alt="belvaitemple.in home page"></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <span class="label mono">Contact</span>
+      <h2>Have something to build? Tell me about it</h2>
+      <p>I&rsquo;m interested in thoughtful products and difficult engineering problems. A WhatsApp message is the quickest way to reach me.</p>
+      <div class="actions">
+        <a class="btn primary" href="https://wa.me/917349495469" target="_blank" rel="noreferrer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.38-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35z"/><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.86 9.86 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 18.13h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.17 8.17 0 0 1-1.25-4.36c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24z"/></svg>
+          Message me on WhatsApp
+        </a>
+        <a class="quiet" href="mailto:roshanshetty010100@gmail.com"><svg class="i"><use href="#mail"/></svg>Email</a>
+        <a class="quiet" href="https://github.com/roshanvijay37" target="_blank" rel="noreferrer"><svg class="i"><use href="#github"/></svg>GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>Designed and built by Roshan Vijay · <a href="/company/">Sumathi Enterprises</a></span>
+    <a class="top" href="#top">Back to top <svg class="i"><use href="#arrow-up"/></svg></a>
+  </div>
+</footer>
+
+<script>
+  // Header hairline once the page moves.
+  var header = document.getElementById("header");
+  var onScroll = function () { header.classList.toggle("scrolled", window.scrollY > 8); };
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  // Theme: flip relative to what is showing now, store it under the live site's key.
+  document.getElementById("theme").addEventListener("click", function () {
+    var root = document.documentElement;
+    var current = root.getAttribute("data-theme") ||
+      (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    var next = current === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", next === "dark" ? "#161513" : "#f8f5ee");
+    try { localStorage.setItem("theme", next); } catch (e) {}
+  });
+
+  // Mobile menu.
+  var menu = document.getElementById("menu"), mnav = document.getElementById("mnav");
+  menu.addEventListener("click", function () {
+    var open = mnav.hidden;
+    mnav.hidden = !open;
+    menu.setAttribute("aria-expanded", String(open));
+  });
+  mnav.addEventListener("click", function (e) {
+    if (e.target.tagName === "A") { mnav.hidden = true; menu.setAttribute("aria-expanded", "false"); }
+  });
+
+  // Hero window: one tab per real site.
+  var domains = { belvaitemple: "belvaitemple.in", shobhadigitalstudio: "shobhadigitalstudio.in", adhishtam: "adhishtam.com", chatu: "chatu.in" };
+  document.querySelectorAll(".tab").forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      var site = tab.dataset.site, url = "https://" + domains[site];
+      document.querySelectorAll(".tab").forEach(function (t) { t.setAttribute("aria-selected", String(t === tab)); });
+      document.querySelectorAll(".screen img").forEach(function (img) { img.classList.toggle("on", img.dataset.site === site); });
+      document.getElementById("addr-text").textContent = url;
+      document.getElementById("addr-link").href = url;
+    });
+  });
+</script>
+</body>
+</html>
