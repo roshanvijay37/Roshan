@@ -5,7 +5,8 @@ import { useThemeName } from "./components";
 
 // One cloud of particles that becomes the page. It assembles into the hero
 // headline (sampled from the real DOM type, so it sits exactly where the words
-// are), tears apart into a spiral galaxy behind the About cards, collapses
+// are), flies across to rebuild itself as the About heading and rides the
+// rail with it, tears apart into a spiral galaxy behind the cards, collapses
 // into a strange attractor through the capabilities, and falls into a black
 // hole under "Let's give it gravity." Every form is a position the vertex
 // shader can compute; scroll decides how far each particle has travelled
@@ -22,12 +23,11 @@ const PALETTE = {
 };
 
 const CAM_Z = 10;
-// Fraction of each chapter a form holds before it starts to change.
-const HOLD = [0, 0.72, 0.78];
 const FOV = 40;
 
 const VERT = /* glsl */ `
   attribute vec3 aText;
+  attribute vec4 aText2;  // About heading: xyz, w accent flag
   attribute vec3 aGalaxy;
   attribute vec3 aAttr;
   attribute vec3 aAttrDir;
@@ -36,7 +36,8 @@ const VERT = /* glsl */ `
   uniform float uTime;
   uniform float uIntro;
   uniform float uMorph;
-  uniform float uTextShift;
+  uniform vec2 uShift0;   // hero headline's travel since it was sampled
+  uniform vec2 uShift1;   // About heading's travel since it was sampled
   uniform float uViewW;
   uniform float uTurb;
   uniform vec3 uMouse;
@@ -54,6 +55,10 @@ const VERT = /* glsl */ `
   mat3 rotX(float a) { float c = cos(a), s = sin(a); return mat3(1., 0., 0., 0., c, s, 0., -s, c); }
   mat3 rotY(float a) { float c = cos(a), s = sin(a); return mat3(c, 0., -s, 0., 1., 0., s, 0., c); }
 
+  // Independent pseudo-randoms from one seed. fract(seed * k) for several k
+  // are correlated and put the points on visible lines.
+  float hash(float n) { return fract(sin(n) * 43758.5453123); }
+
   vec3 swirl(vec3 p, float seed) {
     return vec3(
       sin(p.y * 0.9 + seed * 12.0 + uTime * 0.9),
@@ -66,10 +71,11 @@ const VERT = /* glsl */ `
     float seed = aRand.z;
 
     // --- form 0: the headline, drifting up with the page
-    vec3 scatter = normalize(vec3(sin(seed * 91.0), cos(seed * 47.0), sin(seed * 23.0) * 0.6)) * (9.0 + seed * 9.0);
+    vec3 scatter = normalize(vec3(hash(seed * 91.7) - 0.5, hash(seed * 47.3 + 3.1) - 0.5, (hash(seed * 23.9 + 7.7) - 0.5) * 0.6) + 1e-4)
+      * (9.0 + hash(seed * 11.1 + 1.3) * 9.0);
     float sweep = clamp(uIntro * 1.7 - (aText.x / uViewW + 0.5) * 0.55 - aRand.x * 0.25, 0.0, 1.0);
     sweep = 1.0 - pow(1.0 - sweep, 3.0);
-    vec3 text = aText + vec3(0.0, uTextShift, 0.0);
+    vec3 text = aText + vec3(uShift0, 0.0);
     text += swirl(aText * 3.0, seed) * 0.012;
     vec3 f0 = mix(scatter, text, sweep);
     vec3 c0 = mix(uBase, uAccent, aRand.w);
@@ -77,29 +83,37 @@ const VERT = /* glsl */ `
     // behind it, drifting up slowly.
     float dust = step(0.89, fract(seed * 57.0));
     vec3 dp = vec3(
-      (fract(seed * 13.0) - 0.5) * 30.0,
-      fract(fract(seed * 29.0) + uTime * 0.006) * 18.0 - 9.0,
-      -2.0 - fract(seed * 7.0) * 16.0
+      (hash(seed * 13.1 + 0.7) - 0.5) * 30.0,
+      fract(hash(seed * 29.3 + 5.1) + uTime * 0.006) * 18.0 - 9.0,
+      -2.0 - hash(seed * 7.7 + 9.3) * 16.0
     );
     f0 = mix(f0, mix(scatter, dp, sweep), dust);
     c0 = mix(c0, mix(uCool, uBase, fract(seed * 3.0)), dust);
 
-    // --- form 1: a three-armed galaxy, turning
+    // --- form 1: the About heading, riding the rail with its DOM twin. A
+    // slow wave of light runs along the letters.
+    vec3 f1 = aText2.xyz + vec3(uShift1, 0.0) + swirl(aText2.xyz * 3.0, seed) * 0.012;
+    float wave = 0.5 + 0.5 * sin(aText2.x * 1.3 - uTime * 2.2);
+    vec3 c1 = mix(uBase, uAccent, aText2.w) * (0.8 + 0.45 * pow(wave, 6.0));
+    f1 = mix(f1, dp, dust);
+    c1 = mix(c1, mix(uCool, uBase, fract(seed * 3.0)), dust);
+
+    // --- form 2: a three-armed galaxy, turning
     float gr = aGalaxy.x;
     float ga = aGalaxy.y + uTime * 0.22 / (0.5 + gr * 0.35);
-    vec3 f1 = rotX(-1.08) * vec3(gr * cos(ga), aGalaxy.z, gr * sin(ga)) * uFormScale + vec3(0.4 * uFormScale, -0.2, -3.0);
-    vec3 c1 = mix(uHot, uCool, smoothstep(0.0, 5.5, gr));
-    c1 = mix(c1, uAccent, step(0.93, fract(seed * 13.0)) * 0.8);
+    vec3 f2 = rotX(-1.08) * vec3(gr * cos(ga), aGalaxy.z, gr * sin(ga)) * uFormScale + vec3(0.4 * uFormScale, -0.2, -3.0);
+    vec3 c2 = mix(uHot, uCool, smoothstep(0.0, 5.5, gr));
+    c2 = mix(c2, uAccent, step(0.93, fract(seed * 13.0)) * 0.8);
 
-    // --- form 2: the Aizawa attractor, its points shimmering along the flow
+    // --- form 3: the Aizawa attractor, its points shimmering along the flow
     vec3 ap = aAttr + aAttrDir * sin(uTime * 2.0 + seed * 6.283) * 0.07;
-    vec3 f2 = rotX(0.45) * rotY(uTime * 0.16 + uAttrSpin) * ap * uFormScale + vec3(0.0, -0.25, -1.0);
-    vec3 c2 = mix(uAccent, uCool, smoothstep(-1.4, 1.6, aAttr.y));
+    vec3 f3 = rotX(0.45) * rotY(uTime * 0.16 + uAttrSpin) * ap * uFormScale + vec3(0.0, -0.25, -1.0);
+    vec3 c3 = mix(uAccent, uCool, smoothstep(-1.4, 1.6, aAttr.y));
 
-    // --- form 3: a black hole. Disk particles spiral in and are replaced at
+    // --- form 4: a black hole. Disk particles spiral in and are replaced at
     // the rim; the rest trace the lensed arc of the far side of the disk.
-    vec3 f3;
-    vec3 c3;
+    vec3 f4;
+    vec3 c4;
     float fall = fract(aHole.x - uTime * 0.035);
     float ringAlpha = 1.0;
     if (aHole.z < 0.8) {
@@ -107,34 +121,38 @@ const VERT = /* glsl */ `
       float a = aHole.y + uTime * 2.6 * pow(r, -1.5);
       vec3 d = vec3(r * cos(a), (fract(seed * 31.0) - 0.5) * 0.03 * r, r * sin(a));
       // Seen almost edge-on, tipped just enough to read as a disk.
-      f3 = rotX(0.2) * d;
+      f4 = rotX(0.2) * d;
       float beam = 1.0 + 0.6 * cos(a);    // the side coming toward you is brighter
-      c3 = mix(uHot, uAccent, smoothstep(1.4, 4.8, r)) * beam;
+      c4 = mix(uHot, uAccent, smoothstep(1.4, 4.8, r)) * beam;
     } else {
       // The far side of the disk, bent over and under the shadow by the
       // hole's gravity: a ring standing up behind it.
       float r = mix(1.36, 1.9, pow(fract(seed * 17.0), 3.0));
       float a = aHole.y + uTime * 0.5;
-      f3 = vec3(r * cos(a), r * sin(a), -0.4);
-      c3 = mix(uHot, uAccent, smoothstep(1.36, 1.9, r));
+      f4 = vec3(r * cos(a), r * sin(a), -0.4);
+      c4 = mix(uHot, uAccent, smoothstep(1.36, 1.9, r));
       ringAlpha = 0.85;
     }
-    f3 = f3 * 1.8 * uFormScale + vec3(0.0, -0.35, -1.5);
+    f4 = f4 * 1.8 * uFormScale + vec3(0.0, -0.35, -1.5);
 
     // --- travel between forms, each particle on its own schedule, flung
     // outward along a swirl while it is in flight
-    float m = clamp(uMorph, 0.0, 3.0);
-    float seg = min(floor(m), 2.0);
-    float t = clamp((m - seg) * 1.35 - aRand.x * 0.35, 0.0, 1.0);
+    vec3 P[5];
+    vec3 C[5];
+    P[0] = f0; P[1] = f1; P[2] = f2; P[3] = f3; P[4] = f4;
+    C[0] = c0; C[1] = c1; C[2] = c2; C[3] = c3; C[4] = c4;
+    float SIZE[5];
+    SIZE[0] = 1.0; SIZE[1] = 1.0; SIZE[2] = 1.25; SIZE[3] = 1.25; SIZE[4] = 1.25;
+    float DIM[5];
+    DIM[0] = 1.0; DIM[1] = 1.0; DIM[2] = 1.0; DIM[3] = 0.72; DIM[4] = 1.0;
+    float m = clamp(uMorph, 0.0, 4.0);
+    int seg = int(min(floor(m), 3.0));
+    float t = clamp((m - float(seg)) * 1.35 - aRand.x * 0.35, 0.0, 1.0);
     t = t * t * (3.0 - 2.0 * t);
-    vec3 a0 = seg < 0.5 ? f0 : (seg < 1.5 ? f1 : f2);
-    vec3 a1 = seg < 0.5 ? f1 : (seg < 1.5 ? f2 : f3);
-    vec3 ca = seg < 0.5 ? c0 : (seg < 1.5 ? c1 : c2);
-    vec3 cb = seg < 0.5 ? c1 : (seg < 1.5 ? c2 : c3);
-    vec3 p = mix(a0, a1, t);
+    vec3 p = mix(P[seg], P[seg + 1], t);
     float flight = sin(3.14159 * t);
     p += swirl(p, seed) * (flight * 1.5 + uTurb);
-    vColor = mix(ca, cb, t);
+    vColor = mix(C[seg], C[seg + 1], t);
 
     // --- the pointer parts the cloud
     vec3 dm = p - uMouse;
@@ -144,13 +162,15 @@ const VERT = /* glsl */ `
 
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
     gl_Position = projectionMatrix * mv;
-    float formSize = seg < 0.5 ? mix(1.0, 1.25, t) : 1.25;
+    float formSize = mix(SIZE[seg], SIZE[seg + 1], t);
     gl_PointSize = uPx * (0.55 + aRand.y) * formSize * (${CAM_Z.toFixed(1)} / -mv.z);
     vAlpha = mix(0.35, 1.0, sweep) * (0.7 + 0.3 * aRand.y) + fall2 * 0.5;
-    if (seg < 0.5) vAlpha *= mix(1.0, 0.45, dust * (1.0 - t));
+    // Dust is dimmer while it hangs behind the type.
+    float inText = seg < 1 ? 1.0 : (seg == 1 ? 1.0 - t : 0.0);
+    vAlpha *= mix(1.0, 0.45, dust * inText);
+    vAlpha *= mix(DIM[seg], DIM[seg + 1], t);
     // Disk particles fade in at the rim and out at the horizon.
-    vAlpha *= mix(1.0, 0.72, seg < 0.5 ? 0.0 : (seg < 1.5 ? t : 1.0 - t));
-    if (seg > 1.5) vAlpha *= mix(1.0, aHole.z < 0.8 ? smoothstep(0.0, 0.06, fall) * smoothstep(1.0, 0.6, fall) : ringAlpha, t);
+    if (seg == 3) vAlpha *= mix(1.0, aHole.z < 0.8 ? smoothstep(0.0, 0.06, fall) * smoothstep(1.0, 0.6, fall) : ringAlpha, t);
   }
 `;
 
@@ -211,14 +231,13 @@ function buildForms(n) {
   return { galaxy, attr, attrDir, hole, rand };
 }
 
-// Samples the hero headline exactly as the browser laid it out: every word is
-// drawn into a canvas at its own on-screen box, in its own font, and the lit
-// pixels become particle targets on the z = 0 plane.
-function sampleHeadline(n, view) {
-  const h1 = document.querySelector(".hero h1");
-  if (!h1) return null;
-  const words = [...h1.querySelectorAll(".hword")];
-  const box = h1.getBoundingClientRect();
+// Samples a heading exactly as the browser laid it out: every word is drawn
+// into a canvas at its own on-screen box, in its own font, and the lit pixels
+// become particle targets on the z = 0 plane. Positions are in the viewport as
+// it was at sampling; the frame loop adds however far the element has moved
+// since, so the particles ride along with the real layout (scroll, rails).
+function sampleWords(root, words, isAccent, n, view) {
+  const box = root.getBoundingClientRect();
   if (!words.length || box.width < 10) return null;
   const S = 2;
   const cw = Math.ceil(box.width * S);
@@ -237,7 +256,7 @@ function sampleHeadline(n, view) {
     const pb = parseFloat(cs.paddingBottom) || 0;
     const text = w.textContent;
     ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${parseFloat(cs.fontSize) * S}px ${cs.fontFamily}`;
-    ctx.fillStyle = w.classList.contains("accent") ? "#00ff00" : "#ff0000";
+    ctx.fillStyle = isAccent(w) ? "#00ff00" : "#ff0000";
     ctx.textBaseline = "alphabetic";
     const m = ctx.measureText(text);
     const asc = m.fontBoundingBoxAscent ?? m.actualBoundingBoxAscent;
@@ -266,17 +285,42 @@ function sampleHeadline(n, view) {
   const count = lit.length / 3;
   const pos = new Float32Array(n * 3);
   const accent = new Float32Array(n);
-  const top = box.top + window.scrollY;
   for (let i = 0; i < n; i++) {
     const j = Math.floor(Math.random() * count) * 3;
     const sx = box.left + (lit[j] + Math.random()) / S;
-    const sy = top + (lit[j + 1] + Math.random()) / S;
+    const sy = box.top + (lit[j + 1] + Math.random()) / S;
     pos[i * 3] = (sx / view.w - 0.5) * view.worldW;
     pos[i * 3 + 1] = -(sy / view.h - 0.5) * view.worldH;
     pos[i * 3 + 2] = (Math.random() - 0.5) * 0.08;
     accent[i] = lit[j + 2];
   }
-  return { pos, accent };
+  return { pos, accent, left: box.left, top: box.top };
+}
+
+const HEADINGS = [
+  {
+    root: () => document.querySelector(".hero h1"),
+    words: (el) => [...el.querySelectorAll(".hword")],
+    accent: (w) => w.classList.contains("accent"),
+    flag: "gl-text",
+  },
+  {
+    root: () => document.querySelector("#about .section-heading h2"),
+    words: (el) => [...el.querySelectorAll(".split-vis .word")],
+    accent: (w) => Boolean(w.closest("em")),
+    flag: "gl-about",
+  },
+];
+
+const ramp = (x, a, b) => Math.min(1, Math.max(0, (x - a) / (b - a)));
+// Scroll chapter -> position across the five forms. The hero headline streams
+// into the About heading as it rises; the heading holds while the rail pins,
+// dissolves into the galaxy as it slides off-screen, and the galaxy holds
+// behind the cards until the rail is nearly done. Spread evenly, the long
+// pinned chapters would leave the cloud mid-flight the whole time.
+function morphFor(j) {
+  if (j < 2) return ramp(j, 0.2, 1.15) + ramp(j, 1.4, 1.58) + ramp(j, 1.74, 2);
+  return 3 + ramp(j, 2.78, 3);
 }
 
 const easeIO = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -297,6 +341,9 @@ function Cloud({ scroll, pointer, lite, reduced }) {
     for (let i = 0; i < n; i++) text.set([(Math.random() - 0.5) * 10, (Math.random() - 0.5) * 4, 0], i * 3);
     g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(n * 3), 3));
     g.setAttribute("aText", new THREE.BufferAttribute(text, 3));
+    const text2 = new Float32Array(n * 4);
+    for (let i = 0; i < n; i++) text2.set([(Math.random() - 0.5) * 10, -6 - Math.random() * 4, 0, 0], i * 4);
+    g.setAttribute("aText2", new THREE.BufferAttribute(text2, 4));
     g.setAttribute("aGalaxy", new THREE.BufferAttribute(forms.galaxy, 3));
     g.setAttribute("aAttr", new THREE.BufferAttribute(forms.attr, 3));
     g.setAttribute("aAttrDir", new THREE.BufferAttribute(forms.attrDir, 3));
@@ -310,7 +357,8 @@ function Cloud({ scroll, pointer, lite, reduced }) {
     uTime: { value: 0 },
     uIntro: { value: 0 },
     uMorph: { value: 0 },
-    uTextShift: { value: 0 },
+    uShift0: { value: new THREE.Vector2() },
+    uShift1: { value: new THREE.Vector2() },
     uViewW: { value: 10 },
     uTurb: { value: 0 },
     uMouse: { value: new THREE.Vector3(99, 99, 0) },
@@ -338,6 +386,8 @@ function Cloud({ scroll, pointer, lite, reduced }) {
 
   const view = useRef({ w: 1, h: 1, worldW: 10, worldH: 6 });
   const ready = useRef(0);
+  const anchors = useRef([]);
+  const resample = useRef(null);
 
   useEffect(() => {
     const p = PALETTE[theme];
@@ -372,17 +422,34 @@ function Cloud({ scroll, pointer, lite, reduced }) {
       uniforms.uViewW.value = view.current.worldW;
       // Narrow screens get smaller forms so they sit behind the type, not over it.
       uniforms.uFormScale.value = Math.min(1, Math.max(0.55, (vw / vh) * 1.1));
-      const result = sampleHeadline(n, view.current);
-      if (!result) return;
-      const attrText = geometry.getAttribute("aText");
-      attrText.array.set(result.pos);
-      attrText.needsUpdate = true;
-      const r = geometry.getAttribute("aRand");
-      for (let i = 0; i < n; i++) r.array[i * 4 + 3] = result.accent[i];
-      r.needsUpdate = true;
-      if (!ready.current) ready.current = performance.now();
-      document.documentElement.classList.add("gl-text");
+      for (let h = 0; h < HEADINGS.length; h++) {
+        const def = HEADINGS[h];
+        const el = def.root();
+        const result = el && sampleWords(el, def.words(el), def.accent, n, view.current);
+        if (!result) continue;
+        if (h === 0) {
+          const a = geometry.getAttribute("aText");
+          a.array.set(result.pos);
+          a.needsUpdate = true;
+          const r = geometry.getAttribute("aRand");
+          for (let i = 0; i < n; i++) r.array[i * 4 + 3] = result.accent[i];
+          r.needsUpdate = true;
+        } else {
+          const a = geometry.getAttribute("aText2");
+          for (let i = 0; i < n; i++) {
+            a.array[i * 4] = result.pos[i * 3];
+            a.array[i * 4 + 1] = result.pos[i * 3 + 1];
+            a.array[i * 4 + 2] = result.pos[i * 3 + 2];
+            a.array[i * 4 + 3] = result.accent[i];
+          }
+          a.needsUpdate = true;
+        }
+        anchors.current[h] = { el, left: result.left, top: result.top };
+        document.documentElement.classList.add(def.flag);
+      }
+      if (anchors.current[0] && !ready.current) ready.current = performance.now();
     };
+    resample.current = sample;
     sample();
     const onResize = () => { clearTimeout(timer); timer = setTimeout(sample, 180); };
     window.addEventListener("resize", onResize);
@@ -390,7 +457,7 @@ function Cloud({ scroll, pointer, lite, reduced }) {
       cancelled = true;
       clearTimeout(timer);
       window.removeEventListener("resize", onResize);
-      document.documentElement.classList.remove("gl-text");
+      for (const def of HEADINGS) document.documentElement.classList.remove(def.flag);
     };
   }, [geometry, n, uniforms]);
 
@@ -407,14 +474,24 @@ function Cloud({ scroll, pointer, lite, reduced }) {
     }
 
     st.j += (scroll.chapter - st.j) * Math.min(1, dt * 4);
-    // Each form holds for most of its chapter and changes near the end of
-    // it; a morph spread over the whole long pinned sections would leave the
-    // cloud as a haze the entire time.
-    const seg = Math.min(Math.floor(st.j), 2);
-    const hold = HOLD[seg];
-    uniforms.uMorph.value = seg + Math.min(1, Math.max(0, (st.j - seg - hold) / (1 - hold)));
+    uniforms.uMorph.value = morphFor(st.j);
     const v = view.current;
-    uniforms.uTextShift.value = (scroll.y / v.h) * v.worldH;
+    // Each sampled heading's particles follow the real element wherever the
+    // layout has carried it since: scrolled, pinned, or slid along a rail.
+    const shifts = [uniforms.uShift0.value, uniforms.uShift1.value];
+    for (let h = 0; h < shifts.length; h++) {
+      const a = anchors.current[h];
+      if (!a) continue;
+      if (!a.el.isConnected) {
+        // React swapped the element (the About layout changes with the
+        // screen); sample the new one.
+        anchors.current[h] = null;
+        resample.current?.();
+        continue;
+      }
+      const r = a.el.getBoundingClientRect();
+      shifts[h].set(((r.left - a.left) / v.w) * v.worldW, (-(r.top - a.top) / v.h) * v.worldH);
+    }
 
     const speed = Math.abs(scroll.velocity);
     st.turb += (Math.min(speed * 0.012, 0.6) - st.turb) * Math.min(1, dt * 5);
@@ -448,7 +525,9 @@ function Cloud({ scroll, pointer, lite, reduced }) {
 class Guard extends Component {
   constructor(props) { super(props); this.state = { failed: false }; }
   static getDerivedStateFromError() { return { failed: true }; }
-  componentDidCatch() { document.documentElement.classList.remove("gl-text"); }
+  componentDidCatch() {
+    for (const def of HEADINGS) document.documentElement.classList.remove(def.flag);
+  }
   render() { return this.state.failed ? null : this.props.children; }
 }
 

@@ -191,6 +191,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
 /* Once the particle cloud has sampled the headline it draws it instead; the
    DOM words keep their place in the layout and for screen readers. */
 .gl-text .hero h1 .hline { opacity: 0; }
+.gl-about #about .section-heading h2 .split-vis { opacity: 0; }
+/* The visible letters are a picture of the words; the screen-reader copy
+   beside them is the text. Selecting only the copy means a copy-paste gets
+   each line once instead of twice. */
+.hline, .split-vis { user-select: none; -webkit-user-select: none; }
 .hline-b { padding-left: 0.9em; }
 /* The word is the mask. Padding opens room for descenders and the italic's
    overhang; the negative margin gives it back so line-height is unchanged. */
@@ -301,11 +306,23 @@ button, a { -webkit-tap-highlight-color: transparent; }
   transform-style: preserve-3d; will-change: transform;
 }
 .rail-head { flex: none; width: min(46vw, 640px); }
-.rail-card { flex: none; width: min(36vw, 520px); height: min(66vh, 620px); transform-style: preserve-3d; }
+.rail-card { flex: none; width: min(36vw, 520px); height: min(66vh, 620px); transform-style: preserve-3d; --focus: 0; }
+/* A card lights up as it reaches the centre of the rail: its outline number
+   fills with ember, its edge catches the light, a glow spills out under it. */
+.rail-card .service-card, .unfold .service-card {
+  border-color: color-mix(in srgb, var(--accent) calc(var(--focus) * 70%), var(--line-strong));
+  box-shadow: 0 0 calc(var(--focus) * 80px) color-mix(in srgb, var(--accent) calc(var(--focus) * 22%), transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--accent) calc(var(--focus) * 60%), transparent);
+}
+.rail-card .service-num, .unfold .service-num {
+  color: color-mix(in srgb, var(--accent) calc(var(--focus) * 100%), transparent);
+  -webkit-text-stroke-color: color-mix(in srgb, var(--accent) calc(var(--focus) * 100%), var(--line-strong));
+  text-shadow: 0 0 calc(var(--focus) * 40px) color-mix(in srgb, var(--accent) calc(var(--focus) * 45%), transparent);
+}
 
 .about.stacked { padding: 120px 0 60px; }
 .about.stacked .service-grid { display: grid; gap: 22px; margin-top: 56px; }
-.unfold { perspective: 1200px; }
+.unfold { perspective: 1200px; --focus: 0; }
 .unfold > div { transform-origin: 50% 0%; }
 
 /* ---------- skills: depth ---------- */

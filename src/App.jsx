@@ -217,6 +217,8 @@ function AboutRail() {
         const d = Math.max(-1.2, Math.min(1.2, (centre - vw / 2) / vw));
         card.style.transform = `translateZ(${-Math.abs(d) * 320}px) rotateY(${d * -42}deg)`;
         card.style.opacity = String(Math.max(0.15, 1 - Math.max(0, Math.abs(d) - 0.35) * 1.4));
+        // 1 when the card sits dead centre: it lights up as it arrives.
+        card.style.setProperty("--focus", Math.max(0, 1 - Math.abs(d) / 0.32).toFixed(3));
       }
     };
     measure();
@@ -243,16 +245,19 @@ function AboutRail() {
   );
 }
 
-// Stacked: each card unfolds from its top edge as it rises into view.
+// Stacked: each card unfolds from its top edge as it rises into view, and
+// lights up while it crosses the middle of the screen.
 function Unfold({ children }) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "start 55%"] });
   const rotateX = useTransform(scrollYProgress, [0, 1], [-70, 0]);
   const opacity = useTransform(scrollYProgress, [0, 0.6], [0, 1]);
+  const { scrollYProgress: pass } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const focus = useTransform(pass, [0.3, 0.5, 0.7], [0, 1, 0]);
   return (
-    <div className="unfold" ref={ref}>
+    <motion.div className="unfold" ref={ref} style={{ "--focus": focus }}>
       <motion.div style={{ rotateX, opacity }}>{children}</motion.div>
-    </div>
+    </motion.div>
   );
 }
 
