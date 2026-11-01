@@ -69,9 +69,11 @@ export function startSmoothScroll({ smooth }) {
     event.preventDefault();
     const top = el.getBoundingClientRect().top + window.scrollY;
     // Header is fixed at 20 + 62px; same breathing room scroll-padding gave.
+    // A pinned section (data-pin) is entered exactly at its top, where its
+    // sticky stage begins; anything else leaves room for the fixed header.
     const y = el.hasAttribute("data-anchor-end")
       ? top + el.offsetHeight - window.innerHeight
-      : top - 96;
+      : el.hasAttribute("data-pin") ? top : top - 96;
     lenis.scrollTo(Math.max(0, y), { duration: 1.4 });
   };
   document.addEventListener("click", jump);

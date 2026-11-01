@@ -1,5 +1,5 @@
 import {
-  AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform,
+  AnimatePresence, motion, useReducedMotion, useScroll, useSpring, useTransform,
 } from "framer-motion";
 import {
   ArrowDown, ArrowRight, ArrowUpRight, Github, Mail, Menu, X,
@@ -7,7 +7,7 @@ import {
 import { Fragment, lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Intro from "./Intro";
 import {
-  Cursor, MagneticLink, Marquee, Reveal, Scroll3D, ScrubReveal, Split, ThemeToggle, TiltCard,
+  Cursor, MagneticLink, Reveal, ScrubReveal, Split, ThemeToggle, TiltCard,
 } from "./components";
 import { services, skillGroups } from "./data";
 import { dur, ease } from "./motion";
@@ -19,18 +19,19 @@ const fadeLine = {
   visible: { opacity: 1, transition: { duration: dur.quick } },
 };
 
-// Each letter of the headline swings up on its own hinge out of the page, a
-// beat behind its neighbour, so the line assembles in depth rather than sliding.
+// Each letter rises out of its word's mask, rolled a few degrees off the
+// baseline, a beat behind its neighbour — the headline is typeset in front of
+// you rather than faded in.
 const charIn = {
-  hidden: { y: "0.55em", rotateX: -96, z: -90, opacity: 0 },
+  hidden: { y: "112%", rotate: 14 },
   visible: (i) => ({
-    y: "0em", rotateX: 0, z: 0, opacity: 1,
-    transition: { duration: dur.epic, ease: ease.expo, delay: 0.18 + i * 0.03 },
+    y: "0%", rotate: 0,
+    transition: { duration: dur.epic, ease: ease.expo, delay: 0.12 + i * 0.026 },
   }),
 };
 
 // Words stay unbroken: letters are inline-blocks, which a line may otherwise
-// wrap between.
+// wrap between. The word is the mask.
 function HeroChars({ text, offset = 0, reduced }) {
   let index = offset;
   const words = text.split(" ");
@@ -48,19 +49,18 @@ function HeroChars({ text, offset = 0, reduced }) {
   ));
 }
 
-// True on screens big enough to pin the service cards and fly them in. Below
-// that the pinned stage cannot fit the heading and three cards at once.
-const DECK_QUERY = "(min-width: 981px) and (min-height: 700px)";
-function useDeckMode() {
+// True where there is room to pin a section and drive it sideways or in
+// depth. Below that, sections stack and animate as they pass.
+function useStageMode(query) {
   const reduced = useReducedMotion();
-  const [wide, setWide] = useState(() => typeof window !== "undefined" && window.matchMedia(DECK_QUERY).matches);
+  const [match, setMatch] = useState(() => typeof window !== "undefined" && window.matchMedia(query).matches);
   useEffect(() => {
-    const mq = window.matchMedia(DECK_QUERY);
-    const sync = () => setWide(mq.matches);
+    const mq = window.matchMedia(query);
+    const sync = () => setMatch(mq.matches);
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
-  }, []);
-  return wide && !reduced;
+  }, [query]);
+  return match && !reduced;
 }
 
 const Scene = lazy(() => import("./Scene"));
@@ -87,7 +87,13 @@ function Header() {
         <span>R</span><i />
       </a>
       <nav className="desktop-nav" aria-label="Primary navigation">
-        {nav.map(([label, href]) => <a href={href} key={href}>{label}</a>)}
+        {/* The label is drawn twice and rolled on hover; the copy is hidden
+            from assistive tech so it is still read once. */}
+        {nav.map(([label, href]) => (
+          <a href={href} key={href}>
+            <span className="roll"><span>{label}</span><span aria-hidden="true">{label}</span></span>
+          </a>
+        ))}
       </nav>
       <div className="nav-actions">
         <ThemeToggle />
@@ -102,18 +108,18 @@ function Header() {
         {open && (
           <motion.nav
             className="mobile-nav"
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
+            initial={{ clipPath: "inset(0 0 100% 0)" }}
+            animate={{ clipPath: "inset(0 0 0% 0)", transition: { duration: 0.55, ease: ease.expo } }}
+            exit={{ clipPath: "inset(0 0 100% 0)", transition: { duration: 0.35, ease: ease.inOut } }}
           >
             {nav.map(([label, href], index) => (
               <motion.a
                 href={href}
                 key={href}
                 onClick={() => setOpen(false)}
-                initial={{ opacity: 0, x: -12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.05 }}
+                initial={{ y: 40, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.12 + index * 0.06, duration: 0.6, ease: ease.expo }}
               >
                 <span>0{index + 1}</span>{label}
               </motion.a>
@@ -129,119 +135,82 @@ function Hero({ revealed }) {
   const reduced = useReducedMotion();
   const ref = useRef(null);
 
-  // Scrolling away tips the whole hero back into the page and lets it fall
-  // into depth, so the scene behind seems to come forward to meet you.
+  // Scrolling away shears the headline apart — the first line slides off one
+  // side, the second off the other — while the camera dives past it.
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const exitRotate = useTransform(scrollYProgress, [0, 1], [0, 26]);
-  const exitZ = useTransform(scrollYProgress, [0, 1], [0, -460]);
-  const exitY = useTransform(scrollYProgress, [0, 1], [0, -120]);
-  const exitFade = useTransform(scrollYProgress, [0, 0.72], [1, 0]);
+  const lineA = useTransform(scrollYProgress, [0, 1], ["0vw", "-22vw"]);
+  const lineB = useTransform(scrollYProgress, [0, 1], ["0vw", "22vw"]);
+  const lift = useTransform(scrollYProgress, [0, 1], [0, -90]);
+  const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
-  // The headline leans a few degrees toward the pointer: enough to feel the
-  // depth in the letters, never enough to make them hard to read.
-  const px = useMotionValue(0);
-  const py = useMotionValue(0);
-  const tiltY = useSpring(useTransform(px, [-1, 1], [-5, 5]), { stiffness: 60, damping: 18 });
-  const tiltX = useSpring(useTransform(py, [-1, 1], [-3.5, 3.5]), { stiffness: 60, damping: 18 });
-  useEffect(() => {
-    if (reduced) return undefined;
-    const move = (event) => {
-      if (event.pointerType !== "mouse") return;
-      px.set((event.clientX / window.innerWidth - 0.5) * 2);
-      py.set((event.clientY / window.innerHeight - 0.5) * 2);
-    };
-    window.addEventListener("pointermove", move, { passive: true });
-    return () => window.removeEventListener("pointermove", move);
-  }, [reduced, px, py]);
+  const enter = (delay) => ({
+    hidden: { opacity: 0, y: reduced ? 0 : 18 },
+    visible: { opacity: 1, y: 0, transition: { duration: dur.slow, ease: ease.expo, delay } },
+  });
 
   return (
-    <section className="hero section-pad" id="top" ref={ref}>
+    <section className="hero" id="top" ref={ref}>
       <motion.div
-        className="hero-stage"
-        style={reduced ? undefined : { rotateX: exitRotate, z: exitZ, y: exitY, opacity: exitFade }}
+        className="hero-inner section-pad"
+        initial="hidden"
+        // Held until the curtain lifts so the type sets itself in view rather
+        // than already being in place behind it.
+        animate={revealed ? "visible" : "hidden"}
       >
-        <motion.div className="hero-tilt" style={reduced ? undefined : { rotateX: tiltX, rotateY: tiltY }}>
-          <motion.div
-            className="hero-copy"
-            initial="hidden"
-            // Held until the curtain opens so the headline rises into view rather
-            // than being already settled behind it.
-            animate={revealed ? "visible" : "hidden"}
-            variants={{ visible: { transition: { staggerChildren: 0.11, delayChildren: 0.12 } } }}
-          >
-            {/* The first screen previously carried no name at all — only the "R"
-                logo — so anyone arriving from a shared link had to scroll to find
-                out whose site this is. */}
-            <motion.div className="hero-identity" variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }}>
-              <span>
-                <strong>Roshan Vijay</strong>
-                <i>Software Engineer</i>
-              </span>
-            </motion.div>
-            <motion.div className="availability" variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}>
-              <i /> Available for ambitious projects
-            </motion.div>
-            <h1>
-              <span className="sr-only">I engineer ideas into impact.</span>
-              {/* Letter by letter in depth; the accent word arrives last and
-                  whole, so its gold gradient stays one sweep instead of
-                  restarting on every letter. */}
-              <motion.span className="line-3d" aria-hidden="true" variants={{ hidden: {}, visible: {} }}>
-                <HeroChars text="I engineer ideas" reduced={reduced} />
+        <motion.div className="hero-meta" style={reduced ? undefined : { opacity: fade }}>
+          <motion.div className="hero-identity" variants={enter(0.05)}>
+            <strong>Roshan Vijay</strong>
+            <i>Software Engineer</i>
+          </motion.div>
+          <motion.div className="availability" variants={enter(0.15)}>
+            <i /> Available for ambitious projects
+          </motion.div>
+          <motion.div className="hero-side-note" variants={enter(0.25)}>
+            <span>Based in India</span>
+          </motion.div>
+        </motion.div>
+
+        <h1>
+          <span className="sr-only">I engineer ideas into impact.</span>
+          <motion.span className="hline" aria-hidden="true" style={reduced ? undefined : { x: lineA, opacity: fade }}>
+            <HeroChars text="I engineer ideas" reduced={reduced} />
+          </motion.span>
+          <motion.span className="hline hline-b" aria-hidden="true" style={reduced ? undefined : { x: lineB, opacity: fade }}>
+            <HeroChars text="into" offset={14} reduced={reduced} />{" "}
+            <span className="hword">
+              <motion.span
+                className="accent"
+                variants={reduced ? fadeLine : {
+                  hidden: { y: "112%", rotate: 8 },
+                  visible: { y: "0%", rotate: 0, transition: { duration: 1.4, ease: ease.expo, delay: 0.62 } },
+                }}
+              >
+                impact.
               </motion.span>
-              <motion.span className="line-3d" aria-hidden="true" variants={{ hidden: {}, visible: {} }}>
-                <HeroChars text="into" offset={14} reduced={reduced} />{" "}
-                <motion.span
-                  className="accent"
-                  variants={reduced ? fadeLine : {
-                    hidden: { opacity: 0, rotateX: -80, z: -160, y: "0.4em", filter: "blur(12px)" },
-                    visible: {
-                      opacity: 1, rotateX: 0, z: 0, y: "0em", filter: "blur(0px)",
-                      transition: { duration: 1.3, ease: ease.expo, delay: 0.8 },
-                    },
-                  }}
-                >
-                  impact.
-                </motion.span>
-              </motion.span>
-            </h1>
-            <motion.p variants={{ hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8 } } }}>
-              I design and build web products for founders and small teams — from fast marketing sites to full applications with real users behind them.
-            </motion.p>
-            <motion.div className="hero-actions" variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
-              <MagneticLink className="button primary" href="#contact">Start a conversation <ArrowRight size={18} /></MagneticLink>
-            </motion.div>
+            </span>
+          </motion.span>
+        </h1>
+
+        <motion.div className="hero-foot" style={reduced ? undefined : { y: lift, opacity: fade }}>
+          <motion.p variants={enter(0.85)}>
+            I design and build web products for founders and small teams — from fast marketing sites to full applications with real users behind them.
+          </motion.p>
+          <motion.div className="hero-actions" variants={enter(0.95)}>
+            <MagneticLink className="button primary" href="#contact">Start a conversation <ArrowRight size={18} /></MagneticLink>
           </motion.div>
         </motion.div>
       </motion.div>
-      <motion.div className="hero-side-note" initial={{ opacity: 0 }} animate={{ opacity: revealed ? 1 : 0 }} transition={{ delay: 0.9 }}>
-        <motion.span style={reduced ? undefined : { opacity: exitFade }}>Based in India</motion.span>
-      </motion.div>
-      <motion.a href="#about" className="scroll-cue" aria-label="Scroll to about" style={reduced ? undefined : { opacity: exitFade }}>
-        <span>Scroll to discover</span><ArrowDown size={16} />
+      <motion.a
+        href="#about"
+        className="scroll-cue"
+        aria-label="Scroll to about"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: revealed ? 1 : 0, transition: { delay: 1.2 } }}
+        style={reduced ? undefined : { opacity: fade }}
+      >
+        <span>Scroll to discover</span><i><ArrowDown size={14} /></i>
       </motion.a>
     </section>
-  );
-}
-
-// Card `index` of three, flown in from a single point deep in the scene and
-// fanned out to its place in the row. The ranges overlap, so the second card
-// is already in flight while the first is landing.
-function DeckCard({ progress, index, children }) {
-  const from = index * 0.15;
-  const range = [from, from + 0.5];
-  const side = index - 1;
-  const z = useTransform(progress, range, [-1500, 0]);
-  const x = useTransform(progress, range, [`${side * -108}%`, "0%"]);
-  const y = useTransform(progress, range, [140, 0]);
-  const rotateY = useTransform(progress, range, [side * -62, 0]);
-  const rotateX = useTransform(progress, range, [42, 0]);
-  const rotateZ = useTransform(progress, range, [side * 9, 0]);
-  const opacity = useTransform(progress, [from, from + 0.2], [0, 1]);
-  return (
-    <motion.div className="deck-card" style={{ z, x, y, rotateX, rotateY, rotateZ, opacity }}>
-      {children}
-    </motion.div>
   );
 }
 
@@ -249,9 +218,11 @@ function ServiceCard({ service }) {
   return (
     <TiltCard>
       <div className="service-card">
-        <span className="service-num">{service.num}</span>
-        <h3>{service.title}</h3>
-        <p>{service.body}</p>
+        <span className="service-num" aria-hidden="true">{service.num}</span>
+        <div className="service-body">
+          <h3>{service.title}</h3>
+          <p>{service.body}</p>
+        </div>
       </div>
     </TiltCard>
   );
@@ -259,114 +230,149 @@ function ServiceCard({ service }) {
 
 function AboutHeading() {
   return (
-    <Reveal className="section-heading">
+    <div className="section-heading">
       <span className="section-number">01 / ABOUT</span>
       <ScrubReveal as="h2">
         <Split text="What I build," /><br /><em><Split text="and how I work." /></em>
       </ScrubReveal>
-    </Reveal>
+    </div>
+  );
+}
+
+// The rail: About pins, and the page turns sideways. The heading and the three
+// cards slide past on one track, and each card swings on its vertical axis by
+// how far it is from the centre of the screen — a carousel in depth driven by
+// the wheel.
+function AboutRail() {
+  const ref = useRef(null);
+  const track = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+
+  useEffect(() => {
+    const el = track.current;
+    if (!el) return undefined;
+    const cards = [...el.querySelectorAll(".rail-card")];
+    let shift = 0;
+    const measure = () => { shift = Math.max(0, el.scrollWidth - window.innerWidth); };
+    const paint = (p) => {
+      const x = -shift * p;
+      el.style.transform = `translate3d(${x}px, 0, 0)`;
+      const vw = window.innerWidth;
+      for (const card of cards) {
+        const centre = card.offsetLeft + card.offsetWidth / 2 + x;
+        const d = Math.max(-1.2, Math.min(1.2, (centre - vw / 2) / vw));
+        card.style.transform = `translateZ(${-Math.abs(d) * 320}px) rotateY(${d * -42}deg)`;
+        card.style.opacity = String(Math.max(0.15, 1 - Math.max(0, Math.abs(d) - 0.35) * 1.4));
+      }
+    };
+    measure();
+    paint(scrollYProgress.get());
+    const off = scrollYProgress.on("change", paint);
+    const resize = () => { measure(); paint(scrollYProgress.get()); };
+    window.addEventListener("resize", resize);
+    return () => { off(); window.removeEventListener("resize", resize); };
+  }, [scrollYProgress]);
+
+  return (
+    <section className="about rail" id="about" ref={ref} data-pin>
+      <div className="rail-sticky">
+        <div className="rail-track" ref={track}>
+          <div className="rail-head"><AboutHeading /></div>
+          {services.map((service) => (
+            <div className="rail-card" key={service.num}>
+              <ServiceCard service={service} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Stacked: each card unfolds from its top edge as it rises into view.
+function Unfold({ children }) {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "start 55%"] });
+  const rotateX = useTransform(scrollYProgress, [0, 1], [-70, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.6], [0, 1]);
+  return (
+    <div className="unfold" ref={ref}>
+      <motion.div style={{ rotateX, opacity }}>{children}</motion.div>
+    </div>
   );
 }
 
 function About() {
-  const deck = useDeckMode();
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 70%", "end end"] });
-
-  // On a large screen the section pins and the cards fly in while it holds.
-  if (deck) {
-    return (
-      <section className="section-pad about deck" id="about" ref={ref} data-anchor-end>
-        <div className="deck-sticky">
-          <AboutHeading />
-          <div className="service-grid">
-            {services.map((service, index) => (
-              <DeckCard progress={scrollYProgress} index={index} key={service.num}>
-                <ServiceCard service={service} />
-              </DeckCard>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
-
+  const rail = useStageMode("(min-width: 981px) and (min-height: 620px)");
+  const reduced = useReducedMotion();
+  if (rail) return <AboutRail />;
   return (
-    <section className="section-pad about" id="about" ref={ref}>
+    <section className="section-pad about stacked" id="about">
       <AboutHeading />
-      {/* The lead line here said "complicated problems into systems that feel
-          simple, fast and dependable" — true, but every developer site says it,
-          so it carried no information. The three cards say what there is to buy. */}
       <div className="service-grid">
         {services.map((service, index) => (
-          <Reveal key={service.num} delay={index * 0.08}>
-            <Scroll3D intensity={1.6} lift={1.4}>
-              <ServiceCard service={service} />
-            </Scroll3D>
-          </Reveal>
+          reduced
+            ? <Reveal key={service.num} delay={index * 0.08}><ServiceCard service={service} /></Reveal>
+            : <Unfold key={service.num}><ServiceCard service={service} /></Unfold>
         ))}
       </div>
     </section>
   );
 }
 
+function SkillPlane({ group, index }) {
+  return (
+    <div className="plane" data-group={group.key}>
+      <span className="plane-label"><b>0{index + 1}</b>{group.name}</span>
+      <ul>
+        {group.items.map((item) => <li key={item}>{item}</li>)}
+      </ul>
+    </div>
+  );
+}
+
+// Depth: the capabilities pin and the camera pushes through them. Each
+// discipline is a sheet of type hanging in the dark; it comes forward out of
+// the distance, holds sharp at the centre, then flies past the viewer as the
+// next one arrives behind it.
 function Skills() {
   const reduced = useReducedMotion();
-  const wall = useRef(null);
-  // The wall is a floor of type that the page tips up to face you and lays
-  // back down as it leaves, sheared sideways by how fast you scroll.
-  const { scrollYProgress } = useScroll({ target: wall, offset: ["start end", "end start"] });
-  const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [48, 0, -34]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.82, 1, 0.9]);
-  const z = useTransform(scrollYProgress, [0, 0.5, 1], [-260, 0, -200]);
-  // Read from the shared scroll state, which decays to zero when the page
-  // stops; framer's velocity could leave the wall sheared at rest.
-  const skewX = useMotionValue(0);
+  const ref = useRef(null);
+  const stage = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+
   useEffect(() => {
-    if (reduced) return undefined;
-    let raf = 0;
-    const loop = () => {
-      const target = Math.max(-9, Math.min(9, scrollState.velocity * -0.22));
-      const next = skewX.get() + (target - skewX.get()) * 0.12;
-      skewX.set(Math.abs(next) < 0.01 ? 0 : next);
-      raf = requestAnimationFrame(loop);
+    if (reduced || !stage.current) return undefined;
+    const planes = [...stage.current.querySelectorAll(".plane")];
+    const n = planes.length;
+    const paint = (p) => {
+      for (let i = 0; i < n; i++) {
+        // t is 0 when plane i is in focus; negative while it waits behind.
+        const t = p * (n + 0.4) - i - 0.7;
+        const z = t < 0 ? t * 1500 : t * 2200;
+        const a = t < 0 ? Math.max(0, 1 + t * 0.85) : Math.max(0, 1 - t * 2.6);
+        const el = planes[i];
+        el.style.transform = `translate3d(-50%, -50%, ${z}px) rotateX(${t * -10}deg)`;
+        el.style.opacity = String(a);
+        el.style.visibility = a < 0.01 ? "hidden" : "visible";
+      }
     };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  }, [reduced, skewX]);
+    paint(scrollYProgress.get());
+    return scrollYProgress.on("change", paint);
+  }, [reduced, scrollYProgress]);
 
   return (
-    <section className="section-pad skills-section" id="skills">
-      <Reveal className="section-heading compact">
-        <span className="section-number">02 / CAPABILITIES</span>
-        <ScrubReveal as="h2">
-          <Split text="What I build with." /><br /><em><Split text="One way of working." /></em>
-        </ScrubReveal>
-      </Reveal>
-      {/* One full-bleed row per discipline, counter-moving at different speeds.
-          A rotating sphere of words could not be read while it moved; type this
-          large is legible even in motion, which is the whole point. */}
-      <div className="kinetic-stage" ref={wall}>
-        <motion.div className="kinetic-wall" style={reduced ? undefined : { rotateX, scale, z, skewX }}>
-          {skillGroups.map((group, index) => (
-            <div className="kinetic-row" data-group={group.key} key={group.key}>
-              <span className="kinetic-label">{group.name}</span>
-              <Marquee
-                className="kinetic-track"
-                reverse={index % 2 === 1}
-                lockDirection
-                baseSpeed={2.4 + index * 0.55}
-                maxBoost={34}
-              >
-                {/* Tripled, not doubled: the groups are five items now instead of
-                    nine, and a row needs enough width to loop without a gap. */}
-                {[...group.items, ...group.items, ...group.items].map((item, i) => (
-                  <span key={`${item}-${i}`}>{item}<i>✦</i></span>
-                ))}
-              </Marquee>
-            </div>
-          ))}
-        </motion.div>
+    <section className={reduced ? "skills-section flat" : "skills-section"} id="skills" ref={ref} data-pin={reduced ? undefined : ""}>
+      <div className="skills-sticky">
+        <div className="section-heading compact section-pad">
+          <span className="section-number">02 / CAPABILITIES</span>
+          <ScrubReveal as="h2" start="start 98%" end="start 50%">
+            <Split text="What I build with." /><br /><em><Split text="One way of working." /></em>
+          </ScrubReveal>
+        </div>
+        <div className="depth" ref={stage}>
+          {skillGroups.map((group, index) => <SkillPlane group={group} index={index} key={group.key} />)}
+        </div>
       </div>
     </section>
   );
@@ -385,31 +391,34 @@ function WhatsAppGlyph({ size = 20 }) {
 }
 
 function Contact() {
+  const reduced = useReducedMotion();
+  const ref = useRef(null);
+  // The closing line grows out of the horizon toward you as the page ends.
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "start 25%"] });
+  const scale = useTransform(scrollYProgress, [0, 1], [0.72, 1]);
+  const y = useTransform(scrollYProgress, [0, 1], [120, 0]);
+
   return (
-    <section className="section-pad contact" id="contact">
-      {/* The glow clips against this, not against the section. The section is
-          48px narrower than the screen, so clipping there cut the wash off in a
-          hard vertical line 80px from the edge. */}
-      <div className="contact-fx" aria-hidden="true">
-        <div className="contact-glow" />
-      </div>
-      <Reveal className="contact-intro">
+    <section className="section-pad contact" id="contact" ref={ref}>
+      <motion.div className="contact-intro" style={reduced ? undefined : { scale, y }}>
         <span className="section-number">03 / CONTACT</span>
         {/* The page ends soon after this heading, so on a tall screen its top
             never reaches the default end line; settle it lower. */}
-        <ScrubReveal as="h2" start="start 98%" end="start 62%">
+        <ScrubReveal as="h2" start="start 100%" end="start 60%">
           <Split text="Have an ambitious idea?" /><br /><em><Split text="Let's give it gravity." /></em>
         </ScrubReveal>
+      </motion.div>
+      <Reveal className="contact-body">
         <p>I&apos;m always interested in thoughtful products, difficult engineering problems, and collaborations with a little spark to them.</p>
         <div className="contact-actions">
           {/* wa.me needs the number in full international form, no plus or spaces. */}
           <MagneticLink
-            className="button primary"
+            className="button primary big"
             href="https://wa.me/917349495469"
             target="_blank"
             rel="noreferrer"
           >
-            <WhatsAppGlyph size={19} /> Message me on WhatsApp
+            <WhatsAppGlyph size={20} /> Message me on WhatsApp
           </MagneticLink>
         </div>
         <div className="social-links">
@@ -435,7 +444,7 @@ export default function App() {
   const reduced = useReducedMotion();
   const [revealed, setRevealed] = useState(false);
   const reveal = useCallback(() => setRevealed(true), []);
-  const pointer = useRef({ x: 0, y: 0 });
+  const pointer = useRef({ x: 0, y: 0, active: false });
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 100, damping: 25, restDelta: 0.001 });
 
@@ -445,28 +454,31 @@ export default function App() {
     const move = (event) => {
       pointer.current.x = (event.clientX / window.innerWidth - 0.5) * 2;
       pointer.current.y = -(event.clientY / window.innerHeight - 0.5) * 2;
-      document.documentElement.style.setProperty("--mouse-x", `${event.clientX}px`);
-      document.documentElement.style.setProperty("--mouse-y", `${event.clientY}px`);
+      pointer.current.active = event.pointerType === "mouse";
     };
+    const leave = (event) => { if (!event.relatedTarget) pointer.current.active = false; };
     window.addEventListener("pointermove", move, { passive: true });
-    return () => window.removeEventListener("pointermove", move);
+    document.addEventListener("mouseout", leave);
+    return () => {
+      window.removeEventListener("pointermove", move);
+      document.removeEventListener("mouseout", leave);
+    };
   }, []);
 
   return (
     <>
       <a className="skip-link" href="#about">Skip to content</a>
-      <motion.div className="progress-bar" style={{ scaleX: progress }} />
+      <div className="progress-rail" aria-hidden="true">
+        <motion.i style={{ scaleY: progress }} />
+      </div>
       <div className="noise" />
-      <div className="cursor-glow" />
       <Cursor />
       <AnimatePresence>{!revealed && <Intro key="intro" onDone={reveal} />}</AnimatePresence>
-      {/* The scene mounts only after the curtain. Booting three WebGL contexts
-          while the intro plays saturates the main thread — the timers fire late
-          and the panels slide at ~13fps. Deferring the mount buys the intro a
-          clear thread, and the sculpture then assembles into an empty stage. */}
+      {/* The scene mounts only after the curtain, so the intro has a clear
+          main thread instead of competing with a WebGL boot. */}
       {revealed && (
         <Suspense fallback={null}>
-          <Scene pointer={pointer} scroll={scrollState} revealed={revealed} />
+          <Scene pointer={pointer} scroll={scrollState} />
         </Suspense>
       )}
       <Header />

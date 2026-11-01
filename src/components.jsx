@@ -1,15 +1,15 @@
 import {
-  motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform,
+  motion, useMotionValue, useReducedMotion, useScroll, useSpring,
 } from "framer-motion";
-import { ArrowUpRight, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { anticipate, dur, ease as easings, spring } from "./motion";
 
-const ease = easings.out;
+const ease = easings.expo;
 
 export const fadeUp = {
-  hidden: { opacity: 0, y: 44, filter: "blur(10px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: dur.slow, ease } },
+  hidden: { opacity: 0, y: 36 },
+  visible: { opacity: 1, y: 0, transition: { duration: dur.slow, ease } },
 };
 
 const fadeOnly = {
@@ -25,73 +25,12 @@ export function Reveal({ children, className = "", delay = 0 }) {
       variants={reduced ? fadeOnly : fadeUp}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
+      viewport={{ once: true, margin: "-60px" }}
       transition={{ delay: reduced ? 0 : delay }}
     >
       {children}
     </motion.div>
   );
-}
-
-// True once the element comes within `margin` of the viewport, and stays true.
-// Used to hold back WebGL canvases that live below the fold: mounting them at
-// page load costs a context and a chunk parse before anything has been seen.
-export function useNearViewport(ref, margin = "400px") {
-  const [near, setNear] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || near) return undefined;
-    if (typeof IntersectionObserver === "undefined") { setNear(true); return undefined; }
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setNear(true); observer.disconnect(); } },
-      { rootMargin: margin }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [ref, near, margin]);
-
-  return near;
-}
-
-// Tilts its subtree in 3D according to where it sits in the viewport: pitched
-// away on the way in, flat when centred, pitched away again on the way out.
-//
-// `intensity` is deliberately per-element-type. Rotating body copy the way you
-// rotate a card makes it harder to read and reads as effect for its own sake,
-// so text gets a fraction of what panels get.
-export function Scroll3D({ children, className = "", intensity = 1, lift = 1 }) {
-  const ref = useRef(null);
-  const reduced = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-
-  // Deliberately no spring here. Scroll position is already smooth, and a
-  // spring per element means one animation loop per element — with seventeen of
-  // these the page ran at 6fps and the tilts lagged so far behind the scroll
-  // that they never reached their targets. Reading the progress directly is
-  // both cheaper and more accurate.
-  const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [9 * intensity, 0, -9 * intensity]);
-  const z = useTransform(scrollYProgress, [0, 0.5, 1], [-90 * lift, 0, -90 * lift]);
-
-  if (reduced) return <div className={className} ref={ref}>{children}</div>;
-
-  return (
-    <div className={`scroll3d ${className}`} ref={ref}>
-      <motion.div className="scroll3d-inner" style={{ rotateX, z }}>
-        {children}
-      </motion.div>
-    </div>
-  );
-}
-
-// Holds back a lazy subtree until it is approached. The gate has to sit at the
-// call site, not inside the component: rendering a lazy() element is what
-// requests its chunk, so skipping only the <Canvas> inside still pays the
-// download and parse cost up front.
-export function LazyVisual({ className, children, fallback = null }) {
-  const ref = useRef(null);
-  const near = useNearViewport(ref);
-  return <div className={className} ref={ref}>{near ? children : fallback}</div>;
 }
 
 // The <html> attribute is the single source of truth for the theme — the
@@ -116,6 +55,8 @@ export function useThemeName() {
   return theme;
 }
 
+export const THEME_COLOR = { light: "#e9e9e4", dark: "#07080a" };
+
 // Light is the default; the choice persists.
 export function ThemeToggle() {
   const theme = useThemeName();
@@ -126,9 +67,7 @@ export function ThemeToggle() {
     if (next === "dark") root.setAttribute("data-theme", "dark");
     else root.removeAttribute("data-theme");
     // Keeps the mobile browser chrome in step with the page.
-    document
-      .querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", next === "dark" ? "#0b0906" : "#fcfaf4");
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", THEME_COLOR[next]);
     try { localStorage.setItem("theme", next); } catch { /* private mode */ }
   };
 
@@ -142,76 +81,13 @@ export function ThemeToggle() {
     >
       <motion.span
         key={theme}
-        initial={{ rotate: -70, opacity: 0, scale: 0.7 }}
+        initial={{ rotate: -90, opacity: 0, scale: 0.6 }}
         animate={{ rotate: 0, opacity: 1, scale: 1 }}
         transition={spring.pop}
       >
-        {dark ? <Sun size={17} /> : <Moon size={17} />}
+        {dark ? <Sun size={16} /> : <Moon size={16} />}
       </motion.span>
     </button>
-  );
-}
-
-// A marquee that drifts on its own but takes its cue from the page: scrolling
-// adds speed, and scrolling up reverses it. The track holds two copies of the
-// content, so wrapping at -50% puts the seam exactly where it started.
-//
-// Driven by a plain rAF loop writing transform straight to the node. Framer's
-// useAnimationFrame silently stopped ticking here after the first scroll, and a
-// loop we own is both easier to reason about and one less thing between the
-// value and the pixel.
-export function Marquee({
-  children,
-  baseSpeed = 1.6,
-  maxBoost = 26,
-  reverse = false,
-  // Stacked rows want fixed opposing directions — if scroll could flip them
-  // they would all swing the same way at once and the counter-motion, which is
-  // the entire effect, would collapse.
-  lockDirection = false,
-  className = "",
-}) {
-  const reduced = useReducedMotion();
-  const trackRef = useRef(null);
-  const offset = useRef(0);
-  const direction = useRef(reverse ? -1 : 1);
-
-  useEffect(() => {
-    if (reduced) return undefined;
-    let raf = 0;
-    let lastTime = 0;
-    let lastScroll = window.scrollY;
-
-    const loop = (now) => {
-      // Clamp dt so a backgrounded tab doesn't resume with one enormous jump.
-      const dt = lastTime ? Math.min(now - lastTime, 64) : 16;
-      lastTime = now;
-
-      const scrollY = window.scrollY;
-      const moved = scrollY - lastScroll;
-      lastScroll = scrollY;
-      if (!lockDirection && Math.abs(moved) > 0.5) direction.current = moved > 0 ? 1 : -1;
-
-      const speed = baseSpeed + Math.min(Math.abs(moved) * 0.9, maxBoost);
-      let next = offset.current - direction.current * speed * (dt / 1000);
-      if (next <= -50) next += 50;
-      if (next > 0) next -= 50;
-      offset.current = next;
-
-      if (trackRef.current) {
-        trackRef.current.style.transform = `translate3d(${next}%, 0, 0)`;
-      }
-      raf = requestAnimationFrame(loop);
-    };
-
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  }, [reduced, baseSpeed, maxBoost, lockDirection]);
-
-  return (
-    <div className={["skill-marquee", className].filter(Boolean).join(" ")} aria-hidden="true">
-      <div ref={trackRef}>{children}</div>
-    </div>
   );
 }
 
@@ -224,8 +100,8 @@ export function MagneticLink({ children, className = "", ...props }) {
   const move = (event) => {
     if (reduced) return;
     const rect = ref.current.getBoundingClientRect();
-    x.set((event.clientX - rect.left - rect.width / 2) * 0.16);
-    y.set((event.clientY - rect.top - rect.height / 2) * 0.16);
+    x.set((event.clientX - rect.left - rect.width / 2) * 0.2);
+    y.set((event.clientY - rect.top - rect.height / 2) * 0.24);
   };
 
   return (
@@ -246,45 +122,7 @@ export function MagneticLink({ children, className = "", ...props }) {
   );
 }
 
-// A full-width row per project instead of a card in a grid. A card can only
-// carry a title; a row has room for what the thing is, what was hard about it,
-// and what it was built with — which is the difference between a gallery and a
-// portfolio someone can judge.
-export function ProjectRow({ project }) {
-  // The glow is written straight to CSS custom properties rather than held in
-  // state: it changes on every pointer move, and re-rendering five cards at
-  // that rate to move a gradient is work for nothing.
-  const track = (event) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    event.currentTarget.style.setProperty("--mx", `${event.clientX - rect.left}px`);
-    event.currentTarget.style.setProperty("--my", `${event.clientY - rect.top}px`);
-  };
-
-  return (
-    <a
-      className="project-card"
-      href={project.href}
-      target="_blank"
-      rel="noreferrer"
-      style={{ "--accent": `var(${project.accent})` }}
-      onPointerMove={track}
-      aria-label={`${project.title} — ${project.type}, opens in a new tab`}
-    >
-      <div className="project-topline">
-        <span>{project.index} — {project.type}</span>
-        <span className="project-go">Visit <ArrowUpRight size={13} /></span>
-      </div>
-      <h3>{project.title}</h3>
-      <p className="project-summary">{project.summary}</p>
-      <ul className="stack-list">
-        {project.stack.map((item) => <li key={item}>{item}</li>)}
-      </ul>
-      <span className="project-bar" />
-    </a>
-  );
-}
-
-// Splits a string into per-character spans for the 3D type effects, grouped by
+// Splits a string into per-character spans for the scrubbed type, grouped by
 // word so a line can still only break between words. Screen readers get the
 // plain string; the pieces are hidden from them.
 export function Split({ text, className = "" }) {
@@ -308,14 +146,14 @@ export function Split({ text, className = "" }) {
   );
 }
 
-// Scrubs every `.char` inside it with scroll position: each letter swings up
-// out of the page on its own hinge and settles as the heading crosses the
-// screen, then holds. Scrubbed rather than triggered, so scrolling back runs
-// it in reverse — the type is part of the camera move, not a one-off effect.
+// Scrubs every `.char` inside it with scroll position: each letter rises out
+// of its word's mask, rotated off its baseline, and settles as the heading
+// crosses the screen. Scrubbed rather than triggered, so scrolling back runs
+// it in reverse.
 //
 // One subscription writes straight to the nodes. A motion value per letter
 // would be a few hundred subscriptions for the page.
-export function ScrubReveal({ as: Tag = "div", className = "", children, start = "start 92%", end = "start 38%" }) {
+export function ScrubReveal({ as: Tag = "div", className = "", children, start = "start 95%", end = "start 45%" }) {
   const ref = useRef(null);
   const reduced = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: [start, end] });
@@ -324,15 +162,13 @@ export function ScrubReveal({ as: Tag = "div", className = "", children, start =
     if (reduced || !ref.current) return undefined;
     const chars = [...ref.current.querySelectorAll(".char")];
     const n = Math.max(chars.length - 1, 1);
-    const spread = 0.55;
+    const spread = 0.6;
     const paint = (p) => {
       for (let i = 0; i < chars.length; i++) {
-        const t = Math.min(1, Math.max(0, (p * (1 + spread) - (i / n) * spread) / 1));
-        const e = 1 - Math.pow(1 - t, 3);
+        const t = Math.min(1, Math.max(0, p * (1 + spread) - (i / n) * spread));
+        const e = 1 - Math.pow(1 - t, 4);
         const inv = 1 - e;
-        chars[i].style.transform =
-          `translate3d(0, ${inv * 0.55}em, ${inv * -140}px) rotateX(${inv * -88}deg) rotateY(${inv * (i % 2 ? 14 : -14)}deg)`;
-        chars[i].style.opacity = String(Math.min(1, e * 1.35));
+        chars[i].style.transform = `translate3d(0, ${inv * 105}%, 0) rotate(${inv * 12}deg)`;
       }
     };
     paint(scrollYProgress.get());
@@ -342,9 +178,9 @@ export function ScrubReveal({ as: Tag = "div", className = "", children, start =
   return <Tag className={["scrub", className].filter(Boolean).join(" ")} ref={ref}>{children}</Tag>;
 }
 
-// A panel that leans toward the pointer and carries a moving highlight, so it
-// reads as a physical sheet of glass rather than a flat box. Written to CSS
-// variables for the same reason as ProjectRow's glow.
+// A panel that leans toward the pointer and carries a light that follows it.
+// Written to CSS variables: it changes on every pointer move, and re-rendering
+// to move a gradient is work for nothing.
 export function TiltCard({ children, className = "" }) {
   const track = (event) => {
     if (event.pointerType !== "mouse") return;
@@ -352,8 +188,8 @@ export function TiltCard({ children, className = "" }) {
     const rect = el.getBoundingClientRect();
     const x = (event.clientX - rect.left) / rect.width;
     const y = (event.clientY - rect.top) / rect.height;
-    el.style.setProperty("--rx", `${(0.5 - y) * 12}deg`);
-    el.style.setProperty("--ry", `${(x - 0.5) * 14}deg`);
+    el.style.setProperty("--rx", `${(0.5 - y) * 8}deg`);
+    el.style.setProperty("--ry", `${(x - 0.5) * 10}deg`);
     el.style.setProperty("--mx", `${x * 100}%`);
     el.style.setProperty("--my", `${y * 100}%`);
   };
@@ -368,12 +204,11 @@ export function TiltCard({ children, className = "" }) {
   );
 }
 
-// A ring that trails the pointer with a little inertia and swells over
-// anything clickable. Mouse only: on touch there is no pointer to follow.
+// A disc that inverts whatever it passes over, trailing the pointer with a
+// little inertia and opening wide over anything clickable. Mouse only.
 export function Cursor() {
   const reduced = useReducedMotion();
-  const ring = useRef(null);
-  const dot = useRef(null);
+  const disc = useRef(null);
 
   useEffect(() => {
     if (reduced || !window.matchMedia("(pointer: fine)").matches) return undefined;
@@ -391,10 +226,10 @@ export function Cursor() {
         document.documentElement.classList.add("has-cursor");
       }
       const hot = event.target.closest?.("a, button");
-      ring.current?.classList.toggle("hot", Boolean(hot));
+      disc.current?.classList.toggle("hot", Boolean(hot));
     };
-    const down = () => ring.current?.classList.add("press");
-    const up = () => ring.current?.classList.remove("press");
+    const down = () => disc.current?.classList.add("press");
+    const up = () => disc.current?.classList.remove("press");
     // `pointerleave` never fires on document; a mouseout with no destination
     // is the pointer leaving the window.
     const leave = (event) => {
@@ -404,10 +239,9 @@ export function Cursor() {
     };
 
     const loop = () => {
-      pos.x += (target.x - pos.x) * 0.18;
-      pos.y += (target.y - pos.y) * 0.18;
-      if (ring.current) ring.current.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
-      if (dot.current) dot.current.style.transform = `translate3d(${target.x}px, ${target.y}px, 0)`;
+      pos.x += (target.x - pos.x) * 0.22;
+      pos.y += (target.y - pos.y) * 0.22;
+      if (disc.current) disc.current.style.transform = `translate3d(${pos.x}px, ${pos.y}px, 0)`;
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
@@ -427,8 +261,7 @@ export function Cursor() {
 
   return (
     <div className="cursor" aria-hidden="true">
-      <div className="cursor-ring" ref={ring}><i /></div>
-      <div className="cursor-dot" ref={dot} />
+      <div className="cursor-disc" ref={disc}><i /></div>
     </div>
   );
 }
