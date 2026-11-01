@@ -1,57 +1,56 @@
-/* "Signal" — ink on cool paper, or bone on near-black, with one electric
-   accent per theme. Light is the default; dark is opted into via
-   data-theme="dark" on <html>. Every colour is a token, so a theme is a value
-   swap and never a rule rewrite. */
+/* "Particle" — light emitted on black, with one ember accent. Dark is the
+   default; light is opted into via data-theme="light" on <html>. Every colour
+   is a token, so a theme is a value swap and never a rule rewrite. */
 :root {
-  color-scheme: light;
+  color-scheme: dark;
   font-family: "Inter Tight", "Inter", system-ui, sans-serif;
   font-synthesis: none;
   --max: 1320px;
   --serif: "Instrument Serif", Georgia, serif;
   --mono: "JetBrains Mono", ui-monospace, monospace;
 
-  --bg: #e9e9e4;
-  --surface: rgba(243, 243, 239, 0.95);
-  --surface-solid: #f3f3ef;
-  --nav-bg: rgba(233, 233, 228, 0.72);
-  --text-hi: #0d0e11;
-  --text-1: #15161a;
-  --text-2: #3b3d44;
-  --text-3: #575a62;
-  --text-4: #6d7078;
-  --invert: #f3f3ef;
-  --line: rgba(13, 14, 17, 0.14);
-  --line-strong: rgba(13, 14, 17, 0.32);
-  --tint: rgba(13, 14, 17, 0.045);
-  /* Electric cobalt: deep enough for AA text on the paper ground. */
-  --accent: #2b38ff;
-  --accent-ink: #ffffff;
-  --accent-soft: rgba(43, 56, 255, 0.12);
-  --shadow: rgba(13, 14, 17, 0.12);
-  --noise-opacity: 0.035;
+  --bg: #050507;
+  --surface: rgba(12, 12, 16, 0.62);
+  --surface-solid: #0c0c10;
+  --nav-bg: rgba(5, 5, 7, 0.6);
+  --text-hi: #f6f2ea;
+  --text-1: #ece8e0;
+  --text-2: #c4c0b8;
+  --text-3: #a29e96;
+  --text-4: #87837c;
+  --invert: #050507;
+  --line: rgba(246, 242, 234, 0.12);
+  --line-strong: rgba(246, 242, 234, 0.28);
+  --tint: rgba(246, 242, 234, 0.05);
+  /* Ember: the hot end of the particle field. Dark ink on it. */
+  --accent: #ff6a2b;
+  --accent-ink: #050507;
+  --accent-soft: rgba(255, 106, 43, 0.16);
+  --shadow: rgba(0, 0, 0, 0.5);
+  --noise-opacity: 0.045;
 }
 
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --bg: #07080a;
-  --surface: rgba(14, 15, 18, 0.93);
-  --surface-solid: #101114;
-  --nav-bg: rgba(7, 8, 10, 0.66);
-  --text-hi: #f4f5ef;
-  --text-1: #e8e9e3;
-  --text-2: #c2c4bd;
-  --text-3: #9fa29a;
-  --text-4: #858880;
-  --invert: #07080a;
-  --line: rgba(232, 233, 227, 0.13);
-  --line-strong: rgba(232, 233, 227, 0.3);
-  --tint: rgba(232, 233, 227, 0.05);
-  /* Volt on black: the signal colour. Dark ink on it, never white. */
-  --accent: #d2ff3c;
-  --accent-ink: #07080a;
-  --accent-soft: rgba(210, 255, 60, 0.12);
-  --shadow: rgba(0, 0, 0, 0.5);
-  --noise-opacity: 0.05;
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #ecebe6;
+  --surface: rgba(246, 245, 241, 0.7);
+  --surface-solid: #f6f5f1;
+  --nav-bg: rgba(236, 235, 230, 0.7);
+  --text-hi: #0e0e12;
+  --text-1: #16161a;
+  --text-2: #3c3c43;
+  --text-3: #58585f;
+  --text-4: #6d6d74;
+  --invert: #f6f5f1;
+  --line: rgba(14, 14, 18, 0.13);
+  --line-strong: rgba(14, 14, 18, 0.3);
+  --tint: rgba(14, 14, 18, 0.045);
+  /* Deep enough for white text on it and for AA as text on the paper. */
+  --accent: #c7380b;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(199, 56, 11, 0.12);
+  --shadow: rgba(14, 14, 18, 0.12);
+  --noise-opacity: 0.035;
 }
 
 * { box-sizing: border-box; }
@@ -188,7 +187,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
   letter-spacing: -0.065em;
   word-spacing: 0.1em;
 }
-.hline { display: block; white-space: nowrap; will-change: transform; }
+.hline { display: block; white-space: nowrap; transition: opacity .6s; }
+/* Once the particle cloud has sampled the headline it draws it instead; the
+   DOM words keep their place in the layout and for screen readers. */
+.gl-text .hero h1 .hline { opacity: 0; }
 .hline-b { padding-left: 0.9em; }
 /* The word is the mask. Padding opens room for descenders and the italic's
    overhang; the negative margin gives it back so line-height is unchanged. */
@@ -435,5 +437,5 @@ footer .brand span { font-size: 28px; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
-  .hline, .rail-track, .plane { will-change: auto; }
+  .rail-track, .plane { will-change: auto; }
 }

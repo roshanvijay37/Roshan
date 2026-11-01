@@ -4,7 +4,7 @@ import {
 import {
   ArrowDown, ArrowRight, ArrowUpRight, Github, Mail, Menu, X,
 } from "lucide-react";
-import { Fragment, lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Intro from "./Intro";
 import {
   Cursor, MagneticLink, Reveal, ScrubReveal, Split, ThemeToggle, TiltCard,
@@ -12,42 +12,6 @@ import {
 import { services, skillGroups } from "./data";
 import { dur, ease } from "./motion";
 import { scrollState, startSmoothScroll } from "./smooth";
-
-// Reduced-motion stand-in for the letter animations: same timing, no travel.
-const fadeLine = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: dur.quick } },
-};
-
-// Each letter rises out of its word's mask, rolled a few degrees off the
-// baseline, a beat behind its neighbour — the headline is typeset in front of
-// you rather than faded in.
-const charIn = {
-  hidden: { y: "112%", rotate: 14 },
-  visible: (i) => ({
-    y: "0%", rotate: 0,
-    transition: { duration: dur.epic, ease: ease.expo, delay: 0.12 + i * 0.026 },
-  }),
-};
-
-// Words stay unbroken: letters are inline-blocks, which a line may otherwise
-// wrap between. The word is the mask.
-function HeroChars({ text, offset = 0, reduced }) {
-  let index = offset;
-  const words = text.split(" ");
-  return words.map((word, w) => (
-    <Fragment key={`${word}-${w}`}>
-      <span className="hword">
-        {[...word].map((ch, i) => (
-          <motion.span className="hchar" key={i} custom={index++} variants={reduced ? fadeLine : charIn}>
-            {ch}
-          </motion.span>
-        ))}
-      </span>
-      {w < words.length - 1 ? " " : null}
-    </Fragment>
-  ));
-}
 
 // True where there is room to pin a section and drive it sideways or in
 // depth. Below that, sections stack and animate as they pass.
@@ -135,11 +99,9 @@ function Hero({ revealed }) {
   const reduced = useReducedMotion();
   const ref = useRef(null);
 
-  // Scrolling away shears the headline apart — the first line slides off one
-  // side, the second off the other — while the camera dives past it.
+  // The headline itself is particles and leaves on its own; the rest of the
+  // hero lifts and fades as the page scrolls away.
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const lineA = useTransform(scrollYProgress, [0, 1], ["0vw", "-22vw"]);
-  const lineB = useTransform(scrollYProgress, [0, 1], ["0vw", "22vw"]);
   const lift = useTransform(scrollYProgress, [0, 1], [0, -90]);
   const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
@@ -170,25 +132,17 @@ function Hero({ revealed }) {
           </motion.div>
         </motion.div>
 
+        {/* The particle cloud samples each .hword box and draws the headline
+            in their place; these stay as the layout, the fallback without
+            WebGL, and the copy for screen readers. */}
         <h1>
           <span className="sr-only">I engineer ideas into impact.</span>
-          <motion.span className="hline" aria-hidden="true" style={reduced ? undefined : { x: lineA, opacity: fade }}>
-            <HeroChars text="I engineer ideas" reduced={reduced} />
-          </motion.span>
-          <motion.span className="hline hline-b" aria-hidden="true" style={reduced ? undefined : { x: lineB, opacity: fade }}>
-            <HeroChars text="into" offset={14} reduced={reduced} />{" "}
-            <span className="hword">
-              <motion.span
-                className="accent"
-                variants={reduced ? fadeLine : {
-                  hidden: { y: "112%", rotate: 8 },
-                  visible: { y: "0%", rotate: 0, transition: { duration: 1.4, ease: ease.expo, delay: 0.62 } },
-                }}
-              >
-                impact.
-              </motion.span>
-            </span>
-          </motion.span>
+          <span className="hline" aria-hidden="true">
+            <span className="hword">I</span> <span className="hword">engineer</span> <span className="hword">ideas</span>
+          </span>
+          <span className="hline hline-b" aria-hidden="true">
+            <span className="hword">into</span> <span className="hword accent">impact.</span>
+          </span>
         </h1>
 
         <motion.div className="hero-foot" style={reduced ? undefined : { y: lift, opacity: fade }}>

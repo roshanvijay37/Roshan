@@ -39,13 +39,13 @@ export function Reveal({ children, className = "", delay = 0 }) {
 export function useThemeName() {
   const [theme, setTheme] = useState(() =>
     typeof document === "undefined"
-      ? "light"
-      : document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light"
+      ? "dark"
+      : document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark"
   );
 
   useEffect(() => {
     const root = document.documentElement;
-    const sync = () => setTheme(root.getAttribute("data-theme") === "dark" ? "dark" : "light");
+    const sync = () => setTheme(root.getAttribute("data-theme") === "light" ? "light" : "dark");
     const observer = new MutationObserver(sync);
     observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
     sync();
@@ -55,17 +55,17 @@ export function useThemeName() {
   return theme;
 }
 
-export const THEME_COLOR = { light: "#e9e9e4", dark: "#07080a" };
+export const THEME_COLOR = { light: "#ecebe6", dark: "#050507" };
 
-// Light is the default; the choice persists.
+// Dark is the default — the particle field is light emitted on black; the
+// choice persists.
 export function ThemeToggle() {
   const theme = useThemeName();
 
   const flip = () => {
     const next = theme === "dark" ? "light" : "dark";
     const root = document.documentElement;
-    if (next === "dark") root.setAttribute("data-theme", "dark");
-    else root.removeAttribute("data-theme");
+    root.setAttribute("data-theme", next);
     // Keeps the mobile browser chrome in step with the page.
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content", THEME_COLOR[next]);
     try { localStorage.setItem("theme", next); } catch { /* private mode */ }
