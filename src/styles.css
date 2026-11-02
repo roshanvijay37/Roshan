@@ -424,6 +424,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .sky {
   position: relative; height: min(84vh, 820px); margin-top: 3vh;
   touch-action: pan-y;
+  /* Its stars and card stack among themselves, under the particle type. */
+  isolation: isolate;
   user-select: none; -webkit-user-select: none;
 }
 .has-cursor .sky { cursor: grab; }
@@ -567,6 +569,20 @@ footer p { margin: 0; }
 footer p a { color: var(--text-hi); border-bottom: 1px solid var(--accent); }
 footer > a:last-child { display: inline-flex; align-items: center; gap: 6px; color: var(--text-hi); }
 footer .brand span { font-size: 28px; }
+
+/* ---------- particle type ---------- */
+/* Every word is drawn as particles by TypeLayer, on a transparent canvas above
+   the page. Once it has sampled a run of text (data-pt) the real glyphs go
+   clear: they still lay the page out and are still links, focus targets,
+   selectable text and what a screen reader reads. */
+/* The canvas library turns pointer events back on for its own wrapper. */
+.type-layer { position: fixed; inset: 0; z-index: 150; }
+.type-layer, .type-layer * { pointer-events: none !important; }
+.type-layer canvas { display: block; }
+.gl-type [data-pt] { -webkit-text-fill-color: transparent; -webkit-text-stroke-color: transparent; text-shadow: none; }
+/* The letters rise in as particles now; the DOM letters hold still so the
+   sample is taken at rest. */
+.gl-type .scrub .char, .pt-rest .scrub .char { transform: none !important; }
 
 /* ---------- cursor ---------- */
 /* The blend sits on the fixed root: on the disc itself it would blend only

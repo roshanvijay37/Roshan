@@ -31,6 +31,7 @@ function useStageMode(query) {
 }
 
 const Scene = lazy(() => import("./Scene"));
+const TypeLayer = lazy(() => import("./TypeLayer"));
 
 const nav = [
   ["About", "#about"],
@@ -990,6 +991,10 @@ export default function App() {
           samples the intro's R, and the hand-over is the particle burst. */}
       <Suspense fallback={null}>
         <Scene pointer={pointer} scroll={scrollState} />
+      </Suspense>
+      {/* Every other word on the page, as particles, above it. */}
+      <Suspense fallback={null}>
+        <TypeLayer revealed={revealed} />
       </Suspense>
       <Header />
       <main>
