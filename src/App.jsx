@@ -9,8 +9,10 @@ import Intro from "./Intro";
 import {
   Cursor, MagneticLink, Reveal, ScrubReveal, Split, ThemeToggle, TiltCard,
 } from "./components";
-import { services, skillGroups } from "./data";
-import { emitWave, fx, startGyro } from "./fx";
+import { constellation, services, skillGroups } from "./data";
+import {
+  emitWave, fx, startGyro, startShake, supernova,
+} from "./fx";
 import { dur, ease } from "./motion";
 import { scrollState, startSmoothScroll } from "./smooth";
 
@@ -33,6 +35,7 @@ const Scene = lazy(() => import("./Scene"));
 const nav = [
   ["About", "#about"],
   ["Skills", "#skills"],
+  ["Work", "#work"],
   ["Contact", "#contact"],
 ];
 
@@ -363,6 +366,265 @@ function Skills() {
   );
 }
 
+// The work is a constellation: every live project is a star in a slowly
+// turning sky, joined by faint lines into one shape. Drag to turn it. Pick a
+// star and the camera flies to it, the rest of the sky streaming out past the
+// edges, and the star opens into a card with the link; close it and the
+// camera pulls back out. The stars are real buttons, laid over a 3D
+// projection done here (the same sum a camera does), so they stay clickable,
+// focusable and readable.
+const EDGES = constellation.flatMap((star, i) => star.links.map((j) => [i, j]));
+// oy: where the point the camera looks at sits on screen, as a share of the
+// height; a chosen star rides up so its card fits beneath it.
+const SKY_REST = { dist: 3.1, cx: 0, cy: 0, cz: 0, oy: 0.5 };
+const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+function Constellation() {
+  const reduced = useReducedMotion();
+  const sky = useRef(null);
+  const [open, setOpen] = useState(null);
+  const cam = useRef({ yaw: 0.35, pitch: -0.16, ...SKY_REST, vyaw: 0, vpitch: 0, tween: null, drag: null });
+  const openRef = useRef(null);
+
+  // Fly the camera to a star (or back out with null).
+  const flyTo = useCallback((index) => {
+    const c = cam.current;
+    let to;
+    if (index === null) {
+      to = { yaw: c.yaw, pitch: -0.16, ...SKY_REST };
+    } else {
+      const [x, y, z] = constellation[index].p;
+      // Turn the sky so this star's side of it faces you, then close in.
+      let yaw = Math.atan2(-x, z);
+      while (yaw - c.yaw > Math.PI) yaw -= Math.PI * 2;
+      while (yaw - c.yaw < -Math.PI) yaw += Math.PI * 2;
+      to = { yaw, pitch: -Math.atan2(y, 1.6) * 0.6, dist: 0.62, cx: x, cy: y, cz: z, oy: 0.3 };
+    }
+    const from = { yaw: c.yaw, pitch: c.pitch, dist: c.dist, cx: c.cx, cy: c.cy, cz: c.cz, oy: c.oy };
+    c.tween = { from, to, at: performance.now(), ms: reduced ? 1 : 1250 };
+    c.vyaw = 0;
+    c.vpitch = 0;
+  }, [reduced]);
+
+  const choose = useCallback((index) => {
+    openRef.current = index;
+    setOpen(index);
+    flyTo(index);
+  }, [flyTo]);
+  const close = useCallback(() => {
+    const was = openRef.current;
+    openRef.current = null;
+    setOpen(null);
+    flyTo(null);
+    if (was !== null) sky.current?.querySelectorAll(".star")[was]?.focus({ preventScroll: true });
+  }, [flyTo]);
+
+  useEffect(() => {
+    if (open === null) return undefined;
+    const onKey = (e) => { if (e.key === "Escape") close(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, close]);
+
+  useEffect(() => {
+    const el = sky.current;
+    if (!el) return undefined;
+    const stars = [...el.querySelectorAll(".star")];
+    const lines = [...el.querySelectorAll(".sky-lines line")];
+    const c = cam.current;
+    const proj = constellation.map(() => ({ x: 0, y: 0, s: 1, d: 1, on: true }));
+    // Pixels per unit of sky. A tall phone gets the shape stretched
+    // upright, so the stars spread down the screen instead of crowding a
+    // strip across the middle.
+    let w = 0, h = 0, kx = 1, ky = 1;
+    const measure = () => {
+      w = el.clientWidth;
+      h = el.clientHeight;
+      kx = Math.min(w * 0.6, h * 0.47);
+      ky = kx * (h > w * 1.2 ? 1.6 : 1);
+    };
+    measure();
+
+    let raf = 0;
+    let last = 0;
+    let visible = false;
+    const frame = (now) => {
+      const dt = last ? Math.min(0.05, (now - last) / 1000) : 0;
+      last = now;
+      if (c.tween) {
+        const k = Math.min(1, (now - c.tween.at) / c.tween.ms);
+        const e = easeInOut(k);
+        for (const key of Object.keys(c.tween.to)) c[key] = c.tween.from[key] + (c.tween.to[key] - c.tween.from[key]) * e;
+        if (k >= 1) c.tween = null;
+      } else if (!c.drag && openRef.current === null) {
+        // Drifts on its own, keeps a throw's spin for a moment, and the tilt
+        // settles back.
+        c.yaw += c.vyaw * dt + (reduced ? 0 : dt * 0.07);
+        c.vyaw *= Math.exp(-dt * 2.2);
+        c.pitch += c.vpitch * dt;
+        c.vpitch *= Math.exp(-dt * 2.2);
+        c.pitch += (-0.16 - c.pitch) * Math.min(1, dt * 0.8);
+      }
+
+      const cy = Math.cos(c.yaw), sy = Math.sin(c.yaw);
+      const cp = Math.cos(c.pitch), sp = Math.sin(c.pitch);
+      const F = 2.3;
+      for (let i = 0; i < constellation.length; i++) {
+        const [x0, y0, z0] = constellation[i].p;
+        const x = x0 - c.cx, y = y0 - c.cy, z = z0 - c.cz;
+        const x1 = x * cy + z * sy;
+        const z1 = -x * sy + z * cy;
+        const y2 = y * cp - z1 * sp;
+        const z2 = y * sp + z1 * cp;
+        const d = c.dist - z2;
+        const pr = proj[i];
+        pr.on = d > 0.12;
+        pr.d = d;
+        pr.s = F / Math.max(d, 0.12);
+        pr.x = w / 2 + x1 * kx * pr.s;
+        pr.y = h * c.oy - y2 * ky * pr.s;
+      }
+      const focus = openRef.current;
+      for (let i = 0; i < stars.length; i++) {
+        const pr = proj[i];
+        const st = stars[i];
+        const near = Math.min(1, Math.max(0, (4 - pr.d) / 2.4));
+        const off = !pr.on || pr.x < -80 || pr.x > w + 80 || pr.y < -80 || pr.y > h + 80;
+        // Only the point grows as you close in; the name stays legible.
+        st.style.transform = `translate3d(${pr.x.toFixed(1)}px, ${pr.y.toFixed(1)}px, 0)`;
+        st.style.setProperty("--s", Math.min(3.2, Math.max(0.6, pr.s * 1.15)).toFixed(3));
+        st.style.opacity = off ? "0" : String((focus !== null && focus !== i ? 0.35 : 0.45 + 0.55 * near).toFixed(3));
+        st.style.zIndex = String(Math.round(100 - pr.d * 10));
+        st.style.visibility = off ? "hidden" : "visible";
+      }
+      for (let k = 0; k < lines.length; k++) {
+        const [a, b] = EDGES[k];
+        const A = proj[a], B = proj[b];
+        const ln = lines[k];
+        if (!A.on || !B.on) { ln.style.opacity = "0"; continue; }
+        ln.setAttribute("x1", A.x.toFixed(1));
+        ln.setAttribute("y1", A.y.toFixed(1));
+        ln.setAttribute("x2", B.x.toFixed(1));
+        ln.setAttribute("y2", B.y.toFixed(1));
+        const near = Math.min(1, Math.max(0, (4.2 - (A.d + B.d) / 2) / 2.6));
+        ln.style.opacity = String((0.2 + 0.6 * near).toFixed(3));
+      }
+      raf = visible || c.tween ? requestAnimationFrame(frame) : 0;
+    };
+    const kick = () => { if (!raf) { last = 0; raf = requestAnimationFrame(frame); } };
+    c.kick = kick;
+    const io = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; if (visible) kick(); });
+    io.observe(el);
+    frame(performance.now());
+
+    // Drag the empty sky to turn it. On touch only sideways drags reach it
+    // (touch-action: pan-y), so the page still scrolls.
+    const down = (e) => {
+      if (e.button !== 0 || e.target.closest(".star, .star-card")) return;
+      if (openRef.current !== null) { close(); return; }
+      c.drag = { x: e.clientX, y: e.clientY, t: performance.now() };
+      c.tween = null;
+      el.setPointerCapture?.(e.pointerId);
+      el.classList.add("grabbing");
+    };
+    const move = (e) => {
+      if (!c.drag) return;
+      const now = performance.now();
+      const dts = Math.max(8, now - c.drag.t) / 1000;
+      const dx = (e.clientX - c.drag.x) * 0.006;
+      const dy = (e.clientY - c.drag.y) * 0.004;
+      c.yaw += dx;
+      c.pitch = Math.max(-0.9, Math.min(0.9, c.pitch + dy));
+      c.vyaw = dx / dts;
+      c.vpitch = dy / dts;
+      c.drag = { x: e.clientX, y: e.clientY, t: now };
+    };
+    const up = () => {
+      if (!c.drag) return;
+      c.drag = null;
+      el.classList.remove("grabbing");
+    };
+    const resize = () => { measure(); kick(); };
+    el.addEventListener("pointerdown", down);
+    el.addEventListener("pointermove", move);
+    el.addEventListener("pointerup", up);
+    el.addEventListener("pointercancel", up);
+    window.addEventListener("resize", resize);
+    return () => {
+      io.disconnect();
+      cancelAnimationFrame(raf);
+      el.removeEventListener("pointerdown", down);
+      el.removeEventListener("pointermove", move);
+      el.removeEventListener("pointerup", up);
+      el.removeEventListener("pointercancel", up);
+      window.removeEventListener("resize", resize);
+    };
+  }, [reduced, close]);
+
+  useEffect(() => { cam.current.kick?.(); }, [open]);
+
+  const star = open === null ? null : constellation[open];
+  return (
+    <div className={open === null ? "sky" : "sky focused"} ref={sky}>
+      <svg className="sky-lines" aria-hidden="true">
+        {EDGES.map(([a, b]) => <line key={`${a}-${b}`} />)}
+      </svg>
+      {constellation.map((s, i) => (
+        <button
+          type="button"
+          className="star"
+          key={s.name}
+          style={{ "--c": s.c }}
+          aria-label={`${s.name}: ${s.kind}`}
+          aria-expanded={open === i}
+          onClick={() => (open === i ? close() : choose(i))}
+        >
+          <i /><span>{s.name}</span>
+        </button>
+      ))}
+      <AnimatePresence>
+        {star && (
+          // The card unfolds out of the star as the camera arrives at it.
+          <motion.div
+            className="star-card"
+            key={star.name}
+            role="dialog"
+            aria-label={star.name}
+            style={{ "--c": star.c, transformPerspective: 900 }}
+            initial={{ opacity: 0, scale: 0.4, rotateX: -60, y: 30 }}
+            animate={{ opacity: 1, scale: 1, rotateX: 0, y: 0, transition: { delay: reduced ? 0 : 0.75, duration: 0.8, ease: ease.expo } }}
+            exit={{ opacity: 0, scale: 0.6, rotateX: 40, transition: { duration: 0.35, ease: ease.inOut } }}
+            onAnimationComplete={() => sky.current?.querySelector(".star-card a")?.focus({ preventScroll: true })}
+          >
+            <button type="button" className="star-close" onClick={close} aria-label="Close"><X size={18} /></button>
+            <span className="star-kind">{star.kind}</span>
+            <h3>{star.name}</h3>
+            <p>{star.line}</p>
+            <a className="button primary" href={star.href} target="_blank" rel="noreferrer">
+              Visit {star.href.replace(/^https:\/\//, "")} <ArrowUpRight size={17} />
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <span className="sky-hint" aria-hidden="true">Tap a star · drag to turn</span>
+    </div>
+  );
+}
+
+function Work() {
+  return (
+    <section className="work" id="work">
+      <div className="section-heading section-pad">
+        <span className="section-number">03 / WORK</span>
+        <ScrubReveal as="h2">
+          <Split text="Things I've shipped," /><br /><em><Split text="still in orbit." /></em>
+        </ScrubReveal>
+      </div>
+      <Constellation />
+    </section>
+  );
+}
+
 // WhatsApp has no icon in lucide, and it is the one mark worth drawing exactly:
 // a generic chat bubble does not read as WhatsApp, and recognition is the whole
 // point of the button.
@@ -527,7 +789,7 @@ function Contact() {
   return (
     <section className="section-pad contact" id="contact" ref={ref}>
       <motion.div className="contact-intro" style={reduced ? undefined : { scale, y }}>
-        <span className="section-number">03 / CONTACT</span>
+        <span className="section-number">04 / CONTACT</span>
         {/* The page ends soon after this heading, so on a tall screen its top
             never reaches the default end line; settle it lower. */}
         <ScrubReveal as="h2" start="start 100%" end="start 60%">
@@ -666,6 +928,27 @@ export default function App() {
 
   useEffect(() => startSmoothScroll({ smooth: !reduced }), [reduced]);
   useEffect(() => (reduced ? undefined : startGyro()), [reduced]);
+  useEffect(() => (reduced ? undefined : startShake()), [reduced]);
+
+  // Three quick taps on the page itself (not on a link or a control): a
+  // supernova from that spot.
+  useEffect(() => {
+    if (reduced) return undefined;
+    let taps = [];
+    const onDown = (event) => {
+      if (event.button !== 0 || event.target.closest?.("a, button, input, textarea, .sky")) return;
+      const now = performance.now();
+      taps = taps.filter((t) => now - t.at < 650 && Math.hypot(t.x - event.clientX, t.y - event.clientY) < 60);
+      taps.push({ at: now, x: event.clientX, y: event.clientY });
+      if (taps.length >= 3) {
+        taps = [];
+        window.getSelection?.()?.removeAllRanges();
+        supernova(event.clientX, event.clientY);
+      }
+    };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [reduced]);
   useWarpHome(reduced);
 
   // Every click on something clickable sends a shockwave through the cloud.
@@ -713,6 +996,7 @@ export default function App() {
         <Hero revealed={revealed} />
         <About />
         <Skills />
+        <Work />
         <Contact />
       </main>
       <Footer />

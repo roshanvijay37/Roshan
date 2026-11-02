@@ -5,8 +5,8 @@ import Lenis from "lenis";
 // state: re-rendering anything at scroll rate would be work for nothing.
 //
 // `chapter` is the page position measured in sections rather than pixels —
-// 0 at the hero, 1 when About reaches mid-screen, 2 for Skills, 3 at the very
-// bottom. The scene keys its camera journey to it, so the choreography stays
+// 0 at the hero, 1 when About reaches mid-screen, 2 for Skills, 3 for Work,
+// 4 for Contact, 5 at the very bottom. The scene keys its camera journey to it, so the choreography stays
 // locked to the content whatever the viewport height does to the layout.
 export const scrollState = {
   y: 0,
@@ -16,9 +16,10 @@ export const scrollState = {
   lenis: null,
 };
 
-const CHAPTER_IDS = ["about", "skills"];
+const CHAPTER_IDS = ["about", "skills", "work", "contact"];
+const LAST = CHAPTER_IDS.length + 1;
 
-let anchors = [0, 1, 2, 3];
+let anchors = Array.from({ length: LAST + 1 }, (_, i) => i);
 
 function measure() {
   const vh = window.innerHeight;
@@ -29,16 +30,19 @@ function measure() {
   });
   // Monotonic even if a section is missing or the page is shorter than the
   // viewport, so the piecewise map below never divides by zero or runs back.
-  const a1 = Math.min(Math.max(tops[0], 1), max - 2);
-  const a2 = Math.min(Math.max(tops[1], a1 + 1), max - 1);
-  anchors = [0, a1, a2, max];
+  anchors = [0];
+  tops.forEach((t, i) => {
+    const room = tops.length - i;
+    anchors.push(Math.min(Math.max(t, anchors[i] + 1), max - room));
+  });
+  anchors.push(max);
 }
 
 function toChapter(y) {
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < LAST; i++) {
     if (y <= anchors[i + 1]) return i + (y - anchors[i]) / (anchors[i + 1] - anchors[i]);
   }
-  return 3;
+  return LAST;
 }
 
 // Lenis gives the page its weight: wheel input is eased rather than stepped,
@@ -93,7 +97,7 @@ export function startSmoothScroll({ smooth }) {
     last = y;
     scrollState.velocity += (raw - scrollState.velocity) * 0.18;
     scrollState.y = y;
-    scrollState.progress = y / anchors[3];
+    scrollState.progress = y / anchors[LAST];
     scrollState.chapter = toChapter(y);
     raf = requestAnimationFrame(tick);
   };

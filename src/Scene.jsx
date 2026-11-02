@@ -13,7 +13,8 @@ import { fx } from "./fx";
 // skill as it arrives), and falls into a black hole under "Let's give it
 // gravity." that can be dragged and fed. Every form is a position the vertex
 // shader can compute; scroll decides how far each particle has travelled
-// between them.
+// between them, and while they are in flight the camera flies through the
+// stream with them.
 const PALETTE = {
   dark: {
     bg: "#050507", base: "#f3eee6", accent: "#ff6a2b", cool: "#7f9cff", hot: "#fff3d6",
@@ -69,6 +70,10 @@ const VERT = /* glsl */ `
   uniform vec3 uHot;
   uniform float uAttrSpin;
   uniform float uFormScale;
+  uniform float uFly;     // how far particles in flight stream toward the camera
+  uniform float uNovaAge; // seconds since the last supernova
+  uniform float uMaxPt;   // largest point, in pixels: fill rate is the cost
+  uniform float uHush;    // the cloud steps back behind the Work constellation
   varying vec3 vColor;
   varying float vAlpha;
 
@@ -211,6 +216,11 @@ const VERT = /* glsl */ `
     // must not shake the letters apart.
     float skForm = sa * (seg == 2 ? t : (seg == 3 ? 1.0 - t : 0.0));
     p += swirl(p, seed) * (flight * 1.5 + uTurb * (1.0 - skForm * 0.85));
+    // Between forms the stream pours toward the viewer, each particle at its
+    // own moment, and some of it past them: with the camera diving in at the
+    // same time, this is the fly-through.
+    float rush = hash(seed * 61.3 + 4.4);
+    p.z += flight * uFly * (0.2 + rush * rush * 1.8);
     vColor = mix(C[seg], C[seg + 1], t);
 
     // --- the pointer parts the cloud
@@ -231,10 +241,23 @@ const VERT = /* glsl */ `
       p.z += waveGlow * 1.6;
     }
 
+    // --- a supernova: the whole cloud blows apart in a flash, hangs, and
+    // falls back together, the slowest particles last.
+    float nova = 0.0;
+    if (uNovaAge < 5.0) {
+      float back = 1.0 - smoothstep(1.0, 3.8, uNovaAge - aRand.x * 0.7);
+      nova = (1.0 - exp(-uNovaAge * 8.0)) * back;
+      vec3 nd = normalize(vec3(hash(seed * 71.3) - 0.5, hash(seed * 19.7 + 2.0) - 0.5, hash(seed * 43.1 + 6.0) - 0.5) + 1e-4);
+      p += nd * nova * (2.5 + pow(hash(seed * 8.3 + 1.7), 2.0) * 15.0);
+      p = rotZ(nova * 0.5 * (hash(seed * 3.3) - 0.5)) * p;
+    }
+
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
     gl_Position = projectionMatrix * mv;
     float formSize = mix(SIZE[seg], SIZE[seg + 1], t);
-    gl_PointSize = min(uPx * (0.55 + aRand.y) * formSize * (${CAM_Z.toFixed(1)} / -mv.z), 48.0);
+    // Anything brushing the lens is dropped rather than drawn as a huge disc.
+    float depth = -mv.z;
+    gl_PointSize = depth < 0.45 ? 0.0 : min(uPx * (0.55 + aRand.y) * formSize * (${CAM_Z.toFixed(1)} / depth), uMaxPt);
     vAlpha = mix(0.35, 1.0, max(sweep, rk)) * (0.7 + 0.3 * aRand.y) + fall2 * 0.5 + waveGlow * 0.6;
     vAlpha *= 1.0 + skForm * 0.55;
     // Dust is dimmer while it hangs behind the type.
@@ -243,6 +266,10 @@ const VERT = /* glsl */ `
     vAlpha *= mix(DIM[seg], DIM[seg + 1], t);
     // Disk particles fade in at the rim and out at the horizon.
     if (seg == 3) vAlpha *= mix(1.0, aHole.z < 0.8 ? smoothstep(0.0, 0.06, fall) * smoothstep(1.0, 0.6, fall) : ringAlpha, t);
+    vAlpha *= smoothstep(0.45, 2.4, depth) * (1.0 - uHush * 0.86);
+    float flash = nova * exp(-uNovaAge * 2.2);
+    vColor = mix(vColor, uHot, flash);
+    vAlpha *= 1.0 + flash * 1.2;
   }
 `;
 
@@ -410,14 +437,17 @@ const toWorldX = (x, v) => (x / v.w - 0.5) * v.worldW;
 const toWorldY = (y, v) => -(y / v.h - 0.5) * v.worldH;
 
 const ramp = (x, a, b) => Math.min(1, Math.max(0, (x - a) / (b - a)));
-// Scroll chapter -> position across the five forms. The hero headline streams
+// Scroll chapter (0 hero, 1 About, 2 Skills, 3 Work, 4 Contact, 5 the
+// bottom) -> position across the five forms. The hero headline streams
 // into the About heading as it rises; the heading holds while the rail pins,
 // dissolves into the galaxy as it slides off-screen, and the galaxy holds
 // behind the cards until the rail is nearly done. Spread evenly, the long
 // pinned chapters would leave the cloud mid-flight the whole time.
 function morphFor(j) {
   if (j < 2) return ramp(j, 0.2, 1.15) + ramp(j, 1.4, 1.58) + ramp(j, 1.74, 2);
-  return 3 + ramp(j, 2.78, 3);
+  // The attractor hangs behind Skills and Work; the black hole forms as
+  // Contact rises.
+  return 3 + ramp(j, 3.75, 4.25);
 }
 
 const easeIO = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -427,9 +457,46 @@ function key(j, values) {
   return values[i] + (values[i + 1] - values[i]) * t;
 }
 
+// Each flight between forms has its own line through the cloud: how far the
+// camera dives in, how far it swings sideways, how far it banks.
+const FLIGHTS = [
+  { dive: 3.0, side: 1.1, roll: 0.2 },
+  { dive: 4.5, side: -1.6, roll: -0.3 },
+  { dive: 6.5, side: 1.2, roll: 0.45 },
+  { dive: 5.5, side: -0.4, roll: -0.6 },
+];
+
+// Quality steps, best first. The controller in the frame loop measures the
+// frame rate and walks down them while the device struggles (and back up,
+// carefully, once it copes): fewer pixels, then fewer particles, then smaller
+// points and a gentler fly-through. Particles are in random order, so drawing
+// the first k of them is a fair sample of every form.
+const LEVELS = [
+  { dpr: 2, share: 1, pt: 48, fly: 1 },
+  { dpr: 1.5, share: 1, pt: 40, fly: 1 },
+  { dpr: 1.25, share: 0.7, pt: 32, fly: 1 },
+  { dpr: 1, share: 0.5, pt: 24, fly: 0.6 },
+  { dpr: 0.85, share: 0.32, pt: 18, fly: 0.4 },
+];
+
+// ?q=0..4 pins a level (for testing); otherwise a device that says it is
+// small or on a data saver starts a step or two down.
+function forcedLevel() {
+  const v = new URLSearchParams(window.location.search).get("q");
+  return v !== null && LEVELS[Number(v)] ? Number(v) : null;
+}
+function startLevel() {
+  const forced = forcedLevel();
+  if (forced !== null) return forced;
+  if (navigator.connection?.saveData) return 2;
+  if ((navigator.deviceMemory && navigator.deviceMemory <= 4) || navigator.hardwareConcurrency <= 4) return 1;
+  return 0;
+}
+
 function Cloud({ scroll, pointer, lite, reduced }) {
   const theme = useThemeName();
-  const { gl, size, camera } = useThree();
+  const { gl, camera } = useThree();
+  const setDpr = useThree((state) => state.setDpr);
   const n = lite ? 50000 : 130000;
   const forms = useMemo(() => buildForms(n), [n]);
   const geometry = useMemo(() => {
@@ -492,6 +559,10 @@ function Cloud({ scroll, pointer, lite, reduced }) {
     uHot: { value: new THREE.Color() },
     uAttrSpin: { value: 0 },
     uFormScale: { value: 1 },
+    uFly: { value: 0 },
+    uNovaAge: { value: 99 },
+    uMaxPt: { value: 48 },
+    uHush: { value: 0 },
   }), []);
 
   // Built here rather than as JSX: R3F copies a `uniforms` prop into a fresh
@@ -624,7 +695,32 @@ function Cloud({ scroll, pointer, lite, reduced }) {
     };
   }, [geometry, n, uniforms, reduced]);
 
-  const s = useRef({ j: 0, turb: 0, mouse: 0, spin: 0, feed: 0 });
+  const s = useRef({ j: 0, turb: 0, mouse: 0, spin: 0, feed: 0, cx: 0, cy: 0, novaAt: -1e9 });
+
+  // Quality: the controller's state, and how a level is applied.
+  const q = useRef(null);
+  useEffect(() => {
+    const apply = (level) => {
+      const L = LEVELS[level];
+      const cap = Math.min(window.devicePixelRatio || 1, lite ? 1.5 : 2);
+      setDpr(Math.min(cap, L.dpr));
+      geometry.setDrawRange(0, Math.floor(n * L.share));
+      uniforms.uMaxPt.value = L.pt;
+      window.__rvQuality = { level, fps: q.current?.fps ?? null, particles: Math.floor(n * L.share) };
+    };
+    q.current = {
+      level: startLevel(), floor: 0, acc: 0, frames: 0, good: 0, upAt: -1e9,
+      born: performance.now(), forced: forcedLevel() !== null, fps: null, apply,
+    };
+    apply(q.current.level);
+  }, [geometry, n, lite, setDpr, uniforms]);
+
+  // Shake the phone or triple-tap the page: everything blows apart.
+  useEffect(() => {
+    const go = () => { s.current.novaAt = performance.now(); };
+    window.addEventListener("rv:nova", go);
+    return () => window.removeEventListener("rv:nova", go);
+  }, []);
 
   // Back to the top through the black hole: the cloud is reborn from a point.
   useEffect(() => {
@@ -731,8 +827,43 @@ function Cloud({ scroll, pointer, lite, reduced }) {
     st.mouse += ((pt.active && !reduced ? 1 : 0) - st.mouse) * Math.min(1, dt * 3);
     uniforms.uMouseAmt.value = st.mouse;
 
-    // Point size in device pixels, so density reads the same on any screen.
-    uniforms.uPx.value = (lite ? 2.2 : 1.9) * gl.getPixelRatio();
+    // Quality: frame rate over 1.5 s windows (a stalled or hidden tab's long
+    // frames are not counted). Below 42 fps, step down; after 7.5 s above 57,
+    // try one step up, and if that step drops it again, stay put for good.
+    const qq = q.current;
+    if (qq && !qq.forced && rawDt < 0.25 && now - qq.born > 2500) {
+      qq.acc += rawDt;
+      qq.frames += 1;
+      if (qq.acc >= 1.5) {
+        qq.fps = qq.frames / qq.acc;
+        qq.acc = 0;
+        qq.frames = 0;
+        if (qq.fps < 42 && qq.level < LEVELS.length - 1) {
+          if (now - qq.upAt < 6000) qq.floor = qq.level + 1;
+          qq.level += 1;
+          qq.good = 0;
+          qq.apply(qq.level);
+        } else if (qq.fps > 57 && qq.level > qq.floor) {
+          qq.good += 1;
+          if (qq.good >= 5) {
+            qq.level -= 1;
+            qq.good = 0;
+            qq.upAt = now;
+            qq.apply(qq.level);
+          }
+        } else {
+          qq.good = 0;
+        }
+        if (window.__rvQuality) window.__rvQuality.fps = Math.round(qq.fps);
+      }
+    }
+    const L = LEVELS[qq ? qq.level : 0];
+
+    // Point size in device pixels, so density reads the same on any screen;
+    // with fewer particles drawn each grows a little to keep the type full.
+    uniforms.uPx.value = (lite ? 2.2 : 1.9) * gl.getPixelRatio() * Math.pow(1 / L.share, 0.3);
+
+    uniforms.uNovaAge.value = reduced ? 99 : (now - st.novaAt) / 1000;
 
     // A slow drift of the camera with the pointer (or, on a phone, with its
     // tilt): the forms are 3D and should feel it. Kept small at the headline,
@@ -741,11 +872,26 @@ function Cloud({ scroll, pointer, lite, reduced }) {
     const g = fx.gyro;
     const lookX = !pt.active && g.active && !reduced ? g.x : pt.x;
     const lookY = !pt.active && g.active && !reduced ? g.y : pt.y;
-    const reach = key(st.j, [0.18, 1.4, 1.6, 0.9]) * (1 - skMax * 0.9);
-    camera.position.x += (lookX * reach - camera.position.x) * Math.min(1, dt * 2);
-    camera.position.y += (lookY * reach * 0.6 - camera.position.y) * Math.min(1, dt * 2);
-    camera.position.z = CAM_Z;
-    camera.lookAt(0, 0, -2 * Math.min(1, st.j));
+    const reach = key(st.j, [0.18, 1.4, 1.6, 0.9, 0.9, 0.9]) * (1 - skMax * 0.9);
+    st.cx += (lookX * reach - st.cx) * Math.min(1, dt * 2);
+    st.cy += (lookY * reach * 0.6 - st.cy) * Math.min(1, dt * 2);
+
+    // The fly-through: while the particles are between forms the camera
+    // dives into the stream on that flight's line, banking, and comes back
+    // out as the next form settles. At every form it is back at rest, so the
+    // particle type stays on the real type.
+    const mm = uniforms.uMorph.value;
+    const seg = Math.min(Math.floor(mm), 3);
+    const fl = reduced ? 0 : Math.sin(Math.PI * Math.min(1, Math.max(0, mm - seg)));
+    const F = FLIGHTS[seg];
+    const go = fl * L.fly;
+    uniforms.uFly.value = reduced ? 0 : 3.4 * L.fly;
+    // The constellation is the subject in Work; the attractor dims behind it
+    // until the black hole starts to form.
+    uniforms.uHush.value = ramp(st.j, 2.85, 3.05) * (1 - ramp(st.j, 3.7, 4.05));
+    camera.position.set(st.cx + F.side * go, st.cy, CAM_Z - F.dive * go);
+    camera.up.set(Math.sin(F.roll * go), Math.cos(F.roll * go), 0);
+    camera.lookAt(F.side * go * 0.35, 0, -2 * Math.min(1, st.j) - F.dive * go * 0.5);
   });
 
   return (

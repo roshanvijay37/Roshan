@@ -98,3 +98,20 @@ export const services = [
     body: "APIs, realtime data, third-party integrations and the unglamorous plumbing that keeps a product honest.",
   },
 ];
+
+// The constellation in Work: things that are live right now, each line taken
+// from the site's own description (checked 2 Nov 2026). `p` is the star's
+// place in the sky, x and y across, z toward you, all roughly -1..1; `links`
+// are the lines drawn to earlier stars (by index), which make the shape.
+export const constellation = [
+  { name: "StatusHD", kind: "Product", line: "Keeps WhatsApp Status videos sharp instead of blurry. Works inside WhatsApp, nothing to install.", href: "https://statushd.in", c: "#2fd27a", p: [-0.08, 0.06, 0.35], links: [] },
+  { name: "Chukta", kind: "Product · web + Android", line: "Every loan and EMI in one place. EMIs post themselves on their due date, stepping the debt down to zero.", href: "https://chukta.roshanvijay.com", c: "#ff6a2b", p: [0.42, 0.34, -0.1], links: [0] },
+  { name: "OurReminder", kind: "Product · web + Android", line: "Reminders and push notifications for business teams.", href: "https://oureminder.com", c: "#7f9cff", p: [0.86, 0.02, 0.28], links: [1] },
+  { name: "LawyerDesk", kind: "Product", line: "Cases, hearings, documents, tasks and clients for advocates.", href: "https://law.roshanvijay.com", c: "#6aa0ff", p: [0.58, -0.4, -0.38], links: [2] },
+  { name: "EzyLinkIndia", kind: "Product", line: "Find local businesses near you and call or WhatsApp them in one tap.", href: "https://ezylinkindia.com", c: "#ffd166", p: [-0.52, 0.42, -0.3], links: [0] },
+  { name: "Tejas Electronics", kind: "Client shop", line: "An online shop with cash on delivery for a furniture and electronics store in Moodbidri.", href: "https://tejas.roshanvijay.com", c: "#4f7cff", p: [0.08, -0.38, 0.12], links: [0, 3] },
+  { name: "Yathvik Place", kind: "Client site", line: "A 3D site for a restaurant, rooms, bar and banquet hall in Moodbidri.", href: "https://yathvikplacemoodbidri.com", c: "#e8b04a", p: [-0.92, 0.0, 0.18], links: [4] },
+  { name: "Belvai Temple", kind: "Heritage site", line: "A site for an 830-year-old temple in Dakshina Kannada, written in Kannada.", href: "https://belvaitemple.in", c: "#e0603e", p: [-0.62, -0.46, -0.42], links: [6, 5] },
+  { name: "Shobha Digital Studio", kind: "Client site", line: "A photography studio in Belvai: weddings, temple festivals and Yakshagana.", href: "https://shobhadigitalstudio.in", c: "#f3eee6", p: [-0.3, -0.12, -0.72], links: [7, 4] },
+  { name: "Adhishtam Digital", kind: "Client site", line: "A motion-led site for a creative agency in Moodbidri.", href: "https://adhishtam.com", c: "#9be15d", p: [0.22, 0.5, 0.55], links: [1, 0] },
+];

@@ -44,9 +44,11 @@ export function startGyro() {
   };
   window.addEventListener("deviceorientation", onOrient);
 
+  // One ask covers the tilt and the shake (startShake).
   const ask = () => {
-    const req = window.DeviceOrientationEvent?.requestPermission;
-    if (typeof req === "function") req.call(window.DeviceOrientationEvent).catch(() => {});
+    for (const Api of [window.DeviceOrientationEvent, window.DeviceMotionEvent]) {
+      if (typeof Api?.requestPermission === "function") Api.requestPermission().catch(() => {});
+    }
   };
   window.addEventListener("touchend", ask, { once: true });
 
@@ -76,4 +78,38 @@ export function startGyro() {
     window.removeEventListener("deviceorientation", onOrient);
     window.removeEventListener("touchend", ask);
   };
+}
+
+// A supernova: the cloud blows apart (Scene listens for rv:nova) with a big
+// shockwave from where it started. Never more than one every four seconds.
+let lastNova = -1e9;
+export function supernova(clientX = window.innerWidth / 2, clientY = window.innerHeight / 2) {
+  const now = performance.now();
+  if (now - lastNova < 4000) return;
+  lastNova = now;
+  emitWave(clientX, clientY, 2.2, 13);
+  window.dispatchEvent(new Event("rv:nova"));
+}
+
+// Shaking the phone sets one off: two hard jolts within 700 ms.
+export function startShake() {
+  if (typeof window === "undefined" || !("DeviceMotionEvent" in window)) return () => {};
+  if (!window.matchMedia("(pointer: coarse)").matches) return () => {};
+  let jolts = [];
+  const onMotion = (e) => {
+    const a = e.acceleration;
+    if (!a || a.x == null) return;
+    if (Math.hypot(a.x, a.y, a.z) < 17) return;
+    const now = performance.now();
+    jolts = jolts.filter((t) => now - t < 700);
+    // Readings come in bursts; one jolt is one jolt, however many arrive.
+    if (jolts.length && now - jolts[jolts.length - 1] < 120) return;
+    jolts.push(now);
+    if (jolts.length >= 2) {
+      jolts = [];
+      supernova();
+    }
+  };
+  window.addEventListener("devicemotion", onMotion);
+  return () => window.removeEventListener("devicemotion", onMotion);
 }
