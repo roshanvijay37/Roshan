@@ -44,5 +44,6 @@ export const anticipate = {
     y: [0, 1.5, -2],
     transition: { duration: dur.quick, times: [0, 0.3, 1], ease: ease.out },
   },
-  tap: { scale: 0.97, y: 0, transition: { duration: dur.snap } },
+  // Sinks onto its edge (the CSS edge shadow shortens to match).
+  tap: { scale: 0.97, y: 3, transition: { duration: dur.snap } },
 };

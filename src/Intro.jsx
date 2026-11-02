@@ -1,53 +1,76 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { dur, ease } from "./motion";
+import { ease } from "./motion";
 
-// The page spends over a second booting React and the fonts. Rather than leave
-// that time blank, a sheet of ink holds the screen while a trace runs across
-// it, then lifts away on a slant and hands over to the hero on a beat.
+// The page spends a second or so booting React, the fonts and the particle
+// scene. A sheet in the page colour holds the screen with the R mark on it.
+// When the cloud is ready it samples that R, and the hand-over is the show:
+// the DOM R implodes to a point, the sheet drops away, and the particles —
+// all of them sitting in that point — burst out, condense into the same R,
+// and stream into the headline (Scene.jsx, "the boot").
 //
-// It never blocks: a hard timer resolves it regardless of what is still loading,
-// and reduced-motion skips it entirely.
+// It never blocks: if the scene fails or is slow, a timer lifts the sheet
+// anyway and the cloud skips straight to the headline when it does arrive.
+// Reduced motion skips it entirely.
 export default function Intro({ onDone }) {
   const reduced = useReducedMotion();
-  const [open, setOpen] = useState(false);
+  const [phase, setPhase] = useState("wait");
 
   useEffect(() => {
-    if (reduced) { onDone(); return undefined; }
-    // React's own mount costs ~350ms before this effect runs, so these are
-    // deliberately shorter than they read.
-    const toOpen = setTimeout(() => setOpen(true), 700);
-    const toDone = setTimeout(onDone, 1500);
-    return () => { clearTimeout(toOpen); clearTimeout(toDone); };
+    if (reduced) { window.__rvIntroDone = true; onDone(); return undefined; }
+    let settled = false;
+    let done = 0;
+    const finish = (after) => {
+      done = setTimeout(() => { window.__rvIntroDone = true; onDone(); }, after);
+    };
+    const go = () => {
+      if (settled) return;
+      settled = true;
+      setPhase("lit");
+      // The R has formed and starts streaming into the headline at 1.9 s;
+      // the rest of the hero comes in with it.
+      finish(1900);
+    };
+    const giveUp = () => {
+      if (settled) return;
+      settled = true;
+      setPhase("fallback");
+      finish(450);
+    };
+    window.addEventListener("rv:scene-ready", go);
+    window.addEventListener("rv:scene-failed", giveUp);
+    if (window.__rvSceneReady) go();
+    const timeout = setTimeout(giveUp, 3200);
+    return () => {
+      clearTimeout(timeout);
+      clearTimeout(done);
+      window.removeEventListener("rv:scene-ready", go);
+      window.removeEventListener("rv:scene-failed", giveUp);
+    };
   }, [reduced, onDone]);
 
   if (reduced) return null;
 
+  const lit = phase === "lit";
   return (
     <motion.div className="intro" aria-hidden="true" exit={{ opacity: 0, transition: { duration: 0.2 } }}>
       <motion.div
         className="intro-sheet"
-        initial={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
-        animate={open
-          ? { clipPath: "polygon(0 0, 100% 0, 100% 0%, 0 0%)", transition: { duration: 0.85, ease: ease.inOut } }
-          : undefined}
+        animate={phase === "wait" ? { opacity: 1 } : { opacity: 0, transition: { duration: lit ? 0.35 : 0.45, ease: ease.inOut } }}
       />
       <motion.div
         className="intro-mark"
-        initial={{ opacity: 0, y: 12 }}
-        animate={open
-          ? { opacity: 0, y: -40, transition: { duration: 0.45, ease: ease.inOut } }
-          : { opacity: 1, y: 0, transition: { duration: dur.base, ease: ease.out } }}
+        // No entrance: the scene may sample the R at any moment, and must
+        // find it at its true size.
+        initial={false}
+        animate={phase === "wait"
+          ? { opacity: 1, scale: 1 }
+          : lit
+            // Collapses to the point the particles start from.
+            ? { opacity: 0, scale: 0.02, transition: { duration: 0.35, ease: [0.7, 0, 0.84, 0] } }
+            : { opacity: 0, y: -30, transition: { duration: 0.4, ease: ease.inOut } }}
       >
         <span>R</span>
-        <svg viewBox="0 0 160 24" preserveAspectRatio="none">
-          <motion.path
-            d="M0 12 L46 12 L54 3 L62 21 L70 6 L77 16 L84 12 L160 12"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 0.75, ease: ease.inOut }}
-          />
-        </svg>
       </motion.div>
     </motion.div>
   );

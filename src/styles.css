@@ -88,44 +88,55 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .scene canvas { display: block; }
 .section-pad { width: min(calc(100% - 64px), var(--max)); margin-inline: auto; }
 
-/* ---------- progress: a hairline down the right edge ---------- */
-.progress-rail {
-  position: fixed; top: 50%; right: 22px; z-index: 120;
-  width: 1px; height: 34vh; transform: translateY(-50%);
-  background: var(--line);
+/* ---------- progress: a tipped ring of particles on the right edge ---------- */
+.progress-ring {
+  position: fixed; top: 50%; right: 16px; z-index: 120;
+  width: 46px; height: 46px; margin-top: -23px;
+  pointer-events: none;
 }
-.progress-rail i {
-  position: absolute; inset: 0; display: block;
-  transform-origin: top; background: var(--accent);
-}
+.progress-ring svg { width: 100%; height: 100%; overflow: visible; transform: perspective(300px) rotateY(28deg) rotateX(12deg); }
+.progress-ring circle { fill: var(--line-strong); transition: fill .3s, r .3s; }
+.progress-ring circle.on { fill: var(--accent); r: 1.6; filter: drop-shadow(0 0 2px var(--accent)); }
 
 /* ---------- intro ---------- */
+/* A sheet in the page colour with the R on it; the particle cloud samples the
+   R, the DOM R collapses to a point, and the particles burst from there. */
 .intro { position: fixed; inset: 0; z-index: 300; pointer-events: none; }
-.intro-sheet { position: absolute; inset: 0; background: var(--text-hi); }
+.intro-sheet { position: absolute; inset: 0; background: var(--bg); }
 .intro-mark {
   position: absolute; inset: 0;
-  display: grid; place-content: center; justify-items: center; gap: 18px;
-  color: var(--invert);
+  display: grid; place-content: center;
+  color: var(--text-hi);
 }
-.intro-mark span { font: italic 400 76px/1 var(--serif); }
-.intro-mark svg { width: 160px; height: 24px; overflow: visible; }
-.intro-mark path { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-linejoin: round; }
+.intro-mark span { display: block; font: italic 400 clamp(150px, 30vw, 300px)/1 var(--serif); letter-spacing: -0.02em; }
 
 /* ---------- header ---------- */
 .nav-shell {
   position: fixed; z-index: 100; top: 0; left: 0; right: 0;
   height: 76px; padding: 0 clamp(20px, 3.4vw, 48px);
   display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid transparent;
-  transition: background .4s, border-color .4s, height .4s;
+  border: 1px solid transparent;
+  transform: perspective(900px) rotateX(var(--tilt, 0deg));
+  transform-origin: 50% 0%;
+  transition: background .4s, border-color .4s, height .4s, top .5s cubic-bezier(.16, 1, .3, 1),
+    left .5s cubic-bezier(.16, 1, .3, 1), right .5s cubic-bezier(.16, 1, .3, 1), border-radius .5s, box-shadow .5s;
 }
+/* Once the page moves the header lifts off the edge: a floating slab of glass
+   with a lit top edge, a darker underside showing its thickness, and a shadow
+   below; it tips with scroll speed (--tilt, from Header). */
 .nav-shell.scrolled {
-  height: 64px;
+  top: 10px; left: 14px; right: 14px;
+  height: 60px;
+  border-radius: 18px;
   background: var(--nav-bg);
-  border-color: var(--line);
+  border-color: var(--line-strong);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 4px 0 -1px var(--line), 0 22px 44px -18px var(--shadow);
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
 }
+/* The mobile menu is position: fixed inside the header, and a transformed or
+   inset header would become its frame; open, it goes back to the full edge. */
+.nav-shell.open { top: 0; left: 0; right: 0; border-radius: 0; transform: none; box-shadow: none; }
 .brand { display: inline-flex; align-items: flex-end; gap: 4px; color: var(--text-hi); }
 .brand span { font: italic 400 34px/0.8 var(--serif); letter-spacing: -0.02em; }
 .brand i { width: 7px; height: 7px; margin-bottom: 1px; background: var(--accent); }
@@ -151,9 +162,11 @@ button, a { -webkit-tap-highlight-color: transparent; }
   border-radius: 999px;
   color: var(--accent-ink); background: var(--accent);
   font-size: 13px; font-weight: 600;
-  transition: transform .3s cubic-bezier(.16, 1, .3, 1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 3px 0 0 color-mix(in srgb, var(--accent) 55%, #000), 0 10px 20px -8px var(--accent-soft);
+  transition: transform .3s cubic-bezier(.16, 1, .3, 1), box-shadow .3s cubic-bezier(.16, 1, .3, 1);
 }
-.nav-cta:hover { transform: translateY(-2px); }
+.nav-cta:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 5px 0 0 color-mix(in srgb, var(--accent) 55%, #000), 0 16px 26px -8px var(--accent-soft); }
+.nav-cta:active { transform: translateY(2px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 1px 0 0 color-mix(in srgb, var(--accent) 55%, #000); transition-duration: .08s; }
 .menu-button { display: none; width: 44px; height: 44px; padding: 0; border: 0; color: var(--text-hi); background: none; }
 .mobile-nav { display: none; }
 
@@ -233,6 +246,32 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .button.primary:hover { color: var(--accent-ink); border-color: var(--accent); }
 .button:hover::before { transform: translateY(0); }
 .button.big { min-height: 68px; padding: 0 34px; font-size: 17px; }
+/* Thickness: a darker edge under the face, a lit top bevel, a soft shadow on
+   the page. Hover lifts it off its edge; pressing sinks it (with the tap
+   variant's y). */
+.button {
+  --edge: color-mix(in srgb, var(--text-hi) 52%, #000);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -2px 0 rgba(0, 0, 0, 0.16),
+    0 5px 0 0 var(--edge), 0 18px 34px -12px var(--shadow);
+  transition: color .45s cubic-bezier(.16, 1, .3, 1), border-color .45s, box-shadow .3s cubic-bezier(.16, 1, .3, 1);
+}
+.button:hover {
+  --edge: color-mix(in srgb, var(--accent) 52%, #000);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -2px 0 rgba(0, 0, 0, 0.16),
+    0 7px 0 0 var(--edge), 0 26px 40px -14px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.button:active {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 -1px 0 rgba(0, 0, 0, 0.16),
+    0 1px 0 0 var(--edge), 0 6px 14px -8px var(--shadow);
+  transition-duration: .08s;
+}
+/* The light on the bevel, following the pointer across the face. */
+.button .sheen {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none; border-radius: inherit;
+  background: radial-gradient(140px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, 0.4), transparent 70%);
+  mix-blend-mode: soft-light; opacity: 0; transition: opacity .35s;
+}
+.button:hover .sheen { opacity: 1; }
 
 .scroll-cue {
   position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%);
@@ -294,8 +333,20 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .tilt-card:hover .service-num { -webkit-text-stroke-color: var(--accent); }
 .service-card h3 { margin: 0 0 14px; color: var(--text-hi); font-size: clamp(24px, 2.1vw, 34px); font-weight: 600; letter-spacing: -0.035em; }
 .service-card p { margin: 0; color: var(--text-2); font-size: 16px; line-height: 1.65; }
-.tilt-card { height: 100%; perspective: 1000px; }
-.tilt-card > * { transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .5s cubic-bezier(.16, 1, .3, 1); }
+.tilt-card { height: 100%; perspective: 1000px; --px: var(--gx, 0); --py: var(--gy, 0); }
+/* Leans to the mouse (--rx/--ry) or, on a phone, to its tilt (--gx/--gy). */
+.tilt-card > * {
+  transform: rotateX(calc(var(--rx, 0deg) + var(--gy, 0) * -7deg)) rotateY(calc(var(--ry, 0deg) + var(--gx, 0) * 9deg));
+  transition: transform .5s cubic-bezier(.16, 1, .3, 1);
+}
+/* Layers at different depths: the big number floats furthest forward and
+   moves most, the text sits nearly on the sheet. The card clips and blurs
+   its backdrop, which flattens real 3D, so depth is parallax. */
+.service-card h3, .service-card p { transition: transform .5s cubic-bezier(.16, 1, .3, 1); }
+.service-num { transition: transform .5s cubic-bezier(.16, 1, .3, 1), -webkit-text-stroke-color .4s, color .4s; }
+.service-num { transform: translate3d(calc(var(--px) * 22px), calc(var(--py) * 16px), 0); }
+.service-card h3 { transform: translate3d(calc(var(--px) * 9px), calc(var(--py) * 7px), 0); }
+.service-card p { transform: translate3d(calc(var(--px) * 4px), calc(var(--py) * 3px), 0); }
 
 /* Rail: pinned, driven sideways by vertical scroll. */
 .about.rail { position: relative; height: 340vh; }
@@ -352,6 +403,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
   font-size: clamp(40px, 6.6vw, 112px); font-weight: 700; line-height: 1; letter-spacing: -0.055em;
 }
 .plane li { position: relative; }
+/* With the particle cloud spelling the skills, the type flies in as a faint
+   ghost and firms up only once the particles have landed on it (--form, from
+   Skills). */
+.gl-skills .plane ul { opacity: calc(0.16 + 0.84 * clamp(0, (var(--form, 1) - 0.6) * 2.5, 1)); }
 /* Every other item in the serif italic: one rhythm, two voices. */
 .plane li:nth-child(even) { font: italic 400 1.06em/1 var(--serif); letter-spacing: -0.02em; color: var(--text-3); }
 .plane li:not(:last-child)::after {
@@ -377,7 +432,46 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .contact h2 em { color: var(--accent); }
 .contact-body { display: grid; justify-items: center; }
 .contact-body p { max-width: 560px; margin: 40px auto 0; color: var(--text-2); font-size: clamp(16px, 1.3vw, 19px); line-height: 1.65; }
-.contact-actions { margin-top: 44px; }
+/* The black hole behind can be grabbed (Contact): sideways drags on touch,
+   vertical ones still scroll. */
+.contact { touch-action: pan-y; }
+.has-cursor .contact { cursor: grab; }
+.contact.grabbing { cursor: grabbing; user-select: none; -webkit-user-select: none; }
+
+/* Email and GitHub orbit the WhatsApp button on a tipped ring (OrbitTokens). */
+.contact-actions { position: relative; display: grid; justify-items: center; margin: 92px auto 104px; }
+.contact-actions .button { position: relative; z-index: 2; }
+.orbit { position: absolute; left: 50%; top: 50%; width: min(640px, 82vw); height: 0; transform: translateX(-50%); pointer-events: none; }
+.token {
+  position: absolute; left: 50%; top: 0;
+  width: 86px; margin: -28px 0 0 -43px;
+  display: grid; justify-items: center; gap: 8px;
+  pointer-events: auto;
+  color: var(--text-2); font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase;
+  will-change: transform;
+}
+.token b { font-weight: 500; transition: color .3s; }
+/* A coin: a lit face on a darker rim, turned to face the way it travels. */
+.coin {
+  width: 56px; height: 56px; display: grid; place-items: center;
+  border-radius: 50%;
+  color: var(--text-hi);
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--text-hi) 18%, var(--surface-solid)), var(--surface-solid) 70%);
+  border: 1px solid var(--line-strong);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 3px 0 0 -1px var(--line-strong), 0 12px 24px -10px var(--shadow);
+  transform: perspective(400px) rotateY(var(--spin, 0deg));
+  transition: background .3s, color .3s, border-color .3s, box-shadow .3s;
+}
+.token:hover .coin, .token:focus-visible .coin {
+  color: var(--accent-ink); background: var(--accent); border-color: var(--accent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 0 30px color-mix(in srgb, var(--accent) 50%, transparent);
+}
+.token:hover b, .token:focus-visible b { color: var(--text-hi); }
+.orbit.still { position: static; width: auto; height: auto; transform: none; display: flex; justify-content: center; gap: 28px; margin-top: 40px; }
+.orbit.still .token { position: static; margin: 0; }
+.orbit.still .coin { animation: coin-turn 6s ease-in-out infinite; }
+.orbit.still .token + .token .coin { animation-delay: -3s; }
+@keyframes coin-turn { 0%, 100% { transform: perspective(400px) rotateY(-28deg); } 50% { transform: perspective(400px) rotateY(28deg); } }
 .social-links { display: flex; justify-content: center; gap: 28px; margin-top: 34px; }
 .social-links a {
   display: inline-flex; align-items: center; gap: 9px; padding-bottom: 4px;
@@ -402,20 +496,15 @@ footer .brand span { font-size: 28px; }
 /* ---------- cursor ---------- */
 /* The blend sits on the fixed root: on the disc itself it would blend only
    inside the root's own stacking context, against nothing, and paint white. */
-.cursor { position: fixed; inset: 0; z-index: 400; pointer-events: none; mix-blend-mode: difference; }
-.cursor-disc {
-  position: absolute; top: 0; left: 0; opacity: 0;
-  transition: opacity .3s;
-}
-.cursor-disc i {
-  display: block; width: 14px; height: 14px; margin: -7px 0 0 -7px;
-  border-radius: 50%; background: #fff;
-  transition: transform .45s cubic-bezier(.16, 1, .3, 1);
-}
-.has-cursor .cursor-disc { opacity: 1; }
-.cursor-disc.hot i { transform: scale(4.4); }
-.cursor-disc.press i { transform: scale(0.7); }
-.cursor-disc.hot.press i { transform: scale(3.6); }
+/* Inverting only for the mouse knot; the touch sparks are plain ember. */
+.cursor { position: fixed; inset: 0; z-index: 400; pointer-events: none; }
+.cursor canvas { display: block; width: 100%; height: 100%; }
+.has-cursor .cursor { mix-blend-mode: difference; }
+
+/* ---------- theme switch ---------- */
+/* The new theme opens in a circle from the toggle (ThemeToggle animates the
+   clip); the browser's default cross-fade is switched off under it. */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 
 /* ---------- responsive ---------- */
 @media (max-width: 980px) {
@@ -432,7 +521,7 @@ footer .brand span { font-size: 28px; }
   }
   .mobile-nav span { color: var(--accent); font: 500 12px/1 var(--mono); letter-spacing: .1em; }
   .mobile-nav::after { content: ""; display: block; }
-  .progress-rail { right: 10px; }
+  .progress-ring { right: 6px; width: 34px; height: 34px; margin-top: -17px; }
 }
 @media (max-width: 720px) {
   .section-pad, footer { width: calc(100% - 40px); }
@@ -449,6 +538,8 @@ footer .brand span { font-size: 28px; }
   .plane ul { font-size: clamp(34px, 10.5vw, 60px); }
   .contact { padding-top: 16vh; }
   .button.big { min-height: 60px; padding: 0 24px; font-size: 15px; }
+  .contact-actions { margin: 44px auto 0; }
+  .nav-shell.scrolled { left: 10px; right: 10px; top: 8px; height: 56px; border-radius: 16px; }
   footer { flex-direction: column; align-items: flex-start; }
 }
 
